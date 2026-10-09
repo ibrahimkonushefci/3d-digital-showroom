@@ -146,11 +146,13 @@ export async function createOffer({
     const x = 14 + i * 46;
     pdf.setFillColor(m.color);
     pdf.roundedRect(x, 208, 40, 18, 1, 1, "F");
-    if (m.texture)
+    const texture =
+      design.kind === "interior" ? m.previewTexture || m.texture : m.texture;
+    if (texture)
       try {
-        const path = m.texture.startsWith("shared/")
-          ? `/${m.texture}`
-          : `/brands/${brand.catalogId || brand.slug}/${m.texture}`;
+        const path = texture.startsWith("shared/")
+          ? `/${texture}`
+          : `/brands/${brand.catalogId || brand.slug}/${texture}`;
         pdf.addImage(await imageToPng(path), "PNG", x, 208, 40, 18);
       } catch {
         /* Color swatch fallback. */
@@ -227,7 +229,7 @@ export async function createOffer({
       design.doors
         .map(
           (d) =>
-            `${catalog.interiorDoors.find((m) => m.id === d.modelId)?.name[language] || d.modelId}: ${d.width} × 210 cm`,
+            `${catalog.interiorDoors.find((m) => m.id === d.modelId)?.name[language] || d.modelId}: ${d.width} × ${d.height} cm · ${t("frameHeight")} ${d.frameHeight} cm · ${t("frameDepth")} ${d.frameDepth} cm`,
         )
         .join(" · "),
     );

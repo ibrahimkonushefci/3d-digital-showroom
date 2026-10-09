@@ -4,8 +4,14 @@ import { InteriorSchema, type InteriorDesign } from "./types";
 import { newInterior, validInterior } from "./layout";
 export const useInterior = create<{
   design: InteriorDesign | null;
-  set: (d: InteriorDesign) => void;
-}>((set) => ({ design: null, set: (design) => set({ design }) }));
+  brandSlug: string | null;
+  set: (d: InteriorDesign, brand?: string) => void;
+}>((set) => ({
+  design: null,
+  brandSlug: null,
+  set: (design, brandSlug) =>
+    set((state) => ({ design, brandSlug: brandSlug ?? state.brandSlug })),
+}));
 export function loadInterior(brand: string, c: Catalog) {
   try {
     const raw = localStorage.getItem(`showroom-interior-${brand}`);

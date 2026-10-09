@@ -105,7 +105,7 @@ export function Materials({
                   ...design,
                   environment: {
                     floor: e.target.value as "laminate" | "tiles" | "concrete",
-                    wallColor: design.environment?.wallColor || "#e4e0d4",
+                    wallColor: design.environment?.wallColor || "#d4d8df",
                     internalLed: design.environment?.internalLed || false,
                   },
                 })
@@ -121,7 +121,7 @@ export function Materials({
           <Field label={t("wallColor")}>
             <input
               type="color"
-              value={design.environment?.wallColor || "#e4e0d4"}
+              value={design.environment?.wallColor || "#d4d8df"}
               onChange={(e) =>
                 onChange({
                   ...design,
@@ -143,7 +143,7 @@ export function Materials({
                   ...design,
                   environment: {
                     floor: design.environment?.floor || "laminate",
-                    wallColor: design.environment?.wallColor || "#e4e0d4",
+                    wallColor: design.environment?.wallColor || "#d4d8df",
                     internalLed: v,
                   },
                 })

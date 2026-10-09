@@ -6,53 +6,97 @@ import {
   lazy,
   Suspense,
 } from "react";
+import { Trash2, Plus, Download, ChevronRight } from "lucide-react";
 import { useBrand } from "../brand";
-import { useT, useLanguage, label, money, number } from "../i18n";
-import { Field, NumberField, Toggle, ErrorNotice } from "../app/components";
+import {
+  useT,
+  useLanguage,
+  label,
+  money,
+  number,
+  type TranslationKey,
+} from "../i18n";
+import {
+  Field,
+  NumberField,
+  Toggle,
+  ErrorNotice,
+  Swatches,
+} from "../app/components";
 import { OfferFields } from "../app/OfferFields";
 import { SendAnyone } from "../app/SendAnyone";
-import { shareUrl, messageUrl } from "../sharing";
+import { shareUrl } from "../sharing";
 import { newOffer } from "../documents/details";
 import { useInterior, loadInterior } from "./store";
-import { interiorPrice } from "./pricing";
-import { newInterior, validInterior } from "./layout";
-import type { InteriorDesign, InteriorDoor } from "./types";
+import { interiorPrice, interiorDoorPrice } from "./pricing";
+import {
+  changeDoorStyle,
+  switchInteriorRoom,
+  validInterior,
+  newQuoteDoor,
+  doorWidths,
+} from "./layout";
+import { interiorDoorChoices } from "./products";
+import { supportedPhotoDoor } from "./scenes";
+import type { InteriorDesign, InteriorDoor, DoorStyle } from "./types";
 const Scene = lazy(() => import("./Scene"));
 export default function InteriorDesigner() {
-  const { brand, catalog, local, logoUrl } = useBrand(),
+  const { brand, catalog, local, logoUrl, assetUrl } = useBrand(),
     t = useT(),
     { language } = useLanguage(),
-    { design, set } = useInterior();
-  const [selected, select] = useState<string | null>(null),
-    [opened, setOpened] = useState<string[]>([]),
-    [preset, setPreset] = useState("perspective"),
-    [move, setMove] = useState(0),
-    [result, setResult] = useState(false),
+    { design, set, brandSlug } = useInterior();
+  const [result, setResult] = useState(false),
     [error, setError] = useState<string | null>(null),
     [link, setLink] = useState(""),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [ready, setReady] = useState(false),
+    [pdfDownload, setPdfDownload] = useState<{
+      url: string;
+      signature: string;
+    } | null>(null);
+  const exportSignature = JSON.stringify([design, language, brand.slug]);
+  const sceneReady = useCallback((value: boolean) => {
+    setReady(value);
+    setPdfDownload(null);
+  }, []);
+  useEffect(
+    () => () => {
+      if (pdfDownload) URL.revokeObjectURL(pdfDownload.url);
+    },
+    [pdfDownload],
+  );
   const capture = useRef<() => Promise<string>>(null),
     register = useCallback((fn: () => Promise<string>) => {
       capture.current = fn;
     }, []);
   useEffect(() => {
-    if (!useInterior.getState().design) set(loadInterior(brand.slug, catalog));
-  }, [brand.slug, catalog]);
+    if (
+      !useInterior.getState().design ||
+      useInterior.getState().brandSlug !== brand.slug
+    ) {
+      set(loadInterior(brand.slug, catalog), brand.slug);
+      setResult(false);
+      setLink("");
+    }
+  }, [brand.slug, catalog, set]);
   useEffect(() => {
-    if (design)
+    if (design && brandSlug === brand.slug)
       try {
         localStorage.setItem(
           `showroom-interior-${brand.slug}`,
           JSON.stringify(design),
         );
       } catch {
-        /* optional device storage */
+        /* Optional storage. */
       }
-  }, [design, brand.slug]);
-  if (!design) return <div className="startup">{t("sceneLoading")}</div>;
+  }, [design, brand.slug, brandSlug]);
+  if (!design || brandSlug !== brand.slug)
+    return <div className="startup">{t("sceneLoading")}</div>;
   const price = interiorPrice(design, catalog, language),
-    active = design.doors.find((p) => p.id === selected) || design.doors[0],
     floor = catalog.laminates.find((f) => f.id === design.laminateId)!,
+    style = design.doorStyle,
+    choices = interiorDoorChoices(catalog),
+    model = catalog.interiorDoors.find((m) => m.id === style.modelId)!,
     url = shareUrl(design, brand, catalog.id, local);
   const edit = (d: InteriorDesign) => {
     if (validInterior(d, catalog)) {
@@ -60,42 +104,12 @@ export default function InteriorDesigner() {
       setError(null);
     } else setError("fitError");
   };
-  const doorEdit = (v: Partial<InteriorDoor>) =>
+  const product = (v: Partial<DoorStyle>) => edit(changeDoorStyle(design, v));
+  const doorEdit = (id: string, v: Partial<InteriorDoor>) =>
     edit({
       ...design,
-      doors: design.doors.map((p) => (p.id === active.id ? { ...p, ...v } : p)),
+      doors: design.doors.map((p) => (p.id === id ? { ...p, ...v } : p)),
     });
-  const resize = (key: "width" | "depth" | "height", v: number) => {
-    const room = {
-      ...design.room,
-      [key]: Math.max(
-        key === "height" ? 220 : 120,
-        Math.min(key === "height" ? 400 : 1200, v),
-      ),
-    };
-    edit({
-      ...design,
-      room,
-      doors: design.doors.map((p) => ({
-        ...p,
-        offset: Math.max(
-          0,
-          Math.min(
-            p.offset,
-            (["left", "right"].includes(p.wall) ? room.depth : room.width) -
-              p.width,
-          ),
-        ),
-      })),
-    });
-  };
-  const toggleDoor = (id: string) => {
-    if (id === selected)
-      setOpened((o) =>
-        o.includes(id) ? o.filter((i) => i !== id) : [...o, id],
-      );
-    else select(id);
-  };
   const showResult = () => {
     if (!design.offer)
       set({ ...design, offer: newOffer(brand, catalog, language) });
@@ -104,17 +118,23 @@ export default function InteriorDesigner() {
   const pdf = async () => {
     setBusy(true);
     try {
+      if (!ready || !capture.current) throw Error("sceneLoading");
+      const screenshot = await capture.current();
       const { createOffer } = await import("../documents/offer");
       const doc = await createOffer({
         design,
         brand,
         catalog,
         language,
-        screenshot: (await capture.current?.().catch(() => null)) || null,
+        screenshot,
         logoUrl,
         t,
         priceOverride: price,
-        description: `${t("interior")} · ${t(design.preset)} · ${number(price.area, language, 1)} m²`,
+        description: `${t("interior")} · ${t("quoteMeasurements")} ${design.room.width} × ${design.room.depth} cm · ${number(price.area, language, 1)} m²\n${t("previewRoom")}: ${t(design.preset)} · ${t("photoIllustrative")}`,
+      });
+      setPdfDownload({
+        url: URL.createObjectURL(doc.output("blob")),
+        signature: exportSignature,
       });
       doc.save(`${brand.slug}-interior-offer.pdf`);
     } catch {
@@ -123,66 +143,430 @@ export default function InteriorDesigner() {
       setBusy(false);
     }
   };
+  const controls = (
+    <>
+      <section className="interior-product-section">
+        <div className="interior-section-title">
+          <h2>{t("door")}</h2>
+          <small>{t("sharedAcrossRooms")}</small>
+        </div>
+        {design.legacyMixed && (
+          <p className="notice">{t("legacyMixedDoors")}</p>
+        )}
+        {!supportedPhotoDoor(model.style) && (
+          <p className="notice">{t("unsupportedInteriorPreview")}</p>
+        )}
+        <div className="interior-product-grid">
+          {choices.map((choice) => {
+            const f = catalog.productFinishes.find(
+                (f) => f.id === choice.style.finishId,
+              )!,
+              selected =
+                !design.legacyMixed &&
+                Object.entries(choice.style).every(
+                  ([k, v]) => style[k as keyof DoorStyle] === v,
+                );
+            return (
+              <button
+                key={choice.id}
+                className={`interior-product-card ${selected ? "selected" : ""}`}
+                aria-pressed={selected}
+                onClick={() => product(choice.style)}
+              >
+                <span
+                  className="interior-door-thumb"
+                  style={{
+                    backgroundColor: f.color,
+                    ...(f.texture
+                      ? {
+                          backgroundImage: `url(${assetUrl(f.previewTexture || f.texture)})`,
+                        }
+                      : {}),
+                  }}
+                >
+                  {choice.style.modelId === "glass" &&
+                    [1, 2, 3, 4].map((n) => (
+                      <i
+                        className="thumb-glass"
+                        key={n}
+                        style={{ top: `${n * 19}%` }}
+                      />
+                    ))}
+                  <img
+                    alt=""
+                    src="/shared/interior/handle.png"
+                    className={
+                      choice.style.handleId === "black" ? "black-hardware" : ""
+                    }
+                  />
+                </span>
+                <span>{t(choice.id as TranslationKey)}</span>
+                <strong>
+                  {money(
+                    interiorDoorPrice(
+                      { ...design.doors[0], ...choice.style },
+                      catalog,
+                    ),
+                    language,
+                  )}
+                  /{t("perPiece")}
+                </strong>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+      <section className="interior-product-section">
+        <div className="interior-section-title">
+          <h2>{t("laminate")}</h2>
+          <small>{label(floor.name, language)}</small>
+        </div>
+        <div className="interior-product-grid interior-floor-grid">
+          {catalog.laminates.map((f) => (
+            <button
+              key={f.id}
+              className={`interior-product-card ${f.id === design.laminateId ? "selected" : ""}`}
+              aria-pressed={f.id === design.laminateId}
+              onClick={() => edit({ ...design, laminateId: f.id })}
+            >
+              <span
+                className="interior-floor-thumb"
+                style={{
+                  backgroundColor: f.color,
+                  backgroundImage: `url(${assetUrl((f.previewTexture || f.texture)!)})`,
+                }}
+              />
+              <span>{label(f.name, language)}</span>
+              <strong>{money(f.pricePerM2, language)}/m²</strong>
+              <small>
+                {f.class}
+                {f.usageClass ? ` · ${f.usageClass}` : ""} · {f.thickness} mm
+                {f.groove ? " · 4V" : ""}
+              </small>
+            </button>
+          ))}
+        </div>
+      </section>
+      <details>
+        <summary>{t("finishesHardware")}</summary>
+        <Field label={t("model")}>
+          <select
+            value={style.modelId}
+            onChange={(e) => product({ modelId: e.target.value })}
+          >
+            {catalog.interiorDoors
+              .filter((m) => supportedPhotoDoor(m.style))
+              .map((m) => (
+                <option key={m.id} value={m.id}>
+                  {label(m.name, language)}
+                </option>
+              ))}
+          </select>
+        </Field>
+        <Swatches
+          title={t("color")}
+          items={catalog.productFinishes.filter((m) =>
+            [
+              "white",
+              "golden-oak",
+              "walnut",
+              "anthracite",
+              "soft-grey",
+              style.finishId,
+            ].includes(m.id),
+          )}
+          value={style.finishId}
+          onChange={(finishId) => product({ finishId })}
+        />
+        <Field label={t("finish")}>
+          <select
+            value={style.finishTier}
+            onChange={(e) => product({ finishTier: e.target.value })}
+          >
+            {catalog.interiorFinishes.map((f) => (
+              <option key={f.id} value={f.id}>
+                {label(f.name, language)}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label={t("handle")}>
+          <select
+            value={style.handleId}
+            onChange={(e) => product({ handleId: e.target.value })}
+          >
+            {catalog.interiorHandles.map((h) => (
+              <option key={h.id} value={h.id}>
+                {label(h.name, language)} · {money(h.price, language)}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Toggle
+          label={t("hiddenHinges")}
+          checked={style.hiddenHinges}
+          onChange={(hiddenHinges) => product({ hiddenHinges })}
+        />
+      </details>
+      <details>
+        <summary>{t("flooringOptions")}</summary>
+        <Field label={t("layingPattern")}>
+          <select
+            value={design.pattern}
+            onChange={(e) =>
+              edit({
+                ...design,
+                pattern: e.target.value as InteriorDesign["pattern"],
+              })
+            }
+          >
+            {(["straight", "diagonal", "herringbone"] as const).map((k) => (
+              <option key={k} value={k}>
+                {t(k === "straight" ? "straightPattern" : k)} ·{" "}
+                {catalog.interiorPricing!.waste[k] * 100}% {t("waste")}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Toggle
+          label={t("floorDirection")}
+          checked={design.direction}
+          onChange={(direction) => edit({ ...design, direction })}
+        />
+        <Toggle
+          label={t("underlay")}
+          checked={design.underlay}
+          onChange={(underlay) => edit({ ...design, underlay })}
+        />
+        <Field label={t("skirting")}>
+          <select
+            value={design.skirtingId}
+            onChange={(e) => {
+              const skirt = catalog.skirtings.find(
+                (s) => s.id === e.target.value,
+              )!;
+              edit({
+                ...design,
+                skirtingId: skirt.id,
+                skirtingHeight: skirt.heightRates.some(
+                  (r) => r.height === design.skirtingHeight,
+                )
+                  ? design.skirtingHeight
+                  : skirt.heightRates[0].height,
+              });
+            }}
+          >
+            {catalog.skirtings.map((s) => (
+              <option key={s.id} value={s.id}>
+                {label(s.name, language)}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label={t("heightCm")}>
+          <select
+            value={design.skirtingHeight}
+            onChange={(e) =>
+              edit({ ...design, skirtingHeight: Number(e.target.value) })
+            }
+          >
+            {catalog.skirtings
+              .find((s) => s.id === design.skirtingId)!
+              .heightRates.map((h) => (
+                <option key={h.height} value={h.height}>
+                  {h.height} cm
+                </option>
+              ))}
+          </select>
+        </Field>
+        <p className="helper">
+          {number(floor.plankLength, language)} ×{" "}
+          {number(floor.plankWidth, language)} cm ·{" "}
+          {number(floor.m2PerPack, language)} m²/{t("packs")}
+        </p>
+      </details>
+      <details>
+        <summary>{t("quoteMeasurements")}</summary>
+        <p className="helper">{t("fixedQuoteHint")}</p>
+        <div className="dimension-grid">
+          <NumberField
+            label={t("width")}
+            value={design.room.width}
+            min={120}
+            max={2000}
+            onChange={(width) =>
+              edit({ ...design, room: { ...design.room, width } })
+            }
+          />
+          <NumberField
+            label={t("length")}
+            value={design.room.depth}
+            min={120}
+            max={2000}
+            onChange={(depth) =>
+              edit({ ...design, room: { ...design.room, depth } })
+            }
+          />
+        </div>
+        <div className="interior-quote-doors">
+          {design.doors.map((p, i) => (
+            <fieldset key={p.id}>
+              <legend>
+                {t("door")} {i + 1}
+              </legend>
+              <div className="interior-quote-heading">
+                <Field label={t("doorRoomType")}>
+                  <select
+                    value={p.roomType}
+                    onChange={(e) => {
+                      const roomType = e.target
+                        .value as InteriorDoor["roomType"];
+                      doorEdit(p.id, { roomType, width: doorWidths[roomType] });
+                    }}
+                  >
+                    {(["living", "bedroom", "bathroom"] as const).map((r) => (
+                      <option key={r} value={r}>
+                        {t(r)}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+                <button
+                  className="icon-button"
+                  aria-label={`${t("removeDoor")} ${i + 1}`}
+                  disabled={design.doors.length === 1}
+                  onClick={() =>
+                    edit({
+                      ...design,
+                      doors: design.doors.filter((d) => d.id !== p.id),
+                    })
+                  }
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
+              <div className="dimension-grid">
+                <Field label={t("width")}>
+                  <select
+                    value={p.width}
+                    onChange={(e) =>
+                      doorEdit(p.id, {
+                        width: Number(e.target.value) as 70 | 80 | 90,
+                      })
+                    }
+                  >
+                    {[70, 80, 90].map((n) => (
+                      <option key={n} value={n}>
+                        {n} cm
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+                <NumberField
+                  label={t("leafHeight")}
+                  value={p.height}
+                  min={180}
+                  max={240}
+                  onChange={(height) =>
+                    doorEdit(p.id, {
+                      height,
+                      frameHeight: Math.max(p.frameHeight, height + 5),
+                    })
+                  }
+                />
+                <NumberField
+                  label={t("frameHeight")}
+                  value={p.frameHeight}
+                  min={p.height}
+                  max={250}
+                  onChange={(frameHeight) => doorEdit(p.id, { frameHeight })}
+                />
+                <NumberField
+                  label={t("frameDepth")}
+                  value={p.frameDepth}
+                  min={10}
+                  max={25}
+                  onChange={(frameDepth) => doorEdit(p.id, { frameDepth })}
+                />
+              </div>
+              <Field label={t("openingType")}>
+                <select
+                  value={p.opening}
+                  onChange={(e) =>
+                    doorEdit(p.id, {
+                      opening: e.target.value as "left" | "right",
+                    })
+                  }
+                >
+                  <option value="left">{t("openingLeft")}</option>
+                  <option value="right">{t("openingRight")}</option>
+                </select>
+              </Field>
+            </fieldset>
+          ))}
+        </div>
+        <button
+          className="button secondary full"
+          disabled={design.doors.length >= 20}
+          onClick={() =>
+            edit({ ...design, doors: [...design.doors, newQuoteDoor(style)] })
+          }
+        >
+          <Plus size={18} />
+          {t("addDoor")}
+        </button>
+      </details>
+    </>
+  );
   return (
-    <main className="page interior-page">
+    <main className="page interior-page interior-photo-page">
       <div className="section-heading">
         <div>
           <div className="eyebrow">{brand.companyName}</div>
           <h1>{t("interior")}</h1>
+          <p>{t("photoVisualizerSubtitle")}</p>
         </div>
         <span className="pill">
-          {number(price.area, language, 1)} m² · {price.packs} {t("packs")}
+          {number(price.area, language, 1)} m² · {design.doors.length}{" "}
+          {t("doorsCount")}
         </span>
       </div>
       <ErrorNotice message={error} onDismiss={() => setError(null)} />
       <div className="designer-grid">
         <section className="scene-panel">
-          <div className="scene-toolbar">
-            {(["perspective", "top", "walkthrough"] as const).map((k) => (
+          <div
+            className="interior-room-tabs"
+            role="group"
+            aria-label={t("roomPreset")}
+          >
+            {(["hallway", "living", "bedroom"] as const).map((k) => (
               <button
                 key={k}
-                className="button secondary"
-                onClick={() => setPreset(k)}
+                aria-pressed={design.preset === k}
+                className={design.preset === k ? "active" : ""}
+                onClick={() => edit(switchInteriorRoom(design, k))}
               >
                 {t(k)}
               </button>
             ))}
-            {preset === "walkthrough" && (
-              <>
-                <button
-                  className="button secondary"
-                  onClick={() => setMove((v) => v + 1)}
-                >
-                  {t("walkForward")}
-                </button>
-                <button
-                  className="button secondary"
-                  onClick={() => setMove((v) => v - 1)}
-                >
-                  {t("walkBack")}
-                </button>
-              </>
-            )}
           </div>
-          <div className="designer-canvas">
-            <Suspense fallback={<p>{t("sceneLoading")}</p>}>
-              <Scene
-                design={design}
-                catalog={catalog}
-                selected={selected}
-                opened={opened}
-                onDoor={toggleDoor}
-                preset={preset}
-                move={move}
-                capture={register}
-              />
-            </Suspense>
+          <Suspense fallback={<p>{t("sceneLoading")}</p>}>
+            <Scene
+              design={design}
+              catalog={catalog}
+              capture={register}
+              onReady={sceneReady}
+            />
+          </Suspense>
+          <div className="interior-scene-caption">
+            <span>{t("photoPanHint")}</span>
+            <small>{t("photoIllustrative")}</small>
           </div>
-          <p className="helper">{t("interiorHint")}</p>
         </section>
         <aside className="designer-controls">
           <button className="button secondary full" onClick={showResult}>
             {t(result ? "backToDesign" : "summary")}
+            <ChevronRight size={16} />
           </button>
           {result ? (
             <>
@@ -200,18 +584,6 @@ export default function InteriorDesigner() {
                   <strong>{money(l.amount, language)}</strong>
                 </div>
               ))}
-              {design.installation && (
-                <>
-                  <div className="product-line">
-                    <span>{t("floorInstallation")}</span>
-                    <strong>{money(price.floorInstallation, language)}</strong>
-                  </div>
-                  <div className="product-line">
-                    <span>{t("doorInstallation")}</span>
-                    <strong>{money(price.doorInstallation, language)}</strong>
-                  </div>
-                </>
-              )}
               {design.offer && (
                 <OfferFields
                   details={design.offer}
@@ -219,27 +591,10 @@ export default function InteriorDesigner() {
                 />
               )}
               <Toggle
-                label={t("installation")}
-                checked={design.installation}
-                onChange={(v) => edit({ ...design, installation: v })}
-              />
-              <Toggle
-                label={t("vat")}
-                checked={design.vat}
-                onChange={(v) => edit({ ...design, vat: v })}
-              />
-              <Toggle
                 label={t("exactPrice")}
                 checked={design.exact}
-                onChange={(v) => edit({ ...design, exact: v })}
+                onChange={(exact) => edit({ ...design, exact })}
               />
-              <button
-                className="button primary full"
-                disabled={busy}
-                onClick={pdf}
-              >
-                {t(busy ? "preparing" : "pdf")}
-              </button>
               <button
                 className="button secondary full"
                 onClick={() => {
@@ -261,341 +616,71 @@ export default function InteriorDesigner() {
                 text={t("message", { link: "" })}
                 url={url}
               />
-              <div className="two-buttons">
-                {(["whatsapp", "viber"] as const).map((s) => (
-                  <button
-                    className="button secondary"
-                    key={s}
-                    onClick={() =>
-                      window.open(
-                        messageUrl(s, brand, t("message", { link: url })),
-                        "_blank",
-                        "noopener,noreferrer",
-                      )
-                    }
-                  >
-                    {t(s)}
-                  </button>
-                ))}
-              </div>
-              <button
-                className="button primary full"
-                onClick={() =>
-                  window.open(
-                    messageUrl(
-                      "whatsapp",
-                      brand,
-                      `${t("bookingMessage")} ${Object.values(design.offer?.customer || {}).join(" · ")}\n${price.lines.map((l) => l.name).join("\n")}`,
-                    ),
-                    "_blank",
-                    "noopener,noreferrer",
-                  )
-                }
-              >
-                {t("bookMeasure")}
-              </button>
             </>
           ) : (
-            <>
-              <Field label={t("roomPreset")}>
-                <select
-                  value={design.preset}
-                  onChange={(e) => {
-                    set(
-                      newInterior(
-                        catalog,
-                        e.target.value as InteriorDesign["preset"],
-                      ),
-                    );
-                    select(null);
-                    setOpened([]);
-                  }}
-                >
-                  {(["hallway", "living", "bedroom"] as const).map((k) => (
-                    <option key={k} value={k}>
-                      {t(k)}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <div className="dimension-grid">
-                <NumberField
-                  label={t("width")}
-                  value={design.room.width}
-                  min={120}
-                  onChange={(v) => resize("width", v)}
-                />
-                <NumberField
-                  label={t("length")}
-                  value={design.room.depth}
-                  min={120}
-                  onChange={(v) => resize("depth", v)}
-                />
-                <NumberField
-                  label={t("height")}
-                  value={design.room.height}
-                  min={220}
-                  onChange={(v) => resize("height", v)}
-                />
-              </div>
-              <Field label={t("quickCombos")}>
-                <select
-                  value=""
-                  onChange={(e) => {
-                    const p = catalog.quickCombos.find(
-                      (p) => p.id === e.target.value,
-                    )!;
-                    edit({
-                      ...design,
-                      laminateId: p.laminateId,
-                      doors: design.doors.map((d) => ({
-                        ...d,
-                        finishId: p.doorFinishId,
-                        finishTier: p.finishTier,
-                      })),
-                    });
-                  }}
-                >
-                  <option value="" disabled>
-                    {t("quickCombos")}
-                  </option>
-                  {catalog.quickCombos.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {label(p.name, language)}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <Field label={t("laminate")}>
-                <select
-                  value={design.laminateId}
-                  onChange={(e) =>
-                    edit({ ...design, laminateId: e.target.value })
-                  }
-                >
-                  {catalog.laminates.map((f) => (
-                    <option key={f.id} value={f.id}>
-                      {label(f.name, language)} ·{" "}
-                      {money(f.pricePerM2, language)}/m²
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <p className="helper">
-                {floor.class} · {floor.thickness} mm ·{" "}
-                {number(floor.plankLength, language)} ×{" "}
-                {number(floor.plankWidth, language)} cm ·{" "}
-                {number(floor.m2PerPack, language)} m²/{t("packs")} · 4V{" "}
-                {floor.groove ? "✓" : "—"}
-              </p>
-              <Field label={t("layingPattern")}>
-                <select
-                  value={design.pattern}
-                  onChange={(e) =>
-                    edit({
-                      ...design,
-                      pattern: e.target.value as InteriorDesign["pattern"],
-                    })
-                  }
-                >
-                  {(["straight", "diagonal", "herringbone"] as const).map(
-                    (k) => (
-                      <option key={k} value={k}>
-                        {t(k === "straight" ? "straightPattern" : k)} ·{" "}
-                        {catalog.interiorPricing!.waste[k] * 100}% {t("waste")}
-                      </option>
-                    ),
-                  )}
-                </select>
-              </Field>
-              <Toggle
-                label={t("floorDirection")}
-                checked={design.direction}
-                onChange={(v) => edit({ ...design, direction: v })}
-              />
-              <Toggle
-                label={t("underlay")}
-                checked={design.underlay}
-                onChange={(v) => edit({ ...design, underlay: v })}
-              />
-              <Field label={t("skirting")}>
-                <select
-                  value={design.skirtingId}
-                  onChange={(e) =>
-                    edit({ ...design, skirtingId: e.target.value })
-                  }
-                >
-                  {catalog.skirtings.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {label(s.name, language)}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <Field label={t("heightCm")}>
-                <select
-                  value={design.skirtingHeight}
-                  onChange={(e) =>
-                    edit({ ...design, skirtingHeight: Number(e.target.value) })
-                  }
-                >
-                  {catalog.skirtings
-                    .find((s) => s.id === design.skirtingId)!
-                    .heightRates.map((h) => (
-                      <option key={h.height} value={h.height}>
-                        {h.height} cm
-                      </option>
-                    ))}
-                </select>
-              </Field>
-              <details open>
-                <summary>{t("door")}</summary>
-                <Field label={t("selection")}>
-                  <select
-                    value={active.id}
-                    onChange={(e) => select(e.target.value)}
-                  >
-                    {design.doors.map((p, i) => (
-                      <option key={p.id} value={p.id}>
-                        {t("door")} {i + 1}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-                <Field label={t("model")}>
-                  <select
-                    value={active.modelId}
-                    onChange={(e) => doorEdit({ modelId: e.target.value })}
-                  >
-                    {catalog.interiorDoors.map((m) => (
-                      <option key={m.id} value={m.id}>
-                        {label(m.name, language)}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-                <Field label={t("finish")}>
-                  <select
-                    value={active.finishTier}
-                    onChange={(e) => doorEdit({ finishTier: e.target.value })}
-                  >
-                    {catalog.interiorFinishes.map((m) => (
-                      <option key={m.id} value={m.id}>
-                        {label(m.name, language)}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-                <Field label={t("color")}>
-                  <select
-                    value={active.finishId}
-                    onChange={(e) => doorEdit({ finishId: e.target.value })}
-                  >
-                    {catalog.productFinishes.map((f) => (
-                      <option key={f.id} value={f.id}>
-                        {label(f.name, language)}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-                <Field label={t("handle")}>
-                  <select
-                    value={active.handleId}
-                    onChange={(e) => doorEdit({ handleId: e.target.value })}
-                  >
-                    {catalog.interiorHandles.map((h) => (
-                      <option key={h.id} value={h.id}>
-                        {label(h.name, language)}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-                <Field label={t("width")}>
-                  <select
-                    value={active.width}
-                    onChange={(e) =>
-                      doorEdit({
-                        width: Number(e.target.value) as 70 | 80 | 90,
-                      })
-                    }
-                  >
-                    {[70, 80, 90].map((n) => (
-                      <option key={n} value={n}>
-                        {n} cm
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-                <Field label={t("openingType")}>
-                  <select
-                    value={active.opening}
-                    onChange={(e) =>
-                      doorEdit({ opening: e.target.value as "left" | "right" })
-                    }
-                  >
-                    <option value="left">{t("openingLeft")}</option>
-                    <option value="right">{t("openingRight")}</option>
-                  </select>
-                </Field>
-                <Toggle
-                  label={t("hiddenHinges")}
-                  checked={active.hiddenHinges}
-                  onChange={(v) => doorEdit({ hiddenHinges: v })}
-                />
-                <button
-                  className="button secondary full"
-                  onClick={() => {
-                    select(active.id);
-                    setOpened((o) =>
-                      o.includes(active.id)
-                        ? o.filter((i) => i !== active.id)
-                        : [...o, active.id],
-                    );
-                  }}
-                >
-                  {t("openClose")}
-                </button>
-                <button
-                  className="button secondary full"
-                  onClick={() =>
-                    edit({
-                      ...design,
-                      doors: design.doors.map((p) => ({
-                        ...active,
-                        id: p.id,
-                        wall: p.wall,
-                        offset: p.offset,
-                      })),
-                    })
-                  }
-                >
-                  {t("applyAll")}
-                </button>
-              </details>
-              <Toggle
-                label={t("furniture")}
-                checked={design.furniture}
-                onChange={(v) => edit({ ...design, furniture: v })}
-              />
-              <Toggle
-                label={t("evening")}
-                checked={design.evening}
-                onChange={(v) => edit({ ...design, evening: v })}
-              />
-            </>
+            controls
           )}
-          <div className="price-sticky">
-            <span>{t("estimate")}</span>
-            <strong>
-              {design.exact
-                ? money(price.total, language)
-                : `${money(price.low, language)} – ${money(price.high, language)}`}
-            </strong>
-            <small>
-              {price.packs} {t("packs")} · {t("indicative")}
-            </small>
+          <div className="interior-price-options">
+            <Toggle
+              label={t("installation")}
+              checked={design.installation}
+              onChange={(installation) => edit({ ...design, installation })}
+            />
+            <Toggle
+              label={t("vat")}
+              checked={design.vat}
+              onChange={(vat) => edit({ ...design, vat })}
+            />
           </div>
+          <button
+            className="button secondary full"
+            disabled={busy || !ready}
+            onClick={pdf}
+          >
+            <Download size={18} />
+            {t(busy ? "preparing" : "pdf")}
+          </button>
+          {pdfDownload?.signature === exportSignature && ready && (
+            <a
+              className="button secondary full"
+              href={pdfDownload.url}
+              download={`${brand.slug}-interior-offer.pdf`}
+            >
+              {t("pdfReady")}
+            </a>
+          )}
         </aside>
+      </div>
+      <div className="interior-total-bar">
+        <div>
+          <small>{t("estimate")}</small>
+          <strong>
+            {design.exact
+              ? money(price.total, language)
+              : `${money(price.low, language)} – ${money(price.high, language)}`}
+          </strong>
+          <span>
+            {price.packs} {t("packs")} · {t("indicative")}
+          </span>
+        </div>
+        <div className="interior-total-details">
+          <span>
+            {t("materials")}: {money(price.subtotal, language)}
+          </span>
+          <span>
+            {t("installation")}: {money(price.installation, language)} ·{" "}
+            {t("vat")}: {money(price.vat, language)}
+          </span>
+        </div>
+        <button
+          className="button"
+          aria-label={t("pdf")}
+          disabled={busy || !ready}
+          onClick={pdf}
+        >
+          <Download size={18} />
+          <span>{t("pdf")}</span>
+        </button>
       </div>
     </main>
   );

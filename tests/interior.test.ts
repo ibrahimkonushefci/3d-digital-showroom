@@ -13,7 +13,7 @@ const c = CatalogSchema.parse(
 it("prices whole packs rather than unrounded floor area", () => {
   const d = newInterior(c),
     q = interiorPrice(d, c, "sq"),
-    f = c.laminates[0];
+    f = c.laminates.find((f) => f.id === d.laminateId)!;
   expect(q.area).toBeCloseTo(13.2);
   expect(q.withWaste).toBeCloseTo(14.52);
   expect(q.packs).toBe(Math.ceil(14.52 / f.m2PerPack));
@@ -48,13 +48,13 @@ it("keeps installation, transport and VAT distinct", () => {
     rates.transport,
   );
 });
-it("presets fit, detects overlapping doors and round-trips interior links", () => {
+it("presets validate, duplicate quote identifiers fail and interior links round-trip", () => {
   for (const preset of ["hallway", "living", "bedroom"] as const) {
     const d = newInterior(c, preset);
     expect(validInterior(d, c)).toBe(true);
     expect(decodeShare(encodeShare(d, brand, c.id, false)).design).toEqual(d);
   }
   const d = newInterior(c);
-  d.doors[1].offset = d.doors[0].offset;
+  d.doors[1].id = d.doors[0].id;
   expect(validInterior(d, c)).toBe(false);
 });

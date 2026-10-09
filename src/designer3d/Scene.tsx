@@ -9,16 +9,22 @@ import {
   type RegisterCapture,
 } from "../scene/Rendering";
 import { useQuality } from "../scene/quality";
-import { Suspense, useEffect, useRef, Component, type ReactNode } from "react";
+import {
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  Component,
+  type ReactNode,
+} from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   CameraControls,
-  ContactShadows,
   Environment,
   Lightformer,
   AdaptiveDpr,
 } from "@react-three/drei";
-import { Group, MathUtils } from "three";
+import { Group, MathUtils, Object3D, Vector3 } from "three";
 import type {
   Cabinet,
   Catalog,
@@ -39,22 +45,16 @@ import {
 import { Box } from "../scene/Primitives";
 import { useDesigner } from "./store";
 import { useT } from "../i18n";
-export type CameraView = {
-  position: [number, number, number];
-  target: [number, number, number];
-};
-export type CameraPreset = "perspective" | "front" | "top";
-function Handle({
-  kind,
-  color,
-  w,
-  h,
-}: {
-  kind: string;
-  color: string;
-  w: number;
-  h: number;
-}) {
+import {
+  cabinetBounds,
+  cameraBounds,
+  cabinetCamera,
+  boundsCorners,
+  CABINET_FOV,
+} from "./framing";
+import type { CameraView, CameraPreset } from "./framing";
+export type { CameraView, CameraPreset } from "./framing";
+function Handle({ kind, w, h }: { kind: string; w: number; h: number }) {
   if (kind === "none") return null;
   return (
     <>
@@ -66,8 +66,9 @@ function Handle({
           0.02,
         ]}
         position={[0, h / 2 - (kind === "profile" ? 0.014 : 0.06), 0.031]}
-        color={color}
-        metal={0.65}
+        color="#1a1c20"
+        metal={0.9}
+        roughness={0.28}
       />
       {kind === "bar" &&
         [-1, 1].map((n) => (
@@ -75,8 +76,9 @@ function Handle({
             key={n}
             size={[0.015, 0.015, 0.028]}
             position={[n * Math.min(0.1, w * 0.2), h / 2 - 0.06, 0.015]}
-            color={color}
-            metal={0.6}
+            color="#1a1c20"
+            metal={0.9}
+            roughness={0.28}
           />
         ))}
     </>
@@ -128,28 +130,33 @@ function DoorPanel({
               size={[0.035, h, 0.025]}
               position={[-w / 2 + 0.015, 0, 0]}
               material={front}
+              lacquer
             />
             <Box
               size={[0.035, h, 0.025]}
               position={[w / 2 - 0.015, 0, 0]}
               material={front}
+              lacquer
             />
             <Box
               size={[w, 0.035, 0.025]}
               position={[0, h / 2 - 0.015, 0]}
               material={front}
+              lacquer
             />
             <Box
               size={[w, 0.035, 0.025]}
               position={[0, -h / 2 + 0.015, 0]}
               material={front}
+              lacquer
             />
           </>
         ) : (
           <Box
             bevel={0.002}
-            size={[w - 0.005, h - 0.005, 0.02]}
+            size={[w - 0.006, h - 0.006, 0.02]}
             material={front}
+            lacquer
             selected={selected}
           />
         )}
@@ -159,25 +166,29 @@ function DoorPanel({
               size={[0.04, h - 0.06, 0.014]}
               position={[-w / 2 + 0.035, 0, 0.014]}
               material={front}
+              lacquer
             />
             <Box
               size={[0.04, h - 0.06, 0.014]}
               position={[w / 2 - 0.035, 0, 0.014]}
               material={front}
+              lacquer
             />
             <Box
               size={[w - 0.06, 0.04, 0.014]}
               position={[0, h / 2 - 0.035, 0.014]}
               material={front}
+              lacquer
             />
             <Box
               size={[w - 0.06, 0.04, 0.014]}
               position={[0, -h / 2 + 0.035, 0.014]}
               material={front}
+              lacquer
             />
           </>
         )}
-        <Handle kind={handle.id} color={handle.color} w={w} h={h} />
+        <Handle kind={handle.id} w={w} h={h} />
       </group>
     </group>
   );
@@ -213,8 +224,13 @@ function Drawer({
   });
   return (
     <group ref={group} position={[0, y, z]}>
-      <Box bevel={0.002} size={[w - 0.007, h - 0.006, 0.02]} material={front} />
-      <Handle kind={handle.id} color={handle.color} w={w} h={h} />
+      <Box
+        bevel={0.002}
+        size={[w - 0.006, h - 0.006, 0.02]}
+        material={front}
+        lacquer
+      />
+      <Handle kind={handle.id} w={w} h={h} />
       <Box
         size={[w - 0.05, 0.014, 0.45]}
         position={[0, -h / 2 + 0.02, -0.23]}
@@ -394,15 +410,16 @@ function CabinetMesh({
       )}
       <StorageDetails kind={m.type} w={w} h={h} d={d} open={open} />
       {m.type === "pantry" ? (
-        <group position={[0, h / 2, d / 2]}>
+        <group position={[0, h / 2, d / 2 + 0.012]}>
           <group ref={pantryFront}>
             <Box
               bevel={0.002}
-              size={[w - 0.007, h - 0.006, 0.02]}
+              size={[w - 0.006, h - 0.006, 0.02]}
               material={front}
+              lacquer
               selected={selected}
             />
-            <Handle kind={handle.id} color={handle.color} w={w} h={h} />
+            <Handle kind={handle.id} w={w} h={h} />
           </group>
         </group>
       ) : m.type === "drawers" ? (
@@ -412,7 +429,7 @@ function CabinetMesh({
             w={w}
             h={c.level === "wardrobe" ? 0.22 : h / 3}
             y={c.level === "wardrobe" ? 0.22 * (i + 0.5) : (h * (i + 0.5)) / 3}
-            z={d / 2}
+            z={d / 2 + 0.012}
             front={front}
             handle={handle}
             open={open}
@@ -420,7 +437,7 @@ function CabinetMesh({
           />
         ))
       ) : m.type === "sliding" ? (
-        <group position={[0, h / 2, d / 2]}>
+        <group position={[0, h / 2, d / 2 + 0.012]}>
           {[-1, 1].map((side) => (
             <Box
               key={side}
@@ -444,6 +461,7 @@ function CabinetMesh({
               size={[w / 2 + 0.016, h - 0.008, 0.025]}
               position={[-w / 4, 0, 0.016]}
               material={front}
+              lacquer
             />
           </group>
           <Box
@@ -451,13 +469,14 @@ function CabinetMesh({
             size={[w / 2 + 0.016, h - 0.008, 0.025]}
             position={[w / 4, 0, -0.02]}
             material={front}
+            lacquer
           />
         </group>
       ) : m.type !== "open" &&
         m.type !== "oven" &&
         m.type !== "fridge" &&
         !(design.layout === "walkin" && m.type === "hanging") ? (
-        <group position={[0, h / 2, d / 2]}>
+        <group position={[0, h / 2, d / 2 + 0.012]}>
           {w > 0.55 ? (
             [-1, 1].map((side) => (
               <group key={side} position={[(side * w) / 4, 0, 0]}>
@@ -490,7 +509,7 @@ function CabinetMesh({
         </group>
       ) : m.type === "oven" ? (
         <>
-          <group position={[0, h * 0.78, d / 2]}>
+          <group position={[0, h * 0.78, d / 2 + 0.012]}>
             <DoorPanel
               profile={design.style.profile}
               w={w}
@@ -503,13 +522,14 @@ function CabinetMesh({
               glass={false}
             />
           </group>
-          <group position={[0, 0.94, d / 2]}>
+          <group position={[0, 0.94, d / 2 + 0.012]}>
             <Oven width={w} />
           </group>
           <Box
             size={[w - 0.007, 0.62, 0.022]}
-            position={[0, 0.32, d / 2]}
+            position={[0, 0.32, d / 2 + 0.012]}
             material={front}
+            lacquer
           />
         </>
       ) : null}
@@ -531,7 +551,7 @@ function CabinetMesh({
             />
           ))}
           {design.layout !== "walkin" && (
-            <group position={[0, (h + 0.68) / 2, d / 2]}>
+            <group position={[0, (h + 0.68) / 2, d / 2 + 0.012]}>
               <DoorPanel
                 profile={design.style.profile}
                 w={w}
@@ -582,7 +602,7 @@ function CabinetMesh({
         />
       )}
       {m.type === "fridge" && (
-        <group position={[0, 0, d / 2]}>
+        <group position={[0, 0, d / 2 + 0.012]}>
           <Fridge width={w} height={h} />
         </group>
       )}
@@ -596,9 +616,9 @@ function CabinetMesh({
       )}
       {c.level !== "wall" && c.level !== "wardrobe" && (
         <Box
-          size={[w, 0.099, d - 0.08]}
-          position={[0, -0.05, -0.02]}
-          color={design.style.plinth === "matching" ? front.color : "#252c2a"}
+          size={[w, 0.1, d - 0.05]}
+          position={[0, -0.05, 0]}
+          color={design.style.plinth === "matching" ? front.color : "#202227"}
         />
       )}
       {c.level === "wall" && design.style.led && (
@@ -687,6 +707,7 @@ function WallMesh({
             size={[end - start, b - a, 0.08]}
             position={[middle - length / 2, (a + b) / 2, 0]}
             color={color}
+            castShadow={false}
           />
         ));
       })}
@@ -745,17 +766,17 @@ function RoomDetails({ design }: { design: DesignDocument }) {
       <Box
         size={[w, 0.08, 0.018]}
         position={[w / 2, 0.04, 0.01]}
-        color="#faf8ef"
+        color="#23272f"
       />
       <Box
         size={[0.018, 0.08, d]}
         position={[0.01, 0.04, d / 2]}
-        color="#faf8ef"
+        color="#23272f"
       />
       <Box
         size={[w, 0.025, 0.22]}
         position={[w / 2, h, 0.07]}
-        color="#faf8ef"
+        color="#23272f"
       />
       {[0.22, 0.5, 0.78].map((x) => (
         <group key={x} position={[w * x, h - 0.03, 0.32]}>
@@ -822,47 +843,28 @@ function Controls({
   const ref = useRef<CameraControls>(null);
   const dragging = useDesigner((s) => s.dragging);
   const { size } = useThree();
+  const bounds = useMemo(
+    () => cameraBounds(design, preset),
+    [
+      preset,
+      design.cabinets,
+      design.room.width,
+      design.room.depth,
+      design.room.height,
+    ],
+  );
+  const boundsKey = [...bounds.min.toArray(), ...bounds.max.toArray()].join(
+    ",",
+  );
   useEffect(() => {
-    if (cameraView && preset === "perspective") {
-      const fit = Math.max(1, 1.3 / (size.width / size.height));
-      const p = cameraView.position,
-        t = cameraView.target;
-      ref.current?.setLookAt(
-        t[0] + (p[0] - t[0]) * fit,
-        t[1] + (p[1] - t[1]) * fit,
-        t[2] + (p[2] - t[2]) * fit,
-        ...t,
-        true,
-      );
-      return;
-    }
-    const span = Math.max(design.room.width, design.room.depth) / 100;
-    const targetY = design.kind === "wardrobe" ? 1.15 : 0.9;
-    const pos =
-      preset === "front"
-        ? [0, 1.4, span * 1.35]
-        : preset === "top"
-          ? [0, span * 1.5, 0.01]
-          : [span * 0.7, 2.55, span * 0.85];
-    const fit = Math.max(1, 1.3 / (size.width / size.height));
-    ref.current?.setLookAt(
-      pos[0] * fit,
-      targetY + (pos[1] - targetY) * fit,
-      pos[2] * fit,
-      0,
-      targetY,
-      0,
-      true,
+    const view = cabinetCamera(
+      bounds,
+      preset,
+      size.width / size.height,
+      cameraView,
     );
-  }, [
-    preset,
-    cameraView,
-    design.room.width,
-    design.room.depth,
-    design.kind,
-    size.width,
-    size.height,
-  ]);
+    ref.current?.setLookAt(...view.position, ...view.target, true);
+  }, [preset, cameraView, boundsKey, size.width, size.height]);
   return (
     <CameraControls
       ref={ref}
@@ -875,6 +877,56 @@ function Controls({
       dollyToCursor
       smoothTime={0.2}
     />
+  );
+}
+function StudioSun({
+  design,
+  shadows,
+}: {
+  design: DesignDocument;
+  shadows: boolean;
+}) {
+  const lighting = useMemo(() => {
+    const bounds = cabinetBounds(design);
+    const center = bounds.getCenter(new Vector3()).setY(0);
+    const target = new Object3D();
+    target.position.copy(center);
+    const offset = new Vector3(-2.8, 4.2, 3.2);
+    const direction = offset.clone().normalize();
+    const right = new Vector3()
+      .crossVectors(new Vector3(0, 1, 0), direction)
+      .normalize();
+    const up = new Vector3().crossVectors(direction, right);
+    const corners = boundsCorners(bounds).map((p) => p.sub(center));
+    return {
+      target,
+      position: center.clone().add(offset).toArray(),
+      left: Math.min(-3.5, ...corners.map((p) => p.dot(right) - 0.15)),
+      right: Math.max(3.5, ...corners.map((p) => p.dot(right) + 0.15)),
+      top: Math.max(3.5, ...corners.map((p) => p.dot(up) + 0.15)),
+      bottom: Math.min(-0.5, ...corners.map((p) => p.dot(up) - 0.15)),
+    };
+  }, [design.cabinets, design.room.width, design.room.depth]);
+  return (
+    <>
+      <primitive object={lighting.target} />
+      <directionalLight
+        target={lighting.target}
+        position={lighting.position}
+        intensity={2.2}
+        castShadow={shadows}
+        shadow-mapSize={2048}
+        shadow-camera-left={lighting.left}
+        shadow-camera-right={lighting.right}
+        shadow-camera-top={lighting.top}
+        shadow-camera-bottom={lighting.bottom}
+        shadow-camera-near={0.1}
+        shadow-camera-far={30}
+        shadow-bias={-0.0004}
+        shadow-normalBias={0.001}
+        shadow-radius={1}
+      />
+    </>
   );
 }
 class SceneBoundary extends Component<
@@ -922,36 +974,25 @@ export default function Scene({
         dpr={performance ? 1 : [1, 1.75]}
         shadows={!performance}
         gl={showroomGL}
-        camera={{ position: [5, 4, 6], fov: 40 }}
+        camera={{ position: [2.4, 1.55, 4.2], fov: CABINET_FOV }}
         fallback={<div className="scene-fallback">{t("webglError")}</div>}
         onPointerMissed={() =>
           interactive && useDesigner.getState().select(null)
         }
       >
-        <color attach="background" args={["#ece9df"]} />
-        <ambientLight intensity={0.16} />
-        <hemisphereLight args={["#fff8e8", "#a1aca7", 0.3]} />
-        <directionalLight
-          position={[1, 5, 3]}
-          intensity={2.5}
-          castShadow={!performance}
-          shadow-mapSize={performance ? 512 : 1024}
-          shadow-camera-left={-6}
-          shadow-camera-right={6}
-          shadow-camera-top={6}
-          shadow-camera-bottom={-6}
-          shadow-bias={-0.0003}
-          shadow-normalBias={0.018}
-        />
+        <color attach="background" args={["#1e222b"]} />
+        <ambientLight intensity={0.1} />
+        <hemisphereLight args={["#eef3ff", "#78818a", 0.2]} />
+        <StudioSun design={design} shadows={!performance} />
         <Environment resolution={128} frames={1}>
           <Lightformer
-            intensity={3}
-            position={[0, 5, 0]}
+            intensity={0.55}
+            position={[-3, 4, 2]}
             rotation={[Math.PI / 2, 0, 0]}
-            scale={[8, 8, 1]}
+            scale={[3, 3, 1]}
           />
           <Lightformer
-            intensity={2}
+            intensity={0.3}
             position={[4, 2, 1]}
             rotation={[0, Math.PI / 2, 0]}
             scale={[3, 5, 1]}
@@ -1004,7 +1045,7 @@ export default function Scene({
                     }
               }
               side={side}
-              color={design.environment?.wallColor || "#e4e0d4"}
+              color={design.environment?.wallColor || "#d4d8df"}
             />
           ))}
           {design.cabinets.map((c) => (
@@ -1022,9 +1063,13 @@ export default function Scene({
           <RunLights design={design} />
         </group>
         <RefreshShadows revision={[design, opened]} />
-        <Controls preset={preset} design={design} cameraView={cameraView} />
+        <Controls
+          preset={preset}
+          design={committedDesign}
+          cameraView={cameraView}
+        />
         <AdaptiveDpr pixelated />
-        <Rendering capture={capture} />
+        <Rendering capture={capture} crispShadows />
       </Canvas>
     </SceneBoundary>
   );

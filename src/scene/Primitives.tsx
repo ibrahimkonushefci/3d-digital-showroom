@@ -35,6 +35,8 @@ type BoxProps = {
   emissive?: string;
   bevel?: number;
   roughness?: number;
+  lacquer?: boolean;
+  castShadow?: boolean;
 };
 export function Box({
   size,
@@ -48,6 +50,8 @@ export function Box({
   emissive,
   bevel = 0,
   roughness,
+  lacquer = false,
+  castShadow = true,
 }: BoxProps) {
   const resource = useMemo(
     () => (bevel > 0 ? rounded(size, bevel) : null),
@@ -71,7 +75,7 @@ export function Box({
     };
   }, [resource]);
   return (
-    <mesh position={position} castShadow receiveShadow>
+    <mesh position={position} castShadow={castShadow} receiveShadow>
       {geometry ? (
         <primitive object={geometry} attach="geometry" />
       ) : (
@@ -80,19 +84,32 @@ export function Box({
       {material && (material.texture || material.normalMap) ? (
         <Suspense
           fallback={
-            <meshStandardMaterial
+            <meshPhysicalMaterial
               color={material.color}
-              roughness={material.roughness}
+              roughness={
+                lacquer && !material.texture ? 0.4 : material.roughness
+              }
+              metalness={lacquer ? 0.02 : metal}
+              clearcoat={lacquer && !material.texture ? 0.35 : 0}
+              clearcoatRoughness={0.35}
+              envMapIntensity={lacquer ? 1 : 0.6}
             />
           }
         >
-          <SurfaceMaterial material={material} world={world} />
+          <SurfaceMaterial
+            material={material}
+            world={world}
+            lacquer={lacquer}
+          />
         </Suspense>
       ) : (
-        <meshStandardMaterial
+        <meshPhysicalMaterial
           color={material?.color || color}
-          roughness={roughness ?? material?.roughness ?? 0.65}
-          metalness={metal}
+          roughness={lacquer ? 0.4 : (roughness ?? material?.roughness ?? 0.65)}
+          metalness={lacquer ? 0.02 : metal}
+          clearcoat={lacquer ? 0.35 : 0}
+          clearcoatRoughness={0.35}
+          envMapIntensity={lacquer ? 1 : 0.6}
           emissive={emissive}
           emissiveIntensity={emissive ? 1.5 : 0}
           transparent={transparent}

@@ -57,6 +57,7 @@ export const MaterialSchema = z.object({
   color,
   supplier: z.object({ manufacturer:z.string(), code:z.string(), name:z.string(), source:z.string().url(), appearance:z.literal("illustrative") }).optional(),
   texture: asset.optional(),
+  previewTexture: asset.optional(),
   normalMap: asset.optional(),
   roughnessMap: asset.optional(),
   roughness: z.number().min(0).max(1),
@@ -208,6 +209,7 @@ export const CatalogSchema = z
           waterproof: z.boolean(),
           m2PerPack: z.number().positive(),
           pricePerM2: z.number().nonnegative(),
+          usageClass: z.union([z.literal(32), z.literal(33)]).optional(),
         }),
       )
       .default([]),
@@ -227,6 +229,10 @@ export const CatalogSchema = z
           ]),
           price: z.number().nonnegative(),
           hiddenHingePrice: z.number().nonnegative(),
+          previewImage: asset.optional(),
+          leafHeight: z.number().positive().optional(),
+          frameHeight: z.number().positive().optional(),
+          frameDepthRange: z.tuple([z.number().positive(), z.number().positive()]).optional(),
         }),
       )
       .default([]),

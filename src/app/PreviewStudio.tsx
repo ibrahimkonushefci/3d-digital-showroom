@@ -133,11 +133,6 @@ export default function PreviewStudio() {
           <InteriorScene
             design={interior}
             catalog={catalog}
-            selected={null}
-            opened={[]}
-            onDoor={() => {}}
-            preset="perspective"
-            move={0}
             capture={register}
           />
         )}

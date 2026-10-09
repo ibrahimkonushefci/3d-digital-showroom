@@ -5,6 +5,7 @@ import {
   ACESFilmicToneMapping,
   SRGBColorSpace,
   PCFSoftShadowMap,
+  PCFShadowMap,
   Vector2,
 } from "three";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -44,7 +45,13 @@ export function RefreshShadows({
     />
   );
 }
-export function Rendering({ capture }: { capture?: RegisterCapture }) {
+export function Rendering({
+  capture,
+  crispShadows = false,
+}: {
+  capture?: RegisterCapture;
+  crispShadows?: boolean;
+}) {
   const { gl, scene, camera, size, invalidate, setDpr } = useThree();
   const quality = useQuality();
   const pixelRatio = useThree((s) => s.viewport.dpr);
@@ -77,14 +84,14 @@ export function Rendering({ capture }: { capture?: RegisterCapture }) {
     [pipeline],
   );
   useEffect(() => {
-    gl.shadowMap.type = PCFSoftShadowMap;
+    gl.shadowMap.type = crispShadows ? PCFShadowMap : PCFSoftShadowMap;
     setDpr(
       quality === "lightweight"
         ? 1
         : Math.min(window.devicePixelRatio, quality === "high" ? 1.5 : 1.35),
     );
     invalidate();
-  }, [quality, gl, setDpr, invalidate]);
+  }, [quality, gl, setDpr, invalidate, crispShadows]);
   useEffect(() => {
     pipeline?.composer.setPixelRatio(pixelRatio);
     pipeline?.composer.setSize(size.width, size.height);

@@ -1429,7 +1429,7 @@
         "countertop": "travertine",
         "handle": "none",
         "backsplash": "none",
-        "plinth": "matching",
+        "plinth": "black",
         "led": true,
         "profile": "flat"
       },
@@ -1467,7 +1467,7 @@
         "countertop": "oak",
         "handle": "profile",
         "backsplash": "none",
-        "plinth": "matching",
+        "plinth": "black",
         "led": true,
         "profile": "flat"
       },
@@ -1505,7 +1505,7 @@
         "countertop": "marble",
         "handle": "bar",
         "backsplash": "none",
-        "plinth": "matching",
+        "plinth": "black",
         "led": true,
         "profile": "panel"
       },

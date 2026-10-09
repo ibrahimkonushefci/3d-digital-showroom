@@ -37,7 +37,7 @@ pnpm dev
 | Editing             | Straight, L, U, parallel and island kitchens; straight, corner and walk-in wardrobes; module selection, sizing, swapping, adding, deleting and wall positioning; collision/opening/aisle checks; rejected edits preserve the design; animations, undo/redo and performance mode.                     |
 | Offers              | Catalog pricing, materials, accessories, installation and VAT; configurable range/single estimate; branded Unicode PDFs with screenshot/parts/dimensions; compressed validated share links; messaging preparation.                                                                                   |
 | Exterior & photo    | Two-storey procedural house, physical 3D doors/windows, finish/profile/option pricing, camera and evening settings; photo placement from the same 3D factory, frame/glass layers, light matching, selectable polygons, corner loupe and direct before/after handle; three marked placeholder scenes. |
-| Interior & delivery | Hallway/living/bedroom, eight laminate decors, plank patterns, animated interior doors, skirting/pack/waste pricing, quick combos, walkthrough, PDF/share/measurement drafts; offline assets, tests, responsive screens and static deployment.                                                       |
+| Interior & delivery | Calibrated hallway/living/bedroom photographs, shared hinged-door products, sharp laminate grain and plank patterns, editable quote dimensions/quantities, bounded pan/zoom, skirting/pack/waste pricing, PDF/share; cached local assets and responsive touch controls.                                                       |
 
 `default` / Forma Studio enables all four home entry points. `druri-design` enables furniture; `drita-home` enables doors/windows and interior doors/flooring. Company contacts remain blank until configured, or use the demo phone environment fallback. Demo badges identify fictional companies and sample prices.
 
@@ -144,7 +144,7 @@ Settings → **Modaliteti i prezantimit** hides the offline badge, fictional-dem
 
 `frontTiers` defines Iverall, foil MDF, matt lacquer MDF, glossy acrylic and Fenix. Each tier references decor IDs in `fronts`; its multiplier controls module pricing. `countertopTiers` defines laminate 38 mm, compact 12 mm, quartz and granite with decor IDs and a per-metre rate. Decor records retain their own material maps and old IDs. `appliancePackages` supplies the optional package line. `pricing` supplies offer prefix, validity, translated payment terms, LED rates, installation, VAT and range. No supplier authenticity is implied by demo prices or textures.
 
-Offer details contain optional customer name/phone/city, salesperson, device-generated brand/year sequence, date, validity, payment terms and notes. They are saved with the design and printed in the PDF, but omitted from share links. Device storage clearing resets the offer counter; this is a local sequence, not a company-wide invoice system. Furniture design version 1 is migrated to version 2 on read. Exterior and interior designs have their own version-1 schemas inside the existing version-1 compressed share envelope.
+Offer details contain optional customer name/phone/city, salesperson, device-generated brand/year sequence, date, validity, payment terms and notes. They are saved with the design and printed in the PDF, but omitted from share links. Device storage clearing resets the offer counter; this is a local sequence, not a company-wide invoice system. Furniture design version 1 is migrated to version 2 on read. Exterior designs use their version-1 schema; interior designs migrate to version 2 inside the existing version-1 compressed share envelope.
 
 ## Add a laminate decor
 
@@ -181,3 +181,12 @@ Create `public/shared/scenes/<id>.json`:
 ```
 
 Coordinates are normalized to the photo: top-left → top-right → bottom-right → bottom-left. Add window placements the same way. Dimensions are centimetres and drive pricing; photographs do not measure them automatically. Add the ID and SQ/EN/DE name to `public/shared/scenes/index.json`. Choose the scene in **Fotoja ime → Skenat demo** and load it with one tap. Check corners, brightness match, glass reflection and before/after. Photos stay outside share URLs; a recipient can reopen the product configuration and use their own local photo. Rebuild to precache added scenes.
+
+
+### Interior photographic scenes
+
+`src/interior/renderer.ts` owns the WebGL photo compositor. The exterior preview is unchanged. `public/shared/interior/scenes.json` defines normalized leaf/frame/opening quadrilaterals, floor projections, furniture exclusions, skirting and hardware anchors. Photographs are fixed illustrative environments: switching rooms changes the preview only. Quote measurements determine purchased quantities and pricing.
+
+New interior documents use version 2 with one `doorStyle` and individual door dimensions/opening directions. New quotes start at 220 × 600 cm and four doors (90/80/80/70 cm, 200 cm leaves, 205 cm frames, 15 cm adjustable depth). Version-1 saves and links migrate in memory; original 210 cm specifications and mixed products retain their quote until an explicit global selection. Unsupported legacy models show an unavailable preview and block image capture.
+
+The two asset preparation scripts accept external original-image paths; Sharp is needed only to regenerate assets. `previewTexture` is optional catalog metadata and does not replace materials in other modules. Photo provenance is in `public/shared/ASSETS.md`. Sprint screenshots, checks and limitations are documented in `verification/interior-photo/README.md`; sample offers are in `output/pdf/`.

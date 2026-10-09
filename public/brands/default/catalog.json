@@ -2579,7 +2579,8 @@
       "perMeter": 0,
       "normalMap": "shared/textures/veneer-normal.webp",
       "roughnessMap": "shared/textures/veneer-roughness.webp",
-      "texture": "shared/textures/veneer-color.webp"
+      "texture": "shared/textures/veneer-color.webp",
+      "previewTexture": "shared/interior/door-golden-oak.webp"
     },
     {
       "id": "walnut",
@@ -2594,7 +2595,22 @@
       "perMeter": 0,
       "normalMap": "shared/textures/walnut-normal.webp",
       "roughnessMap": "shared/textures/walnut-roughness.webp",
-      "texture": "shared/textures/walnut-color.webp"
+      "texture": "shared/textures/walnut-color.webp",
+      "previewTexture": "shared/interior/door-walnut.webp"
+    },
+    {
+      "id": "soft-grey",
+      "name": {
+        "sq": "Gri e butë",
+        "en": "Soft gray",
+        "de": "Sanftes Grau"
+      },
+      "color": "#b3b5b2",
+      "roughness": 0.55,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp"
     }
   ],
   "laminates": [
@@ -2619,7 +2635,9 @@
       "groove": true,
       "waterproof": false,
       "m2PerPack": 2.22,
-      "pricePerM2": 14
+      "pricePerM2": 14,
+      "usageClass": 32,
+      "previewTexture": "shared/interior/floor-natural.webp"
     },
     {
       "id": "grey",
@@ -2642,7 +2660,9 @@
       "groove": true,
       "waterproof": false,
       "m2PerPack": 2.22,
-      "pricePerM2": 17
+      "pricePerM2": 17,
+      "usageClass": 32,
+      "previewTexture": "shared/interior/floor-grey.webp"
     },
     {
       "id": "white-oak",
@@ -2665,7 +2685,9 @@
       "groove": true,
       "waterproof": false,
       "m2PerPack": 2.22,
-      "pricePerM2": 16
+      "pricePerM2": 16,
+      "usageClass": 32,
+      "previewTexture": "shared/interior/floor-white-oak.webp"
     },
     {
       "id": "dark-oak",
@@ -2688,7 +2710,9 @@
       "groove": true,
       "waterproof": true,
       "m2PerPack": 2.22,
-      "pricePerM2": 22
+      "pricePerM2": 22,
+      "usageClass": 33,
+      "previewTexture": "shared/interior/floor-dark-oak.webp"
     },
     {
       "id": "walnut-floor",
@@ -2711,7 +2735,9 @@
       "groove": true,
       "waterproof": true,
       "m2PerPack": 2.22,
-      "pricePerM2": 21
+      "pricePerM2": 21,
+      "usageClass": 32,
+      "previewTexture": "shared/interior/floor-walnut-floor.webp"
     },
     {
       "id": "rustic",
@@ -2734,7 +2760,9 @@
       "groove": true,
       "waterproof": true,
       "m2PerPack": 2.22,
-      "pricePerM2": 23
+      "pricePerM2": 23,
+      "usageClass": 33,
+      "previewTexture": "shared/interior/floor-rustic.webp"
     },
     {
       "id": "concrete-look",
@@ -2757,7 +2785,8 @@
       "groove": true,
       "waterproof": true,
       "m2PerPack": 2.22,
-      "pricePerM2": 24
+      "pricePerM2": 24,
+      "usageClass": 32
     },
     {
       "id": "herringbone-oak",
@@ -2780,7 +2809,9 @@
       "groove": true,
       "waterproof": true,
       "m2PerPack": 1.92,
-      "pricePerM2": 29
+      "pricePerM2": 29,
+      "usageClass": 33,
+      "previewTexture": "shared/interior/floor-herringbone-oak.webp"
     }
   ],
   "interiorDoors": [
@@ -2793,7 +2824,13 @@
       },
       "style": "flat",
       "price": 220,
-      "hiddenHingePrice": 45
+      "hiddenHingePrice": 45,
+      "leafHeight": 200,
+      "frameHeight": 205,
+      "frameDepthRange": [
+        10,
+        25
+      ]
     },
     {
       "id": "grooves",
@@ -2804,18 +2841,30 @@
       },
       "style": "grooves",
       "price": 245,
-      "hiddenHingePrice": 45
+      "hiddenHingePrice": 45,
+      "leafHeight": 200,
+      "frameHeight": 205,
+      "frameDepthRange": [
+        10,
+        25
+      ]
     },
     {
       "id": "glass",
       "name": {
-        "sq": "Me xham satinato",
-        "en": "Satin glass",
-        "de": "Satiniertes Glas"
+        "sq": "Moderne · 4 shirita xhami satinato",
+        "en": "Modern · 4 satin-glass strips",
+        "de": "Modern · 4 Satinglasstreifen"
       },
       "style": "glass",
       "price": 285,
-      "hiddenHingePrice": 45
+      "hiddenHingePrice": 45,
+      "leafHeight": 200,
+      "frameHeight": 205,
+      "frameDepthRange": [
+        10,
+        25
+      ]
     },
     {
       "id": "classic",
@@ -2826,7 +2875,13 @@
       },
       "style": "classic",
       "price": 275,
-      "hiddenHingePrice": 45
+      "hiddenHingePrice": 45,
+      "leafHeight": 200,
+      "frameHeight": 205,
+      "frameDepthRange": [
+        10,
+        25
+      ]
     },
     {
       "id": "invisible",
@@ -2837,7 +2892,13 @@
       },
       "style": "invisible",
       "price": 420,
-      "hiddenHingePrice": 45
+      "hiddenHingePrice": 45,
+      "leafHeight": 200,
+      "frameHeight": 205,
+      "frameDepthRange": [
+        10,
+        25
+      ]
     },
     {
       "id": "barn",
@@ -2848,7 +2909,13 @@
       },
       "style": "barn",
       "price": 340,
-      "hiddenHingePrice": 45
+      "hiddenHingePrice": 45,
+      "leafHeight": 200,
+      "frameHeight": 205,
+      "frameDepthRange": [
+        10,
+        25
+      ]
     },
     {
       "id": "pocket",
@@ -2859,7 +2926,13 @@
       },
       "style": "pocket",
       "price": 440,
-      "hiddenHingePrice": 45
+      "hiddenHingePrice": 45,
+      "leafHeight": 200,
+      "frameHeight": 205,
+      "frameDepthRange": [
+        10,
+        25
+      ]
     }
   ],
   "interiorFinishes": [
@@ -3071,7 +3144,7 @@
         "countertop": "travertine",
         "handle": "none",
         "backsplash": "none",
-        "plinth": "matching",
+        "plinth": "black",
         "led": true,
         "profile": "flat"
       },
@@ -3109,7 +3182,7 @@
         "countertop": "oak",
         "handle": "profile",
         "backsplash": "none",
-        "plinth": "matching",
+        "plinth": "black",
         "led": true,
         "profile": "flat"
       },
@@ -3147,7 +3220,7 @@
         "countertop": "marble",
         "handle": "bar",
         "backsplash": "none",
-        "plinth": "matching",
+        "plinth": "black",
         "led": true,
         "profile": "panel"
       },

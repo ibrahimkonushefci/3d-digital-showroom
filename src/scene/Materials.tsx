@@ -9,10 +9,12 @@ export function SurfaceMaterial({
   material,
   repeat = [1, 1],
   world = false,
+  lacquer = false,
 }: {
   material: Material;
   repeat?: [number, number];
   world?: boolean;
+  lacquer?: boolean;
 }) {
   const { assetUrl } = useBrand(),
     performance = useQuality() === "lightweight";
@@ -36,18 +38,21 @@ export function SurfaceMaterial({
   useEffect(() => () => maps.forEach((m) => m.dispose()), [maps]);
   const offset = material.texture ? 1 : 0;
   return (
-    <meshStandardMaterial
+    <meshPhysicalMaterial
       map={material.texture ? maps[0] : undefined}
       color={material.texture ? "#ffffff" : material.color}
       normalMap={!performance && material.normalMap ? maps[offset] : undefined}
       normalScale={new Vector2(0.25, 0.25)}
       roughnessMap={
-        !performance && material.roughnessMap
+        !(lacquer && !material.texture) && !performance && material.roughnessMap
           ? maps[offset + (material.normalMap ? 1 : 0)]
           : undefined
       }
-      roughness={material.roughness}
-      envMapIntensity={0.6}
+      roughness={lacquer && !material.texture ? 0.4 : material.roughness}
+      metalness={lacquer ? 0.02 : 0}
+      clearcoat={lacquer && !material.texture ? 0.35 : 0}
+      clearcoatRoughness={0.35}
+      envMapIntensity={lacquer ? 1 : 0.6}
       onBeforeCompile={
         world
           ? (shader) => {
