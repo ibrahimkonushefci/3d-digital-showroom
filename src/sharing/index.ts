@@ -1,0 +1,82 @@
+import { FacadeSchema, type FacadeDesign } from "../doorPreview/types";
+import { InteriorSchema, type InteriorDesign } from "../interior/types";
+import LZString from "lz-string";
+import { z } from "zod";
+import {
+  BrandSchema,
+  DesignSchema,
+  type BrandConfig,
+  type DesignDocument,
+} from "../catalog/types";
+export const SnapshotSchema = BrandSchema.omit({ logo: true }).extend({
+  catalogId: z.string().regex(/^[a-z0-9-]+$/),
+});
+const ShareSchema = z.object({
+  version: z.literal(1),
+  catalogId: z.string().regex(/^[a-z0-9-]+$/),
+  design: z.union([DesignSchema, FacadeSchema, InteriorSchema]),
+  brand: SnapshotSchema.optional(),
+});
+export function decodeShare(encoded: string) {
+  if (encoded.length > 30000) throw Error("invalidLink");
+  const raw = LZString.decompressFromEncodedURIComponent(encoded);
+  if (!raw || raw.length > 150000) throw Error("invalidLink");
+  return ShareSchema.parse(JSON.parse(raw));
+}
+export function encodeShare(
+  design: DesignDocument | FacadeDesign | InteriorDesign,
+  brand: BrandConfig,
+  catalogId: string,
+  local: boolean,
+) {
+  const { logo: _, ...basic } = brand;
+  return LZString.compressToEncodedURIComponent(
+    JSON.stringify({
+      version: 1,
+      catalogId,
+      design: { ...design, offer: undefined },
+      ...(local ? { brand: { ...basic, catalogId } } : {}),
+    }),
+  );
+}
+export function shareUrl(
+  design: DesignDocument | FacadeDesign | InteriorDesign,
+  brand: BrandConfig,
+  catalogId: string,
+  local: boolean,
+) {
+  const url = new URL(
+    window.location.origin +
+      (design.kind === "facade" ? "/preview" : "/designer/" + design.kind),
+  );
+  url.searchParams.set("brand", local ? catalogId : brand.slug);
+  url.hash = "design=" + encodeShare(design, brand, catalogId, local);
+  return url.href;
+}
+export function messageUrl(
+  service: "whatsapp" | "viber",
+  brand: BrandConfig,
+  message: string,
+) {
+  const raw = brand.contact[service] || brand.contact.phone;
+  const number = raw.replace(/[^0-9+]/g, "");
+  if (!number.replace(/\D/g, "")) return anyoneUrl(message);
+  return service === "whatsapp"
+    ? `https://wa.me/${number.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`
+    : `viber://chat?number=${encodeURIComponent(number)}&text=${encodeURIComponent(message)}`;
+}
+
+export function anyoneUrl(text: string) {
+  return `https://wa.me/?text=${encodeURIComponent(text)}`;
+}
+export async function sendAnyone(title: string, text: string, url: string) {
+  if (navigator.share) {
+    try {
+      await navigator.share({ title, text, url });
+      return;
+    } catch (e) {
+      if (e instanceof DOMException && e.name === "AbortError") return;
+    }
+  }
+  window.open(anyoneUrl(`${text} ${url}`), "_blank", "noopener,noreferrer");
+}

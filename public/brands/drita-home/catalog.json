@@ -1,0 +1,1817 @@
+{
+  "version": 1,
+  "id": "drita-home",
+  "doors": [
+    {
+      "id": "door-0",
+      "name": {
+        "sq": "E lëmuar",
+        "en": "Flat",
+        "de": "Glatt"
+      },
+      "style": 0,
+      "price": 620,
+      "colors": [
+        "#343d40",
+        "#f1efe8",
+        "#ae7d48",
+        "#202522"
+      ],
+      "recolorable": true,
+      "referenceArea": 2.1,
+      "options": [
+        {
+          "id": "side-left",
+          "name": {
+            "sq": "Anësore xhami majtas",
+            "en": "Left sidelight",
+            "de": "Seitenglas links"
+          },
+          "price": 180
+        },
+        {
+          "id": "side-right",
+          "name": {
+            "sq": "Anësore xhami djathtas",
+            "en": "Right sidelight",
+            "de": "Seitenglas rechts"
+          },
+          "price": 180
+        },
+        {
+          "id": "transom",
+          "name": {
+            "sq": "Dritare sipër",
+            "en": "Transom",
+            "de": "Oberlicht"
+          },
+          "price": 160
+        },
+        {
+          "id": "satin",
+          "name": {
+            "sq": "Xham satinato",
+            "en": "Satin glass",
+            "de": "Satiniertes Glas"
+          },
+          "price": 65
+        },
+        {
+          "id": "fingerprint",
+          "name": {
+            "sq": "Bravë me gjurmë gishti",
+            "en": "Fingerprint lock",
+            "de": "Fingerabdruckschloss"
+          },
+          "price": 260
+        },
+        {
+          "id": "handle-120",
+          "name": {
+            "sq": "Dorezë 120 cm",
+            "en": "120 cm handle",
+            "de": "120 cm Griff"
+          },
+          "price": 45
+        },
+        {
+          "id": "handle-160",
+          "name": {
+            "sq": "Dorezë 160 cm",
+            "en": "160 cm handle",
+            "de": "160 cm Griff"
+          },
+          "price": 85
+        },
+        {
+          "id": "black-handle",
+          "name": {
+            "sq": "Dorezë e zezë",
+            "en": "Black handle",
+            "de": "Schwarzer Griff"
+          },
+          "price": 20
+        },
+        {
+          "id": "led-handle",
+          "name": {
+            "sq": "Dorezë LED",
+            "en": "LED handle",
+            "de": "LED-Griff"
+          },
+          "price": 95
+        }
+      ]
+    },
+    {
+      "id": "door-1",
+      "name": {
+        "sq": "Me vija",
+        "en": "Grooves",
+        "de": "Mit Rillen"
+      },
+      "style": 1,
+      "price": 690,
+      "colors": [
+        "#343d40",
+        "#f1efe8",
+        "#ae7d48",
+        "#202522"
+      ],
+      "recolorable": true,
+      "referenceArea": 2.1,
+      "options": [
+        {
+          "id": "side-left",
+          "name": {
+            "sq": "Anësore xhami majtas",
+            "en": "Left sidelight",
+            "de": "Seitenglas links"
+          },
+          "price": 180
+        },
+        {
+          "id": "side-right",
+          "name": {
+            "sq": "Anësore xhami djathtas",
+            "en": "Right sidelight",
+            "de": "Seitenglas rechts"
+          },
+          "price": 180
+        },
+        {
+          "id": "transom",
+          "name": {
+            "sq": "Dritare sipër",
+            "en": "Transom",
+            "de": "Oberlicht"
+          },
+          "price": 160
+        },
+        {
+          "id": "satin",
+          "name": {
+            "sq": "Xham satinato",
+            "en": "Satin glass",
+            "de": "Satiniertes Glas"
+          },
+          "price": 65
+        },
+        {
+          "id": "fingerprint",
+          "name": {
+            "sq": "Bravë me gjurmë gishti",
+            "en": "Fingerprint lock",
+            "de": "Fingerabdruckschloss"
+          },
+          "price": 260
+        },
+        {
+          "id": "handle-120",
+          "name": {
+            "sq": "Dorezë 120 cm",
+            "en": "120 cm handle",
+            "de": "120 cm Griff"
+          },
+          "price": 45
+        },
+        {
+          "id": "handle-160",
+          "name": {
+            "sq": "Dorezë 160 cm",
+            "en": "160 cm handle",
+            "de": "160 cm Griff"
+          },
+          "price": 85
+        },
+        {
+          "id": "black-handle",
+          "name": {
+            "sq": "Dorezë e zezë",
+            "en": "Black handle",
+            "de": "Schwarzer Griff"
+          },
+          "price": 20
+        },
+        {
+          "id": "led-handle",
+          "name": {
+            "sq": "Dorezë LED",
+            "en": "LED handle",
+            "de": "LED-Griff"
+          },
+          "price": 95
+        }
+      ]
+    },
+    {
+      "id": "door-2",
+      "name": {
+        "sq": "Shirit vertikal xhami",
+        "en": "Vertical glass strip",
+        "de": "Vertikaler Glasstreifen"
+      },
+      "style": 2,
+      "price": 780,
+      "colors": [
+        "#343d40",
+        "#f1efe8",
+        "#ae7d48",
+        "#202522"
+      ],
+      "recolorable": true,
+      "referenceArea": 2.1,
+      "options": [
+        {
+          "id": "side-left",
+          "name": {
+            "sq": "Anësore xhami majtas",
+            "en": "Left sidelight",
+            "de": "Seitenglas links"
+          },
+          "price": 180
+        },
+        {
+          "id": "side-right",
+          "name": {
+            "sq": "Anësore xhami djathtas",
+            "en": "Right sidelight",
+            "de": "Seitenglas rechts"
+          },
+          "price": 180
+        },
+        {
+          "id": "transom",
+          "name": {
+            "sq": "Dritare sipër",
+            "en": "Transom",
+            "de": "Oberlicht"
+          },
+          "price": 160
+        },
+        {
+          "id": "satin",
+          "name": {
+            "sq": "Xham satinato",
+            "en": "Satin glass",
+            "de": "Satiniertes Glas"
+          },
+          "price": 65
+        },
+        {
+          "id": "fingerprint",
+          "name": {
+            "sq": "Bravë me gjurmë gishti",
+            "en": "Fingerprint lock",
+            "de": "Fingerabdruckschloss"
+          },
+          "price": 260
+        },
+        {
+          "id": "handle-120",
+          "name": {
+            "sq": "Dorezë 120 cm",
+            "en": "120 cm handle",
+            "de": "120 cm Griff"
+          },
+          "price": 45
+        },
+        {
+          "id": "handle-160",
+          "name": {
+            "sq": "Dorezë 160 cm",
+            "en": "160 cm handle",
+            "de": "160 cm Griff"
+          },
+          "price": 85
+        },
+        {
+          "id": "black-handle",
+          "name": {
+            "sq": "Dorezë e zezë",
+            "en": "Black handle",
+            "de": "Schwarzer Griff"
+          },
+          "price": 20
+        },
+        {
+          "id": "led-handle",
+          "name": {
+            "sq": "Dorezë LED",
+            "en": "LED handle",
+            "de": "LED-Griff"
+          },
+          "price": 95
+        }
+      ]
+    },
+    {
+      "id": "door-3",
+      "name": {
+        "sq": "Panele klasike",
+        "en": "Classic panels",
+        "de": "Klassische Paneele"
+      },
+      "style": 3,
+      "price": 730,
+      "colors": [
+        "#343d40",
+        "#f1efe8",
+        "#ae7d48",
+        "#202522"
+      ],
+      "recolorable": true,
+      "referenceArea": 2.1,
+      "options": [
+        {
+          "id": "side-left",
+          "name": {
+            "sq": "Anësore xhami majtas",
+            "en": "Left sidelight",
+            "de": "Seitenglas links"
+          },
+          "price": 180
+        },
+        {
+          "id": "side-right",
+          "name": {
+            "sq": "Anësore xhami djathtas",
+            "en": "Right sidelight",
+            "de": "Seitenglas rechts"
+          },
+          "price": 180
+        },
+        {
+          "id": "transom",
+          "name": {
+            "sq": "Dritare sipër",
+            "en": "Transom",
+            "de": "Oberlicht"
+          },
+          "price": 160
+        },
+        {
+          "id": "satin",
+          "name": {
+            "sq": "Xham satinato",
+            "en": "Satin glass",
+            "de": "Satiniertes Glas"
+          },
+          "price": 65
+        },
+        {
+          "id": "fingerprint",
+          "name": {
+            "sq": "Bravë me gjurmë gishti",
+            "en": "Fingerprint lock",
+            "de": "Fingerabdruckschloss"
+          },
+          "price": 260
+        },
+        {
+          "id": "handle-120",
+          "name": {
+            "sq": "Dorezë 120 cm",
+            "en": "120 cm handle",
+            "de": "120 cm Griff"
+          },
+          "price": 45
+        },
+        {
+          "id": "handle-160",
+          "name": {
+            "sq": "Dorezë 160 cm",
+            "en": "160 cm handle",
+            "de": "160 cm Griff"
+          },
+          "price": 85
+        },
+        {
+          "id": "black-handle",
+          "name": {
+            "sq": "Dorezë e zezë",
+            "en": "Black handle",
+            "de": "Schwarzer Griff"
+          },
+          "price": 20
+        },
+        {
+          "id": "led-handle",
+          "name": {
+            "sq": "Dorezë LED",
+            "en": "LED handle",
+            "de": "LED-Griff"
+          },
+          "price": 95
+        }
+      ]
+    },
+    {
+      "id": "door-4",
+      "name": {
+        "sq": "Me xham anash",
+        "en": "Side glass",
+        "de": "Seitenglas"
+      },
+      "style": 4,
+      "price": 850,
+      "colors": [
+        "#343d40",
+        "#f1efe8",
+        "#ae7d48",
+        "#202522"
+      ],
+      "recolorable": true,
+      "referenceArea": 2.1,
+      "options": [
+        {
+          "id": "side-left",
+          "name": {
+            "sq": "Anësore xhami majtas",
+            "en": "Left sidelight",
+            "de": "Seitenglas links"
+          },
+          "price": 180
+        },
+        {
+          "id": "side-right",
+          "name": {
+            "sq": "Anësore xhami djathtas",
+            "en": "Right sidelight",
+            "de": "Seitenglas rechts"
+          },
+          "price": 180
+        },
+        {
+          "id": "transom",
+          "name": {
+            "sq": "Dritare sipër",
+            "en": "Transom",
+            "de": "Oberlicht"
+          },
+          "price": 160
+        },
+        {
+          "id": "satin",
+          "name": {
+            "sq": "Xham satinato",
+            "en": "Satin glass",
+            "de": "Satiniertes Glas"
+          },
+          "price": 65
+        },
+        {
+          "id": "fingerprint",
+          "name": {
+            "sq": "Bravë me gjurmë gishti",
+            "en": "Fingerprint lock",
+            "de": "Fingerabdruckschloss"
+          },
+          "price": 260
+        },
+        {
+          "id": "handle-120",
+          "name": {
+            "sq": "Dorezë 120 cm",
+            "en": "120 cm handle",
+            "de": "120 cm Griff"
+          },
+          "price": 45
+        },
+        {
+          "id": "handle-160",
+          "name": {
+            "sq": "Dorezë 160 cm",
+            "en": "160 cm handle",
+            "de": "160 cm Griff"
+          },
+          "price": 85
+        },
+        {
+          "id": "black-handle",
+          "name": {
+            "sq": "Dorezë e zezë",
+            "en": "Black handle",
+            "de": "Schwarzer Griff"
+          },
+          "price": 20
+        },
+        {
+          "id": "led-handle",
+          "name": {
+            "sq": "Dorezë LED",
+            "en": "LED handle",
+            "de": "LED-Griff"
+          },
+          "price": 95
+        }
+      ]
+    },
+    {
+      "id": "door-5",
+      "name": {
+        "sq": "Furnir druri",
+        "en": "Wood veneer",
+        "de": "Holzfurnier"
+      },
+      "style": 5,
+      "price": 920,
+      "colors": [
+        "#343d40",
+        "#f1efe8",
+        "#ae7d48",
+        "#202522"
+      ],
+      "recolorable": true,
+      "referenceArea": 2.1,
+      "options": [
+        {
+          "id": "side-left",
+          "name": {
+            "sq": "Anësore xhami majtas",
+            "en": "Left sidelight",
+            "de": "Seitenglas links"
+          },
+          "price": 180
+        },
+        {
+          "id": "side-right",
+          "name": {
+            "sq": "Anësore xhami djathtas",
+            "en": "Right sidelight",
+            "de": "Seitenglas rechts"
+          },
+          "price": 180
+        },
+        {
+          "id": "transom",
+          "name": {
+            "sq": "Dritare sipër",
+            "en": "Transom",
+            "de": "Oberlicht"
+          },
+          "price": 160
+        },
+        {
+          "id": "satin",
+          "name": {
+            "sq": "Xham satinato",
+            "en": "Satin glass",
+            "de": "Satiniertes Glas"
+          },
+          "price": 65
+        },
+        {
+          "id": "fingerprint",
+          "name": {
+            "sq": "Bravë me gjurmë gishti",
+            "en": "Fingerprint lock",
+            "de": "Fingerabdruckschloss"
+          },
+          "price": 260
+        },
+        {
+          "id": "handle-120",
+          "name": {
+            "sq": "Dorezë 120 cm",
+            "en": "120 cm handle",
+            "de": "120 cm Griff"
+          },
+          "price": 45
+        },
+        {
+          "id": "handle-160",
+          "name": {
+            "sq": "Dorezë 160 cm",
+            "en": "160 cm handle",
+            "de": "160 cm Griff"
+          },
+          "price": 85
+        },
+        {
+          "id": "black-handle",
+          "name": {
+            "sq": "Dorezë e zezë",
+            "en": "Black handle",
+            "de": "Schwarzer Griff"
+          },
+          "price": 20
+        },
+        {
+          "id": "led-handle",
+          "name": {
+            "sq": "Dorezë LED",
+            "en": "LED handle",
+            "de": "LED-Griff"
+          },
+          "price": 95
+        }
+      ]
+    },
+    {
+      "id": "door-6",
+      "name": {
+        "sq": "Me xham",
+        "en": "Glazed",
+        "de": "Verglast"
+      },
+      "style": 6,
+      "price": 990,
+      "colors": [
+        "#343d40",
+        "#f1efe8",
+        "#ae7d48",
+        "#202522"
+      ],
+      "recolorable": true,
+      "referenceArea": 2.1,
+      "options": [
+        {
+          "id": "side-left",
+          "name": {
+            "sq": "Anësore xhami majtas",
+            "en": "Left sidelight",
+            "de": "Seitenglas links"
+          },
+          "price": 180
+        },
+        {
+          "id": "side-right",
+          "name": {
+            "sq": "Anësore xhami djathtas",
+            "en": "Right sidelight",
+            "de": "Seitenglas rechts"
+          },
+          "price": 180
+        },
+        {
+          "id": "transom",
+          "name": {
+            "sq": "Dritare sipër",
+            "en": "Transom",
+            "de": "Oberlicht"
+          },
+          "price": 160
+        },
+        {
+          "id": "satin",
+          "name": {
+            "sq": "Xham satinato",
+            "en": "Satin glass",
+            "de": "Satiniertes Glas"
+          },
+          "price": 65
+        },
+        {
+          "id": "fingerprint",
+          "name": {
+            "sq": "Bravë me gjurmë gishti",
+            "en": "Fingerprint lock",
+            "de": "Fingerabdruckschloss"
+          },
+          "price": 260
+        },
+        {
+          "id": "handle-120",
+          "name": {
+            "sq": "Dorezë 120 cm",
+            "en": "120 cm handle",
+            "de": "120 cm Griff"
+          },
+          "price": 45
+        },
+        {
+          "id": "handle-160",
+          "name": {
+            "sq": "Dorezë 160 cm",
+            "en": "160 cm handle",
+            "de": "160 cm Griff"
+          },
+          "price": 85
+        },
+        {
+          "id": "black-handle",
+          "name": {
+            "sq": "Dorezë e zezë",
+            "en": "Black handle",
+            "de": "Schwarzer Griff"
+          },
+          "price": 20
+        },
+        {
+          "id": "led-handle",
+          "name": {
+            "sq": "Dorezë LED",
+            "en": "LED handle",
+            "de": "LED-Griff"
+          },
+          "price": 95
+        }
+      ]
+    }
+  ],
+  "windows": [
+    {
+      "id": "fixed",
+      "name": {
+        "en": "Fixed glass",
+        "sq": "Xham fiks",
+        "de": "Festverglasung"
+      },
+      "style": "fixed",
+      "perSquareMeter": 155,
+      "minimumPrice": 120,
+      "colors": [
+        "#343d40",
+        "#f1efe8",
+        "#ae7d48",
+        "#202522"
+      ],
+      "options": [
+        {
+          "id": "triple-glass",
+          "name": {
+            "sq": "Xham trefish",
+            "en": "Triple glazing",
+            "de": "Dreifachverglasung"
+          },
+          "price": 65
+        },
+        {
+          "id": "sliding",
+          "name": {
+            "sq": "Rrëshqitëse",
+            "en": "Sliding",
+            "de": "Schiebefenster"
+          },
+          "price": 140
+        },
+        {
+          "id": "shutter-manual",
+          "name": {
+            "sq": "Roletë manuale",
+            "en": "Manual roller shutter",
+            "de": "Manueller Rollladen"
+          },
+          "price": 110
+        },
+        {
+          "id": "shutter-electric",
+          "name": {
+            "sq": "Roletë elektrike",
+            "en": "Electric roller shutter",
+            "de": "Elektrischer Rollladen"
+          },
+          "price": 230
+        },
+        {
+          "id": "insect-screen",
+          "name": {
+            "sq": "Mrezë kundër insekteve",
+            "en": "Insect screen",
+            "de": "Insektenschutz"
+          },
+          "price": 45
+        },
+        {
+          "id": "sill",
+          "name": {
+            "sq": "Pervaz",
+            "en": "Sill",
+            "de": "Fensterbank"
+          },
+          "price": 35
+        }
+      ]
+    },
+    {
+      "id": "single",
+      "name": {
+        "en": "Single opening",
+        "sq": "Një hapje",
+        "de": "Einflügelig"
+      },
+      "style": "single",
+      "perSquareMeter": 205,
+      "minimumPrice": 170,
+      "colors": [
+        "#343d40",
+        "#f1efe8",
+        "#ae7d48",
+        "#202522"
+      ],
+      "options": [
+        {
+          "id": "triple-glass",
+          "name": {
+            "sq": "Xham trefish",
+            "en": "Triple glazing",
+            "de": "Dreifachverglasung"
+          },
+          "price": 65
+        },
+        {
+          "id": "sliding",
+          "name": {
+            "sq": "Rrëshqitëse",
+            "en": "Sliding",
+            "de": "Schiebefenster"
+          },
+          "price": 140
+        },
+        {
+          "id": "shutter-manual",
+          "name": {
+            "sq": "Roletë manuale",
+            "en": "Manual roller shutter",
+            "de": "Manueller Rollladen"
+          },
+          "price": 110
+        },
+        {
+          "id": "shutter-electric",
+          "name": {
+            "sq": "Roletë elektrike",
+            "en": "Electric roller shutter",
+            "de": "Elektrischer Rollladen"
+          },
+          "price": 230
+        },
+        {
+          "id": "insect-screen",
+          "name": {
+            "sq": "Mrezë kundër insekteve",
+            "en": "Insect screen",
+            "de": "Insektenschutz"
+          },
+          "price": 45
+        },
+        {
+          "id": "sill",
+          "name": {
+            "sq": "Pervaz",
+            "en": "Sill",
+            "de": "Fensterbank"
+          },
+          "price": 35
+        }
+      ]
+    },
+    {
+      "id": "double",
+      "name": {
+        "en": "Double opening",
+        "sq": "Dy hapje",
+        "de": "Zweiflügelig"
+      },
+      "style": "double",
+      "perSquareMeter": 230,
+      "minimumPrice": 250,
+      "colors": [
+        "#343d40",
+        "#f1efe8",
+        "#ae7d48",
+        "#202522"
+      ],
+      "options": [
+        {
+          "id": "triple-glass",
+          "name": {
+            "sq": "Xham trefish",
+            "en": "Triple glazing",
+            "de": "Dreifachverglasung"
+          },
+          "price": 65
+        },
+        {
+          "id": "sliding",
+          "name": {
+            "sq": "Rrëshqitëse",
+            "en": "Sliding",
+            "de": "Schiebefenster"
+          },
+          "price": 140
+        },
+        {
+          "id": "shutter-manual",
+          "name": {
+            "sq": "Roletë manuale",
+            "en": "Manual roller shutter",
+            "de": "Manueller Rollladen"
+          },
+          "price": 110
+        },
+        {
+          "id": "shutter-electric",
+          "name": {
+            "sq": "Roletë elektrike",
+            "en": "Electric roller shutter",
+            "de": "Elektrischer Rollladen"
+          },
+          "price": 230
+        },
+        {
+          "id": "insect-screen",
+          "name": {
+            "sq": "Mrezë kundër insekteve",
+            "en": "Insect screen",
+            "de": "Insektenschutz"
+          },
+          "price": 45
+        },
+        {
+          "id": "sill",
+          "name": {
+            "sq": "Pervaz",
+            "en": "Sill",
+            "de": "Fensterbank"
+          },
+          "price": 35
+        }
+      ]
+    },
+    {
+      "id": "triple",
+      "name": {
+        "en": "Triple opening",
+        "sq": "Tri hapje",
+        "de": "Dreiflügelig"
+      },
+      "style": "triple",
+      "perSquareMeter": 245,
+      "minimumPrice": 320,
+      "colors": [
+        "#343d40",
+        "#f1efe8",
+        "#ae7d48",
+        "#202522"
+      ],
+      "options": [
+        {
+          "id": "triple-glass",
+          "name": {
+            "sq": "Xham trefish",
+            "en": "Triple glazing",
+            "de": "Dreifachverglasung"
+          },
+          "price": 65
+        },
+        {
+          "id": "sliding",
+          "name": {
+            "sq": "Rrëshqitëse",
+            "en": "Sliding",
+            "de": "Schiebefenster"
+          },
+          "price": 140
+        },
+        {
+          "id": "shutter-manual",
+          "name": {
+            "sq": "Roletë manuale",
+            "en": "Manual roller shutter",
+            "de": "Manueller Rollladen"
+          },
+          "price": 110
+        },
+        {
+          "id": "shutter-electric",
+          "name": {
+            "sq": "Roletë elektrike",
+            "en": "Electric roller shutter",
+            "de": "Elektrischer Rollladen"
+          },
+          "price": 230
+        },
+        {
+          "id": "insect-screen",
+          "name": {
+            "sq": "Mrezë kundër insekteve",
+            "en": "Insect screen",
+            "de": "Insektenschutz"
+          },
+          "price": 45
+        },
+        {
+          "id": "sill",
+          "name": {
+            "sq": "Pervaz",
+            "en": "Sill",
+            "de": "Fensterbank"
+          },
+          "price": 35
+        }
+      ]
+    }
+  ],
+  "pricing": {
+    "installationPercent": 8,
+    "vatPercent": 18,
+    "rangePercent": 7,
+    "ledPerMeter": 22,
+    "plinthPerMeter": 12,
+    "minimumAisle": 90,
+    "panelMultiplier": 1.12,
+    "offerPrefix": "DH",
+    "validityDays": 15,
+    "paymentTerms": {
+      "sq": "Avans 40%",
+      "en": "40% deposit",
+      "de": "40% Anzahlung"
+    },
+    "windowInstallationPerPiece": 35,
+    "doorInstallationPerPiece": 70,
+    "removalPerPiece": 18,
+    "internalLedPerMeter": 35
+  },
+  "doorTypes": [
+    {
+      "id": "pvc",
+      "name": {
+        "sq": "PVC",
+        "en": "PVC",
+        "de": "PVC"
+      },
+      "multiplier": 1
+    },
+    {
+      "id": "aluminium",
+      "name": {
+        "sq": "Alumin me panel",
+        "en": "Aluminium panel",
+        "de": "Aluminium mit Füllung"
+      },
+      "multiplier": 1.4
+    },
+    {
+      "id": "security",
+      "name": {
+        "sq": "Derë e blinduar",
+        "en": "Security door",
+        "de": "Sicherheitstür"
+      },
+      "multiplier": 1.55
+    },
+    {
+      "id": "wood",
+      "name": {
+        "sq": "Dru masiv",
+        "en": "Solid wood",
+        "de": "Massivholz"
+      },
+      "multiplier": 1.8
+    }
+  ],
+  "windowMaterials": [
+    {
+      "id": "pvc",
+      "name": {
+        "sq": "PVC",
+        "en": "PVC",
+        "de": "PVC"
+      },
+      "multiplier": 1
+    },
+    {
+      "id": "aluminium",
+      "name": {
+        "sq": "Alumin",
+        "en": "Aluminium",
+        "de": "Aluminium"
+      },
+      "multiplier": 1.55
+    }
+  ],
+  "windowProfiles": [
+    {
+      "id": "standard",
+      "name": {
+        "sq": "Standard",
+        "en": "Standard",
+        "de": "Standard"
+      },
+      "multiplier": 1
+    },
+    {
+      "id": "veka",
+      "name": {
+        "sq": "VEKA",
+        "en": "VEKA",
+        "de": "VEKA"
+      },
+      "multiplier": 1.12
+    },
+    {
+      "id": "rehau",
+      "name": {
+        "sq": "REHAU",
+        "en": "REHAU",
+        "de": "REHAU"
+      },
+      "multiplier": 1.15
+    },
+    {
+      "id": "alu",
+      "name": {
+        "sq": "Alumil",
+        "en": "Alumil",
+        "de": "Alumil"
+      },
+      "multiplier": 1.2
+    }
+  ],
+  "productFinishes": [
+    {
+      "id": "anthracite",
+      "name": {
+        "sq": "RAL 7016 antracit",
+        "en": "RAL 7016 anthracite",
+        "de": "RAL 7016 Anthrazit"
+      },
+      "color": "#383e42",
+      "roughness": 0.55,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp"
+    },
+    {
+      "id": "white",
+      "name": {
+        "sq": "Bardhë",
+        "en": "White",
+        "de": "Weiß"
+      },
+      "color": "#f2f1ec",
+      "roughness": 0.55,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp"
+    },
+    {
+      "id": "black",
+      "name": {
+        "sq": "Zezë mat",
+        "en": "Matt black",
+        "de": "Mattschwarz"
+      },
+      "color": "#202322",
+      "roughness": 0.55,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp"
+    },
+    {
+      "id": "silver",
+      "name": {
+        "sq": "RAL 9006",
+        "en": "RAL 9006",
+        "de": "RAL 9006"
+      },
+      "color": "#a5a8a6",
+      "roughness": 0.55,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp"
+    },
+    {
+      "id": "golden-oak",
+      "name": {
+        "sq": "Lis i artë",
+        "en": "Golden oak",
+        "de": "Goldene Eiche"
+      },
+      "color": "#c4a477",
+      "roughness": 0.55,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/veneer-normal.webp",
+      "roughnessMap": "shared/textures/veneer-roughness.webp",
+      "texture": "shared/textures/veneer-color.webp"
+    },
+    {
+      "id": "walnut",
+      "name": {
+        "sq": "Arrë",
+        "en": "Walnut",
+        "de": "Walnuss"
+      },
+      "color": "#886345",
+      "roughness": 0.55,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/walnut-normal.webp",
+      "roughnessMap": "shared/textures/walnut-roughness.webp",
+      "texture": "shared/textures/walnut-color.webp"
+    }
+  ],
+  "laminates": [
+    {
+      "id": "natural",
+      "name": {
+        "sq": "Lis natyral",
+        "en": "Natural oak",
+        "de": "Natureiche"
+      },
+      "color": "#cbb184",
+      "texture": "shared/textures/floor-natural.webp",
+      "normalMap": "shared/textures/veneer-normal.webp",
+      "roughnessMap": "shared/textures/veneer-roughness.webp",
+      "roughness": 0.75,
+      "multiplier": 1,
+      "perMeter": 0,
+      "class": "AC4",
+      "thickness": 8,
+      "plankLength": 138,
+      "plankWidth": 19.3,
+      "groove": true,
+      "waterproof": false,
+      "m2PerPack": 2.22,
+      "pricePerM2": 14
+    },
+    {
+      "id": "grey",
+      "name": {
+        "sq": "Lis gri",
+        "en": "Grey oak",
+        "de": "Graue Eiche"
+      },
+      "color": "#a7a8a0",
+      "texture": "shared/textures/floor-grey.webp",
+      "normalMap": "shared/textures/veneer-normal.webp",
+      "roughnessMap": "shared/textures/veneer-roughness.webp",
+      "roughness": 0.75,
+      "multiplier": 1,
+      "perMeter": 0,
+      "class": "AC4",
+      "thickness": 10,
+      "plankLength": 138,
+      "plankWidth": 19.3,
+      "groove": true,
+      "waterproof": false,
+      "m2PerPack": 2.22,
+      "pricePerM2": 17
+    },
+    {
+      "id": "white-oak",
+      "name": {
+        "sq": "Lis i bardhë",
+        "en": "White oak",
+        "de": "Weiße Eiche"
+      },
+      "color": "#e1d9c6",
+      "texture": "shared/textures/floor-white-oak.webp",
+      "normalMap": "shared/textures/veneer-normal.webp",
+      "roughnessMap": "shared/textures/veneer-roughness.webp",
+      "roughness": 0.75,
+      "multiplier": 1,
+      "perMeter": 0,
+      "class": "AC4",
+      "thickness": 8,
+      "plankLength": 138,
+      "plankWidth": 19.3,
+      "groove": true,
+      "waterproof": false,
+      "m2PerPack": 2.22,
+      "pricePerM2": 16
+    },
+    {
+      "id": "dark-oak",
+      "name": {
+        "sq": "Lis i errët",
+        "en": "Dark oak",
+        "de": "Dunkle Eiche"
+      },
+      "color": "#76624b",
+      "texture": "shared/textures/floor-dark-oak.webp",
+      "normalMap": "shared/textures/veneer-normal.webp",
+      "roughnessMap": "shared/textures/veneer-roughness.webp",
+      "roughness": 0.75,
+      "multiplier": 1,
+      "perMeter": 0,
+      "class": "AC5",
+      "thickness": 12,
+      "plankLength": 138,
+      "plankWidth": 19.3,
+      "groove": true,
+      "waterproof": true,
+      "m2PerPack": 2.22,
+      "pricePerM2": 22
+    },
+    {
+      "id": "walnut-floor",
+      "name": {
+        "sq": "Arrë",
+        "en": "Walnut",
+        "de": "Walnuss"
+      },
+      "color": "#82604c",
+      "texture": "shared/textures/floor-walnut-floor.webp",
+      "normalMap": "shared/textures/walnut-normal.webp",
+      "roughnessMap": "shared/textures/walnut-roughness.webp",
+      "roughness": 0.75,
+      "multiplier": 1,
+      "perMeter": 0,
+      "class": "AC4",
+      "thickness": 10,
+      "plankLength": 138,
+      "plankWidth": 19.3,
+      "groove": true,
+      "waterproof": true,
+      "m2PerPack": 2.22,
+      "pricePerM2": 21
+    },
+    {
+      "id": "rustic",
+      "name": {
+        "sq": "Rustik",
+        "en": "Rustic",
+        "de": "Rustikal"
+      },
+      "color": "#b39b75",
+      "texture": "shared/textures/floor-rustic.webp",
+      "normalMap": "shared/textures/veneer-normal.webp",
+      "roughnessMap": "shared/textures/veneer-roughness.webp",
+      "roughness": 0.75,
+      "multiplier": 1,
+      "perMeter": 0,
+      "class": "AC5",
+      "thickness": 12,
+      "plankLength": 138,
+      "plankWidth": 19.3,
+      "groove": true,
+      "waterproof": true,
+      "m2PerPack": 2.22,
+      "pricePerM2": 23
+    },
+    {
+      "id": "concrete-look",
+      "name": {
+        "sq": "Beton-look",
+        "en": "Concrete look",
+        "de": "Betonoptik"
+      },
+      "color": "#a3a5a3",
+      "texture": "shared/textures/floor-concrete-look.webp",
+      "normalMap": "shared/textures/concrete-normal.webp",
+      "roughnessMap": "shared/textures/concrete-roughness.webp",
+      "roughness": 0.75,
+      "multiplier": 1,
+      "perMeter": 0,
+      "class": "AC4",
+      "thickness": 10,
+      "plankLength": 138,
+      "plankWidth": 19.3,
+      "groove": true,
+      "waterproof": true,
+      "m2PerPack": 2.22,
+      "pricePerM2": 24
+    },
+    {
+      "id": "herringbone-oak",
+      "name": {
+        "sq": "Kurriz peshku Lis",
+        "en": "Oak herringbone",
+        "de": "Eiche Fischgrät"
+      },
+      "color": "#c4a47e",
+      "texture": "shared/textures/floor-herringbone-oak.webp",
+      "normalMap": "shared/textures/veneer-normal.webp",
+      "roughnessMap": "shared/textures/veneer-roughness.webp",
+      "roughness": 0.75,
+      "multiplier": 1,
+      "perMeter": 0,
+      "class": "AC5",
+      "thickness": 12,
+      "plankLength": 64,
+      "plankWidth": 16,
+      "groove": true,
+      "waterproof": true,
+      "m2PerPack": 1.92,
+      "pricePerM2": 29
+    }
+  ],
+  "interiorDoors": [
+    {
+      "id": "flat",
+      "name": {
+        "sq": "E lëmuar",
+        "en": "Flat",
+        "de": "Glatt"
+      },
+      "style": "flat",
+      "price": 220,
+      "hiddenHingePrice": 45
+    },
+    {
+      "id": "grooves",
+      "name": {
+        "sq": "Me vija horizontale",
+        "en": "Horizontal grooves",
+        "de": "Horizontale Rillen"
+      },
+      "style": "grooves",
+      "price": 245,
+      "hiddenHingePrice": 45
+    },
+    {
+      "id": "glass",
+      "name": {
+        "sq": "Me xham satinato",
+        "en": "Satin glass",
+        "de": "Satiniertes Glas"
+      },
+      "style": "glass",
+      "price": 285,
+      "hiddenHingePrice": 45
+    },
+    {
+      "id": "classic",
+      "name": {
+        "sq": "Klasike me panele",
+        "en": "Classic panels",
+        "de": "Klassische Paneele"
+      },
+      "style": "classic",
+      "price": 275,
+      "hiddenHingePrice": 45
+    },
+    {
+      "id": "invisible",
+      "name": {
+        "sq": "Invisible · pa pervaz",
+        "en": "Invisible · flush",
+        "de": "Invisible · bündig"
+      },
+      "style": "invisible",
+      "price": 420,
+      "hiddenHingePrice": 45
+    },
+    {
+      "id": "barn",
+      "name": {
+        "sq": "Rrëshqitëse në mur",
+        "en": "Barn sliding",
+        "de": "Schiebetür vor der Wand"
+      },
+      "style": "barn",
+      "price": 340,
+      "hiddenHingePrice": 45
+    },
+    {
+      "id": "pocket",
+      "name": {
+        "sq": "Rrëshqitëse brenda murit",
+        "en": "Pocket sliding",
+        "de": "Schiebetür in der Wand"
+      },
+      "style": "pocket",
+      "price": 440,
+      "hiddenHingePrice": 45
+    }
+  ],
+  "interiorFinishes": [
+    {
+      "id": "cpl",
+      "name": {
+        "sq": "CPL",
+        "en": "CPL",
+        "de": "CPL"
+      },
+      "multiplier": 1
+    },
+    {
+      "id": "laminate",
+      "name": {
+        "sq": "Laminat",
+        "en": "Laminate",
+        "de": "Laminat"
+      },
+      "multiplier": 1.1
+    },
+    {
+      "id": "paint",
+      "name": {
+        "sq": "MDF e lyer",
+        "en": "Painted MDF",
+        "de": "Lackiertes MDF"
+      },
+      "multiplier": 1.35
+    },
+    {
+      "id": "veneer",
+      "name": {
+        "sq": "Furnir",
+        "en": "Veneer",
+        "de": "Furnier"
+      },
+      "multiplier": 1.6
+    }
+  ],
+  "interiorHandles": [
+    {
+      "id": "inox",
+      "name": {
+        "sq": "Inox",
+        "en": "Stainless steel",
+        "de": "Edelstahl"
+      },
+      "color": "#b0b9ba",
+      "price": 18
+    },
+    {
+      "id": "black",
+      "name": {
+        "sq": "Zezë mat",
+        "en": "Matt black",
+        "de": "Mattschwarz"
+      },
+      "color": "#25282b",
+      "price": 22
+    },
+    {
+      "id": "gold",
+      "name": {
+        "sq": "Ari",
+        "en": "Gold",
+        "de": "Gold"
+      },
+      "color": "#b99b59",
+      "price": 35
+    }
+  ],
+  "skirtings": [
+    {
+      "id": "floor",
+      "name": {
+        "sq": "Si dyshemeja",
+        "en": "Match floor",
+        "de": "Wie Boden"
+      },
+      "mode": "floor",
+      "heightRates": [
+        {
+          "height": 6,
+          "perMeter": 4
+        },
+        {
+          "height": 8,
+          "perMeter": 5
+        },
+        {
+          "height": 10,
+          "perMeter": 6
+        }
+      ]
+    },
+    {
+      "id": "white",
+      "name": {
+        "sq": "E bardhë",
+        "en": "White",
+        "de": "Weiß"
+      },
+      "mode": "white",
+      "heightRates": [
+        {
+          "height": 6,
+          "perMeter": 3.5
+        },
+        {
+          "height": 8,
+          "perMeter": 4.5
+        },
+        {
+          "height": 10,
+          "perMeter": 5.5
+        }
+      ]
+    },
+    {
+      "id": "door",
+      "name": {
+        "sq": "Si dyert",
+        "en": "Match doors",
+        "de": "Wie Türen"
+      },
+      "mode": "door",
+      "heightRates": [
+        {
+          "height": 6,
+          "perMeter": 4.5
+        },
+        {
+          "height": 8,
+          "perMeter": 5.5
+        },
+        {
+          "height": 10,
+          "perMeter": 6.5
+        }
+      ]
+    }
+  ],
+  "quickCombos": [
+    {
+      "id": "light-white",
+      "name": {
+        "sq": "Dysheme e çelur + dyer të bardha",
+        "en": "Light floor + white doors",
+        "de": "Heller Boden + weiße Türen"
+      },
+      "laminateId": "white-oak",
+      "doorFinishId": "white",
+      "finishTier": "paint"
+    },
+    {
+      "id": "grey-anthracite",
+      "name": {
+        "sq": "Lis gri + dyer antracit",
+        "en": "Grey oak + anthracite doors",
+        "de": "Graue Eiche + anthrazitfarbene Türen"
+      },
+      "laminateId": "grey",
+      "doorFinishId": "anthracite",
+      "finishTier": "cpl"
+    },
+    {
+      "id": "walnut",
+      "name": {
+        "sq": "Arrë + dyer arre",
+        "en": "Walnut floor + walnut doors",
+        "de": "Walnussboden + Walnusstüren"
+      },
+      "laminateId": "walnut-floor",
+      "doorFinishId": "walnut",
+      "finishTier": "veneer"
+    }
+  ],
+  "interiorPricing": {
+    "waste": {
+      "straight": 0.1,
+      "diagonal": 0.15,
+      "herringbone": 0.2
+    },
+    "underlayPerM2": 2.5,
+    "floorInstallationPerM2": 6,
+    "doorInstallationPerPiece": 45,
+    "transport": 35
+  },
+  "presentationPresets": [
+    {
+      "id": "japandi",
+      "name": {
+        "sq": "Japandi Minimal",
+        "en": "Japandi Minimal",
+        "de": "Japandi Minimal"
+      },
+      "kind": "kitchen",
+      "layout": "l",
+      "thumbnail": "shared/showroom/japandi.webp",
+      "room": {
+        "width": 420,
+        "depth": 360,
+        "height": 270
+      },
+      "style": {
+        "front": "cashmere",
+        "carcass": "oak",
+        "countertop": "travertine",
+        "handle": "none",
+        "backsplash": "none",
+        "plinth": "matching",
+        "led": true,
+        "profile": "flat"
+      },
+      "camera": {
+        "position": [
+          3.7,
+          2.45,
+          4.7
+        ],
+        "target": [
+          0,
+          1.1,
+          -0.4
+        ]
+      }
+    },
+    {
+      "id": "modern",
+      "name": {
+        "sq": "Antracit & lis modern",
+        "en": "Modern Anthracite & Oak",
+        "de": "Modernes Anthrazit & Eiche"
+      },
+      "kind": "kitchen",
+      "layout": "l",
+      "thumbnail": "shared/showroom/modern.webp",
+      "room": {
+        "width": 420,
+        "depth": 360,
+        "height": 270
+      },
+      "style": {
+        "front": "anthracite",
+        "carcass": "oak",
+        "countertop": "oak",
+        "handle": "profile",
+        "backsplash": "none",
+        "plinth": "matching",
+        "led": true,
+        "profile": "flat"
+      },
+      "camera": {
+        "position": [
+          3.7,
+          2.45,
+          4.7
+        ],
+        "target": [
+          0,
+          1.1,
+          -0.4
+        ]
+      }
+    },
+    {
+      "id": "classic",
+      "name": {
+        "sq": "Luks klasik i bardhë",
+        "en": "Classic White Luxury",
+        "de": "Klassischer weißer Luxus"
+      },
+      "kind": "kitchen",
+      "layout": "u",
+      "thumbnail": "shared/showroom/classic.webp",
+      "room": {
+        "width": 420,
+        "depth": 360,
+        "height": 270
+      },
+      "style": {
+        "front": "white",
+        "carcass": "white",
+        "countertop": "marble",
+        "handle": "bar",
+        "backsplash": "none",
+        "plinth": "matching",
+        "led": true,
+        "profile": "panel"
+      },
+      "camera": {
+        "position": [
+          0.3,
+          2.6,
+          5.8
+        ],
+        "target": [
+          0,
+          1.1,
+          -0.3
+        ]
+      }
+    },
+    {
+      "id": "wardrobe",
+      "name": {
+        "sq": "Gardërobë e kuruar",
+        "en": "Curated Wardrobe",
+        "de": "Kuratierter Kleiderschrank"
+      },
+      "kind": "wardrobe",
+      "layout": "corner",
+      "thumbnail": "shared/showroom/wardrobe.webp",
+      "room": {
+        "width": 420,
+        "depth": 360,
+        "height": 270
+      },
+      "style": {
+        "front": "cashmere",
+        "carcass": "oak",
+        "countertop": "oak",
+        "handle": "bar",
+        "backsplash": "none",
+        "plinth": "matching",
+        "led": true,
+        "profile": "flat"
+      },
+      "camera": {
+        "position": [
+          3.7,
+          2.45,
+          4.7
+        ],
+        "target": [
+          0,
+          1.1,
+          -0.4
+        ]
+      }
+    }
+  ]
+}

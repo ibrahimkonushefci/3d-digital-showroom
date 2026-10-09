@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Showroom responsive verification</title>
+    <style>
+      body {
+        font: 14px system-ui;
+        margin: 0;
+        background: #e6e9e0;
+        color: #273b30;
+      }
+      header {
+        padding: 14px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      button,
+      select {
+        padding: 12px;
+        border: 1px solid #acb8a2;
+        background: white;
+        border-radius: 5px;
+      }
+      main {
+        padding: 15px;
+        display: flex;
+        justify-content: center;
+      }
+      iframe {
+        border: 1px solid #b7c1ad;
+        background: #f7f5ef;
+        box-shadow: 0 6px 25px #364e2522;
+      }
+      #size {
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <strong>Responsive verification</strong
+      ><button data-w="1440" data-h="900">Desktop · 1440 × 900</button
+      ><button data-w="390" data-h="844">Phone · 390 × 844</button
+      ><button data-w="768" data-h="1024">Tablet portrait · 768 × 1024</button
+      ><button data-w="1024" data-h="768">Tablet landscape · 1024 × 768</button
+      ><label
+        >Screen
+        <select id="screen">
+          <option value="/">Home</option>
+          <option value="/designer/kitchen">Kitchen</option>
+          <option value="/designer/wardrobe">Wardrobe</option>
+          <option value="/preview">Exterior / Photo</option>
+          <option value="/designer/interior">
+            Interior doors &amp; flooring
+          </option>
+          <option value="/setup">Brand setup</option>
+          <option value="/embed/material-switcher">Embed</option>
+        </select></label
+      ><span id="size"></span>
+    </header>
+    <main>
+      <iframe
+        id="frame"
+        title="Responsive showroom"
+        width="390"
+        height="844"
+        src="/"
+      ></iframe>
+    </main>
+    <script>
+      const frame = document.getElementById("frame");
+      document.querySelectorAll("button").forEach(
+        (b) =>
+          (b.onclick = () => {
+            frame.width = b.dataset.w;
+            frame.height = b.dataset.h;
+            document.getElementById("size").textContent =
+              b.dataset.w + " × " + b.dataset.h;
+          }),
+      );
+      document.getElementById("screen").onchange = (e) =>
+        (frame.src = e.target.value);
+      frame.onload = () => {
+        try {
+          const d = frame.contentDocument.documentElement;
+          document.getElementById("size").textContent =
+            d.clientWidth +
+            " × " +
+            d.clientHeight +
+            " · overflow: " +
+            (d.scrollWidth > d.clientWidth);
+        } catch {}
+      };
+    </script>
+  </body>
+</html>

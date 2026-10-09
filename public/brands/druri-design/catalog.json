@@ -1,0 +1,1564 @@
+{
+  "version": 1,
+  "id": "druri-design",
+  "fronts": [
+    {
+      "id": "cashmere",
+      "name": {
+        "en": "Cashmere",
+        "sq": "Kashmir",
+        "de": "Kaschmir"
+      },
+      "color": "#d7ccba",
+      "roughness": 0.82,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "iverall"
+    },
+    {
+      "id": "sage",
+      "name": {
+        "en": "Sage green",
+        "sq": "Gjelbër sherebele",
+        "de": "Salbeigrün"
+      },
+      "color": "#7e927a",
+      "roughness": 0.78,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "iverall"
+    },
+    {
+      "id": "anthracite",
+      "name": {
+        "en": "Anthracite",
+        "sq": "Antracit",
+        "de": "Anthrazit"
+      },
+      "color": "#343e3e",
+      "roughness": 0.78,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "iverall"
+    },
+    {
+      "id": "white",
+      "name": {
+        "en": "Warm white",
+        "sq": "E bardhë e ngrohtë",
+        "de": "Warmweiß"
+      },
+      "color": "#f3f0e6",
+      "roughness": 0.72,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "iverall"
+    },
+    {
+      "id": "black",
+      "name": {
+        "en": "Soft black",
+        "sq": "E zezë mat",
+        "de": "Mattschwarz"
+      },
+      "color": "#232927",
+      "roughness": 0.85,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "iverall"
+    },
+    {
+      "id": "oak",
+      "name": {
+        "en": "Natural oak",
+        "sq": "Lis natyral",
+        "de": "Natureiche"
+      },
+      "color": "#bb8a55",
+      "roughness": 0.72,
+      "multiplier": 1.6,
+      "perMeter": 0,
+      "texture": "shared/textures/veneer-color.webp",
+      "normalMap": "shared/textures/veneer-normal.webp",
+      "roughnessMap": "shared/textures/veneer-roughness.webp",
+      "tier": "iverall"
+    },
+    {
+      "id": "walnut",
+      "name": {
+        "en": "Walnut",
+        "sq": "Arrë",
+        "de": "Walnuss"
+      },
+      "color": "#74533a",
+      "roughness": 0.7,
+      "multiplier": 1.6,
+      "perMeter": 0,
+      "texture": "shared/textures/walnut-color.webp",
+      "normalMap": "shared/textures/walnut-normal.webp",
+      "roughnessMap": "shared/textures/walnut-roughness.webp",
+      "tier": "iverall"
+    },
+    {
+      "id": "gloss",
+      "name": {
+        "en": "Gloss white",
+        "sq": "E bardhë me shkëlqim",
+        "de": "Weiß Hochglanz"
+      },
+      "color": "#f8f8f4",
+      "roughness": 0.15,
+      "multiplier": 1.25,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "iverall"
+    },
+    {
+      "id": "foil-cashmere",
+      "name": {
+        "en": "Cashmere",
+        "sq": "Kashmir",
+        "de": "Kaschmir"
+      },
+      "color": "#d7ccba",
+      "roughness": 0.82,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "foil"
+    },
+    {
+      "id": "foil-sage",
+      "name": {
+        "en": "Sage green",
+        "sq": "Gjelbër sherebele",
+        "de": "Salbeigrün"
+      },
+      "color": "#7e927a",
+      "roughness": 0.78,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "foil"
+    },
+    {
+      "id": "foil-anthracite",
+      "name": {
+        "en": "Anthracite",
+        "sq": "Antracit",
+        "de": "Anthrazit"
+      },
+      "color": "#343e3e",
+      "roughness": 0.78,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "foil"
+    },
+    {
+      "id": "foil-white",
+      "name": {
+        "en": "Warm white",
+        "sq": "E bardhë e ngrohtë",
+        "de": "Warmweiß"
+      },
+      "color": "#f3f0e6",
+      "roughness": 0.72,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "foil"
+    },
+    {
+      "id": "foil-black",
+      "name": {
+        "en": "Soft black",
+        "sq": "E zezë mat",
+        "de": "Mattschwarz"
+      },
+      "color": "#232927",
+      "roughness": 0.85,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "foil"
+    },
+    {
+      "id": "lacquer-cashmere",
+      "name": {
+        "en": "Cashmere",
+        "sq": "Kashmir",
+        "de": "Kaschmir"
+      },
+      "color": "#d7ccba",
+      "roughness": 0.82,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "lacquer"
+    },
+    {
+      "id": "lacquer-sage",
+      "name": {
+        "en": "Sage green",
+        "sq": "Gjelbër sherebele",
+        "de": "Salbeigrün"
+      },
+      "color": "#7e927a",
+      "roughness": 0.78,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "lacquer"
+    },
+    {
+      "id": "lacquer-anthracite",
+      "name": {
+        "en": "Anthracite",
+        "sq": "Antracit",
+        "de": "Anthrazit"
+      },
+      "color": "#343e3e",
+      "roughness": 0.78,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "lacquer"
+    },
+    {
+      "id": "lacquer-white",
+      "name": {
+        "en": "Warm white",
+        "sq": "E bardhë e ngrohtë",
+        "de": "Warmweiß"
+      },
+      "color": "#f3f0e6",
+      "roughness": 0.72,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "lacquer"
+    },
+    {
+      "id": "lacquer-black",
+      "name": {
+        "en": "Soft black",
+        "sq": "E zezë mat",
+        "de": "Mattschwarz"
+      },
+      "color": "#232927",
+      "roughness": 0.85,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "lacquer"
+    },
+    {
+      "id": "acrylic-cashmere",
+      "name": {
+        "en": "Cashmere",
+        "sq": "Kashmir",
+        "de": "Kaschmir"
+      },
+      "color": "#d7ccba",
+      "roughness": 0.82,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "acrylic"
+    },
+    {
+      "id": "acrylic-sage",
+      "name": {
+        "en": "Sage green",
+        "sq": "Gjelbër sherebele",
+        "de": "Salbeigrün"
+      },
+      "color": "#7e927a",
+      "roughness": 0.78,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "acrylic"
+    },
+    {
+      "id": "acrylic-anthracite",
+      "name": {
+        "en": "Anthracite",
+        "sq": "Antracit",
+        "de": "Anthrazit"
+      },
+      "color": "#343e3e",
+      "roughness": 0.78,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "acrylic"
+    },
+    {
+      "id": "acrylic-white",
+      "name": {
+        "en": "Warm white",
+        "sq": "E bardhë e ngrohtë",
+        "de": "Warmweiß"
+      },
+      "color": "#f3f0e6",
+      "roughness": 0.72,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "acrylic"
+    },
+    {
+      "id": "acrylic-black",
+      "name": {
+        "en": "Soft black",
+        "sq": "E zezë mat",
+        "de": "Mattschwarz"
+      },
+      "color": "#232927",
+      "roughness": 0.85,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "acrylic"
+    },
+    {
+      "id": "fenix-cashmere",
+      "name": {
+        "en": "Cashmere",
+        "sq": "Kashmir",
+        "de": "Kaschmir"
+      },
+      "color": "#d7ccba",
+      "roughness": 0.82,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "fenix"
+    },
+    {
+      "id": "fenix-sage",
+      "name": {
+        "en": "Sage green",
+        "sq": "Gjelbër sherebele",
+        "de": "Salbeigrün"
+      },
+      "color": "#7e927a",
+      "roughness": 0.78,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "fenix"
+    },
+    {
+      "id": "fenix-anthracite",
+      "name": {
+        "en": "Anthracite",
+        "sq": "Antracit",
+        "de": "Anthrazit"
+      },
+      "color": "#343e3e",
+      "roughness": 0.78,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "fenix"
+    },
+    {
+      "id": "fenix-white",
+      "name": {
+        "en": "Warm white",
+        "sq": "E bardhë e ngrohtë",
+        "de": "Warmweiß"
+      },
+      "color": "#f3f0e6",
+      "roughness": 0.72,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "fenix"
+    },
+    {
+      "id": "fenix-black",
+      "name": {
+        "en": "Soft black",
+        "sq": "E zezë mat",
+        "de": "Mattschwarz"
+      },
+      "color": "#232927",
+      "roughness": 0.85,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "fenix"
+    },
+    {
+      "id": "egger-h3303",
+      "name": {
+        "sq": "H3303 ST10 · Natural Hamilton Oak",
+        "en": "H3303 ST10 · Natural Hamilton Oak",
+        "de": "H3303 ST10 · Natural Hamilton Oak"
+      },
+      "color": "#bb8a55",
+      "roughness": 0.72,
+      "multiplier": 1.6,
+      "perMeter": 0,
+      "texture": "shared/textures/veneer-color.webp",
+      "normalMap": "shared/textures/veneer-normal.webp",
+      "roughnessMap": "shared/textures/veneer-roughness.webp",
+      "tier": "iverall",
+      "supplier": {
+        "manufacturer": "EGGER",
+        "code": "H3303 ST10",
+        "name": "Natural Hamilton Oak",
+        "source": "https://www.egger.com/en/furniture-interior-design/decors/H3303_10?country=GE",
+        "appearance": "illustrative"
+      }
+    },
+    {
+      "id": "egger-u708",
+      "name": {
+        "sq": "U708 PM · Light Grey",
+        "en": "U708 PM · Light Grey",
+        "de": "U708 PM · Light Grey"
+      },
+      "color": "#b9bab4",
+      "roughness": 0.82,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "lacquer",
+      "supplier": {
+        "manufacturer": "EGGER",
+        "code": "U708 PM",
+        "name": "Light Grey",
+        "source": "https://www.egger.com/en/furniture-interior-design/decors/U708_PM?country=MT",
+        "appearance": "illustrative"
+      }
+    },
+    {
+      "id": "egger-u961",
+      "name": {
+        "sq": "U961 PM · Graphite Grey",
+        "en": "U961 PM · Graphite Grey",
+        "de": "U961 PM · Graphite Grey"
+      },
+      "color": "#383b3b",
+      "roughness": 0.78,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "lacquer",
+      "supplier": {
+        "manufacturer": "EGGER",
+        "code": "U961 PM",
+        "name": "Graphite Grey",
+        "source": "https://www.egger.com/en/furniture-interior-design/decors/U961_PM",
+        "appearance": "illustrative"
+      }
+    },
+    {
+      "id": "kronospan-k190",
+      "name": {
+        "sq": "K190 · Black",
+        "en": "K190 · Black",
+        "de": "K190 · Black"
+      },
+      "color": "#191c1d",
+      "roughness": 0.85,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "tier": "iverall",
+      "supplier": {
+        "manufacturer": "Kronospan",
+        "code": "K190",
+        "name": "Black",
+        "source": "https://kronospan.com/en_EN/decors/view/kronodesign/color/K190/",
+        "appearance": "illustrative"
+      }
+    }
+  ],
+  "carcasses": [
+    {
+      "id": "white",
+      "name": {
+        "en": "White",
+        "sq": "E bardhë",
+        "de": "Weiß"
+      },
+      "color": "#f0ede4",
+      "roughness": 0.85,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp"
+    },
+    {
+      "id": "oak",
+      "name": {
+        "en": "Oak",
+        "sq": "Lis",
+        "de": "Eiche"
+      },
+      "color": "#b48a5b",
+      "roughness": 0.85,
+      "multiplier": 1,
+      "perMeter": 0,
+      "texture": "shared/textures/veneer-color.webp",
+      "normalMap": "shared/textures/veneer-normal.webp",
+      "roughnessMap": "shared/textures/veneer-roughness.webp"
+    },
+    {
+      "id": "dark",
+      "name": {
+        "en": "Graphite",
+        "sq": "Grafit",
+        "de": "Graphit"
+      },
+      "color": "#3f4241",
+      "roughness": 0.85,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp"
+    }
+  ],
+  "countertops": [
+    {
+      "id": "travertine",
+      "name": {
+        "en": "Travertine",
+        "sq": "Travertin",
+        "de": "Travertin"
+      },
+      "color": "#d0c3ac",
+      "roughness": 0.68,
+      "multiplier": 1,
+      "perMeter": 145,
+      "texture": "shared/textures/travertine-color.webp",
+      "normalMap": "shared/textures/travertine-normal.webp",
+      "roughnessMap": "shared/textures/travertine-roughness.webp",
+      "tier": "compact"
+    },
+    {
+      "id": "marble",
+      "name": {
+        "en": "White marble",
+        "sq": "Mermer i bardhë",
+        "de": "Weißer Marmor"
+      },
+      "color": "#e8e6df",
+      "roughness": 0.3,
+      "multiplier": 1,
+      "perMeter": 210,
+      "texture": "shared/textures/marble-color.webp",
+      "normalMap": "shared/textures/marble-normal.webp",
+      "roughnessMap": "shared/textures/marble-roughness.webp",
+      "tier": "laminate"
+    },
+    {
+      "id": "concrete",
+      "name": {
+        "en": "Concrete",
+        "sq": "Beton",
+        "de": "Beton"
+      },
+      "color": "#a3a29c",
+      "roughness": 0.87,
+      "multiplier": 1,
+      "perMeter": 85,
+      "texture": "shared/textures/concrete-color.webp",
+      "normalMap": "shared/textures/concrete-normal.webp",
+      "roughnessMap": "shared/textures/concrete-roughness.webp",
+      "tier": "laminate"
+    },
+    {
+      "id": "oak",
+      "name": {
+        "en": "Oak",
+        "sq": "Lis",
+        "de": "Eiche"
+      },
+      "color": "#bd9566",
+      "roughness": 0.65,
+      "multiplier": 1,
+      "perMeter": 110,
+      "texture": "shared/textures/veneer-color.webp",
+      "normalMap": "shared/textures/veneer-normal.webp",
+      "roughnessMap": "shared/textures/veneer-roughness.webp",
+      "tier": "laminate"
+    },
+    {
+      "id": "quartz",
+      "name": {
+        "sq": "Kuarc",
+        "en": "Quartz",
+        "de": "Quarz"
+      },
+      "tier": "quartz",
+      "color": "#eeeae0",
+      "texture": "shared/textures/quartz-color.webp",
+      "normalMap": "shared/textures/quartz-normal.webp",
+      "roughnessMap": "shared/textures/quartz-roughness.webp",
+      "roughness": 0.3,
+      "multiplier": 1,
+      "perMeter": 320
+    },
+    {
+      "id": "granite",
+      "name": {
+        "sq": "Granit",
+        "en": "Granite",
+        "de": "Granit"
+      },
+      "tier": "granite",
+      "color": "#85817a",
+      "texture": "shared/textures/granite-color.webp",
+      "normalMap": "shared/textures/granite-normal.webp",
+      "roughnessMap": "shared/textures/granite-roughness.webp",
+      "roughness": 0.3,
+      "multiplier": 1,
+      "perMeter": 280
+    },
+    {
+      "id": "egger-f206",
+      "name": {
+        "sq": "F206 PM · Black Pietra Grigia",
+        "en": "F206 PM · Black Pietra Grigia",
+        "de": "F206 PM · Black Pietra Grigia"
+      },
+      "tier": "compact",
+      "color": "#85817a",
+      "texture": "shared/textures/granite-color.webp",
+      "normalMap": "shared/textures/granite-normal.webp",
+      "roughnessMap": "shared/textures/granite-roughness.webp",
+      "roughness": 0.3,
+      "multiplier": 1,
+      "perMeter": 150,
+      "supplier": {
+        "manufacturer": "EGGER",
+        "code": "F206 PM",
+        "name": "Black Pietra Grigia",
+        "source": "https://www.egger.com/en/furniture-interior-design/decors/F206_PM?country=XK",
+        "appearance": "illustrative"
+      }
+    }
+  ],
+  "backsplashes": [
+    {
+      "id": "none",
+      "name": {
+        "en": "None",
+        "sq": "Pa mbrojtëse",
+        "de": "Keine"
+      },
+      "color": "#f0eee6",
+      "roughness": 0.9,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp"
+    },
+    {
+      "id": "stone",
+      "name": {
+        "en": "Matching worktop",
+        "sq": "Si banaku",
+        "de": "Wie Arbeitsplatte"
+      },
+      "color": "#d0c3ac",
+      "roughness": 0.7,
+      "multiplier": 1,
+      "perMeter": 65,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp"
+    }
+  ],
+  "plinths": [
+    {
+      "id": "matching",
+      "name": {
+        "en": "Matching fronts",
+        "sq": "Si frontet",
+        "de": "Wie Fronten"
+      },
+      "color": "#d7ccba",
+      "roughness": 0.8,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp"
+    },
+    {
+      "id": "black",
+      "name": {
+        "en": "Black",
+        "sq": "E zezë",
+        "de": "Schwarz"
+      },
+      "color": "#252c2a",
+      "roughness": 0.8,
+      "multiplier": 1,
+      "perMeter": 0,
+      "normalMap": "shared/textures/smooth-normal.webp",
+      "roughnessMap": "shared/textures/smooth-roughness.webp"
+    }
+  ],
+  "handles": [
+    {
+      "id": "none",
+      "name": {
+        "sq": "Pa doreza / push",
+        "en": "Handleless / push",
+        "de": "Grifflos / Push"
+      },
+      "color": "#222b28",
+      "perPiece": 0
+    },
+    {
+      "id": "bar",
+      "name": {
+        "sq": "Shufër inox",
+        "en": "Stainless steel bar",
+        "de": "Edelstahl-Bügel"
+      },
+      "color": "#b8a17a",
+      "perPiece": 9
+    },
+    {
+      "id": "profile",
+      "name": {
+        "sq": "Profil gola",
+        "en": "Gola profile",
+        "de": "Gola-Profil"
+      },
+      "color": "#252c2a",
+      "perPiece": 12
+    },
+    {
+      "id": "knob",
+      "name": {
+        "sq": "Shufër e zezë mat",
+        "en": "Matt black bar",
+        "de": "Mattschwarzer Bügel"
+      },
+      "color": "#202322",
+      "perPiece": 6
+    }
+  ],
+  "modules": [
+    {
+      "id": "base-doors",
+      "name": {
+        "en": "Base doors",
+        "sq": "Dollap me dyer",
+        "de": "Unterschrank"
+      },
+      "kind": "kitchen",
+      "type": "doors",
+      "level": "base",
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
+      "height": 72,
+      "depth": 60,
+      "pricePerMeter": 235,
+      "handleCount": 2
+    },
+    {
+      "id": "base-drawers",
+      "name": {
+        "en": "Three drawers",
+        "sq": "Tre sirtarë",
+        "de": "Drei Schubladen"
+      },
+      "kind": "kitchen",
+      "type": "drawers",
+      "level": "base",
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
+      "height": 72,
+      "depth": 60,
+      "pricePerMeter": 330,
+      "handleCount": 3,
+      "accessory": "organizer"
+    },
+    {
+      "id": "sink",
+      "name": {
+        "en": "Sink unit",
+        "sq": "Dollap lavamani",
+        "de": "Spülenschrank"
+      },
+      "kind": "kitchen",
+      "type": "sink",
+      "level": "base",
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
+      "height": 72,
+      "depth": 60,
+      "pricePerMeter": 280,
+      "handleCount": 2
+    },
+    {
+      "id": "dishwasher",
+      "name": {
+        "en": "Dishwasher space",
+        "sq": "Vend për enëlarëse",
+        "de": "Geschirrspülerplatz"
+      },
+      "kind": "kitchen",
+      "type": "dishwasher",
+      "level": "base",
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
+      "height": 72,
+      "depth": 60,
+      "pricePerMeter": 160,
+      "handleCount": 0
+    },
+    {
+      "id": "oven",
+      "name": {
+        "en": "Oven tower",
+        "sq": "Kullë furre",
+        "de": "Backofenschrank"
+      },
+      "kind": "kitchen",
+      "type": "oven",
+      "level": "tall",
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
+      "height": 210,
+      "depth": 60,
+      "pricePerMeter": 430,
+      "handleCount": 2
+    },
+    {
+      "id": "fridge",
+      "name": {
+        "en": "Fridge space",
+        "sq": "Vend për frigorifer",
+        "de": "Kühlschrankplatz"
+      },
+      "kind": "kitchen",
+      "type": "fridge",
+      "level": "tall",
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
+      "height": 210,
+      "depth": 60,
+      "pricePerMeter": 390,
+      "handleCount": 2
+    },
+    {
+      "id": "pantry",
+      "name": {
+        "en": "Pantry pull-out",
+        "sq": "Depo tërheqëse",
+        "de": "Apothekerschrank"
+      },
+      "kind": "kitchen",
+      "type": "pantry",
+      "level": "tall",
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
+      "height": 210,
+      "depth": 60,
+      "pricePerMeter": 450,
+      "handleCount": 1,
+      "accessory": "pantry"
+    },
+    {
+      "id": "corner",
+      "name": {
+        "en": "Corner carousel",
+        "sq": "Kënd rrotullues",
+        "de": "Eckkarussell"
+      },
+      "kind": "kitchen",
+      "type": "corner",
+      "level": "base",
+      "widths": [
+        90
+      ],
+      "height": 72,
+      "depth": 90,
+      "pricePerMeter": 390,
+      "handleCount": 1,
+      "accessory": "carousel"
+    },
+    {
+      "id": "wall-doors",
+      "name": {
+        "en": "Wall cabinet",
+        "sq": "Dollap muri",
+        "de": "Oberschrank"
+      },
+      "kind": "kitchen",
+      "type": "doors",
+      "level": "wall",
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
+      "height": 72,
+      "depth": 35,
+      "pricePerMeter": 210,
+      "handleCount": 2
+    },
+    {
+      "id": "wall-glass",
+      "name": {
+        "en": "Glass cabinet",
+        "sq": "Dollap xhami",
+        "de": "Glasoberschrank"
+      },
+      "kind": "kitchen",
+      "type": "glass",
+      "level": "wall",
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
+      "height": 72,
+      "depth": 35,
+      "pricePerMeter": 265,
+      "handleCount": 2
+    },
+    {
+      "id": "wall-open",
+      "name": {
+        "en": "Open shelf",
+        "sq": "Raft i hapur",
+        "de": "Offenes Regal"
+      },
+      "kind": "kitchen",
+      "type": "open",
+      "level": "wall",
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
+      "height": 72,
+      "depth": 35,
+      "pricePerMeter": 155,
+      "handleCount": 0
+    },
+    {
+      "id": "wardrobe-hanging",
+      "name": {
+        "en": "Hanging wardrobe",
+        "sq": "Gardërobë me varje",
+        "de": "Kleiderschrank"
+      },
+      "kind": "wardrobe",
+      "type": "hanging",
+      "level": "wardrobe",
+      "widths": [
+        40,
+        50,
+        60,
+        80,
+        100
+      ],
+      "height": 230,
+      "depth": 60,
+      "pricePerMeter": 345,
+      "handleCount": 2
+    },
+    {
+      "id": "wardrobe-shelves",
+      "name": {
+        "en": "Shelved wardrobe",
+        "sq": "Gardërobë me rafte",
+        "de": "Regalschrank"
+      },
+      "kind": "wardrobe",
+      "type": "doors",
+      "level": "wardrobe",
+      "widths": [
+        40,
+        50,
+        60,
+        80,
+        100
+      ],
+      "height": 230,
+      "depth": 60,
+      "pricePerMeter": 315,
+      "handleCount": 2
+    },
+    {
+      "id": "wardrobe-drawers",
+      "name": {
+        "en": "Wardrobe drawers",
+        "sq": "Gardërobë me sirtarë",
+        "de": "Schrank mit Schubladen"
+      },
+      "kind": "wardrobe",
+      "type": "drawers",
+      "level": "wardrobe",
+      "widths": [
+        40,
+        50,
+        60,
+        80,
+        100
+      ],
+      "height": 230,
+      "depth": 60,
+      "pricePerMeter": 440,
+      "handleCount": 3,
+      "accessory": "organizer"
+    },
+    {
+      "id": "wardrobe-open",
+      "name": {
+        "en": "Open wardrobe",
+        "sq": "Gardërobë e hapur",
+        "de": "Offener Schrank"
+      },
+      "kind": "wardrobe",
+      "type": "open",
+      "level": "wardrobe",
+      "widths": [
+        40,
+        50,
+        60,
+        80,
+        100
+      ],
+      "height": 230,
+      "depth": 60,
+      "pricePerMeter": 270,
+      "handleCount": 0
+    },
+    {
+      "id": "wardrobe-sliding",
+      "name": {
+        "en": "Sliding wardrobe",
+        "sq": "Gardërobë rrëshqitëse",
+        "de": "Schiebetürenschrank"
+      },
+      "kind": "wardrobe",
+      "type": "sliding",
+      "level": "wardrobe",
+      "widths": [
+        40,
+        50,
+        60,
+        80,
+        100
+      ],
+      "height": 230,
+      "depth": 60,
+      "pricePerMeter": 410,
+      "handleCount": 0
+    },
+    {
+      "id": "wall-hood",
+      "name": {
+        "sq": "Aspirator i integruar",
+        "en": "Integrated extractor hood",
+        "de": "Integrierte Dunstabzugshaube"
+      },
+      "kind": "kitchen",
+      "type": "hood",
+      "level": "wall",
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90
+      ],
+      "height": 72,
+      "depth": 35,
+      "pricePerMeter": 180,
+      "handleCount": 0
+    }
+  ],
+  "accessories": [
+    {
+      "id": "organizer",
+      "name": {
+        "en": "Drawer organizer",
+        "sq": "Organizues sirtari",
+        "de": "Schubladeneinsatz"
+      },
+      "price": 35
+    },
+    {
+      "id": "pantry",
+      "name": {
+        "en": "Pantry mechanism",
+        "sq": "Mekanizëm depoje",
+        "de": "Auszugssystem"
+      },
+      "price": 160
+    },
+    {
+      "id": "carousel",
+      "name": {
+        "en": "Corner carousel",
+        "sq": "Karusel këndi",
+        "de": "Eckkarussell"
+      },
+      "price": 135
+    }
+  ],
+  "pricing": {
+    "installationPercent": 8,
+    "vatPercent": 18,
+    "rangePercent": 7,
+    "ledPerMeter": 22,
+    "plinthPerMeter": 12,
+    "minimumAisle": 90,
+    "panelMultiplier": 1.12,
+    "offerPrefix": "DD",
+    "validityDays": 15,
+    "paymentTerms": {
+      "sq": "Avans 40%",
+      "en": "40% deposit",
+      "de": "40% Anzahlung"
+    },
+    "internalLedPerMeter": 35
+  },
+  "frontTiers": [
+    {
+      "id": "iverall",
+      "name": {
+        "sq": "Iverall (Egger / Kronospan)",
+        "en": "Chipboard (Egger / Kronospan)",
+        "de": "Spanplatte (Egger / Kronospan)"
+      },
+      "multiplier": 1,
+      "decors": [
+        "cashmere",
+        "sage",
+        "anthracite",
+        "white",
+        "black",
+        "oak",
+        "walnut",
+        "gloss",
+        "egger-h3303",
+        "kronospan-k190"
+      ]
+    },
+    {
+      "id": "foil",
+      "name": {
+        "sq": "MDF me folje",
+        "en": "Foil-wrapped MDF",
+        "de": "MDF mit Folie"
+      },
+      "multiplier": 1.15,
+      "decors": [
+        "foil-cashmere",
+        "foil-sage",
+        "foil-anthracite",
+        "foil-white",
+        "foil-black"
+      ]
+    },
+    {
+      "id": "lacquer",
+      "name": {
+        "sq": "MDF e llakuar mat",
+        "en": "Matt lacquered MDF",
+        "de": "Matt lackiertes MDF"
+      },
+      "multiplier": 1.4,
+      "decors": [
+        "lacquer-cashmere",
+        "lacquer-sage",
+        "lacquer-anthracite",
+        "lacquer-white",
+        "lacquer-black",
+        "egger-u708",
+        "egger-u961"
+      ]
+    },
+    {
+      "id": "acrylic",
+      "name": {
+        "sq": "Akrilik me shkëlqim",
+        "en": "High-gloss acrylic",
+        "de": "Hochglanz-Acryl"
+      },
+      "multiplier": 1.55,
+      "decors": [
+        "acrylic-cashmere",
+        "acrylic-sage",
+        "acrylic-anthracite",
+        "acrylic-white",
+        "acrylic-black"
+      ]
+    },
+    {
+      "id": "fenix",
+      "name": {
+        "sq": "Fenix",
+        "en": "Fenix",
+        "de": "Fenix"
+      },
+      "multiplier": 1.85,
+      "decors": [
+        "fenix-cashmere",
+        "fenix-sage",
+        "fenix-anthracite",
+        "fenix-white",
+        "fenix-black"
+      ]
+    }
+  ],
+  "countertopTiers": [
+    {
+      "id": "laminate",
+      "name": {
+        "sq": "Laminat 38 mm",
+        "en": "38 mm laminate",
+        "de": "Laminat 38 mm"
+      },
+      "perMeter": 75,
+      "decors": [
+        "marble",
+        "concrete",
+        "oak"
+      ]
+    },
+    {
+      "id": "compact",
+      "name": {
+        "sq": "Kompakt 12 mm",
+        "en": "12 mm compact",
+        "de": "Kompakt 12 mm"
+      },
+      "perMeter": 150,
+      "decors": [
+        "travertine",
+        "egger-f206"
+      ]
+    },
+    {
+      "id": "quartz",
+      "name": {
+        "sq": "Kuarc",
+        "en": "Quartz",
+        "de": "Quarz"
+      },
+      "perMeter": 320,
+      "decors": [
+        "quartz"
+      ]
+    },
+    {
+      "id": "granite",
+      "name": {
+        "sq": "Granit",
+        "en": "Granite",
+        "de": "Granit"
+      },
+      "perMeter": 280,
+      "decors": [
+        "granite"
+      ]
+    }
+  ],
+  "appliancePackages": [
+    {
+      "id": "none",
+      "name": {
+        "sq": "Pa pajisje",
+        "en": "No appliances",
+        "de": "Ohne Geräte"
+      },
+      "price": 0
+    },
+    {
+      "id": "basic",
+      "name": {
+        "sq": "Paketa bazë",
+        "en": "Basic package",
+        "de": "Basispaket"
+      },
+      "price": 1250
+    },
+    {
+      "id": "premium",
+      "name": {
+        "sq": "Paketa premium",
+        "en": "Premium package",
+        "de": "Premiumpaket"
+      },
+      "price": 2600
+    }
+  ],
+  "presentationPresets": [
+    {
+      "id": "japandi",
+      "name": {
+        "sq": "Japandi Minimal",
+        "en": "Japandi Minimal",
+        "de": "Japandi Minimal"
+      },
+      "kind": "kitchen",
+      "layout": "l",
+      "thumbnail": "shared/showroom/japandi.webp",
+      "room": {
+        "width": 420,
+        "depth": 360,
+        "height": 270
+      },
+      "style": {
+        "front": "cashmere",
+        "carcass": "oak",
+        "countertop": "travertine",
+        "handle": "none",
+        "backsplash": "none",
+        "plinth": "matching",
+        "led": true,
+        "profile": "flat"
+      },
+      "camera": {
+        "position": [
+          3.7,
+          2.45,
+          4.7
+        ],
+        "target": [
+          0,
+          1.1,
+          -0.4
+        ]
+      }
+    },
+    {
+      "id": "modern",
+      "name": {
+        "sq": "Antracit & lis modern",
+        "en": "Modern Anthracite & Oak",
+        "de": "Modernes Anthrazit & Eiche"
+      },
+      "kind": "kitchen",
+      "layout": "l",
+      "thumbnail": "shared/showroom/modern.webp",
+      "room": {
+        "width": 420,
+        "depth": 360,
+        "height": 270
+      },
+      "style": {
+        "front": "anthracite",
+        "carcass": "oak",
+        "countertop": "oak",
+        "handle": "profile",
+        "backsplash": "none",
+        "plinth": "matching",
+        "led": true,
+        "profile": "flat"
+      },
+      "camera": {
+        "position": [
+          3.7,
+          2.45,
+          4.7
+        ],
+        "target": [
+          0,
+          1.1,
+          -0.4
+        ]
+      }
+    },
+    {
+      "id": "classic",
+      "name": {
+        "sq": "Luks klasik i bardhë",
+        "en": "Classic White Luxury",
+        "de": "Klassischer weißer Luxus"
+      },
+      "kind": "kitchen",
+      "layout": "u",
+      "thumbnail": "shared/showroom/classic.webp",
+      "room": {
+        "width": 420,
+        "depth": 360,
+        "height": 270
+      },
+      "style": {
+        "front": "white",
+        "carcass": "white",
+        "countertop": "marble",
+        "handle": "bar",
+        "backsplash": "none",
+        "plinth": "matching",
+        "led": true,
+        "profile": "panel"
+      },
+      "camera": {
+        "position": [
+          0.3,
+          2.6,
+          5.8
+        ],
+        "target": [
+          0,
+          1.1,
+          -0.3
+        ]
+      }
+    },
+    {
+      "id": "wardrobe",
+      "name": {
+        "sq": "Gardërobë e kuruar",
+        "en": "Curated Wardrobe",
+        "de": "Kuratierter Kleiderschrank"
+      },
+      "kind": "wardrobe",
+      "layout": "corner",
+      "thumbnail": "shared/showroom/wardrobe.webp",
+      "room": {
+        "width": 420,
+        "depth": 360,
+        "height": 270
+      },
+      "style": {
+        "front": "cashmere",
+        "carcass": "oak",
+        "countertop": "oak",
+        "handle": "bar",
+        "backsplash": "none",
+        "plinth": "matching",
+        "led": true,
+        "profile": "flat"
+      },
+      "camera": {
+        "position": [
+          3.7,
+          2.45,
+          4.7
+        ],
+        "target": [
+          0,
+          1.1,
+          -0.4
+        ]
+      }
+    }
+  ]
+}

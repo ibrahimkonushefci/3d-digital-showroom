@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "slug": "druri-design",
+  "companyName": "Druri Design",
+  "tagline": "Kuzhina dhe gardëroba me porosi",
+  "logo": "logo.svg",
+  "colors": {
+    "primary": "#3f5542",
+    "accent": "#bc9660",
+    "background": "#f7f5ef",
+    "text": "#29352f"
+  },
+  "font": "Inter",
+  "contact": {
+    "phone": "",
+    "whatsapp": "",
+    "viber": "",
+    "email": "",
+    "address": "",
+    "city": "Prishtinë"
+  },
+  "languages": [
+    "sq",
+    "en",
+    "de"
+  ],
+  "defaultLanguage": "sq",
+  "modules": {
+    "kitchenDesigner": true,
+    "wardrobeDesigner": true,
+    "doorPreview": false
+  },
+  "demo": true
+}

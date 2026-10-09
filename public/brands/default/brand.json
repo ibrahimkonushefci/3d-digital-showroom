@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "slug": "default",
+  "companyName": "Forma Studio",
+  "tagline": "Hapësira juaj. Sipas jush.",
+  "logo": "logo.svg",
+  "colors": {
+    "primary": "#25483e",
+    "accent": "#b7a07c",
+    "background": "#f7f5ef",
+    "text": "#29352f"
+  },
+  "font": "Inter",
+  "contact": {
+    "phone": "",
+    "whatsapp": "",
+    "viber": "",
+    "email": "",
+    "address": "",
+    "city": "Prishtinë"
+  },
+  "languages": [
+    "sq",
+    "en",
+    "de"
+  ],
+  "defaultLanguage": "sq",
+  "modules": {
+    "kitchenDesigner": true,
+    "wardrobeDesigner": true,
+    "doorPreview": true,
+    "interiorDesigner": true
+  },
+  "demo": true
+}

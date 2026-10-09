@@ -1,0 +1,498 @@
+[
+  {
+    "tool": "photo",
+    "client": 1440,
+    "height": 900,
+    "price": {
+      "bottom": 888,
+      "height": 119.1953125,
+      "left": 1075.921875,
+      "right": 1375.921875,
+      "top": 768.8046875,
+      "width": 300,
+      "x": 1075.921875,
+      "y": 768.8046875
+    },
+    "priceVisible": true,
+    "scroll": 1440,
+    "width": 1440
+  },
+  {
+    "tool": "photo",
+    "client": 1024,
+    "height": 768,
+    "price": {
+      "bottom": 756,
+      "height": 119.1953125,
+      "left": 678.4375,
+      "right": 978.4375,
+      "top": 636.8046875,
+      "width": 300,
+      "x": 678.4375,
+      "y": 636.8046875
+    },
+    "priceVisible": true,
+    "scroll": 1024,
+    "width": 1024
+  },
+  {
+    "tool": "photo",
+    "client": 768,
+    "height": 1024,
+    "price": {
+      "bottom": 1012,
+      "height": 119.1953125,
+      "left": 16,
+      "right": 752,
+      "top": 892.8046875,
+      "width": 736,
+      "x": 16,
+      "y": 892.8046875
+    },
+    "priceVisible": true,
+    "scroll": 768,
+    "width": 768
+  },
+  {
+    "tool": "photo",
+    "client": 390,
+    "height": 844,
+    "price": {
+      "bottom": 832,
+      "height": 116.1953125,
+      "left": 16,
+      "right": 374,
+      "top": 715.8046875,
+      "width": 358,
+      "x": 16,
+      "y": 715.8046875
+    },
+    "priceVisible": true,
+    "scroll": 390,
+    "width": 390
+  },
+  {
+    "tool": "house",
+    "client": 1440,
+    "height": 900,
+    "price": {
+      "bottom": 890,
+      "height": 119.1953125,
+      "left": 1056,
+      "right": 1356,
+      "top": 770.8046875,
+      "width": 300,
+      "x": 1056,
+      "y": 770.8046875
+    },
+    "priceVisible": true,
+    "scroll": 1440,
+    "width": 1440
+  },
+  {
+    "tool": "house",
+    "client": 1024,
+    "height": 768,
+    "price": {
+      "bottom": 758,
+      "height": 119.1953125,
+      "left": 708,
+      "right": 980,
+      "top": 638.8046875,
+      "width": 272,
+      "x": 708,
+      "y": 638.8046875
+    },
+    "priceVisible": true,
+    "scroll": 1024,
+    "width": 1024
+  },
+  {
+    "tool": "house",
+    "client": 768,
+    "height": 1024,
+    "price": {
+      "bottom": 1012,
+      "height": 119.1953125,
+      "left": 16,
+      "right": 752,
+      "top": 892.8046875,
+      "width": 736,
+      "x": 16,
+      "y": 892.8046875
+    },
+    "priceVisible": true,
+    "scroll": 768,
+    "width": 768
+  },
+  {
+    "tool": "house",
+    "client": 390,
+    "height": 844,
+    "price": {
+      "bottom": 832,
+      "height": 116.1953125,
+      "left": 16,
+      "right": 374,
+      "top": 715.8046875,
+      "width": 358,
+      "x": 16,
+      "y": 715.8046875
+    },
+    "priceVisible": true,
+    "scroll": 390,
+    "width": 390
+  },
+  {
+    "tool": "materials",
+    "client": 1440,
+    "height": 900,
+    "priceVisible": null,
+    "scroll": 1440,
+    "width": 1440
+  },
+  {
+    "tool": "materials",
+    "client": 1024,
+    "height": 768,
+    "priceVisible": null,
+    "scroll": 1024,
+    "width": 1024
+  },
+  {
+    "tool": "materials",
+    "client": 768,
+    "height": 1024,
+    "priceVisible": null,
+    "scroll": 768,
+    "width": 768
+  },
+  {
+    "tool": "materials",
+    "client": 390,
+    "height": 844,
+    "priceVisible": null,
+    "scroll": 390,
+    "width": 390
+  },
+  {
+    "tool": "home",
+    "client": 1440,
+    "height": 900,
+    "priceVisible": null,
+    "scroll": 1440,
+    "width": 1440
+  },
+  {
+    "tool": "home",
+    "client": 1024,
+    "height": 768,
+    "priceVisible": null,
+    "scroll": 1024,
+    "width": 1024
+  },
+  {
+    "tool": "home",
+    "client": 768,
+    "height": 1024,
+    "priceVisible": null,
+    "scroll": 768,
+    "width": 768
+  },
+  {
+    "tool": "home",
+    "client": 390,
+    "height": 844,
+    "priceVisible": null,
+    "scroll": 390,
+    "width": 390
+  },
+  {
+    "tool": "kitchen",
+    "client": 1440,
+    "height": 900,
+    "price": {
+      "bottom": 872.5546875,
+      "height": 187.5,
+      "left": 1031.921875,
+      "right": 1374.921875,
+      "top": 685.0546875,
+      "width": 343,
+      "x": 1031.921875,
+      "y": 685.0546875
+    },
+    "priceVisible": true,
+    "scroll": 1440,
+    "width": 1440
+  },
+  {
+    "tool": "kitchen",
+    "client": 1024,
+    "height": 768,
+    "price": {
+      "bottom": 738.5546875,
+      "height": 183.5,
+      "left": 685,
+      "right": 993,
+      "top": 555.0546875,
+      "width": 308,
+      "x": 685,
+      "y": 555.0546875
+    },
+    "priceVisible": true,
+    "scroll": 1024,
+    "width": 1024
+  },
+  {
+    "tool": "kitchen",
+    "client": 768,
+    "height": 1024,
+    "price": {
+      "bottom": 1012,
+      "height": 96.5,
+      "left": 16,
+      "right": 752,
+      "top": 915.5,
+      "width": 736,
+      "x": 16,
+      "y": 915.5
+    },
+    "priceVisible": true,
+    "scroll": 768,
+    "width": 768
+  },
+  {
+    "tool": "kitchen",
+    "client": 390,
+    "height": 844,
+    "price": {
+      "bottom": 832,
+      "height": 96.5,
+      "left": 16,
+      "right": 374,
+      "top": 735.5,
+      "width": 358,
+      "x": 16,
+      "y": 735.5
+    },
+    "priceVisible": true,
+    "scroll": 390,
+    "width": 390
+  },
+  {
+    "tool": "wardrobe",
+    "client": 1440,
+    "height": 900,
+    "price": {
+      "bottom": 872.5546875,
+      "height": 187.5,
+      "left": 1031.921875,
+      "right": 1374.921875,
+      "top": 685.0546875,
+      "width": 343,
+      "x": 1031.921875,
+      "y": 685.0546875
+    },
+    "priceVisible": true,
+    "scroll": 1440,
+    "width": 1440
+  },
+  {
+    "tool": "wardrobe",
+    "client": 1024,
+    "height": 768,
+    "price": {
+      "bottom": 738.5546875,
+      "height": 183.5,
+      "left": 685,
+      "right": 993,
+      "top": 555.0546875,
+      "width": 308,
+      "x": 685,
+      "y": 555.0546875
+    },
+    "priceVisible": true,
+    "scroll": 1024,
+    "width": 1024
+  },
+  {
+    "tool": "wardrobe",
+    "client": 768,
+    "height": 1024,
+    "price": {
+      "bottom": 1012,
+      "height": 96.5,
+      "left": 16,
+      "right": 752,
+      "top": 915.5,
+      "width": 736,
+      "x": 16,
+      "y": 915.5
+    },
+    "priceVisible": true,
+    "scroll": 768,
+    "width": 768
+  },
+  {
+    "tool": "wardrobe",
+    "client": 390,
+    "height": 844,
+    "price": {
+      "bottom": 832,
+      "height": 96.5,
+      "left": 16,
+      "right": 374,
+      "top": 735.5,
+      "width": 358,
+      "x": 16,
+      "y": 735.5
+    },
+    "priceVisible": true,
+    "scroll": 390,
+    "width": 390
+  },
+  {
+    "tool": "summary",
+    "client": 1440,
+    "height": 900,
+    "price": {
+      "bottom": 398.0390625,
+      "height": 73,
+      "left": 1074,
+      "right": 1348,
+      "top": 325.0390625,
+      "width": 274,
+      "x": 1074,
+      "y": 325.0390625
+    },
+    "priceVisible": true,
+    "scroll": 1440,
+    "width": 1440
+  },
+  {
+    "tool": "summary",
+    "client": 1024,
+    "height": 768,
+    "price": {
+      "bottom": 389.0390625,
+      "height": 73,
+      "left": 712,
+      "right": 966,
+      "top": 316.0390625,
+      "width": 254,
+      "x": 712,
+      "y": 316.0390625
+    },
+    "priceVisible": true,
+    "scroll": 1024,
+    "width": 1024
+  },
+  {
+    "tool": "summary",
+    "client": 768,
+    "height": 1024,
+    "price": {
+      "bottom": 1012,
+      "height": 85,
+      "left": 16,
+      "right": 752,
+      "top": 927,
+      "width": 736,
+      "x": 16,
+      "y": 927
+    },
+    "priceVisible": true,
+    "scroll": 768,
+    "width": 768
+  },
+  {
+    "tool": "summary",
+    "client": 390,
+    "height": 844,
+    "price": {
+      "bottom": 832,
+      "height": 85,
+      "left": 16,
+      "right": 374,
+      "top": 747,
+      "width": 358,
+      "x": 16,
+      "y": 747
+    },
+    "priceVisible": true,
+    "scroll": 390,
+    "width": 390
+  },
+  {
+    "tool": "interior",
+    "client": 1440,
+    "height": 900,
+    "price": {
+      "bottom": 890,
+      "height": 119.1953125,
+      "left": 1056,
+      "right": 1356,
+      "top": 770.8046875,
+      "width": 300,
+      "x": 1056,
+      "y": 770.8046875
+    },
+    "priceVisible": true,
+    "scroll": 1440,
+    "width": 1440
+  },
+  {
+    "tool": "interior",
+    "client": 1024,
+    "height": 768,
+    "price": {
+      "bottom": 758,
+      "height": 119.1953125,
+      "left": 708,
+      "right": 980,
+      "top": 638.8046875,
+      "width": 272,
+      "x": 708,
+      "y": 638.8046875
+    },
+    "priceVisible": true,
+    "scroll": 1024,
+    "width": 1024
+  },
+  {
+    "tool": "interior",
+    "client": 768,
+    "height": 1024,
+    "price": {
+      "bottom": 1012,
+      "height": 119.1953125,
+      "left": 16,
+      "right": 752,
+      "top": 892.8046875,
+      "width": 736,
+      "x": 16,
+      "y": 892.8046875
+    },
+    "priceVisible": true,
+    "scroll": 768,
+    "width": 768
+  },
+  {
+    "tool": "interior",
+    "client": 390,
+    "height": 844,
+    "price": {
+      "bottom": 832,
+      "height": 116.1953125,
+      "left": 16,
+      "right": 374,
+      "top": 715.8046875,
+      "width": 358,
+      "x": 16,
+      "y": 715.8046875
+    },
+    "priceVisible": true,
+    "scroll": 390,
+    "width": 390
+  }
+]
