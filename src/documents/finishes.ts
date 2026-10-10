@@ -7,9 +7,10 @@ export function proposalFinishes(
 ): Material[] {
   let items: Array<Material | undefined>;
   if (design.kind === "facade")
-    items = design.items.map((p) =>
+    items = design.items.flatMap((p) => [
       catalog.productFinishes.find((f) => f.id === p.finishId),
-    );
+      catalog.productFinishes.find((f) => f.id === p.finishInsideId),
+    ]);
   else if (design.kind === "interior")
     items = [
       catalog.laminates.find((f) => f.id === design.laminateId),

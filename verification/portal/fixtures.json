@@ -1,0 +1,282 @@
+{
+  "studio": {
+    "version": 1,
+    "id": "491c3768-92dc-45cb-8ea4-cd1780184bcd",
+    "kind": "facade",
+    "view": "house",
+    "items": [
+      {
+        "id": "entry",
+        "kind": "door",
+        "modelId": "door-0",
+        "corners": [
+          {
+            "x": 0.35,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.85
+          },
+          {
+            "x": 0.35,
+            "y": 0.85
+          }
+        ],
+        "color": "#383e42",
+        "handle": "bar",
+        "brightness": 1,
+        "width": 100,
+        "height": 210,
+        "options": [],
+        "materialType": "pvc",
+        "profile": "standard",
+        "finishId": "anthracite",
+        "panes": 2,
+        "shutterOpen": true
+      },
+      {
+        "id": "ground-left",
+        "kind": "window",
+        "modelId": "double",
+        "corners": [
+          {
+            "x": 0.35,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.85
+          },
+          {
+            "x": 0.35,
+            "y": 0.85
+          }
+        ],
+        "color": "#383e42",
+        "handle": "bar",
+        "brightness": 1,
+        "width": 140,
+        "height": 140,
+        "options": [],
+        "materialType": "pvc",
+        "profile": "standard",
+        "finishId": "anthracite",
+        "panes": 2,
+        "shutterOpen": true
+      },
+      {
+        "id": "ground-right",
+        "kind": "window",
+        "modelId": "double",
+        "corners": [
+          {
+            "x": 0.35,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.85
+          },
+          {
+            "x": 0.35,
+            "y": 0.85
+          }
+        ],
+        "color": "#383e42",
+        "handle": "bar",
+        "brightness": 1,
+        "width": 95,
+        "height": 120,
+        "options": [],
+        "materialType": "pvc",
+        "profile": "standard",
+        "finishId": "anthracite",
+        "panes": 2,
+        "shutterOpen": true,
+        "colorInside": "#ffffff"
+      },
+      {
+        "id": "upper-left",
+        "kind": "window",
+        "modelId": "double",
+        "corners": [
+          {
+            "x": 0.35,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.85
+          },
+          {
+            "x": 0.35,
+            "y": 0.85
+          }
+        ],
+        "color": "#383e42",
+        "handle": "bar",
+        "brightness": 1,
+        "width": 140,
+        "height": 140,
+        "options": [],
+        "materialType": "pvc",
+        "profile": "standard",
+        "finishId": "anthracite",
+        "panes": 2,
+        "shutterOpen": true
+      },
+      {
+        "id": "upper-center",
+        "kind": "window",
+        "modelId": "double",
+        "corners": [
+          {
+            "x": 0.35,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.85
+          },
+          {
+            "x": 0.35,
+            "y": 0.85
+          }
+        ],
+        "color": "#383e42",
+        "handle": "bar",
+        "brightness": 1,
+        "width": 140,
+        "height": 140,
+        "options": [],
+        "materialType": "pvc",
+        "profile": "standard",
+        "finishId": "anthracite",
+        "panes": 2,
+        "shutterOpen": true
+      },
+      {
+        "id": "upper-right",
+        "kind": "window",
+        "modelId": "double",
+        "corners": [
+          {
+            "x": 0.35,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.85
+          },
+          {
+            "x": 0.35,
+            "y": 0.85
+          }
+        ],
+        "color": "#383e42",
+        "handle": "bar",
+        "brightness": 1,
+        "width": 140,
+        "height": 140,
+        "options": [],
+        "materialType": "pvc",
+        "profile": "standard",
+        "finishId": "anthracite",
+        "panes": 2,
+        "shutterOpen": true
+      }
+    ],
+    "facadeColor": "#e6e0d4",
+    "evening": false,
+    "railing": "glass",
+    "gate": "sliding",
+    "garage": false,
+    "installation": true,
+    "vat": false,
+    "exact": false,
+    "removal": false
+  },
+  "photo": {
+    "version": 1,
+    "id": "photo-fixture",
+    "kind": "facade",
+    "view": "photo",
+    "items": [
+      {
+        "id": "custom-photo-door",
+        "kind": "door",
+        "modelId": "door-0",
+        "corners": [
+          {
+            "x": 0.35,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.25
+          },
+          {
+            "x": 0.65,
+            "y": 0.85
+          },
+          {
+            "x": 0.35,
+            "y": 0.85
+          }
+        ],
+        "color": "#383e42",
+        "handle": "bar",
+        "brightness": 1,
+        "width": 100,
+        "height": 210,
+        "options": [
+          "handle-120",
+          "handle-160",
+          "fingerprint"
+        ],
+        "materialType": "wood",
+        "profile": "standard",
+        "finishId": "walnut",
+        "panes": 2,
+        "shutterOpen": true,
+        "colorInside": "#ffffff"
+      }
+    ],
+    "facadeColor": "#e6e0d4",
+    "evening": false,
+    "railing": "glass",
+    "gate": "sliding",
+    "garage": false,
+    "installation": true,
+    "vat": true,
+    "exact": false,
+    "removal": true
+  },
+  "studioUrl": "http://127.0.0.1:4175/preview?brand=default#design=N4IgbgpgTgzglgewHYgFwEYA0IDGBDAFzwBsEBzASQBM0QqIAzPAV2IJG3vjJVVEliJeWEHBqoQAFgCc6HAGYA7ADYAHAFppAJio51kgKw4ARutUQ8k9TirpFqgAzpVk4zY4gA1nCTiQTfHoPMDgIAHdaAAsEZhgIDzgCCABbGDQAbVAxWggkAigATw9vX1oqBAQoD2SEemJqMoqodQcPHEqkaDTUTJAADzQHADp5A2wi1GGtAwBfTFAByaHlMZAJqdn5-sHl1fWh1U2FndHxncOZgF1sdtIqiQBieVV5CEktD0i8X2J4iWM8FVsMYoHAyJECJ0YN0RGExARImh0A4HNhIhAwRC0FpkdgEAAHAhCbrpa4gZKEaBwEgAFQK+L+IHxYBwHnxUAQDDgv1oMCIvkBNGwXKQcBgkQaEm+CKgeBwiXi2Hx3wg3S02HFzAISSgAHkGbx8swIHMsn4yBzmL51L8GOxsCU-HDfAgItganVJXQYsYeTcOl0Msclqc1jtpqbtksVmclhGtothjGw0sLgmTntzrMybdKrQni83h80d8qDz-oCPCDMZDVTDsHCqAikZJUSB0TWW22CUTkCSyRSddTiHSGbRmaylRyueWQHzS4KPCKxRK-NLIrL5Uk2Sq1RrIlqdfrcmgjSattkJBaYtbQeD7V4fE6n67qrUIPU-OVmL7FbgA7AQZRsMob7PGwZJpmcZHMBuyxsMaYQSMUEIdm-p3PmzyvO8nylrOAJAiA1b3lC9YgI2zaoNIqwdveSJaN2hLEhkA6UqCtL0oyE5stO3KMvOApQEK-g+CuXrrpuCo7lC2L7oe0DHoaUDGuhlQUEg8BBI8DA6bpICRpeIDMPiDLNLaD6OrQzrlG65Lvp+jQ-n6-5QJ0gE9EhoHhjBiZwSmGyRr5yb7IhsFeamaH-hhjxYUWuE-IyBFVneEKkUiDbwoiGCtmiGJ0dljG9hpLHumxw6jlxLI8ZyfG8vyVCLsKoniuJeQbnKUlKruslzge2oKQap7KeeZq0MZpnWLkOrFE+VkvrZHofl636-m0AEkp5KFDOBsHBd5gU7HtEUHSGW0XDmCDRSABbYcW7Z4YllbAiltbQul5GZV2uWdgVeJMX2JXkmVHFjhI3FTjVs4CQ1QlLs1q60BJHXbl1MmoOqvXyXqg2oGeBl+ON0DqC9M2lBI1mvu69nLT6zntK5gYeWFW07UFLM+YdZ0c6d8EHJFub3NdsU4SWCW0Elz01mlGAZU2WXoDl7Z5Viv0gD2zE9KxQ4g5Vk5MrxUP1Y1Imii1a5tZJKNMt16Nyf12Mnrjw1XMKcp4PQADCl15o8EDKBADhUJIHgQJAopIGQaBMMQcTYLK3I+JHV7EHgb3YGQlK8sQYiJx4GeymQfzR7HogaUQxAp0VQ0qeAhBRyQJcQH0crsKgxcQHHKQIGAJD1zHJozEAA",
+  "photoUrl": "http://127.0.0.1:4175/preview?brand=default#design=N4IgbgpgTgzglgewHYgFwEYA0IDGBDAFzwBsEBzASQBM0QqIAzPAV2IJG3vjJVVEliJeWEHBqoQABwAWCAggC0DOAA8CzKBA4gA1nCTiQTfPW1g4EAO60ZchNrgEIAWxhoA2qDG0czGPOcFW3kFKgQEKG09A1owiO1nBHpialjwqAUABm0cCKRoN1RPEBU0TIA6AGYAVmwATzLygCZqgF9MUFLUCoA2WpAG7ua2jpLGvvrGgA4RzsaayaGZ1oBdbFzSSIkAYkqpyogAFibtaTwDYi0JACM8SOxrqDgyaQJ8mEKRSzECaTR0TKZbDSCDPV5oJoA7AISQEISFdwgM4XCAKdBNbLA85US5onqYoz6MjQSRPJDsNYgZyEaBwEgAFTqkiuIEs4Ro2FJCGUl1o-mxdw5hKQcBg0lSEksJCQzHYnPOEEKTWwYtlTigAHlmbwCFBmBB1ghNhQkPBTDsGJarSBVthjHh6ABhI3xHYQHoQTJUQ7aCCQEVIMhoJjEGAGkBQPBwYhE2hkYh4D7aMg0vkxqix7ApyPE4MkMPYfT84gJuHINC6-XYMCECt68MQFR4HDsVAhgsRlwIGvEOv61qtIA"
+}

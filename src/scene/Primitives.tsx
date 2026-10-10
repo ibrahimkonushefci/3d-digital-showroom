@@ -14,7 +14,7 @@ function rounded(size: [number, number, number], bevel: number) {
     entry = {
       geometry: new RoundedBoxGeometry(
         ...size,
-        2,
+        4,
         Math.min(bevel, ...size.map((n) => n / 3)),
       ),
       users: 0,

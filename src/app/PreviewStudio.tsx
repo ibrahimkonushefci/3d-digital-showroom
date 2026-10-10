@@ -5,7 +5,7 @@ import { presentationPresets } from "../designer3d/presets";
 import Scene from "../designer3d/Scene";
 import House from "../doorPreview/House";
 import InteriorScene from "../interior/Scene";
-import { newFacade } from "../doorPreview/store";
+import { portalPresentation } from "../doorPreview/presentation";
 import { newInterior } from "../interior/layout";
 import { createOffer, downloadBlob } from "../documents/offer";
 import { interiorPrice } from "../interior/pricing";
@@ -19,7 +19,7 @@ export default function PreviewStudio() {
   const [id, setId] = useState(presets[0]?.id || "exterior"),
     [status, setStatus] = useState("Ready");
   const p = presets.find((p) => p.id === id),
-    facade = useMemo(() => newFacade(catalog), [catalog]),
+    facade = useMemo(() => portalPresentation(catalog), [catalog]),
     interior = useMemo(() => newInterior(catalog), [catalog]);
   const quality = useRenderQuality((s) => s.level);
   const capture = useRef<CaptureImage | null>(null),
@@ -126,7 +126,7 @@ export default function PreviewStudio() {
           <House
             design={facade}
             catalog={catalog}
-            preset="facade"
+            preset="full"
             capture={register}
           />
         ) : (

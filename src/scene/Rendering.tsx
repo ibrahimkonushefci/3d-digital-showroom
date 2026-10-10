@@ -22,7 +22,7 @@ export const showroomGL = {
   preserveDrawingBuffer: false,
   toneMapping: ACESFilmicToneMapping,
   outputColorSpace: SRGBColorSpace,
-  toneMappingExposure: 1.02,
+  toneMappingExposure: 0.98,
 };
 export function RefreshShadows({
   revision,
@@ -84,11 +84,11 @@ export function Rendering({
     [pipeline],
   );
   useEffect(() => {
-    gl.shadowMap.type = crispShadows ? PCFShadowMap : PCFSoftShadowMap;
+    gl.shadowMap.type = PCFSoftShadowMap;
     setDpr(
       quality === "lightweight"
         ? 1
-        : Math.min(window.devicePixelRatio, quality === "high" ? 1.5 : 1.35),
+        : Math.min(window.devicePixelRatio, quality === "high" ? 1.75 : 1.5),
     );
     invalidate();
   }, [quality, gl, setDpr, invalidate, crispShadows]);

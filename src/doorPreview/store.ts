@@ -40,21 +40,7 @@ export function newFacade(c: Catalog): FacadeDesign {
     id: uid(),
     kind: "facade",
     view: "house",
-    items: [
-      product(c, "door", "entry"),
-      ...[
-        "ground-left",
-        "ground-right",
-        "upper-left",
-        "upper-right",
-        "balcony",
-      ].map((id) => ({
-        ...product(c, "window", id),
-        width: id === "balcony" ? 90 : 140,
-        height: id === "balcony" ? 215 : 140,
-        options: ["shutter-manual", "sill"],
-      })),
-    ],
+    items: [product(c, "door", "entry")],
     facadeColor: "#e6e0d4",
     evening: false,
     railing: "glass",
@@ -68,14 +54,49 @@ export function newFacade(c: Catalog): FacadeDesign {
 }
 export const useFacade = create<{
   design: FacadeDesign | null;
+  photoDesign: FacadeDesign | null;
+  pendingView: "house" | "photo" | null;
   set: (d: FacadeDesign) => void;
-}>((set) => ({ design: null, set: (design) => set({ design }) }));
+  setPhoto: (d: FacadeDesign) => void;
+  receive: (d: FacadeDesign) => void;
+}>((set) => ({
+  design: null,
+  photoDesign: null,
+  pendingView: null,
+  // Shared photo documents must never replace the studio draft.
+  set: (design) =>
+    set(design.view === "photo" ? { photoDesign: design } : { design }),
+  setPhoto: (photoDesign) => set({ photoDesign }),
+  receive: (design) =>
+    set({
+      ...(design.view === "photo" ? { photoDesign: design } : { design }),
+      pendingView: design.view,
+    }),
+}));
+export function restoredView(
+  brand: string,
+  sharedView: "house" | "photo" | null,
+): "house" | "photo" {
+  if (sharedView) return sharedView;
+  try {
+    if (
+      JSON.parse(localStorage.getItem(`showroom-facade-${brand}`) || "null")
+        ?.view === "photo"
+    )
+      return "photo";
+    return localStorage.getItem(`showroom-preview-mode-${brand}`) === "photo"
+      ? "photo"
+      : "house";
+  } catch {
+    return "house";
+  }
+}
 export function loadFacade(brand: string, c: Catalog) {
   try {
     const raw = localStorage.getItem(`showroom-facade-${brand}`);
     if (raw) {
       const d = FacadeSchema.parse(JSON.parse(raw));
-      if (validFacade(d, c)) return d;
+      if (validFacade(d, c) && d.view !== "photo") return d;
     }
   } catch {
     /* invalid local data */
@@ -94,6 +115,8 @@ export function validFacade(d: FacadeDesign, c: Catalog) {
       return (
         !!model &&
         (!p.finishId || c.productFinishes.some((f) => f.id === p.finishId)) &&
+        (!p.finishInsideId ||
+          c.productFinishes.some((f) => f.id === p.finishInsideId)) &&
         p.options.every((id) => model.options?.some((o) => o.id === id)) &&
         (p.kind === "door" ? c.doorTypes : c.windowMaterials).some(
           (t) => t.id === p.materialType,
@@ -102,4 +125,42 @@ export function validFacade(d: FacadeDesign, c: Catalog) {
       );
     })
   );
+}
+
+const PhotoDraftSchema = FacadeSchema.extend({
+  items: PlacementSchema.array().max(60),
+});
+export function loadPhotoDraft(brand: string, c: Catalog): FacadeDesign | null {
+  for (const key of [
+    `showroom-photo-quote-${brand}`,
+    `showroom-facade-${brand}`,
+  ]) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+      const d = PhotoDraftSchema.parse(JSON.parse(raw));
+      if (d.view === "photo" && (!d.items.length || validFacade(d, c)))
+        return d;
+    } catch {
+      /* Keep the original record; do not destroy an unreadable draft. */
+    }
+  }
+  return null;
+}
+export function persistStudio(brand: string, design: FacadeDesign) {
+  const key = `showroom-facade-${brand}`;
+  const raw = localStorage.getItem(key);
+  if (raw) {
+    const old = JSON.parse(raw);
+    if (old.view === "photo") {
+      // Each write must succeed before replacing a legacy photo document.
+      localStorage.setItem(`showroom-facade-photo-backup-${brand}`, raw);
+      if (!localStorage.getItem(`showroom-photo-quote-${brand}`))
+        localStorage.setItem(`showroom-photo-quote-${brand}`, raw);
+    }
+  }
+  localStorage.setItem(key, JSON.stringify(design));
+}
+export function persistPhotoDraft(brand: string, design: FacadeDesign) {
+  localStorage.setItem(`showroom-photo-quote-${brand}`, JSON.stringify(design));
 }

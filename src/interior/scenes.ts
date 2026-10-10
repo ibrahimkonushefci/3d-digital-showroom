@@ -34,7 +34,9 @@ function scene(
       p.map(([x, y]) => ({ x, y })),
     ),
     floorPolygons: s.floorPolygons.map((p) => p.map(([x, y]) => ({ x, y }))),
-    occlusions: s.occlusions.map((p) => p.map(([x, y]) => ({ x, y }))),
+    occlusions: ((s.occlusions || []) as number[][][]).map((p) =>
+      p.map(([x, y]) => ({ x, y })),
+    ),
     doors: s.doors.map((d) => ({
       ...d,
       handle: d.handle as [number, number],

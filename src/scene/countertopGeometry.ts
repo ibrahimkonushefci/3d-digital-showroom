@@ -5,12 +5,19 @@ export type Point2 = [number, number];
 export function worktopOutlines(cabinets: Cabinet[]): Point2[][] {
   const rects = cabinets.map((c) => {
     const b = bounds(c);
-    return {
-      x0: b.x0 / 100 - 0.006,
-      x1: b.x1 / 100 + 0.006,
-      z0: b.z0 / 100 - 0.006,
-      z1: b.z1 / 100 + 0.006,
-    };
+    let x0 = b.x0 / 100 - 0.004;
+    let x1 = b.x1 / 100 + 0.004;
+    let z0 = b.z0 / 100 - 0.004;
+    let z1 = b.z1 / 100 + 0.004;
+    if (c.wall === "back") z1 += 0.028;
+    else if (c.wall === "left") x1 += 0.028;
+    else if (c.wall === "right") x0 -= 0.028;
+    else if (c.wall === "front") z0 -= 0.028;
+    else if (c.wall === "island") {
+      z1 += 0.028;
+      z0 -= 0.028;
+    }
+    return { x0, x1, z0, z1 };
   });
   const xs = [...new Set(rects.flatMap((r) => [r.x0, r.x1]))].sort(
       (a, b) => a - b,

@@ -77,11 +77,13 @@ export function Swatches({
   value,
   onChange,
   title,
+  selectedLabel,
 }: {
   items: Material[];
   value: string;
   onChange: (v: string) => void;
   title: string;
+  selectedLabel?: string;
 }) {
   const { language } = useLanguage();
   const { assetUrl } = useBrand();
@@ -90,10 +92,11 @@ export function Swatches({
       <h3>
         {title}
         <span>
-          {label(
-            items.find((m) => m.id === value)?.name || items[0].name,
-            language,
-          )}
+          {selectedLabel ||
+            label(
+              items.find((m) => m.id === value)?.name || items[0].name,
+              language,
+            )}
         </span>
       </h3>
       <div className="swatches">

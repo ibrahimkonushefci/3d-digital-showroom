@@ -221,6 +221,11 @@ export function newDesign(
       led: true,
       profile: "flat",
     },
+    environment: {
+      floor: "laminate",
+      wallColor: "#d4d8df",
+      internalLed: kind === "wardrobe",
+    },
     installation: true,
     vat: false,
     exact: false,

@@ -48,11 +48,17 @@ export function SurfaceMaterial({
           ? maps[offset + (material.normalMap ? 1 : 0)]
           : undefined
       }
-      roughness={lacquer && !material.texture ? 0.4 : material.roughness}
+      roughness={
+        world
+          ? 0.28
+          : lacquer && !material.texture
+            ? 0.4
+            : material.roughness
+      }
       metalness={lacquer ? 0.02 : 0}
-      clearcoat={lacquer && !material.texture ? 0.35 : 0}
-      clearcoatRoughness={0.35}
-      envMapIntensity={lacquer ? 1 : 0.6}
+      clearcoat={world ? 0.6 : lacquer && !material.texture ? 0.35 : 0}
+      clearcoatRoughness={world ? 0.16 : 0.35}
+      envMapIntensity={world ? 1.1 : lacquer ? 1 : 0.6}
       onBeforeCompile={
         world
           ? (shader) => {

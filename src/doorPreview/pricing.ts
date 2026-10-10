@@ -32,10 +32,46 @@ export function productPrice(p: Placement, c: Catalog) {
     ) + options
   );
 }
+export function productDescription(p: Placement, c: Catalog, l: Language) {
+  const model = (p.kind === "door" ? c.doors : c.windows).find(
+    (m) => m.id === p.modelId,
+  )!;
+  const material = (p.kind === "door" ? c.doorTypes : c.windowMaterials).find(
+    (m) => m.id === p.materialType,
+  );
+  const outside = c.productFinishes.find((f) => f.id === p.finishId),
+    inside = c.productFinishes.find((f) => f.id === p.finishInsideId);
+  const parts = [
+    label(model.name, l),
+    `${p.width} × ${p.height} cm`,
+    material ? label(material.name, l) : p.materialType,
+  ];
+  if (p.kind === "window") {
+    const profile = c.windowProfiles.find((f) => f.id === p.profile);
+    if (profile) parts.push(label(profile.name, l));
+    parts.push(
+      translate(
+        l,
+        p.options.includes("triple-glass") ? "tripleGlass" : "doubleGlass",
+      ),
+    );
+  }
+  parts.push(
+    `${translate(l, "outsideFinish")}: ${outside ? label(outside.name, l) : p.color}`,
+    `${translate(l, "insideFinish")}: ${inside ? label(inside.name, l) : p.colorInside || (outside ? label(outside.name, l) : p.color)}`,
+  );
+  parts.push(
+    ...p.options.map((id) => {
+      const o = model.options.find((o) => o.id === id);
+      return o ? label(o.name, l) : id;
+    }),
+  );
+  return parts.join(" · ");
+}
 export function facadePrice(d: FacadeDesign, c: Catalog, l: Language) {
   const lines: PriceLine[] = d.items.map((p) => ({
     id: p.id,
-    name: `${label((p.kind === "door" ? c.doors : c.windows).find((m) => m.id === p.modelId)!.name, l)} · ${p.width} × ${p.height} cm${p.options.length ? " · " + p.options.map((id) => label((p.kind === "door" ? c.doors : c.windows).find((m) => m.id === p.modelId)!.options.find((o) => o.id === id)?.name || { sq: id, en: id, de: id }, l)).join(", ") : ""}`,
+    name: productDescription(p, c, l),
     quantity: 1,
     unit: "piece",
     amount: productPrice(p, c),

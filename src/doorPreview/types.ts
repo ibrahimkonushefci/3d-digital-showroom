@@ -19,6 +19,7 @@ export const PlacementSchema = z.object({
   materialType: z.string().default("pvc"),
   profile: z.string().default("standard"),
   finishId: z.string().optional(),
+  finishInsideId: z.string().optional(),
   colorInside: z
     .string()
     .regex(/^#[0-9a-fA-F]{6}$/)

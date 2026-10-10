@@ -16,38 +16,75 @@ import {
   Box3,
   Vector3,
   Color,
+  PMREMGenerator,
+  Vector2,
+  type Texture,
 } from "three";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import type { Catalog, Material } from "../catalog/types";
 import type { Placement } from "../doorPreview/types";
 const loader = new TextureLoader();
-const textures = new Map<string, ReturnType<TextureLoader["load"]>>();
+const textures = new Map<string, Texture>();
+const readiness = new Map<Texture, Promise<void>>();
 function texture(path: string, assetUrl: (s: string) => string, color = false) {
-  const url = assetUrl(path);
-  if (!textures.has(url)) {
-    const t = loader.load(url);
+  const url = assetUrl(path),
+    key = url + (color ? ":color" : ":data");
+  if (!textures.has(key)) {
+    let done!: () => void;
+    const ready = new Promise<void>((resolve) => {
+      done = resolve;
+    });
+    const t = loader.load(url, done, undefined, done);
     if (color) t.colorSpace = SRGBColorSpace;
-    textures.set(url, t);
+    t.anisotropy = 4;
+    textures.set(key, t);
+    readiness.set(t, ready);
   }
-  return textures.get(url)!;
+  return textures.get(key)!;
+}
+export function surfaceResponse(materialType: string, grain: boolean) {
+  if (grain)
+    return {
+      roughness: materialType === "wood" ? 0.48 : 0.52,
+      metalness: 0,
+      clearcoat: materialType === "wood" ? 0.18 : 0.08,
+    };
+  switch (materialType) {
+    case "aluminium":
+      return { roughness: 0.42, metalness: 0.04, clearcoat: 0.22 };
+    case "security":
+      return { roughness: 0.52, metalness: 0.03, clearcoat: 0.12 };
+    case "wood":
+      return { roughness: 0.46, metalness: 0, clearcoat: 0.18 };
+    default:
+      return { roughness: 0.34, metalness: 0, clearcoat: 0.1 };
+  }
 }
 function finishMaterial(
   f: Material | undefined,
   color: string,
+  materialType: string,
   assetUrl: (s: string) => string,
   performance: boolean,
 ) {
-  return new MeshStandardMaterial({
+  return new MeshPhysicalMaterial({
     color: f?.texture ? "#ffffff" : color,
     map: f?.texture ? texture(f.texture, assetUrl, true) : null,
     normalMap:
       !performance && f?.normalMap ? texture(f.normalMap, assetUrl) : null,
+    normalScale: new Vector2(0.16, 0.16),
     roughnessMap:
       !performance && f?.roughnessMap
         ? texture(f.roughnessMap, assetUrl)
         : null,
-    roughness: f?.roughness ?? 0.45,
-    metalness: f?.texture ? 0 : 0.2,
+    ...surfaceResponse(materialType, !!f?.texture),
+    clearcoatRoughness: 0.4,
+    envMapIntensity: 0.85,
   });
+}
+export function productReady(g: Group): Promise<void> {
+  return g.userData.ready || Promise.resolve();
 }
 /** Shared physical model: local origin is opening bottom center; positive Z faces the viewer. */
 export function createProduct(
@@ -61,22 +98,36 @@ export function createProduct(
     h = p.height / 100,
     depth = 0.12;
   const f = c.productFinishes.find((f) => f.id === p.finishId),
-    m = finishMaterial(f, p.color, assetUrl, performance),
-    inside = new MeshStandardMaterial({
-      color: p.colorInside || p.color,
-      roughness: 0.55,
-    }),
+    m = finishMaterial(f, p.color, p.materialType, assetUrl, performance),
+    insideFinish = p.finishInsideId
+      ? c.productFinishes.find((f) => f.id === p.finishInsideId)
+      : p.colorInside
+        ? undefined
+        : f,
+    inside = finishMaterial(
+      insideFinish,
+      insideFinish?.color || p.colorInside || p.color,
+      p.materialType,
+      assetUrl,
+      performance,
+    ),
     metal = new MeshStandardMaterial({
-      color: p.options.includes("black-handle") ? "#24282b" : "#adb8be",
+      color: "#adb8be",
       metalness: 0.95,
       roughness: 0.23,
     }),
+    handleMetal = new MeshStandardMaterial({
+      color: p.options.includes("black-handle") ? "#202426" : "#bdc3c4",
+      metalness: p.options.includes("black-handle") ? 0.08 : 0.9,
+      roughness: 0.28,
+    }),
+    seal = new MeshStandardMaterial({ color: "#222625", roughness: 0.88 }),
     glass = new MeshPhysicalMaterial({
-      color: "#8faeb9",
-      metalness: 0.15,
+      color: "#d0dfdf",
+      metalness: 0,
       roughness: p.options.includes("satin") ? 0.55 : 0.08,
       transparent: true,
-      opacity: p.options.includes("satin") ? 0.65 : 0.45,
+      opacity: p.options.includes("satin") ? 0.75 : 0.38,
       transmission: performance ? 0 : 0.25,
       envMapIntensity: 1.2,
     });
@@ -90,13 +141,34 @@ export function createProduct(
     parent: Group,
     size: [number, number, number],
     pos: [number, number, number],
-    mat = m,
+    mat: MeshStandardMaterial = m,
     tag = "solid",
   ) => {
-    const mesh = new Mesh(new BoxGeometry(...size), mat);
+    const geometry =
+      performance || tag === "glass"
+        ? new BoxGeometry(...size)
+        : new RoundedBoxGeometry(
+            ...size,
+            2,
+            Math.min(0.0018, ...size.map((n) => n / 5)),
+          );
+    // Continuous product-space UVs keep one grain sheet across glass cutouts.
+    if (mat === m || mat === inside) {
+      const vertices = geometry.attributes.position,
+        uv = geometry.attributes.uv;
+      for (let i = 0; i < vertices.count; i++)
+        uv.setXY(
+          i,
+          (vertices.getY(i) + pos[1]) / h,
+          (vertices.getX(i) + pos[0] + w / 2) / w,
+        );
+    }
+    const mesh = new Mesh(geometry, mat === m ? [m, m, m, m, m, inside] : mat);
     mesh.position.set(...pos);
-    mesh.castShadow = mesh.receiveShadow = true;
+    mesh.castShadow = tag !== "glass";
+    mesh.receiveShadow = true;
     mesh.userData.surface = tag;
+    mesh.userData.layer = parent === frame ? "frame" : "leaf";
     parent.add(mesh);
     return mesh;
   };
@@ -104,6 +176,22 @@ export function createProduct(
   add(frame, [0.07, h + 0.04, depth], [w / 2 - 0.025, h / 2, 0]);
   add(frame, [w, 0.07, depth], [0, h - 0.025, 0]);
   add(frame, [w, 0.028, 0.18], [0, 0.01, 0.02], metal);
+  for (const side of [-1, 1]) {
+    add(
+      frame,
+      [0.015, h - 0.075, 0.014],
+      [side * (w / 2 - 0.057), h / 2, -0.045],
+      seal,
+    );
+    add(
+      frame,
+      [0.07, h + 0.04, 0.012],
+      [side * (w / 2 - 0.025), h / 2, -0.066],
+      inside,
+    );
+  }
+  add(frame, [w - 0.08, 0.015, 0.014], [0, h - 0.057, -0.045], seal);
+  add(frame, [w, 0.07, 0.012], [0, h - 0.025, -0.066], inside);
   if (p.kind === "door") {
     const model = c.doors.find((d) => d.id === p.modelId);
     const style = model?.style || 0;
@@ -169,25 +257,25 @@ export function createProduct(
       : p.options.includes("handle-120")
         ? 1.2
         : 0.8;
-    add(leaf, [0.025, len, 0.035], [w * 0.32, h * 0.51, 0.11], metal);
+    add(leaf, [0.025, len, 0.035], [w * 0.32, h * 0.51, 0.11], handleMetal);
     for (const y of [-1, 1])
       add(
         leaf,
         [0.025, 0.028, 0.065],
         [w * 0.32, h * 0.51 + y * len * 0.42, 0.08],
-        metal,
+        handleMetal,
       );
     if (p.options.includes("fingerprint")) {
       add(
         leaf,
         [0.06, 0.09, 0.012],
-        [w * 0.31, h * 0.74, 0.058],
+        [w * 0.32 - 0.09, h * 0.74, 0.058],
         new MeshStandardMaterial({ color: "#171c1f" }),
       );
       add(
         leaf,
         [0.035, 0.03, 0.006],
-        [w * 0.31, h * 0.75, 0.067],
+        [w * 0.32 - 0.09, h * 0.75, 0.067],
         new MeshStandardMaterial({
           color: "#68a5a6",
           emissive: "#327c82",
@@ -212,7 +300,8 @@ export function createProduct(
         metal,
       );
       hinge.position.set(-w / 2 + 0.065, h * y, 0.045);
-      leaf.add(hinge);
+      hinge.userData.layer = "frame";
+      frame.add(hinge);
     }
     for (const side of [-1, 1])
       if (p.options.includes(side === -1 ? "side-left" : "side-right")) {
@@ -243,46 +332,69 @@ export function createProduct(
   } else {
     const model = c.windows.find((d) => d.id === p.modelId);
     const panes = p.panes;
+    const sliding = p.options.includes("sliding");
+    if (sliding) {
+      for (const y of [0.045, h - 0.045]) {
+        for (const z of [-0.01, 0.07])
+          add(frame, [w - 0.1, 0.01, 0.012], [0, y, z], metal);
+      }
+    }
     for (let i = 0; i < panes; i++) {
-      const sw = (w - 0.13) / panes,
-        x = -w / 2 + 0.065 + sw * (i + 0.5);
-      add(leaf, [sw - 0.045, h - 0.16, 0.015], [x, h / 2, 0], glass, "glass");
+      const pitch = (w - 0.13) / panes,
+        sw = pitch + (sliding && panes > 1 ? 0.035 : 0),
+        x = -w / 2 + 0.065 + pitch * (i + 0.5);
+      const sashZ = sliding ? (i % 2 ? -0.025 : 0.045) : 0.026;
+      const glazingLayers = p.options.includes("triple-glass") ? 3 : 2;
+      for (let layer = 0; layer < glazingLayers; layer++) {
+        const pane = add(
+          leaf,
+          [sw - 0.045, h - 0.16, 0.003],
+          [x, h / 2, sashZ - 0.05 + layer * 0.012],
+          glass,
+          "glass",
+        );
+        pane.userData.glazingLayers = glazingLayers;
+      }
+      // Spacers expose the insulation stack from the profile/detail cameras.
+      for (let layer = 0; layer < glazingLayers; layer++) {
+        const z = sashZ - 0.05 + layer * 0.012;
+        for (const side of [-1, 1]) {
+          add(
+            leaf,
+            [0.008, h - 0.14, 0.006],
+            [x + side * (sw / 2 - 0.034), h / 2, z],
+            metal,
+          );
+          add(
+            leaf,
+            [sw - 0.07, 0.008, 0.006],
+            [x, side === 1 ? h - 0.074 : 0.074, z],
+            metal,
+          );
+        }
+      }
       for (const s of [-1, 1]) {
         add(
           leaf,
           [0.035, h - 0.1, 0.075],
-          [x + s * (sw / 2 - 0.025), h / 2, 0.026],
+          [x + s * (sw / 2 - 0.025), h / 2, sashZ],
         );
-        add(leaf, [sw, 0.035, 0.075], [x, s === 1 ? h - 0.065 : 0.065, 0.026]);
+        add(leaf, [sw, 0.035, 0.075], [x, s === 1 ? h - 0.065 : 0.065, sashZ]);
       }
-      if (model?.style !== "fixed") {
+      if (sliding || model?.style !== "fixed") {
         add(
           leaf,
           [0.014, 0.11, 0.026],
-          [x + sw / 2 - 0.06, h / 2, 0.086],
+          [x + sw / 2 - 0.06, h / 2, sashZ + 0.06],
           metal,
         );
         add(
           leaf,
           [0.04, 0.025, 0.018],
-          [x + sw / 2 - 0.056, h / 2 + 0.05, 0.07],
+          [x + sw / 2 - 0.056, h / 2 + 0.05, sashZ + 0.045],
           metal,
         );
       }
-    }
-    for (const side of [-1, 1]) {
-      add(
-        frame,
-        [0.07, h + 0.04, 0.012],
-        [side * (w / 2 - 0.025), h / 2, -0.066],
-        inside,
-      );
-      add(
-        frame,
-        [w, 0.07, 0.012],
-        [0, side === 1 ? h - 0.025 : 0.025, -0.066],
-        inside,
-      );
     }
     if (p.options.includes("sill"))
       add(
@@ -292,13 +404,13 @@ export function createProduct(
         new MeshStandardMaterial({ color: "#d9d9d0" }),
       );
     if (p.options.some((o) => o.startsWith("shutter-"))) {
-      add(frame, [w + 0.1, 0.18, 0.24], [0, h + 0.095, -0.015]);
+      add(frame, [w + 0.1, 0.18, 0.32], [0, h + 0.095, 0.04]);
       if (!p.shutterOpen)
         for (let i = 0; i < Math.ceil(h / 0.05); i++)
           add(
             frame,
             [w - 0.06, 0.045, 0.025],
-            [0, 0.035 + i * 0.05, 0.09],
+            [0, 0.035 + i * 0.05, 0.18],
             new MeshStandardMaterial({ color: p.color, roughness: 0.65 }),
           );
     }
@@ -315,10 +427,27 @@ export function createProduct(
         }),
       );
   }
+  if (p.kind === "door") {
+    add(
+      leaf,
+      [0.095, 0.025, 0.025],
+      [w * 0.32 - 0.025, h * 0.48, -0.06],
+      handleMetal,
+    );
+    leaf.position.set(-w / 2 + 0.065, 0, 0.045);
+    leaf.children.forEach((o) => o.position.sub(leaf.position));
+    g.userData.hinge = leaf.position.toArray();
+  }
+  const pending = new Set<Promise<void>>();
+  for (const material of [m, inside])
+    for (const map of [material.map, material.normalMap, material.roughnessMap])
+      if (map && readiness.has(map)) pending.add(readiness.get(map)!);
+  g.userData.materials = [m, inside, metal, handleMetal, seal, glass];
+  g.userData.ready = Promise.all([...pending]).then(() => undefined);
   return g;
 }
 export function disposeProduct(g: Group) {
-  const mats = new Set<MeshStandardMaterial>();
+  const mats = new Set<MeshStandardMaterial>(g.userData.materials || []);
   g.traverse((o) => {
     if (o instanceof Mesh) {
       o.geometry.dispose();
@@ -329,6 +458,7 @@ export function disposeProduct(g: Group) {
   mats.forEach((m) => m.dispose());
 }
 let offscreen: WebGLRenderer | undefined;
+let photoEnvironment: Texture | undefined;
 async function renderProductImage(
   p: Placement,
   c: Catalog,
@@ -348,62 +478,65 @@ async function renderProductImage(
   offscreen.toneMappingExposure = 1.02;
   const g = createProduct(p, c, assetUrl),
     scene = new Scene();
+  if (!photoEnvironment) {
+    const room = new RoomEnvironment(),
+      pmrem = new PMREMGenerator(offscreen);
+    photoEnvironment = pmrem.fromScene(room, 0.04).texture;
+    room.dispose();
+    pmrem.dispose();
+  }
+  scene.environment = photoEnvironment;
   scene.add(g, new AmbientLight("#fff9ef", 1.1));
   const key = new DirectionalLight("#ffffff", 2.2);
   key.position.set(-2, 4, 5);
   scene.add(key);
-  // Wait for local texture images, with a bounded fallback to material colours.
-  await Promise.all(
-    [...textures.values()].map(
-      (t) =>
-        new Promise<void>((resolve) => {
-          if (t.image?.complete) resolve();
-          else {
-            const start = Date.now();
-            const check = () =>
-              t.image?.complete || Date.now() - start > 2500
-                ? resolve()
-                : setTimeout(check, 30);
-            check();
-          }
-        }),
-    ),
-  );
-  const b = new Box3().setFromObject(g),
-    size = b.getSize(new Vector3()),
-    center = b.getCenter(new Vector3());
-  const camera = new OrthographicCamera(
-    -size.x / 2,
-    size.x / 2,
-    size.y / 2,
-    -size.y / 2,
-    0.1,
-    20,
-  );
-  camera.position.set(center.x, center.y, 5);
-  camera.lookAt(center.x, center.y, 0);
-  offscreen.setSize(Math.round((1024 * size.x) / size.y), 1024, false);
-  offscreen.setClearColor(new Color("#000000"), 0);
-  const render = async (layer: string) => {
-    g.traverse((o) => {
-      if (o instanceof Mesh)
-        o.visible =
-          layer === "all" ||
-          (layer === "frame"
-            ? g.getObjectByName("frame")!.children.includes(o)
-            : o.userData.surface === "glass");
-    });
-    offscreen!.render(scene, camera);
-    const im = new Image();
-    im.src = offscreen!.domElement.toDataURL("image/png");
-    await im.decode();
-    return im;
-  };
-  const image = await render("all"),
-    frame = await render("frame"),
-    mask = await render("glass");
-  disposeProduct(g);
-  return { image, frame, glass: mask };
+  try {
+    await Promise.race([
+      productReady(g),
+      new Promise<void>((_, reject) =>
+        setTimeout(
+          () => reject(Error("Product textures still loading")),
+          10000,
+        ),
+      ),
+    ]);
+    const b = new Box3().setFromObject(g),
+      size = b.getSize(new Vector3()),
+      center = b.getCenter(new Vector3());
+    const camera = new OrthographicCamera(
+      -size.x / 2,
+      size.x / 2,
+      size.y / 2,
+      -size.y / 2,
+      0.1,
+      20,
+    );
+    camera.position.set(center.x, center.y, 5);
+    camera.lookAt(center.x, center.y, 0);
+    offscreen.setSize(Math.round((1024 * size.x) / size.y), 1024, false);
+    offscreen.setClearColor(new Color("#000000"), 0);
+    const render = async (layer: string) => {
+      g.traverse((o) => {
+        if (o instanceof Mesh)
+          o.visible =
+            layer === "all" ||
+            (layer === "frame"
+              ? o.userData.layer === "frame"
+              : o.userData.surface === "glass");
+      });
+      offscreen!.render(scene, camera);
+      const im = new Image();
+      im.src = offscreen!.domElement.toDataURL("image/png");
+      await im.decode();
+      return im;
+    };
+    const image = await render("all"),
+      frame = await render("frame"),
+      mask = await render("glass");
+    return { image, frame, glass: mask };
+  } finally {
+    disposeProduct(g);
+  }
 }
 
 // Serialize access to the shared renderer across rapid material changes.

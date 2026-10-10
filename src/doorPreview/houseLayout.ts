@@ -7,6 +7,66 @@ export const openingPositions: Record<string, [number, number, number]> = {
   "upper-right": [2.6, 3.9, 3.08],
   balcony: [0, 3.4, 3.08],
 };
+export type WallRectangle = {
+  left: number;
+  right: number;
+  bottom: number;
+  top: number;
+};
+/** General wall partition, also used by the product studio with arbitrary IDs. */
+export function partitionWall(
+  bounds: WallRectangle,
+  openings: WallRectangle[],
+  depth = 0.24,
+  z = -0.12,
+) {
+  const holes = openings.filter(
+    (h) =>
+      h.right > bounds.left &&
+      h.left < bounds.right &&
+      h.top > bounds.bottom &&
+      h.bottom < bounds.top,
+  );
+  const xs = [
+    ...new Set([
+      bounds.left,
+      bounds.right,
+      ...holes.flatMap((h) => [
+        Math.max(bounds.left, h.left),
+        Math.min(bounds.right, h.right),
+      ]),
+    ]),
+  ].sort((a, b) => a - b);
+  const ys = [
+    ...new Set([
+      bounds.bottom,
+      bounds.top,
+      ...holes.flatMap((h) => [
+        Math.max(bounds.bottom, h.bottom),
+        Math.min(bounds.top, h.top),
+      ]),
+    ]),
+  ].sort((a, b) => a - b);
+  const panels: {
+    size: [number, number, number];
+    position: [number, number, number];
+  }[] = [];
+  for (let i = 0; i < xs.length - 1; i++)
+    for (let j = 0; j < ys.length - 1; j++) {
+      const x = (xs[i] + xs[i + 1]) / 2,
+        y = (ys[j] + ys[j + 1]) / 2;
+      if (
+        !holes.some(
+          (h) => x > h.left && x < h.right && y > h.bottom && y < h.top,
+        )
+      )
+        panels.push({
+          size: [xs[i + 1] - xs[i], ys[j + 1] - ys[j], depth],
+          position: [x, y, z],
+        });
+    }
+  return panels;
+}
 /** A rectangle partition leaves genuine voids for every configured opening and sidelight. */
 export function facadePanels(d: FacadeDesign) {
   const holes = d.items

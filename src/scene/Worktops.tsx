@@ -31,15 +31,15 @@ export function Worktops({
               shape.holes.push(path);
             }
           const geometry = new ExtrudeGeometry(shape, {
-            depth: 0.036,
+            depth: 0.038,
             bevelEnabled: true,
             bevelThickness: 0.002,
             bevelSize: 0.002,
-            bevelSegments: 2,
+            bevelSegments: 4,
             steps: 1,
             curveSegments: 8,
           });
-          return { geometry, y: 0.1 + run.height / 100 + 0.038 };
+          return { geometry, y: 0.1 + run.height / 100 + 0.04 };
         }),
       ),
     [design.cabinets, catalog],

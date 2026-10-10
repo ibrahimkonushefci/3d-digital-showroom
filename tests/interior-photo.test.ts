@@ -256,3 +256,106 @@ it("reports unavailable WebGL instead of accepting an incomplete renderer", asyn
       } as unknown as HTMLCanvasElement),
   ).toThrow("webglError");
 });
+
+it("verifies POT repeat dimensions for all door and floor interior textures", () => {
+  function getWebpSize(buf: Buffer) {
+    const format = buf.toString("ascii", 12, 16);
+    if (format === "VP8 ") {
+      return {
+        width: buf.readUInt16LE(26) & 0x3fff,
+        height: buf.readUInt16LE(28) & 0x3fff,
+      };
+    } else if (format === "VP8L") {
+      const b0 = buf[21],
+        b1 = buf[22],
+        b2 = buf[23],
+        b3 = buf[24];
+      return {
+        width: 1 + (((b1 & 0x3f) << 8) | b0),
+        height: 1 + (((b3 & 0x0f) << 10) | (b2 << 2) | ((b1 & 0xc0) >> 6)),
+      };
+    } else if (format === "VP8X") {
+      return {
+        width: 1 + buf.readUIntLE(24, 3),
+        height: 1 + buf.readUIntLE(27, 3),
+      };
+    }
+    throw Error("Unknown webp chunk: " + format);
+  }
+
+  const isPowerOfTwo = (n: number) => !(n & (n - 1)) && n > 0;
+
+  for (const file of [
+    "door-golden-oak.webp",
+    "door-walnut.webp",
+    "floor-dark-oak.webp",
+    "floor-grey.webp",
+    "floor-herringbone-oak.webp",
+    "floor-natural.webp",
+    "floor-rustic.webp",
+    "floor-walnut-floor.webp",
+    "floor-white-oak.webp",
+  ]) {
+    const fullPath = `public/shared/interior/${file}`;
+    expect(existsSync(fullPath)).toBe(true);
+    const buf = readFileSync(fullPath);
+    const size = getWebpSize(buf);
+    expect(isPowerOfTwo(size.width)).toBe(true);
+    expect(isPowerOfTwo(size.height)).toBe(true);
+    expect(size.width).toBe(1024);
+    expect(size.height).toBe(1024);
+  }
+});
+
+it("ensures Sallon floor mask spans full visible foreground and defines rug occlusion", () => {
+  const living = interiorPhotos.living;
+  expect(living.floorPolygons.length).toBeGreaterThan(0);
+  const floorPts = living.floorPolygons[0];
+  const maxX = Math.max(...floorPts.map((p) => p.x));
+  const minX = Math.min(...floorPts.map((p) => p.x));
+  expect(minX).toBe(0.0);
+  expect(maxX).toBe(1.0);
+  expect(living.occlusions.length).toBeGreaterThan(0);
+});
+
+it("ensures Bedroom door has true sloping perspective edges, full floor span and rug occlusion", () => {
+  const bedroom = interiorPhotos.bedroom;
+  expect(bedroom.doors.length).toBeGreaterThan(0);
+  const door = bedroom.doors[0];
+  // Sloping edges verification: top and bottom edges must not be horizontal
+  expect(Math.abs(door.leaf[0].y - door.leaf[1].y)).toBeGreaterThan(0.04);
+  expect(Math.abs(door.leaf[3].y - door.leaf[2].y)).toBeGreaterThan(0.04);
+  expect(Math.abs(door.frame[0].y - door.frame[1].y)).toBeGreaterThan(0.05);
+  expect(Math.abs(door.frame[3].y - door.frame[2].y)).toBeGreaterThan(0.05);
+
+  // Full floor coverage
+  const floorPts = bedroom.floorPolygons[0];
+  const minX = Math.min(...floorPts.map((p) => p.x));
+  const maxX = Math.max(...floorPts.map((p) => p.x));
+  expect(minX).toBe(0.0);
+  expect(maxX).toBe(1.0);
+
+  // Occlusion preserving rug
+  expect(bedroom.occlusions.length).toBeGreaterThan(0);
+  expect(validCorners(bedroom.floorPlane)).toBe(true);
+});
+
+it("ensures Hallway floor calibration matches corridor vanishing lines and scale", () => {
+  const hallway = interiorPhotos.hallway;
+  expect(validCorners(hallway.floorPlane)).toBe(true);
+  const [bl, tl, tr, br] = hallway.floorPlane;
+  // Floor plane must recede into the corridor (top points have significantly smaller y than bottom points)
+  expect(tl.y).toBeLessThan(0.75);
+  expect(tr.y).toBeLessThan(0.75);
+  expect(bl.y).toBe(1.0);
+  expect(br.y).toBe(1.0);
+  // Planks run longitudinally down hall: floorMeters.x > floorMeters.y
+  expect(hallway.floorMeters[0]).toBeGreaterThan(hallway.floorMeters[1]);
+});
+
+it("ensures renderer shader discards casing shadow below bottom boundary", () => {
+  const rendererSource = readFileSync("src/interior/renderer.ts", "utf8");
+  expect(rendererSource).toContain("if(uv.y>1.)discard;");
+});
+
+

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowUpRight, ArrowRight, MoveUpRight } from "lucide-react";
 import { useBrand } from "../brand";
 import { useT, label, useLanguage, type TranslationKey } from "../i18n";
-import { newFacade } from "../doorPreview/store";
+import { portalPresentation } from "../doorPreview/presentation";
 import { presentationPresets } from "../designer3d/presets";
 import { useDesigner } from "../designer3d/store";
 const Scene = lazy(() => import("../designer3d/Scene"));
@@ -21,6 +21,10 @@ export default function Home() {
           : brand.modules.wardrobeDesigner,
       ),
     [catalog, brand.modules],
+  );
+  const exterior = useMemo(
+    () => (catalog.doors.length ? portalPresentation(catalog) : null),
+    [catalog],
   );
   const designs = presets.map((p) => p.design);
   const [front, setFront] = useState("");
@@ -123,7 +127,7 @@ export default function Home() {
               }
             >
               {brand.modules.doorPreview && catalog.doors.length ? (
-                <House design={newFacade(catalog)} catalog={catalog} />
+                <House design={exterior!} catalog={catalog} preset="full" />
               ) : (
                 <img
                   className="hero-loading-preview"

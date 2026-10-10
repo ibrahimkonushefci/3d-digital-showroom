@@ -31,6 +31,7 @@ type State = {
   edit: (d: DesignDocument, c: Catalog) => boolean;
   select: (id: string | null) => void;
   toggleOpen: (id: string) => void;
+  toggleAllOpen: () => void;
   undo: () => void;
   redo: () => void;
   setError: (e: string | null) => void;
@@ -102,6 +103,15 @@ export const useDesigner = create<State>((set, get) => ({
         ? s.opened.filter((i) => i !== id)
         : [...s.opened, id],
     })),
+  toggleAllOpen: () => {
+    const s = get();
+    if (!s.design) return;
+    if (s.opened.length > 0) {
+      set({ opened: [] });
+    } else {
+      set({ opened: s.design.cabinets.map((c) => c.id) });
+    }
+  },
   undo: () => {
     if (get().dragging) return;
     const { past, design, future } = get();

@@ -5,7 +5,7 @@ import type { Placement } from "../doorPreview/types";
 import type { Catalog } from "../catalog/types";
 import { useBrand } from "../brand";
 import { useQuality } from "./quality";
-import { createProduct, disposeProduct } from "./products";
+import { createProduct, disposeProduct, productReady } from "./products";
 export function Product({
   item,
   catalog,
@@ -27,19 +27,25 @@ export function Product({
   const a = useRef(0);
   useEffect(() => {
     invalidate();
-    const timeout = setTimeout(invalidate, 400);
+    let live = true;
+    productReady(object).then(() => {
+      if (live) invalidate();
+    });
     return () => {
-      clearTimeout(timeout);
+      live = false;
       disposeProduct(object);
     };
   }, [object, invalidate]);
+  useEffect(() => {
+    invalidate();
+  }, [open, invalidate]);
   useFrame((_, dt) => {
-    const target = open ? -1.2 : 0;
+    const target = open && item.kind === "door" ? -1.2 : 0;
     a.current = MathUtils.damp(a.current, target, 7, dt);
+    if (Math.abs(a.current - target) <= 0.001) a.current = target;
     const leaf = object.getObjectByName("leaf");
     if (leaf) {
       leaf.rotation.y = a.current;
-      leaf.position.x = open ? -0.15 : 0;
     }
     if (Math.abs(a.current - target) > 0.001) invalidate();
   });

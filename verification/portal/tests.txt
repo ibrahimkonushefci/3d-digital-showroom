@@ -1,0 +1,22 @@
+$ vitest run
+
+ RUN  v3.2.7 /Users/ibrahimi/3d_designer
+
+ ✓ tests/assets.test.ts (2 tests) 35ms
+ ✓ tests/framing.test.ts (3 tests) 30ms
+ ✓ tests/demo-safety.test.ts (4 tests) 43ms
+ ✓ tests/offers.test.ts (3 tests) 16ms
+ ✓ tests/showroom.test.ts (13 tests) 97ms
+ ✓ tests/portal.test.ts (12 tests) 104ms
+ ✓ tests/core.test.ts (33 tests) 87ms
+ ✓ tests/interior-photo.test.ts (13 tests) 127ms
+ ✓ tests/realism.test.ts (2 tests) 4ms
+ ✓ tests/interior.test.ts (7 tests) 25ms
+ ✓ tests/proposal.test.ts (2 tests) 235ms
+ ✓ tests/exterior.test.ts (4 tests) 7ms
+
+ Test Files  12 passed (12)
+      Tests  98 passed (98)
+   Start at  21:20:14
+   Duration  1.10s (transform 821ms, setup 0ms, collect 4.33s, tests 811ms, environment 7ms, prepare 1.03s)
+

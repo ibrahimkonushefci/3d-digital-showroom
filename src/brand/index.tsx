@@ -152,7 +152,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
               }
             }
             if (payload.design.kind === "facade")
-              useFacade.getState().set(payload.design);
+              useFacade.getState().receive(payload.design);
             else if (payload.design.kind === "interior")
               useInterior.getState().set(payload.design, brand.slug);
             else useDesigner.getState().setDesign(payload.design);

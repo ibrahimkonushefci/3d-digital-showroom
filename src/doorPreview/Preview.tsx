@@ -1,19 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { ImagePlus, Plus, Download, Share2, Trash2 } from "lucide-react";
+import { ImagePlus, Download, Share2 } from "lucide-react";
 import { SendAnyone } from "../app/SendAnyone";
 import { useBrand } from "../brand";
 import { useT, useLanguage, label, money } from "../i18n";
 import { Field, ErrorNotice } from "../app/components";
 import { validCorners, type Corners } from "./homography";
 import { productImage } from "../scene/products";
+import { ProductCards } from "./ProductCards";
+import { product } from "./store";
 import { ProductControls } from "./Controls";
+import { applyWindowConfiguration } from "./configuration";
 import { productPrice } from "./pricing";
 import { PhotoRenderer } from "./renderer";
 import { downloadBlob } from "../documents/offer";
 import { getPhoto, savePhoto } from "../persistence";
 
 import { messageUrl } from "../sharing";
-import { uid } from "../designer3d/layout";
 import { PhotoSceneSchema, SavedPhotoSchema, type Placement } from "./types";
 const doorCorners: Corners = [
   { x: 0.402, y: 0.392 },
@@ -78,30 +80,12 @@ export default function Preview({
   const active = placements.find((p) => p.id === selected);
   const storageKey = brand.slug;
   const create = (type: "door" | "window", corners?: Corners): Placement => ({
-    id: uid(),
-    kind: type,
-    modelId:
-      type === "door"
-        ? catalog.doors[0].id
-        : (catalog.windows[1] || catalog.windows[0]).id,
+    ...product(catalog, type),
     corners: structuredClone(
       corners || (type === "door" ? doorCorners : windowCorners),
     ),
-    color:
-      type === "door"
-        ? catalog.doors[0].colors[0]
-        : (catalog.windows[1] || catalog.windows[0]).colors[0],
-    handle: "bar",
-    brightness: 1,
-    width: type === "door" ? 100 : 120,
-    height: type === "door" ? 210 : 140,
-    options: [],
-    materialType: "pvc",
-    profile: "standard",
-    panes: 2,
-    shutterOpen: true,
-    finishId: "anthracite",
   });
+  const [restored, setRestored] = useState(false);
   useEffect(() => {
     let live = true;
     getPhoto(storageKey)
@@ -118,14 +102,24 @@ export default function Preview({
             );
             setPhoto(parsed.data.photo);
             setPlacements(sharedItems || valid);
-            setSelected(valid[0]?.id || null);
-            if (valid[0]) setKind(valid[0].kind);
+            const items = sharedItems || valid;
+            setSelected(items[0]?.id || null);
+            if (items[0]) setKind(items[0].kind);
           } else setError("photoError");
         }
+        if (!live) return;
+        if (sharedItems?.length) {
+          setSelected(sharedItems[0].id);
+          setKind(sharedItems[0].kind);
+        }
         ready.current = true;
+        setRestored(true);
       })
       .catch(() => {
-        ready.current = true;
+        if (live) {
+          ready.current = true;
+          setRestored(true);
+        }
       });
     return () => {
       live = false;
@@ -141,7 +135,7 @@ export default function Preview({
       500,
     );
     return () => clearTimeout(timeout);
-  }, [photo, placements, storageKey]);
+  }, [photo, placements, storageKey, restored]);
   useEffect(() => {
     if (!photo) return;
     let cancelled = false;
@@ -174,6 +168,9 @@ export default function Preview({
     setRendering(true);
     renderFailed.current = false;
     pendingRender.current = (async () => {
+      const currentPhoto = await loadImage(photo);
+      if (cancelled) return [];
+      photoImage.current = currentPhoto;
       const items = [];
       for (const p of placements) {
         const rendered = await productImage(p, catalog, assetUrl);
@@ -256,15 +253,10 @@ export default function Preview({
         c.width = Math.round(image.naturalWidth * ratio);
         c.height = Math.round(image.naturalHeight * ratio);
         c.getContext("2d")!.drawImage(image, 0, 0, c.width, c.height);
-        const p = create(kind, [
-          { x: 0.35, y: 0.25 },
-          { x: 0.65, y: 0.25 },
-          { x: 0.65, y: 0.8 },
-          { x: 0.35, y: 0.8 },
-        ]);
+        const items = placements.length ? placements : [create(kind)];
         setPhoto(c.toDataURL("image/jpeg", 0.9));
-        setPlacements([p]);
-        setSelected(p.id);
+        setPlacements(items);
+        setSelected(items[0].id);
         setCompare(0);
         setError(null);
       } finally {
@@ -286,15 +278,6 @@ export default function Preview({
     setKind(next);
     const existing = placements.find((p) => p.kind === next);
     if (existing) setSelected(existing.id);
-    else if (photo) {
-      const p = create(next);
-      setPlacements((ps) =>
-        next === "door"
-          ? [...ps.filter((p) => p.kind !== "door"), p]
-          : [...ps, p],
-      );
-      setSelected(p.id);
-    }
   };
   const move = (event: React.PointerEvent) => {
     if (!dragging.current || !stage.current) return;
@@ -320,8 +303,8 @@ export default function Preview({
     );
   };
   useEffect(() => {
-    onItemsChange?.(placements);
-  }, [placements, onItemsChange]);
+    if (restored) onItemsChange?.(placements);
+  }, [placements, onItemsChange, restored]);
   useEffect(() => {
     capture?.(async () => {
       let pending: Promise<void>;
@@ -363,6 +346,12 @@ export default function Preview({
     price: money(price, language),
   });
   const exportBlob = async () => {
+    let pending: Promise<void>;
+    do {
+      pending = pendingRender.current;
+      await pending;
+    } while (pending !== pendingRender.current);
+    if (renderFailed.current) throw Error();
     if (!photoImage.current || !canvas.current) throw Error();
     const c = document.createElement("canvas");
     c.width = size.w;
@@ -598,7 +587,29 @@ export default function Preview({
           </div>
         </section>
         <aside className="preview-controls">
-          <h2>{t("model")}</h2>
+          <ProductCards
+            items={placements}
+            selected={selected}
+            catalog={catalog}
+            onSelect={(id) => {
+              setSelected(id);
+              const p = placements.find((p) => p.id === id)!;
+              setKind(p.kind);
+            }}
+            onAdd={(kind) => {
+              const p = create(kind);
+              setPlacements([...placements, p]);
+              setSelected(p.id);
+              setKind(kind);
+            }}
+            onRemove={(id) => {
+              const next = placements.filter((p) => p.id !== id);
+              setPlacements(next);
+              setSelected(next[0]?.id || null);
+              if (next[0]) setKind(next[0].kind);
+            }}
+          />
+
           {active && (
             <>
               <ProductControls
@@ -606,6 +617,16 @@ export default function Preview({
                 catalog={catalog}
                 onChange={(p) => update(p)}
               />
+              {active.kind === "window" && (
+                <button
+                  className="button secondary full"
+                  onClick={() =>
+                    setPlacements(applyWindowConfiguration(placements, active))
+                  }
+                >
+                  {t("applyAllWindows")}
+                </button>
+              )}
               <Field label={t("brightness")}>
                 <input
                   type="range"
@@ -618,43 +639,13 @@ export default function Preview({
                   }
                 />
               </Field>
-              <button
-                className="button secondary full"
-                onClick={() => {
-                  const p = create("window");
-                  const count = placements.filter(
-                    (x) => x.kind === "window",
-                  ).length;
-                  const shift = Math.min(0.08 * count, 0.2);
-                  p.corners = p.corners.map((c) => ({
-                    x: c.x - shift,
-                    y: c.y - Math.min(0.04 * count, 0.18),
-                  })) as Corners;
-                  setPlacements([...placements, p]);
-                  setSelected(p.id);
-                  setKind("window");
-                }}
-              >
-                <Plus size={16} />
-                {t("addWindow")}
-              </button>
-              <button
-                className="button danger full"
-                onClick={() => {
-                  const next = placements.filter((p) => p.id !== selected);
-                  setPlacements(next);
-                  setSelected(next[0]?.id || null);
-                  if (next[0]) setKind(next[0].kind);
-                }}
-              >
-                <Trash2 size={16} />
-                {t("removePlacement")}
-              </button>
             </>
           )}
           <div className="preview-total">
-            <span>{t("previewPrice")}</span>
-            <strong>{money(price, language)}</strong>
+            <span>{t("selectedEstimate")}</span>
+            <strong>
+              {money(active ? productPrice(active, catalog) : 0, language)}
+            </strong>
             <small>{t("indicative")}</small>
           </div>
           <button

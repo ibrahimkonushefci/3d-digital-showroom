@@ -52,6 +52,7 @@ export async function createOffer({
   t,
   priceOverride,
   description,
+  imageCaption,
 }: {
   design: DesignDocument | FacadeDesign | InteriorDesign;
   brand: BrandConfig;
@@ -62,6 +63,7 @@ export async function createOffer({
   t: T;
   priceOverride?: ReturnType<typeof calculatePrice>;
   description?: string;
+  imageCaption?: string;
 }) {
   const pdf = new jsPDF();
   const bytes = new Uint8Array(
@@ -138,6 +140,10 @@ export async function createOffer({
   if (!imageAdded) {
     pdf.setFontSize(10);
     pdf.text(pdf.splitTextToSize(t("imageUnavailable"), 150), 30, 130);
+  }
+  if (imageCaption) {
+    pdf.setFontSize(7);
+    pdf.text(pdf.splitTextToSize(imageCaption, 182).slice(0, 2), 14, 193);
   }
   pdf.setFontSize(10);
   pdf.text(t("finishes"), 14, 201);

@@ -25,10 +25,11 @@ for (const [kind, products] of [
       (i, channel) =>
         parseInt(p.color.slice(i, i + 2), 16) / stats.channels[channel].mean,
     );
-    await sharp(source)
-      .resize(768, 768)
+    let pipeline = sharp(source).resize(1024, 1024);
+    if (kind === "door") pipeline = pipeline.rotate(90);
+    await pipeline
       .linear(gain, [0, 0, 0])
-      .webp({ quality: 80 })
+      .webp({ quality: 85 })
       .toFile(`public/shared/interior/${kind}-${p.id}.webp`);
   }
 }

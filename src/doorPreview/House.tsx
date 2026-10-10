@@ -1,4 +1,11 @@
-import { Plant } from "../scene/Appliances";
+import { Canvas, useThree, useFrame } from "@react-three/fiber";
+import { CameraControls, Environment, Lightformer } from "@react-three/drei";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Object3D, Vector3 } from "three";
+import type { Catalog, Material } from "../catalog/types";
+import type { FacadeDesign, Placement } from "./types";
+import { Product } from "../scene/Product";
+import { Box } from "../scene/Primitives";
 import {
   Rendering,
   RefreshShadows,
@@ -6,57 +13,171 @@ import {
   type RegisterCapture,
 } from "../scene/Rendering";
 import { useQuality } from "../scene/quality";
-import { Canvas, useThree } from "@react-three/fiber";
+import { partitionWall } from "./houseLayout";
 import {
-  CameraControls,
-  Environment,
-  Lightformer,
-  ContactShadows,
-} from "@react-three/drei";
-import { useEffect, useRef } from "react";
-import type { Catalog } from "../catalog/types";
-import type { FacadeDesign } from "./types";
-import { Product } from "../scene/Product";
-import { Box } from "../scene/Primitives";
-import { openingPositions, facadePanels } from "./houseLayout";
-import type { Material } from "../catalog/types";
-import { useDesigner } from "../designer3d/store";
-export type HouseCamera = "facade" | "entry" | "balcony";
+  studioCamera,
+  studioLayout,
+  studioOpenings,
+  STUDIO_FOV,
+  type StudioCamera,
+} from "./studioLayout";
+export type HouseCamera = StudioCamera | "facade" | "entry" | "balcony";
 function Camera({
+  item,
+  catalog,
   preset,
-  capture,
+  exportView,
 }: {
-  preset: HouseCamera;
-  capture?: RegisterCapture;
+  item: Placement;
+  catalog: Catalog;
+  preset: StudioCamera;
+  exportView: boolean;
 }) {
-  const ref = useRef<CameraControls>(null),
-    { gl, scene, camera } = useThree();
+  const ref = useRef<CameraControls>(null);
+  const { size } = useThree();
+  const saved = useRef<{ position: Vector3; target: Vector3 } | null>(null);
+  // Finish and hardware colour changes deliberately do not reset an orbit.
+  const dimensions = `${item.id}:${item.kind}:${item.width}:${item.height}:${item.modelId}:${item.options.filter((o) => ["side-left", "side-right", "transom"].includes(o) || o.startsWith("shutter-")).join(",")}`;
   useEffect(() => {
-    const v =
-      preset === "entry"
-        ? [2, 2.2, 7, 0, 1.6, 2.8]
-        : preset === "balcony"
-          ? [6, 5, 8, 0, 4, 3.2]
-          : [11, 7, 15, 0, 2.1, 0];
-    ref.current?.setLookAt(v[0], v[1], v[2], v[3], v[4], v[5], true);
-  }, [preset]);
-
+    if (exportView && !saved.current && ref.current)
+      saved.current = {
+        position: ref.current.getPosition(new Vector3()),
+        target: ref.current.getTarget(new Vector3()),
+      };
+    if (!exportView && saved.current) {
+      const previous = saved.current;
+      saved.current = null;
+      ref.current?.setLookAt(
+        ...previous.position.toArray(),
+        ...previous.target.toArray(),
+        false,
+      );
+      return;
+    }
+    const view = studioCamera(
+      item,
+      catalog,
+      exportView ? "full" : preset,
+      size.width / Math.max(1, size.height),
+    );
+    ref.current?.setLookAt(...view.position, ...view.target, true);
+  }, [dimensions, preset, size.width, size.height, exportView]);
   return (
     <CameraControls
       ref={ref}
-      minDistance={3}
-      maxDistance={25}
-      maxPolarAngle={Math.PI / 2 - 0.025}
+      minDistance={0.45}
+      maxDistance={35}
+      maxPolarAngle={Math.PI * 0.57}
     />
   );
 }
+function Sun({
+  center,
+  radius,
+  lightweight,
+}: {
+  center: [number, number, number];
+  radius: number;
+  lightweight: boolean;
+}) {
+  const target = useMemo(() => {
+    const o = new Object3D();
+    o.position.set(...center);
+    return o;
+  }, [center[0], center[1], center[2]]);
+  return (
+    <>
+      <primitive object={target} />
+      <directionalLight
+        target={target}
+        position={[-3.5, 6.5, 5]}
+        color="#fff4e6"
+        intensity={1.5}
+        castShadow={!lightweight}
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-left={-radius}
+        shadow-camera-right={radius}
+        shadow-camera-top={radius}
+        shadow-camera-bottom={-radius}
+        shadow-camera-near={0.1}
+        shadow-camera-far={25}
+        shadow-bias={-0.0003}
+        shadow-normalBias={0.002}
+      />
+      <directionalLight position={[4, 3, 4]} intensity={1.2} color="#fff7eb" />
+    </>
+  );
+}
+function SconceLight({ side, evening }: { side: number; evening: boolean }) {
+  const target = useMemo(() => {
+    const o = new Object3D();
+    o.position.set(0, side * 0.7, -0.1);
+    return o;
+  }, [side]);
+  return (
+    <>
+      <primitive object={target} />
+      <spotLight
+        target={target}
+        position={[0, side * 0.13, 0.055]}
+        color="#ffd6a0"
+        intensity={evening ? 5 : 0.8}
+        angle={0.65}
+        penumbra={0.6}
+        distance={2}
+      />
+    </>
+  );
+}
+function StudioShadows({
+  revision,
+  scale,
+}: {
+  revision: string;
+  scale: number;
+}) {
+  const { scene } = useThree(),
+    previous = useRef(0),
+    moving = useRef(false);
+  const [settled, setSettled] = useState(0);
+  useFrame(() => {
+    const angle = scene.getObjectByName("leaf")?.rotation.y || 0;
+    const changed = Math.abs(angle - previous.current) > 0.00001;
+    if (!changed && moving.current) setSettled((n) => n + 1);
+    moving.current = changed;
+    previous.current = angle;
+  });
+  return <RefreshShadows revision={`${revision}:${settled}`} scale={scale} />;
+}
+const stone: Material = {
+  id: "portal-stone",
+  name: { sq: "Travertin", en: "Travertine", de: "Travertin" },
+  color: "#d4cfc2",
+  texture: "shared/textures/travertine-color.webp",
+  normalMap: "shared/textures/travertine-normal.webp",
+  roughnessMap: "shared/textures/travertine-roughness.webp",
+  roughness: 0.75,
+  multiplier: 1,
+  perMeter: 0,
+};
+const concrete: Material = {
+  ...stone,
+  id: "portal-concrete",
+  texture: undefined,
+  normalMap: "shared/textures/concrete-normal.webp",
+  roughnessMap: "shared/textures/concrete-roughness.webp",
+  color: "#ded9cf",
+  roughness: 0.86,
+};
 export default function House({
   design,
   catalog,
   selected,
   onSelect,
-  preset = "entry",
+  preset = "full",
   capture,
+  open = false,
+  exportView = false,
 }: {
   design: FacadeDesign;
   catalog: Catalog;
@@ -64,240 +185,208 @@ export default function House({
   onSelect?: (id: string) => void;
   preset?: HouseCamera;
   capture?: RegisterCapture;
+  open?: boolean;
+  exportView?: boolean;
 }) {
-  const performance = useQuality() === "lightweight";
-  const positions = openingPositions;
-  const stone: Material = {
-    id: "plinth-stone",
-    name: { sq: "Travertin", en: "Travertine", de: "Travertin" },
-    color: "#d4cfc2",
-    texture: "shared/textures/travertine-color.webp",
-    normalMap: "shared/textures/travertine-normal.webp",
-    roughnessMap: "shared/textures/travertine-roughness.webp",
-    roughness: 0.85,
-    multiplier: 1,
-    perMeter: 0,
-  };
-
-  const paving: Material = {
-    ...stone,
-    id: "paving",
-    color: "#b9b4a8",
-    texture: "shared/textures/concrete-color.webp",
-    normalMap: "shared/textures/concrete-normal.webp",
-    roughnessMap: "shared/textures/concrete-roughness.webp",
-  };
-  const facade: Material = {
-    ...paving,
-    id: "facade",
-    texture: undefined,
-    color: design.facadeColor,
-  };
+  const item = design.items.find((p) => p.id === selected) || design.items[0];
+  const quality = useQuality(),
+    lightweight = quality === "lightweight";
+  const l = studioLayout(item),
+    wall = { ...concrete, color: design.facadeColor };
+  const camera =
+    preset === "facade" || preset === "entry" || preset === "balcony"
+      ? "full"
+      : preset;
+  const holes = studioOpenings(item);
+  const canopyWidth = Math.max(2.4, l.right - l.left + 0.75),
+    canopyY = l.wallHeight - 0.16;
   return (
     <Canvas
       frameloop="demand"
-      dpr={performance ? 1 : [1, 1.6]}
-      shadows={!performance}
-      camera={{ position: [11, 7, 15], fov: 42 }}
+      dpr={lightweight ? 1 : [1, 1.6]}
+      shadows={!lightweight}
+      camera={{ position: [1, 1.6, 6], fov: STUDIO_FOV }}
       gl={showroomGL}
     >
       <color
         attach="background"
-        args={[design.evening ? "#354756" : "#e3edf0"]}
+        args={[design.evening ? "#454b50" : "#d5d2ca"]}
       />
-      <ambientLight intensity={design.evening ? 0.2 : 0.3} />
-      <directionalLight
-        position={[-3, 10, 7]}
-        intensity={design.evening ? 0.4 : 2.4}
-        castShadow={!performance}
-        shadow-mapSize={1024}
-        shadow-normalBias={0.025}
+      <hemisphereLight
+        args={["#fff7ed", "#8d8479", design.evening ? 0.25 : 0.45]}
       />
-      <Environment resolution={64} frames={1}>
-        <Lightformer intensity={2} position={[0, 8, 3]} scale={[20, 10, 1]} />
+      <Sun
+        center={[l.centerX, l.wallHeight / 2, 0]}
+        radius={Math.max(l.wallWidth, l.wallHeight) + 1}
+        lightweight={lightweight}
+      />
+      <Environment
+        resolution={lightweight ? 64 : quality === "high" ? 256 : 128}
+        frames={1}
+      >
+        <Lightformer
+          intensity={2.5}
+          position={[-4, 5, 4]}
+          rotation={[0, Math.PI / 4, 0]}
+          scale={[4, 6, 1]}
+        />
+        <Lightformer
+          intensity={0.8}
+          position={[5, 3, 1]}
+          rotation={[0, -Math.PI / 2, 0]}
+          scale={[4, 5, 1]}
+        />
+        <Lightformer intensity={0.5} position={[0, 3, -5]} scale={[7, 5, 1]} />
+        <Lightformer
+          intensity={1.3}
+          position={[0, 7, 0]}
+          rotation={[Math.PI / 2, 0, 0]}
+          scale={[8, 8, 1]}
+        />
       </Environment>
-      <Box size={[22, 0.1, 18]} position={[0, -0.1, 0]} color="#9ba996" />
-      <Box size={[10, 0.06, 9]} position={[0, -0.035, 1]} material={paving} />
-      {[-1, 1].flatMap((n) =>
-        [0, 1, 2].map((i) => (
-          <group
-            key={`${n}-${i}`}
-            position={[n * 4.5, 0, -2 + i * 1.6]}
-            scale={2.8}
-          >
-            <Plant />
-          </group>
-        )),
-      )}
-      {Array.from({ length: 9 }, (_, i) => (
-        <Box
-          key={i}
-          size={[10, 0.002, 0.015]}
-          position={[0, 0.001, -3 + i]}
-          color="#a4a297"
-        />
+      <Box
+        size={[Math.max(16, l.wallWidth + 8), 0.08, 16]}
+        position={[0, -0.06, 0]}
+        color="#c1bdb3"
+        roughness={0.9}
+      />
+      <Box
+        size={[l.wallWidth + 0.7, 0.14, 4.5]}
+        position={[l.centerX, 0.06, 0.65]}
+        material={stone}
+      />
+      <Box
+        size={[Math.max(canopyWidth + 0.5, l.w + 1), 0.08, 1.05]}
+        position={[l.centerX, 0, 2.25]}
+        material={stone}
+      />
+      {partitionWall(
+        {
+          left: l.centerX - l.wallWidth / 2,
+          right: l.centerX + l.wallWidth / 2,
+          bottom: 0.14,
+          top: l.wallHeight,
+        },
+        holes,
+      ).map((panel, i) => (
+        <Box key={i} {...panel} material={wall} />
       ))}
-      {[-1, 1].map((n) => (
-        <Box
-          key={n}
-          size={[0.045, 0.09, 6.7]}
-          position={[n * 4.15, 6.28, 0]}
-          color="#626d6d"
-          bevel={0.01}
-        />
-      ))}
-      {/* Facade built around actual openings, rather than solid wall behind products. */}
-      <Box size={[8, 0.32, 6]} position={[0, 0.16, 0]} color="#88867d" />
-      <Box size={[8, 6, 0.18]} position={[0, 3.32, -3]} material={facade} />
-      {[-1, 1].map((x) => (
-        <Box
-          key={x}
-          size={[0.18, 6, 6]}
-          position={[x * 4, 3.32, 0]}
-          material={facade}
-        />
-      ))}
-      {facadePanels(design).map((panel, i) => (
-        <Box key={i} {...panel} material={facade} />
-      ))}
-      {[-1, 1].map((x) => (
-        <Box
-          key={x}
-          size={[0.21, 0.42, 6]}
-          position={[x * 4, 0.53, 0]}
-          material={stone}
-        />
-      ))}
-      <Box size={[8, 0.42, 0.21]} position={[0, 0.53, -3]} material={stone} />
-      {[-1, 1].map((x) => (
-        <Box
-          key={x}
-          size={[3.45, 0.42, 0.21]}
-          position={[x * 2.28, 0.53, 3.03]}
-          material={stone}
-        />
-      ))}
-
-      <mesh position={[0, 6.65, 0]} rotation={[0, Math.PI / 4, 0]}>
-        <coneGeometry args={[6.05, 1.4, 4]} />
-        <meshStandardMaterial color="#53535a" roughness={0.8} />
-      </mesh>
-      <Box size={[8.6, 0.14, 6.6]} position={[0, 6.32, 0]} color="#d2cfc3" />
-      {design.items.map((p) => (
-        <group key={p.id} position={positions[p.id] || [0, 1, 3.08]}>
-          <Product
-            item={p}
-            catalog={catalog}
-            onClick={() => onSelect?.(p.id)}
+      {/* Joints, recessed returns and an open-backed interior keep both sides inspectable. */}
+      {[-1, 1].map((side) => (
+        <group key={side}>
+          <Box
+            size={[0.04, l.top - l.bottom, 0.26]}
+            position={[
+              side === -1 ? l.left - 0.035 : l.right + 0.035,
+              (l.bottom + l.top) / 2,
+              -0.08,
+            ]}
+            color="#b9b4a9"
+            roughness={0.8}
           />
-          {selected === p.id && (
-            <group userData={{ exportHidden: true }}>
-              <Box
-                size={[p.width / 100 + 0.04, 0.02, 0.02]}
-                position={[0, -0.02, 0.16]}
-                color="#c6ad78"
+          <Box
+            size={[0.08, l.wallHeight, 0.75]}
+            position={[
+              l.centerX + side * (l.wallWidth / 2 - 0.06),
+              l.wallHeight / 2,
+              -0.56,
+            ]}
+            color="#e4ded2"
+          />
+          <Box
+            size={[0.008, l.wallHeight - 0.3, 0.003]}
+            position={[
+              l.centerX + side * (l.wallWidth / 2 - 0.48),
+              l.wallHeight / 2,
+              -0.001,
+            ]}
+            color="#a8a297"
+          />
+        </group>
+      ))}
+      <Box
+        size={[l.right - l.left + 0.08, 0.04, 0.26]}
+        position={[l.centerX, l.top + 0.035, -0.08]}
+        color="#b9b4a9"
+      />
+      <group position={[0, l.bottom, 0]}>
+        <Product
+          item={item}
+          catalog={catalog}
+          open={exportView ? false : open}
+          onClick={onSelect ? () => onSelect(item.id) : undefined}
+        />
+      </group>
+      {item.kind === "door" && (
+        <>
+          <Box
+            size={[canopyWidth, 0.095, 1.25]}
+            position={[l.centerX, canopyY, 0.43]}
+            color="#303a3b"
+            metal={0.12}
+            roughness={0.42}
+            bevel={0.008}
+          />
+          <Box
+            size={[canopyWidth - 0.1, 0.016, 0.045]}
+            position={[l.centerX, canopyY - 0.052, 0.94]}
+            color="#fff0cf"
+            emissive="#ffce8b"
+            castShadow={false}
+          />
+          {[-0.32, 0.32].map((x) => (
+            <group
+              key={x}
+              position={[l.centerX + x * canopyWidth, canopyY - 0.052, 0.55]}
+            >
+              <mesh rotation={[Math.PI / 2, 0, 0]}>
+                <cylinderGeometry args={[0.024, 0.024, 0.008, 16]} />
+                <meshStandardMaterial
+                  color="#fff1d8"
+                  emissive="#ffd6a0"
+                  emissiveIntensity={1}
+                />
+              </mesh>
+              <pointLight
+                intensity={design.evening ? 2 : 0.35}
+                color="#ffddb1"
+                distance={3}
+                decay={2}
               />
             </group>
-          )}
-          {design.evening && (
-            <pointLight
-              position={[0, p.height / 200, -0.35]}
-              color="#ffbc76"
-              intensity={0.55}
-              distance={2.5}
-            />
-          )}
-        </group>
-      ))}
-      <Box
-        size={[2.8, 0.15, 1.25]}
-        position={[0, 3.27, 3.57]}
-        color="#d1cfc5"
-      />
-      {[-1, 1].map((x) => (
-        <Box
-          key={x}
-          size={[0.05, 1.02, 0.05]}
-          position={[x * 1.36, 3.85, 4.13]}
-          color="#3e484b"
-          metal={0.65}
-        />
-      ))}
-      <Box
-        size={[2.75, 0.035, 0.04]}
-        position={[0, 4.37, 4.13]}
-        color="#3e484b"
-        metal={0.7}
-      />
-      {design.railing === "glass" ? (
-        <Box
-          size={[2.68, 0.9, 0.016]}
-          position={[0, 3.85, 4.13]}
-          color="#abc2c4"
-          transparent
-        />
-      ) : (
-        Array.from({ length: 16 }, (_, i) => (
-          <Box
-            key={i}
-            size={[0.018, 0.94, 0.018]}
-            position={[-1.3 + i * 0.17, 3.85, 4.13]}
-            color="#3e484b"
-          />
-        ))
-      )}
-      {[0, 1, 2].map((i) => (
-        <Box
-          key={i}
-          size={[1.8, 0.08, 1.1 - i * 0.2]}
-          position={[0, 0.04 + i * 0.08, 3.6 - i * 0.1]}
-          color="#9c9c94"
-        />
-      ))}
-      <Box size={[2.2, 0.1, 0.9]} position={[0, 2.6, 3.4]} color="#3e4749" />
-      <Box size={[4.3, 0.8, 0.18]} position={[-2.8, 0.4, 6]} color="#bbb5a5" />
-      <Box size={[0.6, 0.8, 0.18]} position={[4.45, 0.4, 6]} color="#bbb5a5" />
-      {[-0.6, 4.1].map((x) => (
-        <Box
-          key={x}
-          size={[0.25, 1.45, 0.25]}
-          position={[x, 0.72, 6]}
-          color="#aaa28f"
-        />
-      ))}
-      <group position={[1.75, 0.62, 6]}>
-        {Array.from({ length: 11 }, (_, i) => (
-          <Box
-            key={i}
-            size={[4.4, 0.055, 0.055]}
-            position={[0, -0.5 + i * 0.1, 0]}
-            color="#3d484b"
-            metal={0.55}
-          />
-        ))}
-        {design.gate === "swing" && (
-          <Box size={[0.035, 1.1, 0.065]} color="#677073" />
-        )}
-      </group>
-      {design.garage && (
-        <group position={[4.9, 0, 1]}>
-          <Box
-            size={[2.8, 2.6, 3.8]}
-            position={[0, 1.3, 0]}
-            material={facade}
-          />
-          {Array.from({ length: 9 }, (_, i) => (
-            <Box
-              key={i}
-              size={[2.5, 0.24, 0.05]}
-              position={[0, 0.15 + i * 0.27, 1.93]}
-              color="#555e61"
-            />
           ))}
-        </group>
+          <group position={[l.right + 0.48, l.bottom + l.h * 0.65, 0.055]}>
+            <Box
+              size={[0.12, 0.24, 0.09]}
+              color="#343d3d"
+              metal={0.12}
+              bevel={0.007}
+            />
+            {[-1, 1].map((side) => (
+              <group key={side}>
+                <Box
+                  size={[0.075, 0.004, 0.055]}
+                  position={[0, side * 0.122, 0]}
+                  color="#ffe6bd"
+                  emissive="#ffce8b"
+                  castShadow={false}
+                />
+                <SconceLight side={side} evening={design.evening} />
+              </group>
+            ))}
+          </group>
+        </>
       )}
-      <RefreshShadows revision={design} scale={22} />
-      <Camera preset={preset} />
+      <StudioShadows
+        revision={`${item.id}:${item.width}:${item.height}:${item.options.join()}:${open}`}
+        scale={Math.max(8, l.wallWidth + 2)}
+      />
+      <Camera
+        item={item}
+        catalog={catalog}
+        preset={camera}
+        exportView={exportView}
+      />
       <Rendering capture={capture} />
     </Canvas>
   );

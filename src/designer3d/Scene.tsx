@@ -24,7 +24,20 @@ import {
   Lightformer,
   AdaptiveDpr,
 } from "@react-three/drei";
-import { Group, MathUtils, Object3D, Vector3 } from "three";
+import {
+  Group,
+  MathUtils,
+  Object3D,
+  Vector3,
+  Color,
+  PMREMGenerator,
+  Scene as SceneObject,
+  MeshBasicMaterial,
+  Mesh,
+  BoxGeometry,
+  BackSide,
+  DoubleSide,
+} from "three";
 import type {
   Cabinet,
   Catalog,
@@ -54,31 +67,277 @@ import {
 } from "./framing";
 import type { CameraView, CameraPreset } from "./framing";
 export type { CameraView, CameraPreset } from "./framing";
-function Handle({ kind, w, h }: { kind: string; w: number; h: number }) {
+
+function StudioEnvironment() {
+  const { gl, scene } = useThree();
+  useEffect(() => {
+    const pmrem = new PMREMGenerator(gl);
+    const envScene = new SceneObject();
+    const panel = (
+      v: number,
+      w: number,
+      h: number,
+      d: number,
+      x: number,
+      y: number,
+      z: number,
+      side?: import("three").Side,
+    ) => {
+      const m = new MeshBasicMaterial();
+      m.color.setScalar(v);
+      if (side) m.side = side;
+      const b = new Mesh(new BoxGeometry(w, h, d), m);
+      b.position.set(x, y, z);
+      envScene.add(b);
+    };
+    panel(0.42, 62, 34, 62, 0, 10, 0, BackSide);
+    panel(3.4, 34, 0.4, 34, 0, 25.6, 0);
+    panel(2.1, 0.4, 20, 34, -29.6, 9, 0);
+    panel(0.85, 0.4, 20, 34, 29.6, 9, 0);
+    panel(1.35, 34, 20, 0.4, 0, 9, -29.6);
+    panel(1.05, 34, 20, 0.4, 0, 9, 29.6);
+    panel(0.2, 62, 0.4, 62, 0, -6.2, 0);
+    const rt = pmrem.fromScene(envScene, 0.02);
+    pmrem.dispose();
+    envScene.traverse((o) => {
+      if ((o as Mesh).geometry) (o as Mesh).geometry.dispose();
+      if ((o as Mesh).material)
+        ((o as Mesh).material as import("three").Material).dispose();
+    });
+    scene.environment = rt.texture;
+    return () => {
+      rt.texture.dispose();
+      scene.environment = null;
+    };
+  }, [gl, scene]);
+  return null;
+}
+
+function StudioWindow({ w, h }: { w: number; h: number }) {
+  const fr = 0.055;
+  const dep = 0.11;
+  return (
+    <group>
+      <mesh position={[0, 0, 0.005]}>
+        <planeGeometry args={[w, h]} />
+        <meshPhysicalMaterial
+          color="#aed4f0"
+          emissive="#9ec6ea"
+          emissiveIntensity={0.65}
+          roughness={0.05}
+          metalness={0}
+          transparent
+          opacity={0.92}
+          side={DoubleSide}
+        />
+      </mesh>
+      <Box
+        size={[w + 2 * fr + 0.03, 0.024, 0.025]}
+        position={[0, h / 2 + fr + 0.008, 0.01]}
+        color="#c8ccd4"
+        roughness={0.7}
+      />
+      <Box
+        size={[w + 2 * fr + 0.03, 0.024, 0.025]}
+        position={[0, -h / 2 - fr - 0.008, 0.01]}
+        color="#c8ccd4"
+        roughness={0.7}
+      />
+      <Box
+        size={[0.024, h + 2 * fr + 0.03, 0.025]}
+        position={[-w / 2 - fr - 0.008, 0, 0.01]}
+        color="#c8ccd4"
+        roughness={0.7}
+      />
+      <Box
+        size={[0.024, h + 2 * fr + 0.03, 0.025]}
+        position={[w / 2 + fr + 0.008, 0, 0.01]}
+        color="#c8ccd4"
+        roughness={0.7}
+      />
+      <Box
+        size={[w + 2 * fr, fr, dep]}
+        position={[0, h / 2 + fr / 2, dep / 2 - 0.025]}
+        color="#f4f6f9"
+        roughness={0.5}
+      />
+      <Box
+        size={[w + 2 * fr, fr, dep]}
+        position={[0, -h / 2 - fr / 2, dep / 2 - 0.025]}
+        color="#f4f6f9"
+        roughness={0.5}
+      />
+      <Box
+        size={[fr, h + 2 * fr, dep]}
+        position={[-w / 2 - fr / 2, 0, dep / 2 - 0.025]}
+        color="#f4f6f9"
+        roughness={0.5}
+      />
+      <Box
+        size={[fr, h + 2 * fr, dep]}
+        position={[w / 2 + fr / 2, 0, dep / 2 - 0.025]}
+        color="#f4f6f9"
+        roughness={0.5}
+      />
+      <Box
+        size={[0.024, h, 0.03]}
+        position={[0, 0, 0.015]}
+        color="#f4f6f9"
+        roughness={0.5}
+      />
+      <Box
+        size={[w + 2 * fr + 0.07, 0.038, 0.13]}
+        position={[0, -h / 2 - fr, 0.05]}
+        color="#f4f6f9"
+        roughness={0.5}
+        castShadow
+      />
+    </group>
+  );
+}
+
+function StudioDoor({ w, h }: { w: number; h: number }) {
+  const fr = 0.055;
+  const dep = 0.09;
+  return (
+    <group>
+      <Box
+        size={[fr, h + fr, dep]}
+        position={[-w / 2 - fr / 2, fr / 2, dep / 2 - 0.025]}
+        color="#eceae5"
+        roughness={0.6}
+      />
+      <Box
+        size={[fr, h + fr, dep]}
+        position={[w / 2 + fr / 2, fr / 2, dep / 2 - 0.025]}
+        color="#eceae5"
+        roughness={0.6}
+      />
+      <Box
+        size={[w + 2 * fr, fr, dep]}
+        position={[0, h / 2 + fr / 2, dep / 2 - 0.025]}
+        color="#eceae5"
+        roughness={0.6}
+      />
+      <Box
+        size={[w - 0.02, h - 0.015, 0.044]}
+        position={[0, -0.007, 0.028]}
+        color="#b5855a"
+        roughness={0.45}
+        castShadow
+      />
+      <Box
+        size={[0.032, 0.032, 0.022]}
+        position={[w / 2 - 0.07, -0.02, 0.056]}
+        color="#c9ced5"
+        metal={1}
+        roughness={0.3}
+      />
+      <Box
+        size={[0.13, 0.024, 0.022]}
+        position={[w / 2 - 0.13, -0.02, 0.06]}
+        color="#c9ced5"
+        metal={1}
+        roughness={0.3}
+      />
+    </group>
+  );
+}
+function Handle({
+  kind,
+  w,
+  h,
+  side = 0,
+}: {
+  kind: string;
+  w: number;
+  h: number;
+  side?: number;
+}) {
   if (kind === "none") return null;
+
+  // Tall wardrobe doors (h > 1.4m)
+  if (h > 1.4) {
+    const edgeX = side !== 0 ? -side * (w / 2 - 0.042) : w / 2 - 0.042;
+    const barLen = Math.min(0.75, h * 0.35);
+    const centerY = -h * 0.05; // ergonomic ~1.1m from floor
+
+    if (kind === "profile") {
+      return (
+        <Box
+          size={[0.014, h - 0.06, 0.02]}
+          position={[edgeX, 0, 0.016]}
+          color="#1a1c20"
+          metal={0.92}
+          roughness={0.25}
+          castShadow
+        />
+      );
+    }
+
+    if (kind === "knob") {
+      return (
+        <Box
+          size={[0.028, 0.028, 0.026]}
+          position={[edgeX, centerY, 0.02]}
+          color="#1a1c20"
+          metal={0.92}
+          roughness={0.25}
+          castShadow
+        />
+      );
+    }
+
+    // Default vertical bar pull
+    return (
+      <group position={[edgeX, centerY, 0.024]}>
+        <Box
+          size={[0.014, barLen, 0.018]}
+          color="#1a1c20"
+          metal={0.92}
+          roughness={0.3}
+          castShadow
+        />
+        {[-1, 1].map((n) => (
+          <Box
+            key={n}
+            size={[0.012, 0.012, 0.022]}
+            position={[0, n * (barLen * 0.38), -0.01]}
+            color="#1a1c20"
+            metal={0.92}
+            roughness={0.3}
+            castShadow
+          />
+        ))}
+      </group>
+    );
+  }
+
+  // Kitchen base and wall doors
   return (
     <>
       <Box
-        bevel={0.003}
         size={[
-          kind === "profile" ? w - 0.025 : Math.min(0.23, w * 0.5),
-          0.016,
-          0.02,
+          kind === "profile" ? w - 0.025 : Math.min(0.22, w * 0.55),
+          0.014,
+          0.018,
         ]}
-        position={[0, h / 2 - (kind === "profile" ? 0.014 : 0.06), 0.031]}
+        position={[0, h / 2 - (kind === "profile" ? 0.014 : 0.06), 0.028]}
         color="#1a1c20"
-        metal={0.9}
-        roughness={0.28}
+        metal={0.92}
+        roughness={0.3}
+        castShadow
       />
       {kind === "bar" &&
         [-1, 1].map((n) => (
           <Box
             key={n}
-            size={[0.015, 0.015, 0.028]}
-            position={[n * Math.min(0.1, w * 0.2), h / 2 - 0.06, 0.015]}
+            size={[0.012, 0.012, 0.024]}
+            position={[n * Math.min(0.09, w * 0.22), h / 2 - 0.06, 0.014]}
             color="#1a1c20"
-            metal={0.9}
-            roughness={0.28}
+            metal={0.92}
+            roughness={0.3}
+            castShadow
           />
         ))}
     </>
@@ -153,7 +412,6 @@ function DoorPanel({
           </>
         ) : (
           <Box
-            bevel={0.002}
             size={[w - 0.006, h - 0.006, 0.02]}
             material={front}
             lacquer
@@ -188,7 +446,7 @@ function DoorPanel({
             />
           </>
         )}
-        <Handle kind={handle.id} w={w} h={h} />
+        <Handle kind={handle.id} w={w} h={h} side={side} />
       </group>
     </group>
   );
@@ -225,7 +483,6 @@ function Drawer({
   return (
     <group ref={group} position={[0, y, z]}>
       <Box
-        bevel={0.002}
         size={[w - 0.006, h - 0.006, 0.02]}
         material={front}
         lacquer
@@ -236,7 +493,6 @@ function Drawer({
         position={[0, -h / 2 + 0.02, -0.23]}
         color="#747e81"
         metal={0.65}
-        bevel={0.002}
       />
       {[-1, 1].map((n) => (
         <Box
@@ -245,7 +501,6 @@ function Drawer({
           position={[n * (w / 2 - 0.032), -h * 0.1, -0.23]}
           color="#747e81"
           metal={0.65}
-          bevel={0.002}
         />
       ))}
       {organizer &&
@@ -282,6 +537,19 @@ function CabinetMesh({
   );
   const front = catalog.fronts.find((m) => m.id === design.style.front)!;
   const carcass = catalog.carcasses.find((m) => m.id === design.style.carcass)!;
+  const carcassReveal = useMemo(() => {
+    if (design.kind !== "kitchen") return carcass;
+    const col = new Color(front.color).multiplyScalar(0.55);
+    return {
+      ...carcass,
+      color: "#" + col.getHexString(),
+      roughness: 0.7,
+      metalness: 0,
+      texture: undefined,
+      normalMap: undefined,
+      roughnessMap: undefined,
+    };
+  }, [design.kind, front.color, carcass]);
   const counter = catalog.countertops.find(
     (m) => m.id === design.style.countertop,
   )!;
@@ -337,26 +605,26 @@ function CabinetMesh({
       <Box
         size={[w, 0.018, d - 0.025]}
         position={[0, 0.009, 0]}
-        material={carcass}
+        material={carcassReveal}
       />
       {m.type !== "sink" && (
         <Box
           size={[w, 0.018, d - 0.025]}
           position={[0, h - 0.009, 0]}
-          material={carcass}
+          material={carcassReveal}
         />
       )}
       <Box
         size={[w, h, 0.016]}
         position={[0, h / 2, -d / 2 + 0.01]}
-        material={carcass}
+        material={carcassReveal}
       />
       {[-1, 1].map((n) => (
         <Box
           key={n}
           size={[0.018, h, d - 0.018]}
           position={[n * (w / 2 - 0.009), h / 2, 0]}
-          material={carcass}
+          material={carcassReveal}
         />
       ))}
       {m.type === "hanging" || m.type === "sliding" ? (
@@ -413,7 +681,6 @@ function CabinetMesh({
         <group position={[0, h / 2, d / 2 + 0.012]}>
           <group ref={pantryFront}>
             <Box
-              bevel={0.002}
               size={[w - 0.006, h - 0.006, 0.02]}
               material={front}
               lacquer
@@ -441,35 +708,47 @@ function CabinetMesh({
           {[-1, 1].map((side) => (
             <Box
               key={side}
-              size={[w - 0.025, 0.012, 0.065]}
+              size={[w - 0.025, 0.014, 0.065]}
               position={[0, side * (h / 2 - 0.018), 0]}
-              color="#818a8a"
-              metal={0.8}
-              bevel={0.002}
+              color="#1a1c20"
+              metal={0.92}
+              roughness={0.25}
             />
           ))}
           <group ref={sliding}>
             <Box
-              size={[0.014, 0.2, 0.012]}
+              size={[0.014, 0.28, 0.014]}
               position={[-0.025, 0, 0.034]}
-              color="#7f8989"
-              metal={0.8}
-              bevel={0.002}
+              color="#1a1c20"
+              metal={0.92}
+              roughness={0.25}
             />
             <Box
-              bevel={0.002}
               size={[w / 2 + 0.016, h - 0.008, 0.025]}
               position={[-w / 4, 0, 0.016]}
               material={front}
               lacquer
             />
+            <Box
+              size={[0.012, h - 0.01, 0.028]}
+              position={[-0.004, 0, 0.016]}
+              color="#1a1c20"
+              metal={0.9}
+              roughness={0.3}
+            />
           </group>
           <Box
-            bevel={0.002}
             size={[w / 2 + 0.016, h - 0.008, 0.025]}
             position={[w / 4, 0, -0.02]}
             material={front}
             lacquer
+          />
+          <Box
+            size={[0.012, h - 0.01, 0.028]}
+            position={[0.004, 0, -0.02]}
+            color="#1a1c20"
+            metal={0.9}
+            roughness={0.3}
           />
         </group>
       ) : m.type !== "open" &&
@@ -607,18 +886,38 @@ function CabinetMesh({
         </group>
       )}
       {c.level === "wardrobe" && design.environment?.internalLed && (
+        <>
+          <Box
+            size={[w - 0.07, 0.008, 0.016]}
+            position={[0, h - 0.045, d / 2 - 0.045]}
+            color="#fff0ce"
+            emissive="#ffda9b"
+          />
+          <pointLight
+            position={[0, h * 0.75, 0]}
+            color="#ffe4b8"
+            intensity={0.65}
+            distance={2.2}
+            decay={2}
+          />
+        </>
+      )}
+      {c.level === "wardrobe" && (
         <Box
-          size={[w - 0.07, 0.008, 0.016]}
-          position={[0, h - 0.045, d / 2 - 0.045]}
-          color="#fff0ce"
-          emissive="#ffda9b"
+          size={[w, 0.05, d - 0.05]}
+          position={[0, -0.025, -0.025]}
+          color="#202227"
+          roughness={0.5}
+          metal={0.2}
         />
       )}
       {c.level !== "wall" && c.level !== "wardrobe" && (
         <Box
-          size={[w, 0.1, d - 0.05]}
-          position={[0, -0.05, 0]}
-          color={design.style.plinth === "matching" ? front.color : "#202227"}
+          size={[w, 0.1, d - 0.06]}
+          position={[0, -0.05, -0.03]}
+          color="#202227"
+          roughness={0.5}
+          metal={0.2}
         />
       )}
       {c.level === "wall" && design.style.led && (
@@ -720,42 +1019,18 @@ function WallMesh({
             0,
           ]}
         >
-          <Box
-            size={[o.width / 100, o.height / 100, 0.015]}
-            color={o.type === "window" ? "#d0e3e0" : "#c4b9a1"}
-          />
-          {o.type === "window" && (
-            <>
-              <Box size={[0.04, o.height / 100, 0.04]} color="#f4f0e7" />
-              <Box size={[o.width / 100, 0.04, 0.04]} color="#f4f0e7" />
-            </>
+          {o.type === "window" ? (
+            <StudioWindow w={o.width / 100} h={o.height / 100} />
+          ) : (
+            <StudioDoor w={o.width / 100} h={o.height / 100} />
           )}
         </group>
       ))}
     </group>
   );
 }
-function Decor({ design }: { design: DesignDocument }) {
-  if (design.kind !== "kitchen") return null;
-  const base = design.cabinets.find(
-    (c) => c.level === "base" && c.moduleId === "base-doors",
-  );
-  if (!base) return null;
-  return (
-    <group
-      position={[base.x / 100, (10 + base.height + 4) / 100, base.z / 100]}
-      rotation={[0, base.rotation, 0]}
-    >
-      <group position={[0, 0, -0.1]}>
-        <Plant />
-      </group>
-      <Box
-        size={[0.21, 0.015, 0.25]}
-        position={[0.17, 0.01, 0.08]}
-        color="#9e7853"
-      />
-    </group>
-  );
+function Decor({ design: _ }: { design: DesignDocument }) {
+  return null;
 }
 function RoomDetails({ design }: { design: DesignDocument }) {
   const w = design.room.width / 100,
@@ -778,20 +1053,6 @@ function RoomDetails({ design }: { design: DesignDocument }) {
         position={[w / 2, h, 0.07]}
         color="#23272f"
       />
-      {[0.22, 0.5, 0.78].map((x) => (
-        <group key={x} position={[w * x, h - 0.03, 0.32]}>
-          <mesh rotation={[Math.PI / 2, 0, 0]}>
-            <cylinderGeometry args={[0.045, 0.045, 0.014, 16]} />
-            <meshStandardMaterial
-              color="#fff0cc"
-              emissive="#f7d493"
-              emissiveIntensity={0.5}
-            />
-          </mesh>
-          <pointLight intensity={0.15} distance={2} color="#ffefd4" />
-        </group>
-      ))}
-
       {design.cabinets
         .filter((c) => c.wall === "island")
         .filter((_, i) => i % 2 === 0)
@@ -891,7 +1152,8 @@ function StudioSun({
     const center = bounds.getCenter(new Vector3()).setY(0);
     const target = new Object3D();
     target.position.copy(center);
-    const offset = new Vector3(-2.8, 4.2, 3.2);
+    // Key sun angled from upper-left-front (approx 45° across back wall)
+    const offset = new Vector3(-2.4, 4.2, 2.8);
     const direction = offset.clone().normalize();
     const right = new Vector3()
       .crossVectors(new Vector3(0, 1, 0), direction)
@@ -900,11 +1162,13 @@ function StudioSun({
     const corners = boundsCorners(bounds).map((p) => p.sub(center));
     return {
       target,
-      position: center.clone().add(offset).toArray(),
-      left: Math.min(-3.5, ...corners.map((p) => p.dot(right) - 0.15)),
-      right: Math.max(3.5, ...corners.map((p) => p.dot(right) + 0.15)),
-      top: Math.max(3.5, ...corners.map((p) => p.dot(up) + 0.15)),
-      bottom: Math.min(-0.5, ...corners.map((p) => p.dot(up) - 0.15)),
+      center,
+      position: center.clone().add(offset).toArray() as [number, number, number],
+      fillPosition: [center.x + 3.2, 2.6, center.z - 1.8] as [number, number, number],
+      left: Math.min(-4.0, ...corners.map((p) => p.dot(right) - 0.2)),
+      right: Math.max(4.0, ...corners.map((p) => p.dot(right) + 0.2)),
+      top: Math.max(4.0, ...corners.map((p) => p.dot(up) + 0.2)),
+      bottom: Math.min(-0.8, ...corners.map((p) => p.dot(up) - 0.2)),
     };
   }, [design.cabinets, design.room.width, design.room.depth]);
   return (
@@ -913,18 +1177,24 @@ function StudioSun({
       <directionalLight
         target={lighting.target}
         position={lighting.position}
-        intensity={2.2}
+        intensity={1.6}
+        color="#fff1e0"
         castShadow={shadows}
-        shadow-mapSize={2048}
+        shadow-mapSize={[2048, 2048]}
         shadow-camera-left={lighting.left}
         shadow-camera-right={lighting.right}
         shadow-camera-top={lighting.top}
         shadow-camera-bottom={lighting.bottom}
         shadow-camera-near={0.1}
-        shadow-camera-far={30}
-        shadow-bias={-0.0004}
-        shadow-normalBias={0.001}
-        shadow-radius={1}
+        shadow-camera-far={25}
+        shadow-bias={-0.0005}
+        shadow-radius={4}
+      />
+      <directionalLight
+        position={lighting.fillPosition}
+        intensity={0.45}
+        color="#bcd2ff"
+        castShadow={false}
       />
     </>
   );
@@ -980,24 +1250,10 @@ export default function Scene({
           interactive && useDesigner.getState().select(null)
         }
       >
-        <color attach="background" args={["#1e222b"]} />
-        <ambientLight intensity={0.1} />
-        <hemisphereLight args={["#eef3ff", "#78818a", 0.2]} />
+        <color attach="background" args={["#23272f"]} />
+        <hemisphereLight args={["#eaf1fb", "#2b2a27", 0.22]} />
         <StudioSun design={design} shadows={!performance} />
-        <Environment resolution={128} frames={1}>
-          <Lightformer
-            intensity={0.55}
-            position={[-3, 4, 2]}
-            rotation={[Math.PI / 2, 0, 0]}
-            scale={[3, 3, 1]}
-          />
-          <Lightformer
-            intensity={0.3}
-            position={[4, 2, 1]}
-            rotation={[0, Math.PI / 2, 0]}
-            scale={[3, 5, 1]}
-          />
-        </Environment>
+        <StudioEnvironment />
         <group position={[-w / 2, 0, -d / 2]}>
           <Box
             size={[w + 0.2, 0.06, d + 0.2]}
@@ -1005,8 +1261,8 @@ export default function Scene({
             material={{
               id: "floor",
               name: { sq: "", en: "", de: "" },
-              color: "#d6cfbd",
-              roughness: 0.8,
+              color: "#b0a288",
+              roughness: 0.42,
               multiplier: 1,
               perMeter: 0,
               texture: `shared/textures/${design.environment?.floor || "laminate"}-color.webp`,
