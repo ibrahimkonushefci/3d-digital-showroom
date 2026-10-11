@@ -1,11 +1,12 @@
+> Scope revised 11 October 2026: the project is exclusively Kitchen and Wardrobe. This supersedes the original multi-category brief.
+
 ## Context: what I'm trying to achieve
 
-I'm a freelance developer in **Kosovo**. I sell custom software to established businesses that make **kitchens, wardrobes, furniture, doors and windows**. I want to walk into a showroom with a phone or a tablet and show the owner a working tool that **already has their company name, logo, colors and products in it**.
+I'm a freelance developer in **Kosovo**. I sell custom software to established businesses that make **kitchens, wardrobes and furniture**. I want to walk into a showroom with a phone or a tablet and show the owner a working tool that **already has their company name, logo, colors and products in it**.
 
-Build a **white-label "Digital Showroom Designer"** web app with two tools:
+Build a **white-label "Digital Showroom Designer"** web app dedicated to furniture:
 
 1. **3D Kitchen & Wardrobe Designer**: a salesperson (or the customer at home) enters room dimensions, picks a layout, changes fronts, countertops and handles, and sees the result in real-time 3D with a live price estimate.
-2. **Door/Window Photo Preview**: the customer uploads a photo of their house, picks a door model, and sees it placed realistically on their own house (before/after).
 
 **This is a sales demo that has to feel like a finished product**, but it must be built so it can grow into the production version once a client signs.
 
@@ -40,7 +41,6 @@ The whole app gets personalized from one folder per client, so I can rebrand it 
   logo.svg (or logo.png)
   catalog.json
   textures/...      (optional client-specific material photos)
-  doors/...         (optional client door PNGs with transparent background)
 ```
 
 Choose the brand with `?brand=<slug>`, a subdomain (`<slug>.mydomain.com`), or a build-time env var. Fall back to a neutral default brand.
@@ -53,7 +53,12 @@ Choose the brand with `?brand=<slug>`, a subdomain (`<slug>.mydomain.com`), or a
   "companyName": "Druri Design",
   "tagline": "Kuzhina me porosi që nga 2005",
   "logo": "logo.svg",
-  "colors": { "primary": "#1F3A5F", "accent": "#C8A165", "background": "#FFFFFF", "text": "#1A1A1A" },
+  "colors": {
+    "primary": "#1F3A5F",
+    "accent": "#C8A165",
+    "background": "#FFFFFF",
+    "text": "#1A1A1A"
+  },
   "font": "Inter",
   "contact": {
     "phone": "+383 44 123 456",
@@ -65,13 +70,14 @@ Choose the brand with `?brand=<slug>`, a subdomain (`<slug>.mydomain.com`), or a
   },
   "languages": ["sq", "en", "de"],
   "defaultLanguage": "sq",
-  "modules": { "kitchenDesigner": true, "wardrobeDesigner": true, "doorPreview": true }
+  "modules": { "kitchenDesigner": true, "wardrobeDesigner": true }
 }
 ```
 
-`catalog.json` holds materials, modules, door models and **pricing rules** (see the Pricing section). Theme colors are applied through CSS variables so the whole UI recolors from `brand.json`.
+`catalog.json` holds materials and furniture modules and **pricing rules** (see the Pricing section). Theme colors are applied through CSS variables so the whole UI recolors from `brand.json`.
 
 **Brand Setup page** (`/setup`, hidden, protected by a simple PIN):
+
 - Upload a logo → auto-extract 2–3 dominant colors as suggested primary/accent (use a library like `node-vibrant` or a canvas-based extractor)
 - Fields for company name, tagline, phone, city
 - Live preview of the app with the new branding
@@ -106,6 +112,7 @@ Choose the brand with `?brand=<slug>`, a subdomain (`<slug>.mydomain.com`), or a
 ### Pricing engine (configurable per client)
 
 All in `catalog.json`, nothing hard-coded:
+
 - Each module type has a **base price per width** (or price per running meter).
 - **Material multipliers** for fronts (e.g., matte lacquer ×1.0, high-gloss ×1.25, real veneer ×1.6).
 - Countertop **price per running meter** per material.
@@ -113,54 +120,39 @@ All in `catalog.json`, nothing hard-coded:
 - Optional installation % and VAT toggle.
 - Show the price as a **range** (e.g., ±7%) by default, with a setting to show an exact number.
 
-## Tool 2: Door/Window Photo Preview ("See it on your house")
-
-### Flow
-
-1. Customer uploads or takes a photo of the house entrance (phone camera works on mobile).
-2. They **drag 4 corner handles** to mark where the door goes. The selected door image is warped with a **perspective transform (homography)** to fit exactly. Use a canvas/WebGL implementation, not just CSS scaling.
-3. Pick a door model from the catalog. Pick a color (where the model supports recoloring) and handle style.
-4. Adjust brightness to match the photo's lighting, plus a slight shadow on the edges for realism.
-5. **Before/After slider** to compare.
-6. Download the result image, or send it to the company via WhatsApp/Viber with the model name and an indicative price.
-
-### Door assets
-
-- Door models are transparent PNGs listed in `catalog.json` with name, price and available colors.
-- For the demo, include **6–10 door designs generated in code** (SVG or procedural): modern flat, horizontal grooves, vertical glass strip, classic panel, with recolorable surfaces (anthracite RAL 7016, white, golden oak, black). That way it works before I have a client's real photos.
-- Also support the client's own door photos with background removed (just a PNG).
-- Bonus if time allows: the same tool for **windows** (place several windows on a façade photo, pick frame color).
-
 ## Lookbook bridge (small)
 
 Add a simple **"Material Switcher"** entry screen: one beautiful pre-made kitchen scene where the user switches the front finish and countertop with big swatches. A **"Design your own kitchen"** button leads into the full designer. This screen can also be embedded on the client's website (iframe-friendly route `/embed/material-switcher`).
 
 ## Demo data
 
-- Include **two complete demo brands**: one kitchen/furniture company and one doors/windows company, with fictional Kosovo-style names, realistic catalog data and realistic Kosovo market prices in EUR.
+- Include **two complete demo brands**: two kitchen/furniture companies, with fictional Kosovo-style names, realistic catalog data and realistic Kosovo market prices in EUR.
 - Include **3 ready-made example kitchen designs** (modern handleless L-shape in anthracite + oak, classic white U-shape, minimalist straight kitchen with island) that load with one tap, so the demo looks good in the first 5 seconds.
 - A **"Demo reset"** button in settings.
 
 ## Scope: demo now, production later
 
 Build a **demo-ready MVP**: everything on the main path must work flawlessly and look polished. Structure the code so it's easy to extend later. **Do NOT build yet:**
+
 - user accounts, backend, database, admin panel for editing the catalog through a UI (editing JSON is fine for now)
 - exact manufacturing output (cut lists, CNC export)
 - payment integration
 
-Keep clean boundaries (`/brand`, `/catalog`, `/pricing`, `/designer3d`, `/doorPreview`, `/i18n`) so a backend can be added later without rewrites.
+Keep clean boundaries (`/brand`, `/catalog`, `/pricing`, `/designer3d`, `/i18n`) so a backend can be added later without rewrites.
 
 ## Work plan
 
 Work in milestones and make sure the app runs after each one:
+
 1. Project setup, brand system, theming, i18n, PWA shell, `/setup` page
 2. Procedural cabinet generator + room + straight layout + materials
 3. L/U/parallel/island layouts, cabinet editing, snapping, door/drawer animations
 4. Pricing engine + summary + share link + PDF + WhatsApp/Viber send
-5. Door photo preview with homography, before/after, export
+5. Local A/B comparison, storage inspection and indicative proposals
 6. Material Switcher screen, example designs, demo brands, performance pass on tablet
 
 Before you start coding, briefly give me the plan and folder structure. At the end, write a `README.md` with:
+
 - how to run it
 - how to add a new brand in under 15 minutes (step by step)
 - how to edit catalog prices

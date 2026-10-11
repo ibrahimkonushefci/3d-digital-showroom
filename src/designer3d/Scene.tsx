@@ -1,3 +1,5 @@
+import { storageMeasurements } from "./storage";
+import { countertopThickness } from "../scene/furnitureMaterials";
 import { useCabinetInteraction } from "./useCabinetInteraction";
 import { StorageDetails } from "../scene/StorageDetails";
 import { RunLights } from "../scene/RunLights";
@@ -95,7 +97,9 @@ function StudioEnvironment() {
     panel(2.1, 0.4, 20, 34, -29.6, 9, 0);
     panel(0.85, 0.4, 20, 34, 29.6, 9, 0);
     panel(1.35, 34, 20, 0.4, 0, 9, -29.6);
-    panel(1.05, 34, 20, 0.4, 0, 9, 29.6);
+    panel(0.25, 34, 20, 0.4, 0, 9, 29.6);
+    panel(5, 5, 17, 0.5, -12, 10, 29.2);
+    panel(3, 3, 17, 0.5, 7, 10, 29.2);
     panel(0.2, 62, 0.4, 62, 0, -6.2, 0);
     const rt = pmrem.fromScene(envScene, 0.02);
     pmrem.dispose();
@@ -245,11 +249,13 @@ function StudioDoor({ w, h }: { w: number; h: number }) {
 }
 function Handle({
   kind,
+  color,
   w,
   h,
   side = 0,
 }: {
   kind: string;
+  color: string;
   w: number;
   h: number;
   side?: number;
@@ -267,20 +273,7 @@ function Handle({
         <Box
           size={[0.014, h - 0.06, 0.02]}
           position={[edgeX, 0, 0.016]}
-          color="#1a1c20"
-          metal={0.92}
-          roughness={0.25}
-          castShadow
-        />
-      );
-    }
-
-    if (kind === "knob") {
-      return (
-        <Box
-          size={[0.028, 0.028, 0.026]}
-          position={[edgeX, centerY, 0.02]}
-          color="#1a1c20"
+          color={color}
           metal={0.92}
           roughness={0.25}
           castShadow
@@ -293,7 +286,7 @@ function Handle({
       <group position={[edgeX, centerY, 0.024]}>
         <Box
           size={[0.014, barLen, 0.018]}
-          color="#1a1c20"
+          color={color}
           metal={0.92}
           roughness={0.3}
           castShadow
@@ -303,7 +296,7 @@ function Handle({
             key={n}
             size={[0.012, 0.012, 0.022]}
             position={[0, n * (barLen * 0.38), -0.01]}
-            color="#1a1c20"
+            color={color}
             metal={0.92}
             roughness={0.3}
             castShadow
@@ -323,7 +316,7 @@ function Handle({
           0.018,
         ]}
         position={[0, h / 2 - (kind === "profile" ? 0.014 : 0.06), 0.028]}
-        color="#1a1c20"
+        color={color}
         metal={0.92}
         roughness={0.3}
         castShadow
@@ -334,7 +327,7 @@ function Handle({
             key={n}
             size={[0.012, 0.012, 0.024]}
             position={[n * Math.min(0.09, w * 0.22), h / 2 - 0.06, 0.014]}
-            color="#1a1c20"
+            color={color}
             metal={0.92}
             roughness={0.3}
             castShadow
@@ -446,7 +439,7 @@ function DoorPanel({
             />
           </>
         )}
-        <Handle kind={handle.id} w={w} h={h} side={side} />
+        <Handle color={handle.color} kind={handle.id} w={w} h={h} side={side} />
       </group>
     </group>
   );
@@ -482,12 +475,8 @@ function Drawer({
   });
   return (
     <group ref={group} position={[0, y, z]}>
-      <Box
-        size={[w - 0.006, h - 0.006, 0.02]}
-        material={front}
-        lacquer
-      />
-      <Handle kind={handle.id} w={w} h={h} />
+      <Box size={[w - 0.006, h - 0.006, 0.02]} material={front} lacquer />
+      <Handle color={handle.color} kind={handle.id} w={w} h={h} />
       <Box
         size={[w - 0.05, 0.014, 0.45]}
         position={[0, -h / 2 + 0.02, -0.23]}
@@ -526,8 +515,11 @@ function CabinetMesh({
   catalog: Catalog;
   interactive: boolean;
 }) {
-  const selected = useDesigner((s) => s.selected === c.id),
-    open = useDesigner((s) => s.opened.includes(c.id));
+  const selected = useDesigner((s) => interactive && s.selected === c.id),
+    open = useDesigner((s) => interactive && s.opened.includes(c.id));
+  const interior = useDesigner(
+    (s) => interactive && s.interior && design.kind === "wardrobe",
+  );
   const m = catalog.modules.find((m) => m.id === c.moduleId)!;
   const interaction = useCabinetInteraction(
     c,
@@ -537,19 +529,9 @@ function CabinetMesh({
   );
   const front = catalog.fronts.find((m) => m.id === design.style.front)!;
   const carcass = catalog.carcasses.find((m) => m.id === design.style.carcass)!;
-  const carcassReveal = useMemo(() => {
-    if (design.kind !== "kitchen") return carcass;
-    const col = new Color(front.color).multiplyScalar(0.55);
-    return {
-      ...carcass,
-      color: "#" + col.getHexString(),
-      roughness: 0.7,
-      metalness: 0,
-      texture: undefined,
-      normalMap: undefined,
-      roughnessMap: undefined,
-    };
-  }, [design.kind, front.color, carcass]);
+  const carcassReveal = carcass;
+  const storage = storageMeasurements(c, m);
+  const thickness = countertopThickness(design, catalog);
   const counter = catalog.countertops.find(
     (m) => m.id === design.style.countertop,
   )!;
@@ -629,7 +611,10 @@ function CabinetMesh({
       ))}
       {m.type === "hanging" || m.type === "sliding" ? (
         <>
-          <mesh position={[0, h - 0.32, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <mesh
+            position={[0, storage.rail ?? h - 0.32, 0]}
+            rotation={[0, 0, Math.PI / 2]}
+          >
             <cylinderGeometry args={[0.008, 0.008, w - 0.05, 12]} />
             <meshStandardMaterial
               color="#aaa"
@@ -640,7 +625,7 @@ function CabinetMesh({
           {[-1, 1].map((side) => (
             <mesh
               key={side}
-              position={[side * (w / 2 - 0.027), h - 0.32, 0]}
+              position={[side * (w / 2 - 0.027), storage.rail ?? h - 0.32, 0]}
               rotation={[0, 0, Math.PI / 2]}
             >
               <cylinderGeometry args={[0.021, 0.021, 0.016, 16]} />
@@ -664,17 +649,15 @@ function CabinetMesh({
         m.type !== "sink" &&
         m.type !== "pantry" &&
         m.type !== "corner" &&
-        [0.32, 0.62, 0.82]
-          .filter((r) => h * r < h - 0.12)
-          .map((r) => (
-            <Box
-              key={r}
-              bevel={0.0015}
-              size={[w - 0.035, 0.018, d - 0.035]}
-              position={[0, h * r, 0]}
-              material={carcass}
-            />
-          ))
+        storage.shelves.map((r) => (
+          <Box
+            key={r}
+            bevel={0.0015}
+            size={[w - 0.035, 0.018, d - 0.035]}
+            position={[0, r, 0]}
+            material={carcass}
+          />
+        ))
       )}
       <StorageDetails kind={m.type} w={w} h={h} d={d} open={open} />
       {m.type === "pantry" ? (
@@ -686,7 +669,7 @@ function CabinetMesh({
               lacquer
               selected={selected}
             />
-            <Handle kind={handle.id} w={w} h={h} />
+            <Handle color={handle.color} kind={handle.id} w={w} h={h} />
           </group>
         </group>
       ) : m.type === "drawers" ? (
@@ -694,8 +677,12 @@ function CabinetMesh({
           <Drawer
             key={i}
             w={w}
-            h={c.level === "wardrobe" ? 0.22 : h / 3}
-            y={c.level === "wardrobe" ? 0.22 * (i + 0.5) : (h * (i + 0.5)) / 3}
+            h={c.level === "wardrobe" ? storage.drawerHeight : h / 3}
+            y={
+              c.level === "wardrobe"
+                ? storage.drawerHeight * (i + 0.5)
+                : (h * (i + 0.5)) / 3
+            }
             z={d / 2 + 0.012}
             front={front}
             handle={handle}
@@ -703,7 +690,7 @@ function CabinetMesh({
             organizer={i === 0}
           />
         ))
-      ) : m.type === "sliding" ? (
+      ) : interior ? null : m.type === "sliding" ? (
         <group position={[0, h / 2, d / 2 + 0.012]}>
           {[-1, 1].map((side) => (
             <Box
@@ -820,7 +807,7 @@ function CabinetMesh({
             position={[0, 0.68, 0]}
             material={carcass}
           />
-          {[1.3, 1.9].map((v) => (
+          {storage.shelves.slice(1).map((v) => (
             <Box
               key={v}
               bevel={0.0015}
@@ -829,7 +816,7 @@ function CabinetMesh({
               material={carcass}
             />
           ))}
-          {design.layout !== "walkin" && (
+          {design.layout !== "walkin" && !interior && (
             <group position={[0, (h + 0.68) / 2, d / 2 + 0.012]}>
               <DoorPanel
                 profile={design.style.profile}
@@ -849,13 +836,13 @@ function CabinetMesh({
       {c.level === "base" && (
         <>
           {m.type === "sink" && (
-            <group position={[0, h + 0.043, 0.025]}>
+            <group position={[0, h + thickness + 0.005, 0.025]}>
               <Sink width={w} />
             </group>
           )}
           {hobCabinet(design, catalog)?.id === c.id && (
             <>
-              <group position={[0, h + 0.05, 0.01]}>
+              <group position={[0, h + thickness + 0.012, 0.01]}>
                 <Hob width={w} />
               </group>
               {!design.cabinets.some(
@@ -1041,17 +1028,17 @@ function RoomDetails({ design }: { design: DesignDocument }) {
       <Box
         size={[w, 0.08, 0.018]}
         position={[w / 2, 0.04, 0.01]}
-        color="#23272f"
+        color="#c3baaa"
       />
       <Box
         size={[0.018, 0.08, d]}
         position={[0.01, 0.04, d / 2]}
-        color="#23272f"
+        color="#c3baaa"
       />
       <Box
         size={[w, 0.025, 0.22]}
         position={[w / 2, h, 0.07]}
-        color="#23272f"
+        color="#c3baaa"
       />
       {design.cabinets
         .filter((c) => c.wall === "island")
@@ -1096,7 +1083,9 @@ function Controls({
   preset,
   design,
   cameraView,
+  focus,
 }: {
+  focus?: string | null;
   cameraView?: CameraView;
   preset: CameraPreset;
   design: DesignDocument;
@@ -1105,9 +1094,16 @@ function Controls({
   const dragging = useDesigner((s) => s.dragging);
   const { size } = useThree();
   const bounds = useMemo(
-    () => cameraBounds(design, preset),
+    () =>
+      focus
+        ? cabinetBounds({
+            ...design,
+            cabinets: design.cabinets.filter((c) => c.id === focus),
+          }).expandByScalar(0.35)
+        : cameraBounds(design, preset),
     [
       preset,
+      focus,
       design.cabinets,
       design.room.width,
       design.room.depth,
@@ -1163,8 +1159,16 @@ function StudioSun({
     return {
       target,
       center,
-      position: center.clone().add(offset).toArray() as [number, number, number],
-      fillPosition: [center.x + 3.2, 2.6, center.z - 1.8] as [number, number, number],
+      position: center.clone().add(offset).toArray() as [
+        number,
+        number,
+        number,
+      ],
+      fillPosition: [center.x + 3.2, 2.6, center.z - 1.8] as [
+        number,
+        number,
+        number,
+      ],
       left: Math.min(-4.0, ...corners.map((p) => p.dot(right) - 0.2)),
       right: Math.max(4.0, ...corners.map((p) => p.dot(right) + 0.2)),
       top: Math.max(4.0, ...corners.map((p) => p.dot(up) + 0.2)),
@@ -1177,7 +1181,7 @@ function StudioSun({
       <directionalLight
         target={lighting.target}
         position={lighting.position}
-        intensity={1.6}
+        intensity={1.3}
         color="#fff1e0"
         castShadow={shadows}
         shadow-mapSize={[2048, 2048]}
@@ -1192,8 +1196,8 @@ function StudioSun({
       />
       <directionalLight
         position={lighting.fillPosition}
-        intensity={0.45}
-        color="#bcd2ff"
+        intensity={0.65}
+        color="#e2e8ef"
         castShadow={false}
       />
     </>
@@ -1228,6 +1232,9 @@ export default function Scene({
 }) {
   const preview = useDesigner((s) => s.dragPreview);
   const opened = useDesigner((s) => s.opened);
+  const focus = useDesigner((s) =>
+    interactive && s.interactionMode === "showroom" ? s.selected : null,
+  );
   const design = interactive && preview ? preview : committedDesign;
   const performance = useQuality() === "lightweight";
   const t = useT();
@@ -1238,6 +1245,9 @@ export default function Scene({
       fallback={<div className="scene-fallback">{t("webglError")}</div>}
     >
       <Canvas
+        style={
+          interactive ? { height: "calc(100% - 128px)", top: 80 } : undefined
+        }
         role="img"
         aria-label={t("sceneLabel")}
         frameloop="demand"
@@ -1250,8 +1260,8 @@ export default function Scene({
           interactive && useDesigner.getState().select(null)
         }
       >
-        <color attach="background" args={["#23272f"]} />
-        <hemisphereLight args={["#eaf1fb", "#2b2a27", 0.22]} />
+        <color attach="background" args={["#eee9df"]} />
+        <hemisphereLight args={["#fff7e9", "#857b6b", 0.55]} />
         <StudioSun design={design} shadows={!performance} />
         <StudioEnvironment />
         <group position={[-w / 2, 0, -d / 2]}>
@@ -1301,9 +1311,24 @@ export default function Scene({
                     }
               }
               side={side}
-              color={design.environment?.wallColor || "#d4d8df"}
+              color={design.environment?.wallColor || "#e5e0d7"}
             />
           ))}
+          {design.cabinets
+            .filter((c) => c.level === "wall")
+            .map((c) => (
+              <group
+                key={`support-${c.id}`}
+                position={[c.x / 100, 1.75, c.z / 100]}
+                rotation={[0, c.rotation, 0]}
+              >
+                <Box
+                  size={[c.width / 100 + 0.01, 1.15, 0.035]}
+                  position={[0, 0, -c.depth / 200 - 0.015]}
+                  color={design.environment?.wallColor || "#e5e0d7"}
+                />
+              </group>
+            ))}
           {design.cabinets.map((c) => (
             <CabinetMesh
               key={c.id}
@@ -1321,11 +1346,12 @@ export default function Scene({
         <RefreshShadows revision={[design, opened]} />
         <Controls
           preset={preset}
+          focus={focus}
           design={committedDesign}
           cameraView={cameraView}
         />
         <AdaptiveDpr pixelated />
-        <Rendering capture={capture} crispShadows />
+        <Rendering capture={capture} />
       </Canvas>
     </SceneBoundary>
   );

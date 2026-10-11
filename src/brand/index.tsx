@@ -12,9 +12,6 @@ import {
   type BrandConfig,
   type Catalog,
 } from "../catalog/types";
-import { useInterior } from "../interior/store";
-import { validInterior } from "../interior/layout";
-import { useFacade, validFacade } from "../doorPreview/store";
 import { decodeShare, SnapshotSchema } from "../sharing";
 import { useT, useLanguage } from "../i18n";
 import { useDesigner } from "../designer3d/store";
@@ -124,17 +121,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
                 await fetch(`/brands/${payload.catalogId}/catalog.json`)
               ).json(),
             );
-            if (
-              (["kitchen", "wardrobe"].includes(payload.design.kind) &&
-                !validateDesign(
-                  payload.design as import("../catalog/types").DesignDocument,
-                  linkedCatalog,
-                )) ||
-              (payload.design.kind === "interior" &&
-                !validInterior(payload.design, linkedCatalog)) ||
-              (payload.design.kind === "facade" &&
-                !validFacade(payload.design, linkedCatalog))
-            )
+            if (!validateDesign(payload.design, linkedCatalog))
               throw Error("invalidLink");
             catalog = linkedCatalog;
             assetBrand = payload.catalogId;
@@ -151,11 +138,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
                 initialError = "storageError";
               }
             }
-            if (payload.design.kind === "facade")
-              useFacade.getState().receive(payload.design);
-            else if (payload.design.kind === "interior")
-              useInterior.getState().set(payload.design, brand.slug);
-            else useDesigner.getState().setDesign(payload.design);
+            useDesigner.getState().setDesign(payload.design);
           } catch {
             initialError = "invalidLink";
           }
@@ -186,6 +169,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
             useDesigner.getState().setError("storageError");
             throw Error("storageError");
           }
+          if (next.slug !== brand.slug) useDesigner.getState().setDesign(null);
           usePreferences.getState().setPresentation(next.slug, true);
           setValue((v) =>
             v ? { ...v, brand: next, logoUrl: logo, local: true } : v,

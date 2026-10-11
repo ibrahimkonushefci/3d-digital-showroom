@@ -1,3 +1,4 @@
+import { selectFamily } from "../scene/furnitureMaterials";
 import {
   lazy,
   Suspense,
@@ -27,6 +28,11 @@ import {
 import { useBrand } from "../brand";
 import { useT, useLanguage, label, money, type TranslationKey } from "../i18n";
 import { useDesigner } from "./store";
+import { presentationPresets } from "./presets";
+import { storageMeasurements } from "./storage";
+import { inspectionCamera } from "./framing";
+import CaptureAlternative from "./CaptureAlternative";
+import { saveAlternative } from "./comparison";
 import {
   examples,
   generateLayout,
@@ -76,7 +82,11 @@ interface CuratedTheme {
 const KITCHEN_THEMES: CuratedTheme[] = [
   {
     id: "japandi",
-    name: { en: "Japandi Minimal", sq: "Japandi Minimal", de: "Japandi Minimal" },
+    name: {
+      en: "Japandi Minimal",
+      sq: "Japandi Minimal",
+      de: "Japandi Minimal",
+    },
     desc: {
       en: "Cashmere matte & Travertine stone",
       sq: "Kashmir mat & gur Travertin",
@@ -94,7 +104,11 @@ const KITCHEN_THEMES: CuratedTheme[] = [
   },
   {
     id: "anthracite",
-    name: { en: "Modern Anthracite", sq: "Antracit Modern", de: "Modernes Anthrazit" },
+    name: {
+      en: "Modern Anthracite",
+      sq: "Antracit Modern",
+      de: "Modernes Anthrazit",
+    },
     desc: {
       en: "Deep charcoal & Granite stone",
       sq: "Antracit i errët & Granit",
@@ -112,7 +126,11 @@ const KITCHEN_THEMES: CuratedTheme[] = [
   },
   {
     id: "sage",
-    name: { en: "Nordic Sage", sq: "Sherebele Nordike", de: "Nordisches Salbei" },
+    name: {
+      en: "Nordic Sage",
+      sq: "Sherebele Nordike",
+      de: "Nordisches Salbei",
+    },
     desc: {
       en: "Sage green & Carrara marble",
       sq: "Gjelbër sherebele & Mermer Carrara",
@@ -130,7 +148,11 @@ const KITCHEN_THEMES: CuratedTheme[] = [
   },
   {
     id: "white-brass",
-    name: { en: "Warm White & Oak", sq: "E bardhë e ngrohtë & Lis", de: "Warmweiß & Eiche" },
+    name: {
+      en: "Warm White & Oak",
+      sq: "E bardhë e ngrohtë & Lis",
+      de: "Warmweiß & Eiche",
+    },
     desc: {
       en: "Warm white & Natural oak countertop",
       sq: "E bardhë e ngrohtë & Banak lisi",
@@ -148,9 +170,9 @@ const KITCHEN_THEMES: CuratedTheme[] = [
   },
   {
     id: "oak",
-    name: { en: "Natural Oak Veneer", sq: "Lis Natyral", de: "Natureiche Furnier" },
+    name: { en: "Natural Oak", sq: "Lis Natyral", de: "Eichendekor" },
     desc: {
-      en: "Natural oak veneer & Travertine",
+      en: "Oak decor & Travertine",
       sq: "Lis natyral & Gur Travertin",
       de: "Natureiche & Travertin",
     },
@@ -169,11 +191,15 @@ const KITCHEN_THEMES: CuratedTheme[] = [
 const WARDROBE_THEMES: CuratedTheme[] = [
   {
     id: "milano-oak",
-    name: { en: "Milano Smoked Oak", sq: "Lis i Tymosur Milano", de: "Milano Räuchereiche" },
+    name: {
+      en: "Milano Oak",
+      sq: "Lis Milano",
+      de: "Milano Eiche",
+    },
     desc: {
-      en: "Dark oak fronts & graphite handles",
-      sq: "Fronte lisi të errët & doreza grafiti",
-      de: "Dunkle Eiche & Graphitgriffe",
+      en: "Oak decor & stainless handles",
+      sq: "Dekor lisi & doreza inox",
+      de: "Eichendekor & Edelstahlgriffe",
     },
     front: "oak",
     countertop: "travertine",
@@ -187,7 +213,11 @@ const WARDROBE_THEMES: CuratedTheme[] = [
   },
   {
     id: "nordic-cashmere",
-    name: { en: "Nordic Cashmere", sq: "Kashmir Nordik", de: "Nordisches Kaschmir" },
+    name: {
+      en: "Nordic Cashmere",
+      sq: "Kashmir Nordik",
+      de: "Nordisches Kaschmir",
+    },
     desc: {
       en: "Cashmere matte & warm oak carcass",
       sq: "Kashmir mat & korpus lisi të ngrohtë",
@@ -205,7 +235,11 @@ const WARDROBE_THEMES: CuratedTheme[] = [
   },
   {
     id: "metropolitan-anthracite",
-    name: { en: "Metropolitan Anthracite", sq: "Antracit Metropol", de: "Metropolitan Anthrazit" },
+    name: {
+      en: "Metropolitan Anthracite",
+      sq: "Antracit Metropol",
+      de: "Metropolitan Anthrazit",
+    },
     desc: {
       en: "Deep matte anthracite & black profiles",
       sq: "Antracit mat & profile të zeza",
@@ -223,7 +257,11 @@ const WARDROBE_THEMES: CuratedTheme[] = [
   },
   {
     id: "modern-white",
-    name: { en: "Modern White & Oak", sq: "E Bardhë & Lis", de: "Modernes Weiß & Eiche" },
+    name: {
+      en: "Modern White & Oak",
+      sq: "E Bardhë & Lis",
+      de: "Modernes Weiß & Eiche",
+    },
     desc: {
       en: "Warm white & natural oak interior",
       sq: "E bardhë e ngrohtë & brendësi lisi",
@@ -279,7 +317,8 @@ export function Materials({
 
   const applyTheme = (theme: CuratedTheme) => {
     const validFront =
-      catalog.fronts.find((f) => f.id === theme.front)?.id || catalog.fronts[0]?.id;
+      catalog.fronts.find((f) => f.id === theme.front)?.id ||
+      catalog.fronts[0]?.id;
     const validCountertop =
       design.kind === "kitchen"
         ? catalog.countertops.find((c) => c.id === theme.countertop)?.id ||
@@ -309,9 +348,11 @@ export function Materials({
       },
       environment: {
         floor: theme.floor,
-        wallColor: design.environment?.wallColor || "#d4d8df",
+        wallColor: design.environment?.wallColor || "#e5e0d7",
         internalLed:
-          design.kind === "wardrobe" ? true : design.environment?.internalLed || false,
+          design.kind === "wardrobe"
+            ? true
+            : design.environment?.internalLed || false,
       },
     });
   };
@@ -336,6 +377,32 @@ export function Materials({
 
   return (
     <>
+      <h3>{t("front")}</h3>
+      <TierSwatches
+        tiers={catalog.frontTiers}
+        title={t("front")}
+        items={catalog.fronts}
+        value={design.style.front}
+        onChange={(v) => style("front", v)}
+      />
+
+      {design.kind === "kitchen" && (
+        <>
+          <h3>{t("countertop")}</h3>
+          <TierSwatches
+            tiers={catalog.countertopTiers}
+            title={t("countertop")}
+            items={catalog.countertops}
+            value={design.style.countertop}
+            onChange={(v) => style("countertop", v)}
+          />
+          {["quartz", "granite"].includes(
+            catalog.countertops.find((m) => m.id === design.style.countertop)
+              ?.tier || "",
+          ) && <p className="helper">{t("illustrativeThickness")}</p>}
+        </>
+      )}
+
       {!compact && (
         <>
           <h3>{t("curatedThemes")}</h3>
@@ -367,26 +434,6 @@ export function Materials({
               );
             })}
           </div>
-        </>
-      )}
-
-      <h3>{t("front")}</h3>
-      <Swatches
-        title={t("color")}
-        items={catalog.fronts.slice(0, 8)}
-        value={design.style.front}
-        onChange={(v) => style("front", v)}
-      />
-
-      {design.kind === "kitchen" && (
-        <>
-          <h3>{t("countertop")}</h3>
-          <Swatches
-            title={t("countertop")}
-            items={catalog.countertops}
-            value={design.style.countertop}
-            onChange={(v) => style("countertop", v)}
-          />
         </>
       )}
 
@@ -461,14 +508,24 @@ function TierSwatches({
 }) {
   const t = useT(),
     { language } = useLanguage();
-  const tier = items.find((m) => m.id === value)?.tier;
+  const tier = tiers.find((t) => t.decors.includes(value));
+  if (!tiers.length)
+    return (
+      <Swatches title={title} items={items} value={value} onChange={onChange} />
+    );
   return (
     <>
       <Field label={`${title} · ${t("materialTier")}`}>
         <select
-          value={tier}
+          value={tier?.id || ""}
           onChange={(e) =>
-            onChange(tiers.find((t) => t.id === e.target.value)!.decors[0])
+            onChange(
+              selectFamily(
+                value,
+                tiers.find((t) => t.id === e.target.value)!.decors,
+                items,
+              ),
+            )
           }
         >
           {tiers.map((t) => (
@@ -480,7 +537,7 @@ function TierSwatches({
       </Field>
       <Swatches
         title={t("color")}
-        items={items.filter((m) => !tier || m.tier === tier)}
+        items={items.filter((m) => !tier || tier.decors.includes(m.id))}
         value={value}
         onChange={onChange}
       />
@@ -497,10 +554,19 @@ export default function Designer() {
     navigate = useNavigate();
   const state = useDesigner();
   const { design, selected, past, future } = state;
-  const [panel, setPanel] = useState<"styles" | "layout" | "cabinets" | "details">(
-    "styles",
-  );
+  const [panel, setPanel] = useState<
+    "styles" | "layout" | "cabinets" | "details"
+  >("styles");
   const [preset, setPreset] = useState<CameraPreset>("perspective");
+  const [saving, setSaving] = useState<{
+    slot: "A" | "B";
+    design: DesignDocument;
+    name: string;
+  } | null>(null);
+  const [alternativeName, setAlternativeName] = useState("");
+  const [comparisonStatus, setComparisonStatus] = useState<
+    "comparisonSaved" | "comparisonError" | null
+  >(null);
   const capture = useRef<(() => Promise<string>) | null>(null);
   const registerCapture = useCallback((fn: () => Promise<string>) => {
     capture.current = fn;
@@ -510,7 +576,9 @@ export default function Designer() {
     if (useDesigner.getState().design?.kind !== kind) {
       const previousError = useDesigner.getState().error;
       const saved = loadDesign(brand.slug, kind, catalog);
-      const example = examples(catalog).find((d) => d.kind === kind);
+      const example = presentationPresets(catalog).find(
+        (p) => p.design.kind === kind,
+      )?.design;
       state.setDesign(
         saved ||
           example ||
@@ -524,11 +592,20 @@ export default function Designer() {
   }, [kind, catalog, brand.slug]);
 
   useEffect(() => {
-    if (selected) {
+    if (selected && state.interactionMode === "edit") {
       setPanel("cabinets");
     }
-  }, [selected]);
+  }, [selected, state.interactionMode]);
 
+  useEffect(() => {
+    if (state.interactionMode === "showroom" && selected && design)
+      state.setCameraView(inspectionCamera(design, selected));
+  }, [selected, state.interactionMode]);
+  useEffect(() => {
+    setSaving(null);
+    setComparisonStatus(null);
+    setAlternativeName("");
+  }, [kind, brand.slug]);
   if (!design || design.kind !== kind)
     return <div className="startup">{t("sceneLoading")}</div>;
 
@@ -552,12 +629,57 @@ export default function Designer() {
 
   return (
     <main className="designer-page">
+      {saving && (
+        <CaptureAlternative
+          design={saving.design}
+          catalog={catalog}
+          onCapture={async (image) => {
+            try {
+              await saveAlternative(
+                brand.slug,
+                saving.design,
+                catalog,
+                saving.slot,
+                saving.name,
+                async () => image,
+              );
+              setComparisonStatus("comparisonSaved");
+            } catch {
+              setComparisonStatus("comparisonError");
+            }
+            setSaving(null);
+          }}
+          onError={() => {
+            setComparisonStatus("comparisonError");
+            setSaving(null);
+          }}
+        />
+      )}
       <div className="designer-heading">
         <div>
           <div className="eyebrow">{t("madeForYou")}</div>
           <h1>{t(kind === "kitchen" ? "kitchens" : "wardrobes")}</h1>
         </div>
         <div className="history-buttons">
+          <div className="segmented-pills">
+            {(["showroom", "edit"] as const).map((mode) => (
+              <button
+                key={mode}
+                className={
+                  "segmented-pill " +
+                  (state.interactionMode === mode ? "active" : "")
+                }
+                aria-pressed={state.interactionMode === mode}
+                onClick={() => {
+                  state.setInteractionMode(mode);
+                  state.select(null);
+                  state.setCameraView(null);
+                }}
+              >
+                {t(mode)}
+              </button>
+            ))}
+          </div>
           <button
             className="icon-button"
             onClick={state.undo}
@@ -602,17 +724,30 @@ export default function Designer() {
               onClick={() => {
                 setPreset("perspective");
                 state.setCameraView(null);
+                state.select(null);
               }}
             >
               <RotateCcw size={14} />
+              <span>{t("overallView")}</span>
             </button>
+            {kind === "wardrobe" && (
+              <button
+                aria-pressed={state.interior}
+                className={state.interior ? "active" : ""}
+                onClick={() => state.setInterior(!state.interior)}
+              >
+                {t("interiorView")}
+              </button>
+            )}
             <button
               className="canvas-btn-special"
               title={state.opened.length > 0 ? t("closeAll") : t("openAll")}
               onClick={state.toggleAllOpen}
             >
               <DoorOpen size={15} />
-              <span>{state.opened.length > 0 ? t("closeAll") : t("openAll")}</span>
+              <span>
+                {state.opened.length > 0 ? t("closeAll") : t("openAll")}
+              </span>
             </button>
           </div>
 
@@ -641,7 +776,13 @@ export default function Designer() {
               ).toLowerCase()}
             </span>
           </div>
-          <p className="orbit-hint">{t("orbitHint")}</p>
+          <p className="orbit-hint">
+            {t(
+              state.interactionMode === "showroom"
+                ? "showroomHint"
+                : "orbitHint",
+            )}
+          </p>
         </section>
 
         <aside className="design-controls">
@@ -655,7 +796,13 @@ export default function Designer() {
                   icon: Box,
                   label: t(kind === "kitchen" ? "cabinets" : "wardrobes"),
                 },
-                { key: "details", icon: Sliders, label: t("appliances") },
+                {
+                  key: "details",
+                  icon: Sliders,
+                  label: t(
+                    kind === "wardrobe" ? "storageLighting" : "appliances",
+                  ),
+                },
               ] as const
             ).map((p) => (
               <button
@@ -670,6 +817,15 @@ export default function Designer() {
           </div>
 
           <div className="panel-body">
+            {state.interactionMode === "showroom" && selected && (
+              <Inspection
+                design={design}
+                onClose={() => {
+                  state.select(null);
+                  state.setCameraView(null);
+                }}
+              />
+            )}
             {panel === "styles" && (
               <Materials design={design} onChange={edit} />
             )}
@@ -683,16 +839,76 @@ export default function Designer() {
               />
             )}
 
-            {panel === "cabinets" && (
+            {panel === "cabinets" && state.interactionMode === "edit" && (
               <CabinetsSection design={design} onChange={edit} />
             )}
 
+            {panel === "cabinets" && state.interactionMode === "showroom" && (
+              <>
+                <p>{t("inspectionHelp")}</p>
+                <div className="module-list">
+                  {design.cabinets.map((c) => (
+                    <button key={c.id} onClick={() => state.select(c.id)}>
+                      {label(
+                        catalog.modules.find((m) => m.id === c.moduleId)!.name,
+                        language,
+                      )}{" "}
+                      · {c.width} cm
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
             {panel === "details" && (
               <DetailsSection design={design} onChange={edit} />
             )}
           </div>
 
           <div className="price-bar">
+            <label className="alternative-name">
+              {t("comparisonName")}
+              <input
+                maxLength={80}
+                value={alternativeName}
+                onChange={(e) => setAlternativeName(e.target.value)}
+                placeholder={t(design.layout)}
+              />
+            </label>
+            <div className="comparison-actions">
+              {(["A", "B"] as const).map((slot) => (
+                <button
+                  className="button secondary"
+                  key={slot}
+                  disabled={!!saving}
+                  onClick={() => {
+                    setComparisonStatus(null);
+                    setSaving({
+                      slot,
+                      design: structuredClone(design),
+                      name: alternativeName || t(design.layout),
+                    });
+                  }}
+                >
+                  {t(slot === "A" ? "saveA" : "saveB")}
+                </button>
+              ))}
+              <button
+                className="button secondary"
+                disabled={!!saving}
+                onClick={() =>
+                  navigate(
+                    `/compare?brand=${encodeURIComponent(brand.slug)}&kind=${kind}`,
+                  )
+                }
+              >
+                {t("compare")}
+              </button>
+            </div>
+            {(saving || comparisonStatus) && (
+              <small role="status">
+                {t(saving ? "sceneLoading" : comparisonStatus!)}
+              </small>
+            )}
             <span>{t("estimate")}</span>
             <strong>
               {design.exact
@@ -843,7 +1059,8 @@ function RoomAndLayoutSection({
             <button
               type="button"
               className={
-                "segmented-pill " + (activeRoomSize === "compact" ? "active" : "")
+                "segmented-pill " +
+                (activeRoomSize === "compact" ? "active" : "")
               }
               onClick={() => applyRoomSize(280, 240)}
             >
@@ -852,7 +1069,8 @@ function RoomAndLayoutSection({
             <button
               type="button"
               className={
-                "segmented-pill " + (activeRoomSize === "standard" ? "active" : "")
+                "segmented-pill " +
+                (activeRoomSize === "standard" ? "active" : "")
               }
               onClick={() => applyRoomSize(360, 300)}
             >
@@ -861,7 +1079,8 @@ function RoomAndLayoutSection({
             <button
               type="button"
               className={
-                "segmented-pill " + (activeRoomSize === "spacious" ? "active" : "")
+                "segmented-pill " +
+                (activeRoomSize === "spacious" ? "active" : "")
               }
               onClick={() => applyRoomSize(440, 360)}
             >
@@ -873,7 +1092,8 @@ function RoomAndLayoutSection({
             <button
               type="button"
               className={
-                "segmented-pill " + (activeRoomSize === "compact" ? "active" : "")
+                "segmented-pill " +
+                (activeRoomSize === "compact" ? "active" : "")
               }
               onClick={() => applyRoomSize(320, 260)}
             >
@@ -882,7 +1102,8 @@ function RoomAndLayoutSection({
             <button
               type="button"
               className={
-                "segmented-pill " + (activeRoomSize === "standard" ? "active" : "")
+                "segmented-pill " +
+                (activeRoomSize === "standard" ? "active" : "")
               }
               onClick={() => applyRoomSize(420, 360)}
             >
@@ -891,7 +1112,8 @@ function RoomAndLayoutSection({
             <button
               type="button"
               className={
-                "segmented-pill " + (activeRoomSize === "spacious" ? "active" : "")
+                "segmented-pill " +
+                (activeRoomSize === "spacious" ? "active" : "")
               }
               onClick={() => applyRoomSize(500, 400)}
             >
@@ -905,7 +1127,9 @@ function RoomAndLayoutSection({
       <div className="segmented-pills">
         <button
           type="button"
-          className={"segmented-pill " + (currentWindowPos === "none" ? "active" : "")}
+          className={
+            "segmented-pill " + (currentWindowPos === "none" ? "active" : "")
+          }
           onClick={() => setWindowPreset("none")}
         >
           {t("none")}
@@ -943,21 +1167,27 @@ function RoomAndLayoutSection({
       <div className="segmented-pills">
         <button
           type="button"
-          className={"segmented-pill " + (currentDoorPos === "none" ? "active" : "")}
+          className={
+            "segmented-pill " + (currentDoorPos === "none" ? "active" : "")
+          }
           onClick={() => setDoorPreset("none")}
         >
           {t("none")}
         </button>
         <button
           type="button"
-          className={"segmented-pill " + (currentDoorPos === "left" ? "active" : "")}
+          className={
+            "segmented-pill " + (currentDoorPos === "left" ? "active" : "")
+          }
           onClick={() => setDoorPreset("left")}
         >
           {t("left")}
         </button>
         <button
           type="button"
-          className={"segmented-pill " + (currentDoorPos === "right" ? "active" : "")}
+          className={
+            "segmented-pill " + (currentDoorPos === "right" ? "active" : "")
+          }
           onClick={() => setDoorPreset("right")}
         >
           {t("right")}
@@ -1029,7 +1259,9 @@ function CabinetsSection({
     const pos = wallPosition(c.wall, newOff, c.width, c.depth, design.room);
     onChange({
       ...design,
-      cabinets: design.cabinets.map((x) => (x.id === c.id ? { ...x, ...pos } : x)),
+      cabinets: design.cabinets.map((x) =>
+        x.id === c.id ? { ...x, ...pos } : x,
+      ),
     });
   };
 
@@ -1040,7 +1272,10 @@ function CabinetsSection({
       id: uid(),
     };
     const offset = wallOffset(c) + c.width;
-    Object.assign(n, wallPosition(c.wall, offset, n.width, n.depth, design.room));
+    Object.assign(
+      n,
+      wallPosition(c.wall, offset, n.width, n.depth, design.room),
+    );
     if (onChange({ ...design, cabinets: [...design.cabinets, n] })) {
       state.select(n.id);
     }
@@ -1062,8 +1297,11 @@ function CabinetsSection({
     const m = catalog.modules.find((x) => x.id === moduleId);
     if (!m) return;
     const wall: Wall = c?.wall || "back";
-    const width = defaultWidth || m.widths[0] || (design.kind === "wardrobe" ? 80 : 60);
-    const offset = c ? wallOffset(c) + c.width : design.room.width / 2 - width / 2;
+    const width =
+      defaultWidth || m.widths[0] || (design.kind === "wardrobe" ? 80 : 60);
+    const offset = c
+      ? wallOffset(c) + c.width
+      : design.room.width / 2 - width / 2;
     const n: Cabinet = {
       id: uid(),
       moduleId: m.id,
@@ -1113,7 +1351,9 @@ function CabinetsSection({
                 <button
                   key={w}
                   type="button"
-                  className={"segmented-pill " + (c.width === w ? "active" : "")}
+                  className={
+                    "segmented-pill " + (c.width === w ? "active" : "")
+                  }
                   onClick={() => update({ width: w })}
                 >
                   {w} cm
@@ -1170,7 +1410,11 @@ function CabinetsSection({
               <DoorOpen size={16} />
               {t("openClose")}
             </button>
-            <button type="button" className="button secondary" onClick={duplicate}>
+            <button
+              type="button"
+              className="button secondary"
+              onClick={duplicate}
+            >
               <Copy size={16} />
               {t("duplicateUnit")}
             </button>
@@ -1190,117 +1434,29 @@ function CabinetsSection({
       )}
 
       <h3>{t("addUnitCatalog")}</h3>
-      {design.kind === "wardrobe" ? (
-        <div className="unit-catalog-grid">
-          <button
-            type="button"
-            className="unit-catalog-card"
-            onClick={() => addModuleToKitchen("wardrobe-hanging", 80)}
-          >
-            <strong>Hanging Wardrobe 80</strong>
-            <span>Clothes rail & shelf · 80 cm</span>
-          </button>
-          <button
-            type="button"
-            className="unit-catalog-card"
-            onClick={() => addModuleToKitchen("wardrobe-shelves", 60)}
-          >
-            <strong>Shelved Wardrobe 60</strong>
-            <span>Storage shelves & doors · 60 cm</span>
-          </button>
-          <button
-            type="button"
-            className="unit-catalog-card"
-            onClick={() => addModuleToKitchen("wardrobe-drawers", 60)}
-          >
-            <strong>Wardrobe Drawers 60</strong>
-            <span>Internal chest & storage · 60 cm</span>
-          </button>
-          <button
-            type="button"
-            className="unit-catalog-card"
-            onClick={() => addModuleToKitchen("wardrobe-sliding", 100)}
-          >
-            <strong>Sliding Wardrobe 100</strong>
-            <span>Sliding double doors · 100 cm</span>
-          </button>
-          <button
-            type="button"
-            className="unit-catalog-card"
-            onClick={() => addModuleToKitchen("wardrobe-open", 80)}
-          >
-            <strong>Open Dressing Unit 80</strong>
-            <span>Walk-in dressing unit · 80 cm</span>
-          </button>
-        </div>
-      ) : (
-        <div className="unit-catalog-grid">
-          <button
-            type="button"
-            className="unit-catalog-card"
-            onClick={() => addModuleToKitchen("base-drawers", 60)}
-          >
-            <strong>Three Drawers 60</strong>
-            <span>Base unit · 60 cm</span>
-          </button>
-          <button
-            type="button"
-            className="unit-catalog-card"
-            onClick={() => addModuleToKitchen("base-doors", 60)}
-          >
-            <strong>Base Doors 60</strong>
-            <span>Base unit · 60 cm</span>
-          </button>
-          <button
-            type="button"
-            className="unit-catalog-card"
-            onClick={() => addModuleToKitchen("sink", 80)}
-          >
-            <strong>Sink Unit 80</strong>
-            <span>Base sink · 80 cm</span>
-          </button>
-          <button
-            type="button"
-            className="unit-catalog-card"
-            onClick={() => addModuleToKitchen("dishwasher", 60)}
-          >
-            <strong>Dishwasher 60</strong>
-            <span>Integrated · 60 cm</span>
-          </button>
-          <button
-            type="button"
-            className="unit-catalog-card"
-            onClick={() => addModuleToKitchen("wall-doors", 60)}
-          >
-            <strong>Wall Cabinet 60</strong>
-            <span>Wall unit · 60 cm</span>
-          </button>
-          <button
-            type="button"
-            className="unit-catalog-card"
-            onClick={() => addModuleToKitchen("wall-hood", 60)}
-          >
-            <strong>Extractor Hood 60</strong>
-            <span>Wall hood · 60 cm</span>
-          </button>
-          <button
-            type="button"
-            className="unit-catalog-card"
-            onClick={() => addModuleToKitchen("oven", 60)}
-          >
-            <strong>Oven Tower 60</strong>
-            <span>Tall unit · 60 cm</span>
-          </button>
-          <button
-            type="button"
-            className="unit-catalog-card"
-            onClick={() => addModuleToKitchen("pantry", 60)}
-          >
-            <strong>Pantry Tower 60</strong>
-            <span>Tall pull-out · 60 cm</span>
-          </button>
-        </div>
-      )}
+      <div className="unit-catalog-grid">
+        {catalog.modules
+          .filter((m) => m.kind === design.kind)
+          .map((m) => {
+            const width = m.widths.includes(design.kind === "kitchen" ? 60 : 80)
+              ? design.kind === "kitchen"
+                ? 60
+                : 80
+              : m.widths[0];
+            return (
+              <button
+                key={m.id}
+                className="unit-catalog-card"
+                onClick={() => addModuleToKitchen(m.id, width)}
+              >
+                <strong>{label(m.name, language)}</strong>
+                <span>
+                  {width} × {m.height} × {m.depth} cm
+                </span>
+              </button>
+            );
+          })}
+      </div>
 
       <h3>{t(design.kind === "wardrobe" ? "wardrobes" : "cabinets")}</h3>
       <div className="module-list">
@@ -1338,7 +1494,9 @@ function DetailsSection({
 
   return (
     <>
-      <h2>{t("appliances")}</h2>
+      <h2>
+        {t(design.kind === "wardrobe" ? "storageLighting" : "appliances")}
+      </h2>
       {design.kind === "kitchen" && (
         <>
           <Field label={t("appliancePackage")}>
@@ -1351,7 +1509,9 @@ function DetailsSection({
                     "segmented-pill " +
                     (design.appliancePackage === p.id ? "active" : "")
                   }
-                  onClick={() => onChange({ ...design, appliancePackage: p.id })}
+                  onClick={() =>
+                    onChange({ ...design, appliancePackage: p.id })
+                  }
                 >
                   {label(p.name, language)}
                   {p.price ? ` · ${money(p.price, language)}` : ""}
@@ -1378,7 +1538,7 @@ function DetailsSection({
               ...design,
               environment: {
                 floor: design.environment?.floor || "laminate",
-                wallColor: design.environment?.wallColor || "#d4d8df",
+                wallColor: design.environment?.wallColor || "#e5e0d7",
                 internalLed: v,
               },
             })
@@ -1401,9 +1561,10 @@ function DetailsSection({
                 ...design,
                 environment: {
                   floor: k,
-                  wallColor: design.environment?.wallColor || "#d4d8df",
+                  wallColor: design.environment?.wallColor || "#e5e0d7",
                   internalLed:
-                    design.environment?.internalLed ?? (design.kind === "wardrobe"),
+                    design.environment?.internalLed ??
+                    design.kind === "wardrobe",
                 },
               })
             }
@@ -1416,7 +1577,7 @@ function DetailsSection({
       <Field label={t("wallColor")}>
         <input
           type="color"
-          value={design.environment?.wallColor || "#d4d8df"}
+          value={design.environment?.wallColor || "#e5e0d7"}
           onChange={(e) =>
             onChange({
               ...design,
@@ -1424,7 +1585,7 @@ function DetailsSection({
                 floor: design.environment?.floor || "laminate",
                 wallColor: e.target.value,
                 internalLed:
-                  design.environment?.internalLed ?? (design.kind === "wardrobe"),
+                  design.environment?.internalLed ?? design.kind === "wardrobe",
               },
             })
           }
@@ -1591,9 +1752,71 @@ function RoomPanel({
         <Plus size={17} />
         {t("addOpening")}
       </button>
-      <button className="button primary full" style={{ marginTop: 12 }} onClick={apply}>
+      <button
+        className="button primary full"
+        style={{ marginTop: 12 }}
+        onClick={apply}
+      >
         {t("applyRoom")}
       </button>
     </>
+  );
+}
+
+function Inspection({
+  design,
+  onClose,
+}: {
+  design: DesignDocument;
+  onClose: () => void;
+}) {
+  const { catalog } = useBrand(),
+    t = useT(),
+    { language } = useLanguage(),
+    state = useDesigner();
+  const c = design.cabinets.find((c) => c.id === state.selected);
+  if (!c) return null;
+  const m = catalog.modules.find((m) => m.id === c.moduleId)!;
+  const storage = storageMeasurements(c, m),
+    cm = (m: number) => Math.round(m * 1000) / 10;
+  return (
+    <section className="inspection-card">
+      <h3>{label(m.name, language)}</h3>
+      <p>
+        {c.width} × {c.height} × {c.depth} cm
+      </p>
+      {design.kind === "wardrobe" && (
+        <>
+          <p>
+            {t("storageClearance")}: {cm(storage.width)} × {cm(storage.depth)}{" "}
+            cm
+          </p>
+          <p>
+            {t("shelfCount")}: {storage.shelves.length} · {t("drawerCount")}:{" "}
+            {storage.drawers}
+          </p>
+          {storage.rail && (
+            <p>
+              {t("railHeight")}: {cm(storage.rail)} cm
+            </p>
+          )}
+          {!!storage.shelves.length && (
+            <p>
+              {t("storageClearance")}: {storage.clearances.map(cm).join(" / ")}{" "}
+              cm
+            </p>
+          )}
+        </>
+      )}
+      <button
+        className="button secondary"
+        onClick={() => state.toggleOpen(c.id)}
+      >
+        {t(state.opened.includes(c.id) ? "closeUnit" : "openUnit")}
+      </button>
+      <button className="button secondary" onClick={onClose}>
+        {t("overallView")}
+      </button>
+    </section>
   );
 }

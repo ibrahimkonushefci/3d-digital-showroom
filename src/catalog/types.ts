@@ -39,8 +39,6 @@ export const BrandSchema = z.object({
   modules: z.object({
     kitchenDesigner: z.boolean(),
     wardrobeDesigner: z.boolean(),
-    doorPreview: z.boolean(),
-    interiorDesigner: z.boolean().default(false),
   }),
   demo: z.boolean().default(false),
   presentationMode: z.boolean().default(false),
@@ -55,9 +53,16 @@ export const MaterialSchema = z.object({
   name: Label,
   tier: z.string().optional(),
   color,
-  supplier: z.object({ manufacturer:z.string(), code:z.string(), name:z.string(), source:z.string().url(), appearance:z.literal("illustrative") }).optional(),
+  supplier: z
+    .object({
+      manufacturer: z.string(),
+      code: z.string(),
+      name: z.string(),
+      source: z.string().url(),
+      appearance: z.literal("illustrative"),
+    })
+    .optional(),
   texture: asset.optional(),
-  previewTexture: asset.optional(),
   normalMap: asset.optional(),
   roughnessMap: asset.optional(),
   roughness: z.number().min(0).max(1),
@@ -95,12 +100,54 @@ export const CatalogSchema = z
   .object({
     version: z.literal(1),
     id: z.string().regex(/^[a-z0-9-]+$/),
-    presentationPresets: z.array(z.object({
-      id:z.string(), name:Label, kind:z.enum(["kitchen","wardrobe"]), layout:z.enum(["straight","l","u","parallel","island","corner","walkin"]),
-      thumbnail:asset, room:z.object({width:z.number().positive(),depth:z.number().positive(),height:z.number().positive()}),
-      style:z.object({front:z.string(),carcass:z.string(),countertop:z.string(),handle:z.string(),backsplash:z.string(),plinth:z.string(),led:z.boolean(),profile:z.enum(["flat","panel"])}),
-      camera:z.object({position:z.tuple([z.number(),z.number(),z.number()]),target:z.tuple([z.number(),z.number(),z.number()])})
-    })).optional(),
+    presentationPresets: z
+      .array(
+        z.object({
+          id: z.string(),
+          name: Label,
+          kind: z.enum(["kitchen", "wardrobe"]),
+          layout: z.enum([
+            "straight",
+            "l",
+            "u",
+            "parallel",
+            "island",
+            "corner",
+            "walkin",
+          ]),
+          thumbnail: asset,
+          room: z.object({
+            width: z.number().positive(),
+            depth: z.number().positive(),
+            height: z.number().positive(),
+          }),
+          style: z.object({
+            front: z.string(),
+            carcass: z.string(),
+            countertop: z.string(),
+            handle: z.string(),
+            backsplash: z.string(),
+            plinth: z.string(),
+            led: z.boolean(),
+            profile: z.enum(["flat", "panel"]),
+          }),
+          cabinets: z
+            .array(
+              z.object({
+                moduleId: z.string(),
+                wall: z.enum(["back", "left", "right", "front", "island"]),
+                offset: z.number().nonnegative(),
+                width: z.number().positive(),
+              }),
+            )
+            .optional(),
+          camera: z.object({
+            position: z.tuple([z.number(), z.number(), z.number()]),
+            target: z.tuple([z.number(), z.number(), z.number()]),
+          }),
+        }),
+      )
+      .optional(),
     fronts: z.array(MaterialSchema).default([]),
     carcasses: z.array(MaterialSchema).default([]),
     countertops: z.array(MaterialSchema).default([]),
@@ -126,176 +173,6 @@ export const CatalogSchema = z
         }),
       )
       .default([]),
-    doors: z
-      .array(
-        z.object({
-          id: z.string(),
-          name: Label,
-          style: z.number().int(),
-          referenceArea: z.number().positive().default(2.1),
-          options: z
-            .array(
-              z.object({
-                id: z.string(),
-                name: Label,
-                price: z.number().nonnegative(),
-              }),
-            )
-            .default([]),
-          price: z.number().nonnegative(),
-          colors: z.array(color).min(1),
-          image: asset.optional(),
-          recolorable: z.boolean().default(true),
-        }),
-      )
-      .default([]),
-    windows: z
-      .array(
-        z.object({
-          id: z.string(),
-          name: Label,
-          style: z.enum(["fixed", "single", "double", "triple"]),
-          options: z
-            .array(
-              z.object({
-                id: z.string(),
-                name: Label,
-                price: z.number().nonnegative(),
-              }),
-            )
-            .default([]),
-          perSquareMeter: z.number().nonnegative(),
-          minimumPrice: z.number().nonnegative(),
-          colors: z.array(color).min(1),
-        }),
-      )
-      .default([]),
-    doorTypes: z
-      .array(
-        z.object({
-          id: z.string(),
-          name: Label,
-          multiplier: z.number().positive(),
-        }),
-      )
-      .default([]),
-    windowMaterials: z
-      .array(
-        z.object({
-          id: z.string(),
-          name: Label,
-          multiplier: z.number().positive(),
-        }),
-      )
-      .default([]),
-    windowProfiles: z
-      .array(
-        z.object({
-          id: z.string(),
-          name: Label,
-          multiplier: z.number().positive(),
-        }),
-      )
-      .default([]),
-    productFinishes: z.array(MaterialSchema).default([]),
-    laminates: z
-      .array(
-        MaterialSchema.extend({
-          class: z.enum(["AC4", "AC5"]),
-          thickness: z.union([z.literal(8), z.literal(10), z.literal(12)]),
-          plankLength: z.number().positive(),
-          plankWidth: z.number().positive(),
-          groove: z.boolean(),
-          waterproof: z.boolean(),
-          m2PerPack: z.number().positive(),
-          pricePerM2: z.number().nonnegative(),
-          usageClass: z.union([z.literal(32), z.literal(33)]).optional(),
-        }),
-      )
-      .default([]),
-    interiorDoors: z
-      .array(
-        z.object({
-          id: z.string(),
-          name: Label,
-          style: z.enum([
-            "flat",
-            "grooves",
-            "glass",
-            "classic",
-            "invisible",
-            "barn",
-            "pocket",
-          ]),
-          price: z.number().nonnegative(),
-          hiddenHingePrice: z.number().nonnegative(),
-          previewImage: asset.optional(),
-          leafHeight: z.number().positive().optional(),
-          frameHeight: z.number().positive().optional(),
-          frameDepthRange: z.tuple([z.number().positive(), z.number().positive()]).optional(),
-        }),
-      )
-      .default([]),
-    interiorHandles: z
-      .array(
-        z.object({
-          id: z.string(),
-          name: Label,
-          color,
-          price: z.number().nonnegative(),
-        }),
-      )
-      .default([]),
-    interiorFinishes: z
-      .array(
-        z.object({
-          id: z.string(),
-          name: Label,
-          multiplier: z.number().positive(),
-        }),
-      )
-      .default([]),
-    skirtings: z
-      .array(
-        z.object({
-          id: z.string(),
-          name: Label,
-          mode: z.enum(["floor", "white", "door"]),
-          heightRates: z
-            .array(
-              z.object({
-                height: z.number().positive(),
-                perMeter: z.number().nonnegative(),
-              }),
-            )
-            .min(1),
-        }),
-      )
-      .default([]),
-    quickCombos: z
-      .array(
-        z.object({
-          id: z.string(),
-          name: Label,
-          laminateId: z.string(),
-          doorFinishId: z.string(),
-          finishTier: z.string(),
-        }),
-      )
-      .default([]),
-    interiorPricing: z
-      .object({
-        waste: z.object({
-          straight: z.number().min(0).max(1),
-          diagonal: z.number().min(0).max(1),
-          herringbone: z.number().min(0).max(1),
-        }),
-        underlayPerM2: z.number().nonnegative(),
-        floorInstallationPerM2: z.number().nonnegative(),
-        doorInstallationPerPiece: z.number().nonnegative(),
-        transport: z.number().nonnegative(),
-      })
-      .optional(),
     frontTiers: z
       .array(
         z.object({
@@ -312,6 +189,7 @@ export const CatalogSchema = z
           id: z.string(),
           name: Label,
           perMeter: z.number().nonnegative(),
+          thicknessMm: z.number().positive().max(100).optional(),
           decors: z.array(z.string()).min(1),
         }),
       )
@@ -333,9 +211,6 @@ export const CatalogSchema = z
       internalLedPerMeter: z.number().nonnegative().default(0),
       plinthPerMeter: z.number().nonnegative(),
       minimumAisle: z.number().positive(),
-      windowInstallationPerPiece: z.number().nonnegative().default(0),
-      doorInstallationPerPiece: z.number().nonnegative().default(0),
-      removalPerPiece: z.number().nonnegative().default(0),
       offerPrefix: z.string().max(12).default("OF"),
       validityDays: z.number().int().positive().default(15),
       paymentTerms: Label.default({
@@ -356,18 +231,6 @@ export const CatalogSchema = z
       "handles",
       "modules",
       "accessories",
-      "doors",
-      "windows",
-      "doorTypes",
-      "windowMaterials",
-      "windowProfiles",
-      "productFinishes",
-      "laminates",
-      "interiorDoors",
-      "interiorHandles",
-      "interiorFinishes",
-      "skirtings",
-      "quickCombos",
       "frontTiers",
       "countertopTiers",
       "appliancePackages",
@@ -391,24 +254,6 @@ export const CatalogSchema = z
             message: "Unknown decor reference",
             path: [path],
           });
-    for (const combo of c.quickCombos)
-      if (
-        !c.laminates.some((f) => f.id === combo.laminateId) ||
-        !c.productFinishes.some((f) => f.id === combo.doorFinishId) ||
-        !c.interiorFinishes.some((f) => f.id === combo.finishTier)
-      )
-        ctx.addIssue({
-          code: "custom",
-          message: "Unknown combination reference",
-          path: ["quickCombos"],
-        });
-    for (const model of [...c.doors, ...c.windows])
-      if (new Set(model.options.map((o) => o.id)).size !== model.options.length)
-        ctx.addIssue({
-          code: "custom",
-          message: "Duplicate product option",
-          path: ["options"],
-        });
     for (const m of c.modules)
       if (m.accessory && !c.accessories.some((a) => a.id === m.accessory))
         ctx.addIssue({
@@ -530,22 +375,6 @@ export function validateCatalogForBrand(catalog: Catalog, brand: BrandConfig) {
   if (
     brand.modules.wardrobeDesigner &&
     !catalog.modules.some((m) => m.kind === "wardrobe")
-  )
-    return false;
-  if (
-    brand.modules.doorPreview &&
-    (!catalog.doors.length || !catalog.windows.length)
-  )
-    return false;
-  if (
-    brand.modules.interiorDesigner &&
-    (!catalog.laminates.length ||
-      !catalog.interiorDoors.length ||
-      !catalog.interiorHandles.length ||
-      !catalog.interiorFinishes.length ||
-      !catalog.skirtings.length ||
-      !catalog.interiorPricing ||
-      !catalog.productFinishes.length)
   )
     return false;
   return true;

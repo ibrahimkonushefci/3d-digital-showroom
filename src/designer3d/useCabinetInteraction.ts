@@ -42,7 +42,7 @@ export function useCabinetInteraction(
       gl.domElement.removeEventListener("pointercancel", cancel);
       window.removeEventListener("blur", cancel);
     };
-  }, [gl, invalidate, mode]);
+  }, [gl, invalidate, mode, c.id, catalog, interactive]);
   return {
     onPointerDown: (e: ThreeEvent<PointerEvent>) => {
       const s = useDesigner.getState();

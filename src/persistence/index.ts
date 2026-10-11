@@ -1,4 +1,3 @@
-import { openDB } from "idb";
 import {
   DesignSchema,
   type Catalog,
@@ -23,22 +22,6 @@ export function loadDesign(
     return null;
   }
 }
-export async function photoDB() {
-  return openDB("showroom-photos", 1, {
-    upgrade(db) {
-      db.createObjectStore("photos");
-    },
-  });
-}
-export async function savePhoto(key: string, data: unknown) {
-  const db = await photoDB();
-  await db.put("photos", data, key);
-}
-export async function getPhoto(key: string) {
-  const db = await photoDB();
-  return db.get("photos", key);
-}
-
 export function restoreSummary(
   brand: string,
   catalog: Catalog,

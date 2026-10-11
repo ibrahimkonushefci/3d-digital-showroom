@@ -16,10 +16,11 @@ import { saveDesign } from "../persistence";
 import OfflineStatus from "../pwa/Status";
 import { usePresentation } from "./preferences";
 import Home from "./Home";
-const PreviewStudio = import.meta.env.DEV ? lazy(() => import("./PreviewStudio")) : null;
-const Interior = lazy(() => import("../interior/Designer"));
+const PreviewStudio = import.meta.env.DEV
+  ? lazy(() => import("./PreviewStudio"))
+  : null;
+const Compare = lazy(() => import("./Compare"));
 const Designer = lazy(() => import("../designer3d/Designer")),
-  Preview = lazy(() => import("../doorPreview/Designer")),
   Summary = lazy(() => import("./Summary")),
   Setup = lazy(() => import("../brand/Setup")),
   Settings = lazy(() => import("./Settings")),
@@ -47,18 +48,12 @@ function FatalError() {
 function ProductRoute() {
   const { kind } = useParams(),
     { brand } = useBrand();
-  if (kind === "interior")
-    return brand.modules.interiorDesigner ? <Interior /> : <Home />;
   return (kind === "kitchen" && brand.modules.kitchenDesigner) ||
     (kind === "wardrobe" && brand.modules.wardrobeDesigner) ? (
     <Designer />
   ) : (
     <Home />
   );
-}
-function MaterialRoute() {
-  const { brand } = useBrand();
-  return brand.modules.kitchenDesigner ? <MaterialSwitcher /> : <Home />;
 }
 function Shell() {
   const { brand, logoUrl, local } = useBrand(),
@@ -107,16 +102,6 @@ function Shell() {
                 {t("wardrobes")}
               </NavLink>
             )}
-            {brand.modules.doorPreview && (
-              <NavLink to={"/preview" + location.search}>
-                {t("doorsWindows")}
-              </NavLink>
-            )}
-            {brand.modules.interiorDesigner && (
-              <NavLink to={"/designer/interior" + location.search}>
-                {t("interior")}
-              </NavLink>
-            )}
           </nav>
           <div className="header-right">
             <OfflineStatus hideBadge={presentation} />
@@ -154,13 +139,12 @@ function Shell() {
         }
       >
         <Routes>
-          {PreviewStudio && <Route path="/preview-studio" element={<PreviewStudio/>} />}
+          {PreviewStudio && (
+            <Route path="/preview-studio" element={<PreviewStudio />} />
+          )}
           <Route path="/" element={<Home />} />
           <Route path="/designer/:kind" element={<ProductRoute />} />
-          <Route
-            path="/preview"
-            element={brand.modules.doorPreview ? <Preview /> : <Home />}
-          />
+          <Route path="/compare" element={<Compare />} />
           <Route path="/summary" element={<Summary />} />
           <Route path="/setup" element={<Setup />} />
           <Route path="/settings" element={<Settings />} />

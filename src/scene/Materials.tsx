@@ -1,3 +1,4 @@
+import { furnitureResponse } from "./furnitureMaterials";
 import { useQuality } from "./quality";
 import { useEffect, useMemo } from "react";
 import { useTexture } from "@react-three/drei";
@@ -36,6 +37,7 @@ export function SurfaceMaterial({
     [loaded, repeat[0], repeat[1], performance, material.texture],
   );
   useEffect(() => () => maps.forEach((m) => m.dispose()), [maps]);
+  const response = furnitureResponse(material);
   const offset = material.texture ? 1 : 0;
   return (
     <meshPhysicalMaterial
@@ -50,15 +52,27 @@ export function SurfaceMaterial({
       }
       roughness={
         world
-          ? 0.28
-          : lacquer && !material.texture
-            ? 0.4
+          ? material.tier === "compact"
+            ? 0.64
+            : material.tier === "laminate"
+              ? 0.48
+              : 0.24
+          : lacquer
+            ? response.roughness
             : material.roughness
       }
       metalness={lacquer ? 0.02 : 0}
-      clearcoat={world ? 0.6 : lacquer && !material.texture ? 0.35 : 0}
-      clearcoatRoughness={world ? 0.16 : 0.35}
-      envMapIntensity={world ? 1.1 : lacquer ? 1 : 0.6}
+      clearcoat={
+        world
+          ? material.tier === "quartz" || material.tier === "granite"
+            ? 0.5
+            : 0.08
+          : lacquer
+            ? response.clearcoat
+            : 0
+      }
+      clearcoatRoughness={world ? 0.25 : response.clearcoatRoughness}
+      envMapIntensity={world ? 1.1 : lacquer ? response.envMapIntensity : 0.6}
       onBeforeCompile={
         world
           ? (shader) => {

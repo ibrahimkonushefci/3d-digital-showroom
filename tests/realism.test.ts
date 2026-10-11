@@ -7,8 +7,6 @@ import {
   hobCabinet,
   wallOffset,
 } from "../src/designer3d/layout";
-import { newFacade } from "../src/doorPreview/store";
-import { facadePanels, openingPositions } from "../src/doorPreview/houseLayout";
 const c = CatalogSchema.parse(
   JSON.parse(readFileSync("public/brands/default/catalog.json", "utf8")),
 );
@@ -37,18 +35,39 @@ it("places a hood over a hob with cabinets on both sides and avoids a window", (
   ];
   expect(hobCabinet(d, c)?.id).not.toBe(hob.id);
 });
-it("keeps facade wall panels outside a resized door and sidelights", () => {
-  const d = newFacade(c);
-  d.items[0] = {
-    ...d.items[0],
-    width: 180,
-    options: ["side-left", "side-right", "transom"],
-  };
-  const [x, y] = openingPositions.entry;
-  for (const p of facadePanels(d)) {
-    const [px, py] = p.position;
+import { storageMeasurements } from "../src/designer3d/storage";
+import {
+  countertopThickness,
+  furnitureResponse,
+} from "../src/scene/furnitureMaterials";
+import { presentationPresets } from "../src/designer3d/presets";
+it("shares safe storage measurements at changed wardrobe heights", () => {
+  for (const p of presentationPresets(c).filter(
+    (p) => p.design.kind === "wardrobe",
+  ))
+    for (const cabinet of p.design.cabinets) {
+      const m = c.modules.find((m) => m.id === cabinet.moduleId)!;
+      const s = storageMeasurements({ ...cabinet, height: 180 }, m);
+      expect(s.width).toBeCloseTo(cabinet.width / 100 - 0.036);
+      expect(s.depth).toBeCloseTo(cabinet.depth / 100 - 0.035);
+      expect(s.shelves.every((y) => y < 1.8)).toBe(true);
+      expect(s.clearances.every((y) => y > 0)).toBe(true);
+    }
+});
+it("renders catalog thickness and visibly differentiated furniture responses", () => {
+  const d = presentationPresets(c)[0].design;
+  for (const [id, metres] of [
+    ["marble", 0.038],
+    ["travertine", 0.012],
+    ["quartz", 0.02],
+    ["granite", 0.02],
+  ] as const)
     expect(
-      px > x - 1.22 && px < x + 1.22 && py > y - 0.025 && py < y + 2.445,
-    ).toBe(false);
-  }
+      countertopThickness({ ...d, style: { ...d.style, countertop: id } }, c),
+    ).toBe(metres);
+  const matte = c.fronts.find((m) => m.tier === "fenix")!,
+    gloss = c.fronts.find((m) => m.tier === "acrylic")!;
+  expect(
+    furnitureResponse(matte).roughness - furnitureResponse(gloss).roughness,
+  ).toBeGreaterThan(0.5);
 });

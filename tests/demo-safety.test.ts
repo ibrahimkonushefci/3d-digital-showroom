@@ -60,15 +60,10 @@ describe("demo safety", () => {
     ).toBe("https://wa.me/38344123456?text=hi");
   });
   it("isolates product catalogs and requires sections for enabled tools", () => {
-    for (const slug of ["default", "druri-design", "drita-home"]) {
+    for (const slug of ["default", "druri-design"]) {
       const c = CatalogSchema.parse(read(slug, "catalog")),
         b = BrandSchema.parse(read(slug, "brand"));
       expect(validateCatalogForBrand(c, b)).toBe(true);
-      if (slug === "druri-design") expect(c.doors).toHaveLength(0);
-      if (slug === "drita-home") {
-        expect(c.modules).toHaveLength(0);
-        expect(examples(c)).toEqual([]);
-      }
     }
     expect(
       validateCatalogForBrand(

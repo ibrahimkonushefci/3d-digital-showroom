@@ -2,6 +2,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 import { Suspense, useMemo, useEffect } from "react";
 import { Edges } from "@react-three/drei";
 import type { Material } from "../catalog/types";
+import { furnitureResponse } from "./furnitureMaterials";
 import { SurfaceMaterial } from "./Materials";
 const bevelCache = new Map<
   string,
@@ -53,6 +54,10 @@ export function Box({
   lacquer = false,
   castShadow = true,
 }: BoxProps) {
+  bevel = bevel || (lacquer ? 0.0015 : 0);
+  const response = material
+    ? furnitureResponse(material)
+    : { roughness: 0.4, clearcoat: 0.35, clearcoatRoughness: 0.35 };
   const resource = useMemo(
     () => (bevel > 0 ? rounded(size, bevel) : null),
     [size[0], size[1], size[2], bevel],
@@ -86,12 +91,10 @@ export function Box({
           fallback={
             <meshPhysicalMaterial
               color={material.color}
-              roughness={
-                lacquer && !material.texture ? 0.4 : material.roughness
-              }
+              roughness={lacquer ? response.roughness : material.roughness}
               metalness={lacquer ? 0.02 : metal}
-              clearcoat={lacquer && !material.texture ? 0.35 : 0}
-              clearcoatRoughness={0.35}
+              clearcoat={lacquer ? response.clearcoat : 0}
+              clearcoatRoughness={response.clearcoatRoughness}
               envMapIntensity={lacquer ? 1 : 0.6}
             />
           }
@@ -105,10 +108,14 @@ export function Box({
       ) : (
         <meshPhysicalMaterial
           color={material?.color || color}
-          roughness={lacquer ? 0.4 : (roughness ?? material?.roughness ?? 0.65)}
+          roughness={
+            lacquer
+              ? response.roughness
+              : (roughness ?? material?.roughness ?? 0.65)
+          }
           metalness={lacquer ? 0.02 : metal}
-          clearcoat={lacquer ? 0.35 : 0}
-          clearcoatRoughness={0.35}
+          clearcoat={lacquer ? response.clearcoat : 0}
+          clearcoatRoughness={response.clearcoatRoughness}
           envMapIntensity={lacquer ? 1 : 0.6}
           emissive={emissive}
           emissiveIntensity={emissive ? 1.5 : 0}

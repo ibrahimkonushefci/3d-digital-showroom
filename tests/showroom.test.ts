@@ -18,8 +18,6 @@ import {
   worktopRuns,
 } from "../src/scene/countertopGeometry";
 import { qualityForFrames } from "../src/scene/quality";
-import { PhotoSceneSchema } from "../src/doorPreview/types";
-import { validCorners } from "../src/doorPreview/homography";
 import { calculatePrice } from "../src/pricing";
 const catalog = CatalogSchema.parse(
   JSON.parse(readFileSync("public/brands/default/catalog.json", "utf8")),
@@ -136,7 +134,7 @@ it("keeps separated worktops separate across supported layouts", () => {
 });
 it("validates curated presets and filters unavailable catalog finishes", () => {
   const presets = presentationPresets(catalog);
-  expect(presets).toHaveLength(4);
+  expect(presets).toHaveLength(5);
   for (const p of presets) {
     expect(validateDesign(p.design, catalog)).toBe(true);
     expect(p.camera.position.length).toBe(3);
@@ -169,24 +167,6 @@ it("quality and transient opening states cannot change prices", () => {
   useDesigner.getState().setInteractionMode("edit");
   expect(calculatePrice(d, catalog, "en")).toEqual(before);
 });
-it("ships independently calibrated real photographs below the photo budget", () => {
-  const corners: string[] = [];
-  let bytes = 0;
-  for (const i of [1, 2, 3]) {
-    const scene = PhotoSceneSchema.parse(
-      JSON.parse(readFileSync(`public/shared/scenes/house-${i}.json`, "utf8")),
-    );
-    expect(scene.photo.endsWith(".webp")).toBe(true);
-    expect(existsSync("public/" + scene.photo)).toBe(true);
-    bytes += statSync("public/" + scene.photo).size;
-    for (const p of scene.placements)
-      expect(validCorners(p.corners)).toBe(true);
-    corners.push(JSON.stringify(scene.placements[0].corners));
-  }
-  expect(new Set(corners).size).toBe(3);
-  expect(bytes).toBeLessThan(1_500_000);
-});
-
 it("hides incompatible presets when a brand lacks a required module", () => {
   const partial = {
     ...catalog,
@@ -202,4 +182,57 @@ it("does not create history for a drag that returns to its original snapped posi
   useDesigner.getState().previewDrag(structuredClone(d));
   expect(useDesigner.getState().finishDrag(catalog)).toBe(false);
   expect(useDesigner.getState().past).toHaveLength(0);
+});
+
+it("reconciles selected and open IDs through edits, regeneration and history", () => {
+  const s = useDesigner.getState(),
+    d = design(),
+    id = d.cabinets[0].id;
+  s.setDesign(d);
+  s.select(id);
+  s.toggleOpen(id);
+  s.edit({ ...d, style: { ...d.style, front: "oak" } }, catalog);
+  expect(useDesigner.getState().opened).toEqual([id]);
+  const regenerated = generateLayout({ ...d, layout: "l" }, catalog)!;
+  s.edit(regenerated, catalog);
+  expect(useDesigner.getState().opened).toEqual([]);
+  expect(useDesigner.getState().selected).toBeNull();
+  s.toggleAllOpen();
+  s.undo();
+  expect(useDesigner.getState().opened).toEqual([]);
+  s.redo();
+  expect(useDesigner.getState().opened).toEqual([]);
+  s.setInterior(true);
+  s.setDesign(d);
+  expect(useDesigner.getState().interior).toBe(false);
+});
+it("groups generated tall appliances at a run end and keeps sink and dishwasher adjacent", () => {
+  for (const layout of ["straight", "l", "u", "parallel", "island"] as const) {
+    const d = generateLayout(newDesign("kitchen", layout), catalog)!;
+    const oven = d.cabinets.find((c) => c.moduleId === "oven")!,
+      fridge = d.cabinets.find((c) => c.moduleId === "fridge")!;
+    expect(oven.wall).toBe(fridge.wall);
+    expect(wallOffset(oven) + oven.width).toBeCloseTo(wallOffset(fridge));
+    const sink = d.cabinets.find((c) => c.moduleId === "sink")!,
+      dish = d.cabinets.find((c) => c.moduleId === "dishwasher")!;
+    expect(sink.wall).toBe(dish.wall);
+    expect(wallOffset(sink) + sink.width).toBeCloseTo(wallOffset(dish));
+  }
+});
+
+it("clears furniture inspection and drag state when switching brand context without deleting persisted drafts", () => {
+  const s = useDesigner.getState(),
+    d = design();
+  s.setDesign(d);
+  s.select(d.cabinets[0].id);
+  s.toggleAllOpen();
+  s.setInterior(true);
+  s.previewDrag(d);
+  s.setDesign(null);
+  const next = useDesigner.getState();
+  expect(next.design).toBeNull();
+  expect(next.selected).toBeNull();
+  expect(next.opened).toEqual([]);
+  expect(next.dragPreview).toBeNull();
+  expect(next.interior).toBe(false);
 });

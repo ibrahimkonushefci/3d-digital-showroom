@@ -758,7 +758,7 @@
         "en": "Stainless steel bar",
         "de": "Edelstahl-Bügel"
       },
-      "color": "#b8a17a",
+      "color": "#b5b9b7",
       "perPiece": 9
     },
     {
@@ -793,16 +793,7 @@
       "kind": "kitchen",
       "type": "doors",
       "level": "base",
-      "widths": [
-        30,
-        40,
-        45,
-        50,
-        60,
-        80,
-        90,
-        100
-      ],
+      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
       "height": 72,
       "depth": 60,
       "pricePerMeter": 235,
@@ -818,16 +809,7 @@
       "kind": "kitchen",
       "type": "drawers",
       "level": "base",
-      "widths": [
-        30,
-        40,
-        45,
-        50,
-        60,
-        80,
-        90,
-        100
-      ],
+      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
       "height": 72,
       "depth": 60,
       "pricePerMeter": 330,
@@ -844,16 +826,7 @@
       "kind": "kitchen",
       "type": "sink",
       "level": "base",
-      "widths": [
-        30,
-        40,
-        45,
-        50,
-        60,
-        80,
-        90,
-        100
-      ],
+      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
       "height": 72,
       "depth": 60,
       "pricePerMeter": 280,
@@ -869,16 +842,7 @@
       "kind": "kitchen",
       "type": "dishwasher",
       "level": "base",
-      "widths": [
-        30,
-        40,
-        45,
-        50,
-        60,
-        80,
-        90,
-        100
-      ],
+      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
       "height": 72,
       "depth": 60,
       "pricePerMeter": 160,
@@ -894,16 +858,7 @@
       "kind": "kitchen",
       "type": "oven",
       "level": "tall",
-      "widths": [
-        30,
-        40,
-        45,
-        50,
-        60,
-        80,
-        90,
-        100
-      ],
+      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
       "height": 210,
       "depth": 60,
       "pricePerMeter": 430,
@@ -919,16 +874,7 @@
       "kind": "kitchen",
       "type": "fridge",
       "level": "tall",
-      "widths": [
-        30,
-        40,
-        45,
-        50,
-        60,
-        80,
-        90,
-        100
-      ],
+      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
       "height": 210,
       "depth": 60,
       "pricePerMeter": 390,
@@ -944,16 +890,7 @@
       "kind": "kitchen",
       "type": "pantry",
       "level": "tall",
-      "widths": [
-        30,
-        40,
-        45,
-        50,
-        60,
-        80,
-        90,
-        100
-      ],
+      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
       "height": 210,
       "depth": 60,
       "pricePerMeter": 450,
@@ -970,9 +907,7 @@
       "kind": "kitchen",
       "type": "corner",
       "level": "base",
-      "widths": [
-        90
-      ],
+      "widths": [90],
       "height": 72,
       "depth": 90,
       "pricePerMeter": 390,
@@ -989,16 +924,7 @@
       "kind": "kitchen",
       "type": "doors",
       "level": "wall",
-      "widths": [
-        30,
-        40,
-        45,
-        50,
-        60,
-        80,
-        90,
-        100
-      ],
+      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
       "height": 72,
       "depth": 35,
       "pricePerMeter": 210,
@@ -1014,16 +940,7 @@
       "kind": "kitchen",
       "type": "glass",
       "level": "wall",
-      "widths": [
-        30,
-        40,
-        45,
-        50,
-        60,
-        80,
-        90,
-        100
-      ],
+      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
       "height": 72,
       "depth": 35,
       "pricePerMeter": 265,
@@ -1039,16 +956,7 @@
       "kind": "kitchen",
       "type": "open",
       "level": "wall",
-      "widths": [
-        30,
-        40,
-        45,
-        50,
-        60,
-        80,
-        90,
-        100
-      ],
+      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
       "height": 72,
       "depth": 35,
       "pricePerMeter": 155,
@@ -1064,13 +972,7 @@
       "kind": "wardrobe",
       "type": "hanging",
       "level": "wardrobe",
-      "widths": [
-        40,
-        50,
-        60,
-        80,
-        100
-      ],
+      "widths": [40, 50, 60, 80, 100],
       "height": 230,
       "depth": 60,
       "pricePerMeter": 345,
@@ -1086,13 +988,7 @@
       "kind": "wardrobe",
       "type": "doors",
       "level": "wardrobe",
-      "widths": [
-        40,
-        50,
-        60,
-        80,
-        100
-      ],
+      "widths": [40, 50, 60, 80, 100],
       "height": 230,
       "depth": 60,
       "pricePerMeter": 315,
@@ -1108,13 +1004,7 @@
       "kind": "wardrobe",
       "type": "drawers",
       "level": "wardrobe",
-      "widths": [
-        40,
-        50,
-        60,
-        80,
-        100
-      ],
+      "widths": [40, 50, 60, 80, 100],
       "height": 230,
       "depth": 60,
       "pricePerMeter": 440,
@@ -1131,13 +1021,7 @@
       "kind": "wardrobe",
       "type": "open",
       "level": "wardrobe",
-      "widths": [
-        40,
-        50,
-        60,
-        80,
-        100
-      ],
+      "widths": [40, 50, 60, 80, 100],
       "height": 230,
       "depth": 60,
       "pricePerMeter": 270,
@@ -1153,13 +1037,7 @@
       "kind": "wardrobe",
       "type": "sliding",
       "level": "wardrobe",
-      "widths": [
-        40,
-        50,
-        60,
-        80,
-        100
-      ],
+      "widths": [40, 50, 60, 80, 100],
       "height": 230,
       "depth": 60,
       "pricePerMeter": 410,
@@ -1175,15 +1053,7 @@
       "kind": "kitchen",
       "type": "hood",
       "level": "wall",
-      "widths": [
-        30,
-        40,
-        45,
-        50,
-        60,
-        80,
-        90
-      ],
+      "widths": [30, 40, 45, 50, 60, 80, 90],
       "height": 72,
       "depth": 35,
       "pricePerMeter": 180,
@@ -1334,11 +1204,8 @@
         "de": "Laminat 38 mm"
       },
       "perMeter": 75,
-      "decors": [
-        "marble",
-        "concrete",
-        "oak"
-      ]
+      "decors": ["marble", "concrete", "oak"],
+      "thicknessMm": 38
     },
     {
       "id": "compact",
@@ -1348,10 +1215,8 @@
         "de": "Kompakt 12 mm"
       },
       "perMeter": 150,
-      "decors": [
-        "travertine",
-        "egger-f206"
-      ]
+      "decors": ["travertine", "egger-f206"],
+      "thicknessMm": 12
     },
     {
       "id": "quartz",
@@ -1361,9 +1226,8 @@
         "de": "Quarz"
       },
       "perMeter": 320,
-      "decors": [
-        "quartz"
-      ]
+      "decors": ["quartz"],
+      "thicknessMm": 20
     },
     {
       "id": "granite",
@@ -1373,9 +1237,8 @@
         "de": "Granit"
       },
       "perMeter": 280,
-      "decors": [
-        "granite"
-      ]
+      "decors": ["granite"],
+      "thicknessMm": 20
     }
   ],
   "appliancePackages": [
@@ -1411,9 +1274,9 @@
     {
       "id": "japandi",
       "name": {
-        "sq": "Japandi Minimal",
-        "en": "Japandi Minimal",
-        "de": "Japandi Minimal"
+        "sq": "Kashmir · Kuzhinë L",
+        "en": "Cashmere · L kitchen",
+        "de": "Kaschmir · L-Küche"
       },
       "kind": "kitchen",
       "layout": "l",
@@ -1425,7 +1288,7 @@
       },
       "style": {
         "front": "cashmere",
-        "carcass": "oak",
+        "carcass": "white",
         "countertop": "travertine",
         "handle": "none",
         "backsplash": "none",
@@ -1434,36 +1297,120 @@
         "profile": "flat"
       },
       "camera": {
-        "position": [
-          3.7,
-          2.45,
-          4.7
-        ],
-        "target": [
-          0,
-          1.1,
-          -0.4
-        ]
-      }
+        "position": [3.7, 2.45, 4.7],
+        "target": [0, 1.1, -0.4]
+      },
+      "cabinets": [
+        {
+          "moduleId": "corner",
+          "wall": "back",
+          "offset": 0,
+          "width": 90
+        },
+        {
+          "moduleId": "sink",
+          "wall": "back",
+          "offset": 90,
+          "width": 60
+        },
+        {
+          "moduleId": "dishwasher",
+          "wall": "back",
+          "offset": 150,
+          "width": 60
+        },
+        {
+          "moduleId": "base-drawers",
+          "wall": "back",
+          "offset": 210,
+          "width": 60
+        },
+        {
+          "moduleId": "base-doors",
+          "wall": "back",
+          "offset": 270,
+          "width": 60
+        },
+        {
+          "moduleId": "base-drawers",
+          "wall": "back",
+          "offset": 330,
+          "width": 60
+        },
+        {
+          "moduleId": "base-drawers",
+          "wall": "left",
+          "offset": 90,
+          "width": 60
+        },
+        {
+          "moduleId": "base-doors",
+          "wall": "left",
+          "offset": 150,
+          "width": 60
+        },
+        {
+          "moduleId": "oven",
+          "wall": "left",
+          "offset": 210,
+          "width": 60
+        },
+        {
+          "moduleId": "fridge",
+          "wall": "left",
+          "offset": 270,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-doors",
+          "wall": "back",
+          "offset": 90,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-doors",
+          "wall": "back",
+          "offset": 150,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-hood",
+          "wall": "back",
+          "offset": 210,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-doors",
+          "wall": "back",
+          "offset": 270,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-doors",
+          "wall": "back",
+          "offset": 330,
+          "width": 60
+        }
+      ]
     },
     {
       "id": "modern",
       "name": {
-        "sq": "Antracit & lis modern",
-        "en": "Modern Anthracite & Oak",
-        "de": "Modernes Anthrazit & Eiche"
+        "sq": "E bardhë e ngrohtë · Lineare",
+        "en": "Warm white · Straight",
+        "de": "Warmweiß · Gerade"
       },
       "kind": "kitchen",
-      "layout": "l",
+      "layout": "straight",
       "thumbnail": "shared/showroom/modern.webp",
       "room": {
         "width": 420,
-        "depth": 360,
+        "depth": 300,
         "height": 270
       },
       "style": {
-        "front": "anthracite",
-        "carcass": "oak",
+        "front": "white",
+        "carcass": "white",
         "countertop": "oak",
         "handle": "profile",
         "backsplash": "none",
@@ -1472,69 +1419,237 @@
         "profile": "flat"
       },
       "camera": {
-        "position": [
-          3.7,
-          2.45,
-          4.7
-        ],
-        "target": [
-          0,
-          1.1,
-          -0.4
-        ]
-      }
+        "position": [2.4, 2.2, 5],
+        "target": [0, 1, -1]
+      },
+      "cabinets": [
+        {
+          "moduleId": "oven",
+          "wall": "back",
+          "offset": 0,
+          "width": 60
+        },
+        {
+          "moduleId": "fridge",
+          "wall": "back",
+          "offset": 60,
+          "width": 60
+        },
+        {
+          "moduleId": "sink",
+          "wall": "back",
+          "offset": 120,
+          "width": 60
+        },
+        {
+          "moduleId": "dishwasher",
+          "wall": "back",
+          "offset": 180,
+          "width": 60
+        },
+        {
+          "moduleId": "base-drawers",
+          "wall": "back",
+          "offset": 240,
+          "width": 60
+        },
+        {
+          "moduleId": "base-doors",
+          "wall": "back",
+          "offset": 300,
+          "width": 60
+        },
+        {
+          "moduleId": "base-drawers",
+          "wall": "back",
+          "offset": 360,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-doors",
+          "wall": "back",
+          "offset": 120,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-doors",
+          "wall": "back",
+          "offset": 180,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-hood",
+          "wall": "back",
+          "offset": 240,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-doors",
+          "wall": "back",
+          "offset": 300,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-doors",
+          "wall": "back",
+          "offset": 360,
+          "width": 60
+        }
+      ]
     },
     {
       "id": "classic",
       "name": {
-        "sq": "Luks klasik i bardhë",
-        "en": "Classic White Luxury",
-        "de": "Klassischer weißer Luxus"
+        "sq": "Antracit · Ishull",
+        "en": "Anthracite · Island",
+        "de": "Anthrazit · Insel"
       },
       "kind": "kitchen",
-      "layout": "u",
+      "layout": "island",
       "thumbnail": "shared/showroom/classic.webp",
       "room": {
-        "width": 420,
-        "depth": 360,
+        "width": 480,
+        "depth": 420,
         "height": 270
       },
       "style": {
-        "front": "white",
+        "front": "anthracite",
         "carcass": "white",
-        "countertop": "marble",
+        "countertop": "quartz",
         "handle": "bar",
         "backsplash": "none",
         "plinth": "black",
         "led": true,
-        "profile": "panel"
+        "profile": "flat"
       },
       "camera": {
-        "position": [
-          0.3,
-          2.6,
-          5.8
-        ],
-        "target": [
-          0,
-          1.1,
-          -0.3
-        ]
-      }
+        "position": [0.3, 2.6, 5.8],
+        "target": [0, 1.1, -0.3]
+      },
+      "cabinets": [
+        {
+          "moduleId": "oven",
+          "wall": "back",
+          "offset": 0,
+          "width": 60
+        },
+        {
+          "moduleId": "fridge",
+          "wall": "back",
+          "offset": 60,
+          "width": 60
+        },
+        {
+          "moduleId": "sink",
+          "wall": "back",
+          "offset": 120,
+          "width": 60
+        },
+        {
+          "moduleId": "dishwasher",
+          "wall": "back",
+          "offset": 180,
+          "width": 60
+        },
+        {
+          "moduleId": "base-drawers",
+          "wall": "back",
+          "offset": 240,
+          "width": 60
+        },
+        {
+          "moduleId": "base-doors",
+          "wall": "back",
+          "offset": 300,
+          "width": 60
+        },
+        {
+          "moduleId": "base-drawers",
+          "wall": "back",
+          "offset": 360,
+          "width": 60
+        },
+        {
+          "moduleId": "base-doors",
+          "wall": "back",
+          "offset": 420,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-doors",
+          "wall": "back",
+          "offset": 120,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-doors",
+          "wall": "back",
+          "offset": 180,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-hood",
+          "wall": "back",
+          "offset": 240,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-doors",
+          "wall": "back",
+          "offset": 300,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-doors",
+          "wall": "back",
+          "offset": 360,
+          "width": 60
+        },
+        {
+          "moduleId": "wall-doors",
+          "wall": "back",
+          "offset": 420,
+          "width": 60
+        },
+        {
+          "moduleId": "base-drawers",
+          "wall": "island",
+          "offset": 120,
+          "width": 60
+        },
+        {
+          "moduleId": "base-drawers",
+          "wall": "island",
+          "offset": 180,
+          "width": 60
+        },
+        {
+          "moduleId": "base-drawers",
+          "wall": "island",
+          "offset": 240,
+          "width": 60
+        },
+        {
+          "moduleId": "base-drawers",
+          "wall": "island",
+          "offset": 300,
+          "width": 60
+        }
+      ]
     },
     {
-      "id": "wardrobe",
+      "id": "wardrobe-straight",
       "name": {
-        "sq": "Gardërobë e kuruar",
-        "en": "Curated Wardrobe",
-        "de": "Kuratierter Kleiderschrank"
+        "sq": "Gardërobë lineare",
+        "en": "Straight wardrobe",
+        "de": "Gerader Kleiderschrank"
       },
       "kind": "wardrobe",
-      "layout": "corner",
-      "thumbnail": "shared/showroom/wardrobe.webp",
+      "layout": "straight",
+      "thumbnail": "shared/showroom/wardrobe-straight.webp",
       "room": {
-        "width": 420,
-        "depth": 360,
+        "width": 360,
+        "depth": 300,
         "height": 270
       },
       "style": {
@@ -1548,17 +1663,103 @@
         "profile": "flat"
       },
       "camera": {
-        "position": [
-          3.7,
-          2.45,
-          4.7
-        ],
-        "target": [
-          0,
-          1.1,
-          -0.4
-        ]
-      }
+        "position": [2, 2, 5],
+        "target": [0, 1, -1]
+      },
+      "cabinets": [
+        {
+          "moduleId": "wardrobe-hanging",
+          "wall": "back",
+          "offset": 0,
+          "width": 80
+        },
+        {
+          "moduleId": "wardrobe-shelves",
+          "wall": "back",
+          "offset": 80,
+          "width": 80
+        },
+        {
+          "moduleId": "wardrobe-drawers",
+          "wall": "back",
+          "offset": 160,
+          "width": 80
+        },
+        {
+          "moduleId": "wardrobe-sliding",
+          "wall": "back",
+          "offset": 240,
+          "width": 100
+        }
+      ]
+    },
+    {
+      "id": "wardrobe",
+      "name": {
+        "sq": "Gardërobë këndore",
+        "en": "Corner wardrobe",
+        "de": "Eckkleiderschrank"
+      },
+      "kind": "wardrobe",
+      "layout": "corner",
+      "thumbnail": "shared/showroom/wardrobe.webp",
+      "room": {
+        "width": 360,
+        "depth": 300,
+        "height": 270
+      },
+      "style": {
+        "front": "cashmere",
+        "carcass": "oak",
+        "countertop": "oak",
+        "handle": "bar",
+        "backsplash": "none",
+        "plinth": "matching",
+        "led": true,
+        "profile": "flat"
+      },
+      "camera": {
+        "position": [3.7, 2.45, 4.7],
+        "target": [0, 1.1, -0.4]
+      },
+      "cabinets": [
+        {
+          "moduleId": "wardrobe-hanging",
+          "wall": "back",
+          "offset": 0,
+          "width": 80
+        },
+        {
+          "moduleId": "wardrobe-shelves",
+          "wall": "back",
+          "offset": 80,
+          "width": 80
+        },
+        {
+          "moduleId": "wardrobe-drawers",
+          "wall": "back",
+          "offset": 160,
+          "width": 80
+        },
+        {
+          "moduleId": "wardrobe-sliding",
+          "wall": "back",
+          "offset": 240,
+          "width": 100
+        },
+        {
+          "moduleId": "wardrobe-shelves",
+          "wall": "left",
+          "offset": 60,
+          "width": 80
+        },
+        {
+          "moduleId": "wardrobe-hanging",
+          "wall": "left",
+          "offset": 140,
+          "width": 80
+        }
+      ]
     }
   ]
 }

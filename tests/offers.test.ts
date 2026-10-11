@@ -50,7 +50,7 @@ it("material tiers and appliance packages contribute independently to the estima
     "sq",
   );
   expect(quartz.lines.find((l) => l.id === "countertop")?.name).toBe(
-    "Banaku – Kuarc",
+    "Banaku – Kuarc · Kuarc",
   );
 });
 it("adds the optional wardrobe internal LED at the catalog rate", () => {

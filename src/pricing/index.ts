@@ -69,7 +69,7 @@ export function calculatePrice(
   if (baseMeters)
     lines.push({
       id: "countertop",
-      name: `${translate(language, "countertop")} – ${label(catalog.countertopTiers.find((t) => t.id === counter.tier)?.name ?? counter.name, language)}`,
+      name: `${translate(language, "countertop")} – ${label(catalog.countertopTiers.find((t) => t.id === counter.tier)?.name ?? counter.name, language)} · ${label(counter.name, language)}`,
       quantity: baseMeters,
       unit: "m",
       amount:
@@ -80,7 +80,10 @@ export function calculatePrice(
   if (handles && handle.perPiece)
     lines.push({
       id: "handles",
-      name: label(handle.name, language),
+      name:
+        handle.id === "profile"
+          ? translate(language, "profileAllowance")
+          : label(handle.name, language),
       quantity: handles,
       unit: "piece",
       amount: handles * handle.perPiece,
@@ -153,14 +156,4 @@ export function calculatePrice(
     low: total * (1 - range),
     high: total * (1 + range),
   };
-}
-export function windowPrice(
-  model: Catalog["windows"][number],
-  width: number,
-  height: number,
-) {
-  return Math.max(
-    model.minimumPrice,
-    ((Math.max(0, width) * Math.max(0, height)) / 10000) * model.perSquareMeter,
-  );
 }

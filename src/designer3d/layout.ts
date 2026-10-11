@@ -223,7 +223,7 @@ export function newDesign(
     },
     environment: {
       floor: "laminate",
-      wallColor: "#d4d8df",
+      wallColor: "#e5e0d7",
       internalLed: kind === "wardrobe",
     },
     installation: true,
@@ -291,6 +291,19 @@ export function generateLayout(
   if (hasRight) runs.push(["right", cornerDepth, room.depth]);
   if (layout === "parallel") runs.push(["front", 0, room.width]);
   let count = 0;
+  if (kitchen) {
+    const tallRun = runs[runs.length - 1];
+    const [wall, start, end] = tallRun;
+    const previous = d.cabinets.length;
+    if (
+      end - start >= 240 &&
+      push("oven", wall, end - 120, 60) &&
+      push("fridge", wall, end - 60, 60)
+    ) {
+      tallRun[2] -= 120;
+      count = 2;
+    } else d.cabinets.splice(previous);
+  }
   for (const [wall, start, end] of runs) {
     let offset = start;
     while (offset + 30 <= end) {
@@ -299,11 +312,11 @@ export function generateLayout(
         ? count === 0
           ? "oven"
           : count === 1
-            ? "sink"
+            ? "fridge"
             : count === 2
-              ? "dishwasher"
+              ? "sink"
               : count === 3
-                ? "fridge"
+                ? "dishwasher"
                 : count % 2
                   ? "base-doors"
                   : "base-drawers"

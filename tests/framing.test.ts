@@ -40,7 +40,7 @@ it("frames every cabinet at desktop and portrait aspect ratios for all layouts a
           Math.max(...projected.flatMap((p) => [Math.abs(p.x), Math.abs(p.y)])),
         ).toBeGreaterThan(0.85);
         if (preset === "perspective")
-          expect(view.position[1]).toBeCloseTo(1.55, 2);
+          expect(view.position[1]).toBeCloseTo(2.4, 2);
       }
     }
   }
@@ -71,4 +71,28 @@ it("fits wardrobes, authored perspective headings and empty designs without inva
       true,
     );
   }
+});
+import { inspectionCamera } from "../src/designer3d/framing";
+it("fits a selected wardrobe compartment with open-door clearance at tablet and phone aspect ratios", () => {
+  const d = generateLayout(newDesign("wardrobe", "corner"), catalog)!;
+  for (const c of d.cabinets)
+    for (const aspect of [0.55, 1.4]) {
+      const bounds = cabinetBounds({ ...d, cabinets: [c] }).expandByScalar(
+          0.35,
+        ),
+        view = cabinetCamera(
+          bounds,
+          "perspective",
+          aspect,
+          inspectionCamera(d, c.id)!,
+        );
+      const camera = new PerspectiveCamera(CABINET_FOV, aspect, 0.1, 100);
+      camera.position.set(...view.position);
+      camera.lookAt(new Vector3(...view.target));
+      camera.updateMatrixWorld();
+      for (const point of boundsCorners(bounds).map((p) => p.project(camera))) {
+        expect(Math.abs(point.x)).toBeLessThanOrEqual(0.92);
+        expect(Math.abs(point.y)).toBeLessThanOrEqual(0.92);
+      }
+    }
 });

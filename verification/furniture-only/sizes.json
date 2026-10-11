@@ -1,0 +1,22 @@
+{
+  "before": {
+    "shipped": 9119106,
+    "precache": 9077387,
+    "precacheURLs": 154,
+    "javascript": 2861897,
+    "javascriptGzip": 885019,
+    "css": 61315,
+    "staticAssets": 5970848
+  },
+  "after": {
+    "shipped": 5264586,
+    "precache": 5238811,
+    "precacheURLs": 84,
+    "javascript": 2636172,
+    "javascriptGzip": 807410,
+    "css": 42084,
+    "staticAssets": 2361391
+  },
+  "removedFiles": 220,
+  "grossRemovedFileBytes": 54656000
+}

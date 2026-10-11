@@ -6,8 +6,6 @@ import type {
   DesignDocument,
   Language,
 } from "../catalog/types";
-import type { InteriorDesign } from "../interior/types";
-import type { FacadeDesign } from "../doorPreview/types";
 import type { TranslationKey } from "../i18n";
 import { money } from "../i18n";
 import { calculatePrice } from "../pricing";
@@ -50,20 +48,14 @@ export async function createOffer({
   screenshot,
   logoUrl,
   t,
-  priceOverride,
-  description,
-  imageCaption,
 }: {
-  design: DesignDocument | FacadeDesign | InteriorDesign;
+  design: DesignDocument;
   brand: BrandConfig;
   catalog: Catalog;
   language: Language;
   screenshot: string | null;
   logoUrl: string;
   t: T;
-  priceOverride?: ReturnType<typeof calculatePrice>;
-  description?: string;
-  imageCaption?: string;
 }) {
   const pdf = new jsPDF();
   const bytes = new Uint8Array(
@@ -75,9 +67,7 @@ export async function createOffer({
   pdf.addFileToVFS("DejaVuSans.ttf", btoa(binary));
   pdf.addFont("DejaVuSans.ttf", "DejaVu", "normal");
   pdf.setFont("DejaVu");
-  const price =
-    priceOverride ||
-    calculatePrice(design as DesignDocument, catalog, language);
+  const price = calculatePrice(design, catalog, language);
   const header = () => {
     pdf.setFillColor(brand.colors.primary);
     pdf.rect(0, 0, 210, 4, "F");
@@ -99,11 +89,7 @@ export async function createOffer({
   const estimate = design.exact
     ? money(price.total, language)
     : `${money(price.low, language)} – ${money(price.high, language)}`;
-  const project =
-    description ||
-    ("room" in design
-      ? `${t(design.kind === "kitchen" ? "kitchens" : design.kind === "wardrobe" ? "wardrobes" : "interior")} · ${design.room.width} × ${design.room.depth} × ${design.room.height} cm`
-      : t("doorsWindows"));
+  const project = `${t(design.kind === "kitchen" ? "kitchens" : "wardrobes")} · ${design.room.width} × ${design.room.depth} × ${design.room.height} cm`;
   header();
   try {
     pdf.addImage(await imageToPng(logoUrl), "PNG", 14, 11, 16, 16);
@@ -141,10 +127,6 @@ export async function createOffer({
     pdf.setFontSize(10);
     pdf.text(pdf.splitTextToSize(t("imageUnavailable"), 150), 30, 130);
   }
-  if (imageCaption) {
-    pdf.setFontSize(7);
-    pdf.text(pdf.splitTextToSize(imageCaption, 182).slice(0, 2), 14, 193);
-  }
   pdf.setFontSize(10);
   pdf.text(t("finishes"), 14, 201);
   const finishes = proposalFinishes(design, catalog);
@@ -152,8 +134,7 @@ export async function createOffer({
     const x = 14 + i * 46;
     pdf.setFillColor(m.color);
     pdf.roundedRect(x, 208, 40, 18, 1, 1, "F");
-    const texture =
-      design.kind === "interior" ? m.previewTexture || m.texture : m.texture;
+    const texture = m.texture;
     if (texture)
       try {
         const path = texture.startsWith("shared/")
@@ -204,9 +185,13 @@ export async function createOffer({
     for (const text of [
       `${t("offerNumber")}: ${o.number} · ${t("offerDate")}: ${o.date}`,
       t("validFor", { days: o.validityDays }),
-      `${t("customer")}: ${[o.customer.name, o.customer.phone, o.customer.city].filter(Boolean).join(" · ")}`,
-      `${t("salesperson")}: ${o.salesperson}`,
-      `${t("paymentTerms")}: ${o.paymentTerms}`,
+      ...([o.customer.name, o.customer.phone, o.customer.city].some(Boolean)
+        ? [
+            `${t("customer")}: ${[o.customer.name, o.customer.phone, o.customer.city].filter(Boolean).join(" · ")}`,
+          ]
+        : []),
+      ...(o.salesperson ? [`${t("salesperson")}: ${o.salesperson}`] : []),
+      ...(o.paymentTerms ? [`${t("paymentTerms")}: ${o.paymentTerms}`] : []),
       ...(o.notes ? [`${t("notes")}: ${o.notes}`] : []),
     ])
       paragraph(text);
@@ -221,24 +206,7 @@ export async function createOffer({
       ),
     ];
     paragraph(dimensions.join(" · "));
-  } else if (design.kind === "facade")
-    paragraph(
-      design.items
-        .map(
-          (p) =>
-            `${(p.kind === "door" ? catalog.doors : catalog.windows).find((m) => m.id === p.modelId)?.name[language] || p.modelId}: ${p.width} × ${p.height} cm`,
-        )
-        .join(" · "),
-    );
-  else if ("doors" in design)
-    paragraph(
-      design.doors
-        .map(
-          (d) =>
-            `${catalog.interiorDoors.find((m) => m.id === d.modelId)?.name[language] || d.modelId}: ${d.width} × ${d.height} cm · ${t("frameHeight")} ${d.frameHeight} cm · ${t("frameDepth")} ${d.frameDepth} cm`,
-        )
-        .join(" · "),
-    );
+  }
   if (finishes.length > 4)
     paragraph(
       `${t("finishes")}: ${finishes.map((m) => m.name[language]).join(" · ")}`,
@@ -260,7 +228,7 @@ export async function createOffer({
   const row = (name: string, quantity: string, amount: number) => {
     pdf.setFontSize(8.5);
     const lines = pdf.splitTextToSize(name, 110);
-    const height = Math.max(8, lines.length * 4 + 4);
+    const height = Math.max(7, lines.length * 4 + 3);
     if (y + height > 268) {
       pdf.addPage();
       header();
@@ -277,31 +245,16 @@ export async function createOffer({
   for (const line of price.lines)
     row(
       line.id === "led" || line.id === "plinth" ? t(line.id) : line.name,
-      `${new Intl.NumberFormat(language === "en" ? "en-IE" : "de-DE", { maximumFractionDigits: 2 }).format(line.quantity)}${line.unit === "m" ? " m" : line.unit === "m2" ? " m²" : ""}`,
+      `${new Intl.NumberFormat(language === "en" ? "en-IE" : "de-DE", { maximumFractionDigits: 2 }).format(line.quantity)}${line.unit === "m" ? " m" : line.unit === "m2" ? " m²" : ` ${t("pieces")}`}`,
       line.amount,
     );
-  if (design.installation) {
-    if (design.kind === "interior") {
-      row(
-        t("floorInstallation"),
-        "",
-        ((design.room.width * design.room.depth) / 10000) *
-          catalog.interiorPricing!.floorInstallationPerM2,
-      );
-      row(
-        t("doorInstallation"),
-        "",
-        design.doors.length * catalog.interiorPricing!.doorInstallationPerPiece,
-      );
-    } else
-      row(
-        design.kind === "facade"
-          ? t("installation")
-          : `${t("installation")} (${catalog.pricing.installationPercent}%)`,
-        "",
-        price.installation,
-      );
-  }
+  ensureSpace(35 + (design.installation ? 8 : 0) + (design.vat ? 8 : 0));
+  if (design.installation)
+    row(
+      `${t("installation")} (${catalog.pricing.installationPercent}%)`,
+      "",
+      price.installation,
+    );
   if (design.vat)
     row(`${t("vat")} (${catalog.pricing.vatPercent}%)`, "", price.vat);
   ensureSpace(35);

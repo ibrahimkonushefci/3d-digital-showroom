@@ -14,19 +14,11 @@ import {
   validateDesign,
   wallPosition,
 } from "../src/designer3d/layout";
-import { calculatePrice, windowPrice } from "../src/pricing";
-import {
-  homography,
-  inverse,
-  transform,
-  validCorners,
-  type Corners,
-} from "../src/doorPreview/homography";
+import { calculatePrice } from "../src/pricing";
 import { decodeShare, encodeShare, messageUrl } from "../src/sharing";
 import { resolveBrand } from "../src/brand";
 import { useDesigner } from "../src/designer3d/store";
 import { money } from "../src/i18n";
-import { SavedPhotoSchema } from "../src/doorPreview/types";
 const catalog = CatalogSchema.parse(
     JSON.parse(readFileSync("public/brands/default/catalog.json", "utf8")),
   ),
@@ -34,8 +26,18 @@ const catalog = CatalogSchema.parse(
     JSON.parse(readFileSync("public/brands/default/brand.json", "utf8")),
   );
 describe("catalog and branding", () => {
+  it("loads existing furniture branding while discarding obsolete module flags", () => {
+    const parsed = BrandSchema.parse({
+      ...brand,
+      modules: { ...brand.modules, doorPreview: true, interiorDesigner: true },
+    });
+    expect(parsed.modules).toEqual({
+      kitchenDesigner: true,
+      wardrobeDesigner: true,
+    });
+  });
   it("loads all demo brands and catalogs", () => {
-    for (const slug of ["default", "druri-design", "drita-home"]) {
+    for (const slug of ["default", "druri-design"]) {
       expect(
         BrandSchema.parse(
           JSON.parse(readFileSync(`public/brands/${slug}/brand.json`, "utf8")),
@@ -46,22 +48,27 @@ describe("catalog and branding", () => {
           JSON.parse(
             readFileSync(`public/brands/${slug}/catalog.json`, "utf8"),
           ),
-        ).doors,
-      ).toHaveLength(slug === "druri-design" ? 0 : 7);
+        ).modules,
+      ).not.toHaveLength(0);
     }
   });
   it("uses query before configured subdomain and environment", () => {
     expect(
       resolveBrand(
         "?brand=druri-design",
-        "drita-home.example.com",
+        "custom-furniture.example.com",
         "default",
         "example.com",
       ),
     ).toBe("druri-design");
     expect(
-      resolveBrand("", "drita-home.example.com", "druri-design", "example.com"),
-    ).toBe("drita-home");
+      resolveBrand(
+        "",
+        "custom-furniture.example.com",
+        "druri-design",
+        "example.com",
+      ),
+    ).toBe("custom-furniture");
     expect(resolveBrand("", "localhost", "druri-design")).toBe("druri-design");
   });
   it("rejects unsafe asset paths and invalid colors", () => {
@@ -255,13 +262,6 @@ describe("pricing", () => {
       calculatePrice(d, catalog, "en").total,
     );
   });
-  it("honors window area and minimum prices", () => {
-    const model = catalog.windows[1];
-    expect(windowPrice(model, 120, 140)).toBeCloseTo(
-      1.68 * model.perSquareMeter,
-    );
-    expect(windowPrice(model, 20, 20)).toBe(model.minimumPrice);
-  });
 });
 describe("history and sharing", () => {
   beforeEach(() => useDesigner.getState().setDesign(examples(catalog)[0]));
@@ -300,6 +300,17 @@ describe("history and sharing", () => {
   it("rejects malformed and oversized links", () => {
     expect(() => decodeShare("invalid")).toThrow();
     expect(() => decodeShare("x".repeat(31000))).toThrow();
+    for (const kind of ["facade", "interior"])
+      expect(() =>
+        decodeShare(
+          encodeShare(
+            { ...examples(catalog)[0], kind } as never,
+            brand,
+            catalog.id,
+            false,
+          ),
+        ),
+      ).toThrow();
   });
   it("does not invent a company message destination", () => {
     expect(messageUrl("whatsapp", brand, "test")).toBe(
@@ -317,69 +328,12 @@ describe("history and sharing", () => {
     ).toBe("https://wa.me/38344123456?text=Hello%20there");
   });
 });
-describe("perspective transform", () => {
-  const corners: Corners = [
-    { x: 0.2, y: 0.1 },
-    { x: 0.8, y: 0.2 },
-    { x: 0.9, y: 0.85 },
-    { x: 0.15, y: 0.9 },
-  ];
-  it("maps all four source corners to their exact destinations", () => {
-    const h = homography(corners);
-    [
-      { x: 0, y: 0 },
-      { x: 1, y: 0 },
-      { x: 1, y: 1 },
-      { x: 0, y: 1 },
-    ].forEach((p, i) => {
-      const q = transform(h, p);
-      expect(q.x).toBeCloseTo(corners[i].x, 9);
-      expect(q.y).toBeCloseTo(corners[i].y, 9);
-    });
-  });
-  it("round-trips interior points through the inverse", () => {
-    const h = homography(corners),
-      p = { x: 0.35, y: 0.65 };
-    const q = transform(inverse(h), transform(h, p));
-    expect(q.x).toBeCloseTo(p.x, 9);
-    expect(q.y).toBeCloseTo(p.y, 9);
-  });
-  it("rejects crossed, tiny and out-of-bounds corners", () => {
-    expect(validCorners([corners[0], corners[2], corners[1], corners[3]])).toBe(
-      false,
-    );
-    expect(
-      validCorners([
-        { x: 0, y: 0 },
-        { x: 0.01, y: 0 },
-        { x: 0.01, y: 0.01 },
-        { x: 0, y: 0.01 },
-      ]),
-    ).toBe(false);
-    expect(() =>
-      homography([
-        { x: -0.1, y: 0 },
-        { x: 0.5, y: 0 },
-        { x: 0.5, y: 0.5 },
-        { x: 0, y: 0.5 },
-      ]),
-    ).toThrow();
-  });
-});
-
-describe("saved photo validation", () => {
-  it("rejects remote photos and malformed placements", () => {
-    expect(
-      SavedPhotoSchema.safeParse({
-        photo: "https://example.com/photo.jpg",
-        placements: [],
-      }).success,
-    ).toBe(false);
-    expect(
-      SavedPhotoSchema.safeParse({
-        photo: "data:image/jpeg;base64,AA",
-        placements: [{ kind: "door" }],
-      }).success,
-    ).toBe(false);
-  });
+import { selectFamily } from "../src/scene/furnitureMaterials";
+it("selects only a family-listed available decor, retaining compatible choices", () => {
+  const items = [
+    { id: "a" },
+    { id: "b" },
+  ] as import("../src/catalog/types").Material[];
+  expect(selectFamily("b", ["a", "b"], items)).toBe("b");
+  expect(selectFamily("old", ["missing", "a", "b"], items)).toBe("a");
 });

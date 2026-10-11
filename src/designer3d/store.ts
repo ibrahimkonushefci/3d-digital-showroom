@@ -1,7 +1,20 @@
 import { create } from "zustand";
 import type { Catalog, DesignDocument } from "../catalog/types";
 import { validateDesign } from "./layout";
+export function reconcileCabinets(
+  design: DesignDocument,
+  selected: string | null,
+  opened: string[],
+) {
+  const ids = new Set(design.cabinets.map((c) => c.id));
+  return {
+    selected: selected && ids.has(selected) ? selected : null,
+    opened: opened.filter((id) => ids.has(id)),
+  };
+}
 type State = {
+  interior: boolean;
+  setInterior: (value: boolean) => void;
   design: DesignDocument | null;
   cameraView: {
     position: [number, number, number];
@@ -27,7 +40,7 @@ type State = {
   screenshot: string | null;
   error: string | null;
   performance: boolean;
-  setDesign: (d: DesignDocument) => void;
+  setDesign: (d: DesignDocument | null) => void;
   edit: (d: DesignDocument, c: Catalog) => boolean;
   select: (id: string | null) => void;
   toggleOpen: (id: string) => void;
@@ -39,6 +52,8 @@ type State = {
   setPerformance: (v: boolean) => void;
 };
 export const useDesigner = create<State>((set, get) => ({
+  interior: false,
+  setInterior: (interior) => set({ interior }),
   design: null,
   cameraView: null,
   setCameraView: (cameraView) => set({ cameraView }),
@@ -68,6 +83,7 @@ export const useDesigner = create<State>((set, get) => ({
   setDesign: (design) =>
     set({
       design,
+      interior: false,
       cameraView: null,
       dragPreview: null,
       dragging: false,
@@ -87,6 +103,7 @@ export const useDesigner = create<State>((set, get) => ({
     const prev = get().design;
     set({
       design,
+      ...reconcileCabinets(design, get().selected, get().opened),
       dragPreview: null,
       dragging: false,
       past: prev ? [...get().past.slice(-29), prev] : [],
@@ -120,7 +137,7 @@ export const useDesigner = create<State>((set, get) => ({
         design: past.at(-1)!,
         past: past.slice(0, -1),
         future: [design, ...future],
-        selected: null,
+        ...reconcileCabinets(past.at(-1)!, get().selected, get().opened),
         error: null,
         screenshot: null,
       });
@@ -133,7 +150,7 @@ export const useDesigner = create<State>((set, get) => ({
         design: future[0],
         past: [...past, design],
         future: future.slice(1),
-        selected: null,
+        ...reconcileCabinets(future[0], get().selected, get().opened),
         error: null,
         screenshot: null,
       });

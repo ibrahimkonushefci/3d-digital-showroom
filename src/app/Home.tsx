@@ -3,11 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowUpRight, ArrowRight, MoveUpRight } from "lucide-react";
 import { useBrand } from "../brand";
 import { useT, label, useLanguage, type TranslationKey } from "../i18n";
-import { portalPresentation } from "../doorPreview/presentation";
 import { presentationPresets } from "../designer3d/presets";
 import { useDesigner } from "../designer3d/store";
 const Scene = lazy(() => import("../designer3d/Scene"));
-const House = lazy(() => import("../doorPreview/House"));
 export default function Home() {
   const { brand, catalog } = useBrand(),
     t = useT(),
@@ -21,10 +19,6 @@ export default function Home() {
           : brand.modules.wardrobeDesigner,
       ),
     [catalog, brand.modules],
-  );
-  const exterior = useMemo(
-    () => (catalog.doors.length ? portalPresentation(catalog) : null),
-    [catalog],
   );
   const designs = presets.map((p) => p.design);
   const [front, setFront] = useState("");
@@ -55,20 +49,6 @@ export default function Home() {
       route: "/designer/wardrobe",
       enabled: brand.modules.wardrobeDesigner,
       img: "wardrobe",
-    },
-    {
-      key: "interior",
-      desc: "interiorDescription",
-      route: "/designer/interior",
-      enabled: brand.modules.interiorDesigner,
-      img: "interior",
-    },
-    {
-      key: "doorsWindows",
-      desc: "doorDescription",
-      route: "/preview",
-      enabled: brand.modules.doorPreview,
-      img: "door",
     },
   ].filter((x) => x.enabled);
   const load = (i: number) => {
@@ -117,25 +97,7 @@ export default function Home() {
               />
             </Suspense>
           ) : (
-            <Suspense
-              fallback={
-                <img
-                  className="hero-loading-preview"
-                  src="/shared/showroom/exterior.webp"
-                  alt={t("sceneLoading")}
-                />
-              }
-            >
-              {brand.modules.doorPreview && catalog.doors.length ? (
-                <House design={exterior!} catalog={catalog} preset="full" />
-              ) : (
-                <img
-                  className="hero-loading-preview"
-                  src="/shared/showroom/interior.webp"
-                  alt={t("madeForYou")}
-                />
-              )}
-            </Suspense>
+            <p className="empty-state">{t("noFurniture")}</p>
           )}
           <div className="hero-scene-label">
             <span>{brand.companyName}</span>
@@ -145,7 +107,7 @@ export default function Home() {
                   ? hero.kind === "kitchen"
                     ? "kitchens"
                     : "wardrobes"
-                  : "doorsWindows",
+                  : "noFurniture",
               )}
             </small>
           </div>
@@ -190,11 +152,7 @@ export default function Home() {
                 <img
                   src={
                     "/shared/showroom/" +
-                    (tool.img === "kitchen"
-                      ? "japandi"
-                      : tool.img === "door"
-                        ? "exterior"
-                        : tool.img) +
+                    (tool.img === "kitchen" ? "japandi" : tool.img) +
                     ".webp"
                   }
                   alt=""

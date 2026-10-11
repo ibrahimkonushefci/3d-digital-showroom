@@ -3,24 +3,16 @@ import { useState, useMemo, useRef, useCallback } from "react";
 import { useBrand } from "../brand";
 import { presentationPresets } from "../designer3d/presets";
 import Scene from "../designer3d/Scene";
-import House from "../doorPreview/House";
-import InteriorScene from "../interior/Scene";
-import { portalPresentation } from "../doorPreview/presentation";
-import { newInterior } from "../interior/layout";
 import { createOffer, downloadBlob } from "../documents/offer";
-import { interiorPrice } from "../interior/pricing";
-import { facadePrice } from "../doorPreview/pricing";
 import { translate } from "../i18n";
 import { useRenderQuality, type Quality } from "../scene/quality";
 import type { CaptureImage } from "../scene/Rendering";
 export default function PreviewStudio() {
   const { brand, catalog, logoUrl } = useBrand(),
     presets = useMemo(() => presentationPresets(catalog), [catalog]);
-  const [id, setId] = useState(presets[0]?.id || "exterior"),
+  const [id, setId] = useState(presets[0]?.id || ""),
     [status, setStatus] = useState("Ready");
-  const p = presets.find((p) => p.id === id),
-    facade = useMemo(() => portalPresentation(catalog), [catalog]),
-    interior = useMemo(() => newInterior(catalog), [catalog]);
+  const p = presets.find((p) => p.id === id);
   const quality = useRenderQuality((s) => s.level);
   const capture = useRef<CaptureImage | null>(null),
     register = useCallback((fn: CaptureImage) => {
@@ -51,7 +43,8 @@ export default function PreviewStudio() {
   const pdf = async (language: "sq" | "en" | "de") => {
     try {
       setStatus("Rendering PDF");
-      const design = p?.design || (id === "interior" ? interior : facade);
+      if (!p) return;
+      const design = p.design;
       const doc = await createOffer({
         design,
         brand,
@@ -60,11 +53,6 @@ export default function PreviewStudio() {
         language,
         screenshot: await capture.current!(),
         t: (k, v) => translate(language, k, v),
-        priceOverride: p
-          ? undefined
-          : id === "interior"
-            ? interiorPrice(interior, catalog, language)
-            : facadePrice(facade, catalog, language),
       });
       doc.save(`proposal-${id}-${language}.pdf`);
       setStatus("Saved");
@@ -88,8 +76,6 @@ export default function PreviewStudio() {
               {p.id}
             </option>
           ))}
-          <option value="exterior">exterior</option>
-          <option value="interior">interior</option>
         </select>
       </label>
       <label>
@@ -122,20 +108,7 @@ export default function PreviewStudio() {
             cameraView={p.camera}
             capture={register}
           />
-        ) : id === "exterior" ? (
-          <House
-            design={facade}
-            catalog={catalog}
-            preset="full"
-            capture={register}
-          />
-        ) : (
-          <InteriorScene
-            design={interior}
-            catalog={catalog}
-            capture={register}
-          />
-        )}
+        ) : null}
       </div>
     </main>
   );

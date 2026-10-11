@@ -81,7 +81,8 @@ export default function Summary() {
     setBusy(true);
     try {
       const { createOffer } = await import("../documents/offer");
-      const screenshot = (await capture.current?.().catch(() => null)) || state.screenshot;
+      const screenshot =
+        (await capture.current?.().catch(() => null)) || state.screenshot;
       const doc = await createOffer({
         design,
         brand,
@@ -139,7 +140,11 @@ export default function Summary() {
                     </td>
                     <td>
                       {Number(l.quantity.toFixed(2))}
-                      {l.unit === "m" ? " m" : ""}
+                      {l.unit === "m"
+                        ? " m"
+                        : l.unit === "m2"
+                          ? " m²"
+                          : ` ${t("pieces")}`}
                     </td>
                     <td>{money(l.amount, language)}</td>
                   </tr>

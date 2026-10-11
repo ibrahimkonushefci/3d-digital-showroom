@@ -19,16 +19,11 @@
     "address": "",
     "city": "Prishtinë"
   },
-  "languages": [
-    "sq",
-    "en",
-    "de"
-  ],
+  "languages": ["sq", "en", "de"],
   "defaultLanguage": "sq",
   "modules": {
     "kitchenDesigner": true,
-    "wardrobeDesigner": true,
-    "doorPreview": false
+    "wardrobeDesigner": true
   },
   "demo": true
 }

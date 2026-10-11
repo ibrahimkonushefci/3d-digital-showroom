@@ -2,6 +2,7 @@ import { useMemo, useEffect, Suspense } from "react";
 import { Shape, Path, ExtrudeGeometry } from "three";
 import type { Catalog, DesignDocument } from "../catalog/types";
 import { worktopRuns, pointInPolygon } from "./countertopGeometry";
+import { countertopThickness } from "./furnitureMaterials";
 import { SurfaceMaterial } from "./Materials";
 export function Worktops({
   design,
@@ -10,6 +11,7 @@ export function Worktops({
   design: DesignDocument;
   catalog: Catalog;
 }) {
+  const thickness = countertopThickness(design, catalog);
   const slabs = useMemo(
     () =>
       worktopRuns(design.cabinets, catalog).flatMap((run) =>
@@ -31,7 +33,7 @@ export function Worktops({
               shape.holes.push(path);
             }
           const geometry = new ExtrudeGeometry(shape, {
-            depth: 0.038,
+            depth: thickness,
             bevelEnabled: true,
             bevelThickness: 0.002,
             bevelSize: 0.002,
@@ -39,10 +41,10 @@ export function Worktops({
             steps: 1,
             curveSegments: 8,
           });
-          return { geometry, y: 0.1 + run.height / 100 + 0.04 };
+          return { geometry, y: 0.1 + run.height / 100 + thickness };
         }),
       ),
-    [design.cabinets, catalog],
+    [design.cabinets, catalog, thickness],
   );
   useEffect(() => () => slabs.forEach((s) => s.geometry.dispose()), [slabs]);
   const material = catalog.countertops.find(

@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { useBrand } from "../brand";
 import { useT } from "../i18n";
-import { examples } from "../designer3d/layout";
+import { presentationPresets } from "../designer3d/presets";
 import { useDesigner } from "../designer3d/store";
 import { Materials } from "../designer3d/Designer";
 const Scene = lazy(() => import("../designer3d/Scene"));
@@ -12,11 +12,13 @@ export default function MaterialSwitcher() {
     t = useT(),
     navigate = useNavigate(),
     location = useLocation();
-  const example = useMemo(() => examples(catalog)[0], [catalog]);
-  const [design, setDesign] = useState({
-    ...example,
-    style: { ...example.style, front: "cashmere", countertop: "travertine" },
-  });
+  const example = useMemo(
+    () =>
+      presentationPresets(catalog).find((p) => p.design.kind === "kitchen")!
+        .design,
+    [catalog],
+  );
+  const [design, setDesign] = useState(example);
   const embedded = location.pathname.startsWith("/embed");
   return (
     <main className={"material-page " + (embedded ? "embedded" : "page")}>

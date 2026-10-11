@@ -1,6 +1,13 @@
 import type { Catalog, DesignDocument } from "../catalog/types";
 import type { CameraView } from "./Scene";
-import { examples, generateLayout, newDesign, validateDesign } from "./layout";
+import {
+  examples,
+  generateLayout,
+  newDesign,
+  validateDesign,
+  uid,
+  wallPosition,
+} from "./layout";
 export type ShowroomPreset = {
   id: string;
   name: { sq: string; en: string; de: string };
@@ -36,7 +43,7 @@ export function presentationPresets(catalog: Catalog): ShowroomPreset[] {
         )
       )
         return [];
-      const d = generateLayout(
+      let d = generateLayout(
         {
           ...newDesign(p.kind, p.layout),
           room: { ...p.room, openings: [] },
@@ -44,6 +51,33 @@ export function presentationPresets(catalog: Catalog): ShowroomPreset[] {
         },
         catalog,
       );
+      if (d && p.cabinets) {
+        const room = d.room;
+        d = {
+          ...d,
+          cabinets: p.cabinets.flatMap((a) => {
+            const m = catalog.modules.find((m) => m.id === a.moduleId);
+            return m
+              ? [
+                  {
+                    id: uid(),
+                    moduleId: m.id,
+                    width: a.width,
+                    height:
+                      m.level === "wardrobe"
+                        ? Math.min(m.height, room.height)
+                        : m.height,
+                    depth: m.depth,
+                    level: m.level,
+                    wall: a.wall,
+                    ...wallPosition(a.wall, a.offset, a.width, m.depth, room),
+                  },
+                ]
+              : [];
+          }),
+        };
+        if (d.cabinets.length !== p.cabinets.length) return [];
+      }
       return d && validateDesign(d, catalog)
         ? [
             {

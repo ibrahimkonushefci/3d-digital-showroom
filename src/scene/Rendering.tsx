@@ -1,19 +1,12 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows, useProgress } from "@react-three/drei";
 import {
   ACESFilmicToneMapping,
   SRGBColorSpace,
   PCFSoftShadowMap,
-  PCFShadowMap,
   Vector2,
 } from "three";
-import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
-import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-import { SSAOPass } from "three/addons/postprocessing/SSAOPass.js";
-import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
-import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
-import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { qualityForFrames, useQuality, useRenderQuality } from "./quality";
 export type CaptureImage = () => Promise<string>;
 export type RegisterCapture = (capture: CaptureImage) => void;
@@ -45,44 +38,13 @@ export function RefreshShadows({
     />
   );
 }
-export function Rendering({
-  capture,
-  crispShadows = false,
-}: {
-  capture?: RegisterCapture;
-  crispShadows?: boolean;
-}) {
-  const { gl, scene, camera, size, invalidate, setDpr } = useThree();
+export function Rendering({ capture }: { capture?: RegisterCapture }) {
+  const { gl, scene, camera, invalidate, setDpr } = useThree();
   const quality = useQuality();
-  const pixelRatio = useThree((s) => s.viewport.dpr);
   const frames = useRef<number[]>([]),
     downgraded = useRef(false),
     exporting = useRef(false),
     motion = useRef({ signature: NaN, active: false });
-  const pipeline = useMemo(() => {
-    if (quality !== "high") return null;
-    const composer = new EffectComposer(gl);
-    const ao = new SSAOPass(scene, camera, size.width, size.height, 8);
-    ao.kernelRadius = 0.14;
-    ao.minDistance = 0.002;
-    ao.maxDistance = 0.12;
-    const output = new OutputPass();
-    const aa = new ShaderPass(FXAAShader);
-    composer.addPass(new RenderPass(scene, camera));
-    composer.addPass(ao);
-    composer.addPass(output);
-    composer.addPass(aa);
-    return { composer, ao, output, aa };
-  }, [gl, scene, camera, quality]);
-  useEffect(
-    () => () => {
-      pipeline?.ao.dispose();
-      pipeline?.output.dispose();
-      pipeline?.aa.dispose();
-      pipeline?.composer.dispose();
-    },
-    [pipeline],
-  );
   useEffect(() => {
     gl.shadowMap.type = PCFSoftShadowMap;
     setDpr(
@@ -91,21 +53,8 @@ export function Rendering({
         : Math.min(window.devicePixelRatio, quality === "high" ? 1.75 : 1.5),
     );
     invalidate();
-  }, [quality, gl, setDpr, invalidate, crispShadows]);
-  useEffect(() => {
-    pipeline?.composer.setPixelRatio(pixelRatio);
-    pipeline?.composer.setSize(size.width, size.height);
-    invalidate();
-  }, [pipeline, size, pixelRatio, invalidate]);
-  const render = () => {
-    if (pipeline) {
-      pipeline.aa.uniforms.resolution.value.set(
-        1 / gl.domElement.width,
-        1 / gl.domElement.height,
-      );
-      pipeline.composer.render();
-    } else gl.render(scene, camera);
-  };
+  }, [quality, gl, setDpr, invalidate]);
+  const render = () => gl.render(scene, camera);
   useFrame((_, dt) => {
     if (!exporting.current) {
       // Sample consecutive moving frames only, excluding idle invalidations and shadow refreshes.
@@ -181,19 +130,12 @@ export function Rendering({
           Math.round(oldSize.y * ratio),
           false,
         );
-        pipeline?.composer.setPixelRatio(1);
-        pipeline?.composer.setSize(
-          Math.round(oldSize.x * ratio),
-          Math.round(oldSize.y * ratio),
-        );
         render();
         return gl.domElement.toDataURL("image/png");
       } finally {
         hidden.forEach((o) => (o.visible = true));
         gl.setPixelRatio(dpr);
         gl.setSize(oldSize.x, oldSize.y, false);
-        pipeline?.composer.setPixelRatio(dpr);
-        pipeline?.composer.setSize(oldSize.x, oldSize.y);
         exporting.current = false;
         invalidate();
       }
@@ -201,6 +143,6 @@ export function Rendering({
     return () => {
       live = false;
     };
-  }, [capture, pipeline, gl, camera, scene, invalidate]);
+  }, [capture, gl, camera, scene, invalidate]);
   return null;
 }

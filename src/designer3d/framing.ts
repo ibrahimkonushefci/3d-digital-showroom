@@ -81,16 +81,20 @@ export function cabinetCamera(
   if (heading.lengthSq() === 0) heading.set(0, 0, 1);
   const tanY = Math.tan(MathUtils.degToRad(CABINET_FOV / 2)) / 1.1;
   const tanX = tanY * Math.max(aspect, 0.1);
-  const eyeY = preset === "front" ? 1.4 : 1.55;
+  const eyeY = preset === "front" ? 1.4 : (authoredView?.position[1] ?? 2.4);
   let distance = 5;
   let direction = new Vector3();
-  for (let iteration = 0; iteration < 8; iteration++) {
+  for (let iteration = 0; iteration < 24; iteration++) {
     direction =
       preset === "top"
         ? new Vector3(0, 1, 0.001).normalize()
         : heading
             .clone()
-            .multiplyScalar(distance)
+            .multiplyScalar(
+              Math.sqrt(
+                Math.max(0.01, distance * distance - (eyeY - target.y) ** 2),
+              ),
+            )
             .setY(eyeY - target.y)
             .normalize();
     const right = new Vector3()
@@ -113,4 +117,26 @@ export function cabinetCamera(
   }
   const position = target.clone().addScaledVector(direction, distance);
   return { position: position.toArray(), target: target.toArray() };
+}
+
+/** Front-facing inspection heading, with the rendered camera fitting open clearance. */
+export function inspectionCamera(
+  design: DesignDocument,
+  id: string,
+): CameraView | null {
+  const c = design.cabinets.find((c) => c.id === id);
+  if (!c) return null;
+  const target: [number, number, number] = [
+    c.x / 100 - design.room.width / 200,
+    c.height / 200,
+    c.z / 100 - design.room.depth / 200,
+  ];
+  return {
+    target,
+    position: [
+      target[0] + Math.sin(c.rotation) * 4,
+      1.55,
+      target[2] + Math.cos(c.rotation) * 4,
+    ],
+  };
 }

@@ -6,10 +6,8 @@ import { useBrand } from "../brand";
 import { useT, useLanguage } from "../i18n";
 import { Field, Toggle } from "./components";
 import { useDesigner } from "../designer3d/store";
-import { useFacade, newFacade } from "../doorPreview/store";
-import { useInterior } from "../interior/store";
-import { newInterior } from "../interior/layout";
-import { examples } from "../designer3d/layout";
+import { presentationPresets } from "../designer3d/presets";
+import { clearComparisons } from "../designer3d/comparison";
 import type { Language } from "../catalog/types";
 export default function Settings() {
   const { brand, catalog, local, clearLocal } = useBrand(),
@@ -48,13 +46,9 @@ export default function Settings() {
             value={catalog.id}
             onChange={(e) => (location.href = "/?brand=" + e.target.value)}
           >
-            {["default", "druri-design", "drita-home"].map((slug) => (
+            {["default", "druri-design"].map((slug) => (
               <option key={slug} value={slug}>
-                {slug === "default"
-                  ? "Forma Studio"
-                  : slug === "druri-design"
-                    ? "Druri Design"
-                    : "Drita Home"}
+                {slug === "default" ? "Forma Studio" : "Druri Design"}
               </option>
             ))}
           </select>
@@ -96,18 +90,19 @@ export default function Settings() {
         <p className="helper">{t("performanceHelp")}</p>
         <button
           className="button secondary full"
-          onClick={() => {
-            for (const kind of ["kitchen", "wardrobe"])
-              localStorage.removeItem(`showroom-design-${brand.slug}-${kind}`);
-            localStorage.removeItem(`showroom-recent-${brand.slug}`);
-            localStorage.removeItem(`showroom-facade-${brand.slug}`);
-            localStorage.removeItem(`showroom-interior-${brand.slug}`);
-            if (brand.modules.doorPreview)
-              useFacade.getState().set(newFacade(catalog));
-            if (brand.modules.interiorDesigner)
-              useInterior.getState().set(newInterior(catalog));
-            const example = examples(catalog)[0];
-            if (example) state.setDesign(example);
+          onClick={async () => {
+            try {
+              await clearComparisons(brand.slug);
+              for (const kind of ["kitchen", "wardrobe"])
+                localStorage.removeItem(
+                  `showroom-design-${brand.slug}-${kind}`,
+                );
+              localStorage.removeItem(`showroom-recent-${brand.slug}`);
+              const example = presentationPresets(catalog)[0]?.design;
+              if (example) state.setDesign(example);
+            } catch {
+              state.setError("storageError");
+            }
           }}
         >
           {t("reset")}

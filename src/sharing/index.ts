@@ -1,5 +1,3 @@
-import { FacadeSchema, type FacadeDesign } from "../doorPreview/types";
-import { InteriorSchema, type InteriorDesign } from "../interior/types";
 import LZString from "lz-string";
 import { z } from "zod";
 import {
@@ -14,7 +12,7 @@ export const SnapshotSchema = BrandSchema.omit({ logo: true }).extend({
 const ShareSchema = z.object({
   version: z.literal(1),
   catalogId: z.string().regex(/^[a-z0-9-]+$/),
-  design: z.union([DesignSchema, FacadeSchema, InteriorSchema]),
+  design: DesignSchema,
   brand: SnapshotSchema.optional(),
 });
 export function decodeShare(encoded: string) {
@@ -24,7 +22,7 @@ export function decodeShare(encoded: string) {
   return ShareSchema.parse(JSON.parse(raw));
 }
 export function encodeShare(
-  design: DesignDocument | FacadeDesign | InteriorDesign,
+  design: DesignDocument,
   brand: BrandConfig,
   catalogId: string,
   local: boolean,
@@ -40,15 +38,12 @@ export function encodeShare(
   );
 }
 export function shareUrl(
-  design: DesignDocument | FacadeDesign | InteriorDesign,
+  design: DesignDocument,
   brand: BrandConfig,
   catalogId: string,
   local: boolean,
 ) {
-  const url = new URL(
-    window.location.origin +
-      (design.kind === "facade" ? "/preview" : "/designer/" + design.kind),
-  );
+  const url = new URL(window.location.origin + ("/designer/" + design.kind));
   url.searchParams.set("brand", local ? catalogId : brand.slug);
   url.hash = "design=" + encodeShare(design, brand, catalogId, local);
   return url.href;
