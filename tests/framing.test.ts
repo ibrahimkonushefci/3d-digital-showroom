@@ -96,3 +96,67 @@ it("fits a selected wardrobe compartment with open-door clearance at tablet and 
       }
     }
 });
+import { orbitLimits, viewAzimuth } from "../src/designer3d/framing";
+const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
+const deg = (d: number) => (d * Math.PI) / 180;
+it("keeps the authored view inside the orbit limits for every layout and preset", () => {
+  const layouts = [
+    ["kitchen", ["straight", "l", "u", "parallel", "island"]],
+    ["wardrobe", ["straight", "corner", "walkin"]],
+  ] as const;
+  for (const [kind, names] of layouts)
+    for (const layout of names) {
+      const d = generateLayout(newDesign(kind, layout), catalog)!;
+      for (const preset of ["front", "perspective", "top"] as const) {
+        const view = cabinetCamera(cameraBounds(d, preset), preset, 1.4);
+        const limits = orbitLimits(d, view);
+        const start = viewAzimuth(view);
+        expect(limits.minAzimuth).toBeLessThanOrEqual(start + 1e-9);
+        expect(limits.maxAzimuth).toBeGreaterThanOrEqual(start - 1e-9);
+        expect(limits.maxAzimuth - limits.minAzimuth).toBeGreaterThanOrEqual(
+          deg(59),
+        );
+      }
+    }
+});
+it("never lets a single-sided layout orbit behind its cabinet runs", () => {
+  for (const [kind, layout] of [
+    ["kitchen", "straight"],
+    ["kitchen", "l"],
+    ["kitchen", "island"],
+    ["wardrobe", "straight"],
+    ["wardrobe", "corner"],
+  ] as const) {
+    const d = generateLayout(newDesign(kind, layout), catalog)!;
+    const view = cabinetCamera(cameraBounds(d, "perspective"), "perspective", 1.4);
+    const { minAzimuth, maxAzimuth } = orbitLimits(d, view);
+    for (const azimuth of [minAzimuth, maxAzimuth])
+      for (const c of d.cabinets.filter((c) => c.wall !== "island"))
+        expect(Math.abs(wrap(azimuth - c.rotation))).toBeLessThanOrEqual(
+          deg(82) + 1e-6,
+        );
+  }
+});
+it("limits inspection to the selected cabinet's front, including front-wall runs across ±π", () => {
+  for (const layout of ["l", "parallel", "u"] as const) {
+    const d = generateLayout(newDesign("kitchen", layout), catalog)!;
+    for (const c of d.cabinets) {
+      const view = cabinetCamera(
+        cabinetBounds({ ...d, cabinets: [c] }).expandByScalar(0.35),
+        "perspective",
+        1.4,
+        inspectionCamera(d, c.id)!,
+      );
+      const start = viewAzimuth(view);
+      const limits = orbitLimits(d, view, c.id);
+      expect(Math.abs(wrap(start - c.rotation))).toBeLessThan(deg(1));
+      expect(limits.minAzimuth).toBeLessThanOrEqual(start + 1e-9);
+      expect(limits.maxAzimuth).toBeGreaterThanOrEqual(start - 1e-9);
+      // Limits are continuous around the start even when it sits near ±π.
+      expect(limits.maxAzimuth - limits.minAzimuth).toBeLessThanOrEqual(
+        deg(110) + 1e-6,
+      );
+      expect(limits.minDistance).toBeLessThan(2);
+    }
+  }
+});

@@ -712,7 +712,11 @@ export default function Designer() {
                 <button
                   key={p}
                   className={preset === p ? "active" : ""}
-                  onClick={() => setPreset(p)}
+                  onClick={() => {
+                    setPreset(p);
+                    state.select(null);
+                    state.setCameraView(null);
+                  }}
                 >
                   {t(p === "front" ? "frontCamera" : p)}
                 </button>

@@ -42,7 +42,6 @@ export function Rendering({ capture }: { capture?: RegisterCapture }) {
   const { gl, scene, camera, invalidate, setDpr } = useThree();
   const quality = useQuality();
   const frames = useRef<number[]>([]),
-    downgraded = useRef(false),
     exporting = useRef(false),
     motion = useRef({ signature: NaN, active: false });
   useEffect(() => {
@@ -81,11 +80,7 @@ export function Rendering({ capture }: { capture?: RegisterCapture }) {
       if (frames.current.length >= 120) {
         const next = qualityForFrames(quality, frames.current);
         frames.current = [];
-        if (next !== quality && !(downgraded.current && next === "high")) {
-          if (next === "lightweight" || quality === "high")
-            downgraded.current = true;
-          useRenderQuality.getState().setLevel(next);
-        }
+        if (next !== quality) useRenderQuality.getState().setLevel(next);
       }
     }
     render();

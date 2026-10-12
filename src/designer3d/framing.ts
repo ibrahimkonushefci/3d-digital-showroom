@@ -119,6 +119,71 @@ export function cabinetCamera(
   return { position: position.toArray(), target: target.toArray() };
 }
 
+export type OrbitLimits = {
+  minAzimuth: number;
+  maxAzimuth: number;
+  minDistance: number;
+  maxDistance: number;
+};
+const DEG = Math.PI / 180;
+const wrapAngle = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
+
+/** Azimuth as camera-controls measures it: atan2(x, z) of position − target. */
+export function viewAzimuth(view: CameraView) {
+  return Math.atan2(
+    view.position[0] - view.target[0],
+    view.position[2] - view.target[2],
+  );
+}
+
+/**
+ * Keep orbiting on the side the furniture faces, so a swipe never lands
+ * behind a run of cabinets. Limits are expressed around the view's own
+ * azimuth because camera-controls clamps without wrapping.
+ */
+export function orbitLimits(
+  design: DesignDocument,
+  view: CameraView,
+  focusId?: string | null,
+): OrbitLimits {
+  const start = viewAzimuth(view);
+  const focus = focusId
+    ? design.cabinets.find((c) => c.id === focusId)
+    : undefined;
+  const faces = [
+    ...new Set(
+      design.cabinets
+        .filter((c) => c.wall !== "island")
+        .map((c) => Math.round(wrapAngle(c.rotation) / DEG)),
+    ),
+  ].map((n) => ({ normal: n * DEG, span: 82 * DEG }));
+  if (focus) faces.push({ normal: focus.rotation, span: 55 * DEG });
+  const allowed = (a: number) =>
+    faces.every(
+      ({ normal, span }) => Math.abs(wrapAngle(a - normal)) <= span + 1e-6,
+    );
+  const reach = (direction: 1 | -1) => {
+    let steps = 0;
+    while (steps < 179 && allowed(start + direction * (steps + 1) * DEG))
+      steps++;
+    return steps * DEG;
+  };
+  let minAzimuth = start - reach(-1),
+    maxAzimuth = start + reach(1);
+  // U-shapes and parallel runs face each other: no angle sees every front,
+  // so allow a modest swing around the authored view instead.
+  if (maxAzimuth - minAzimuth < 30 * DEG) {
+    minAzimuth = start - 30 * DEG;
+    maxAzimuth = start + 30 * DEG;
+  }
+  return {
+    minAzimuth,
+    maxAzimuth,
+    minDistance: focus ? 1.2 : 2,
+    maxDistance: focus ? 6 : 20,
+  };
+}
+
 /** Front-facing inspection heading, with the rendered camera fitting open clearance. */
 export function inspectionCamera(
   design: DesignDocument,

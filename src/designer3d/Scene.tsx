@@ -24,7 +24,6 @@ import {
   CameraControls,
   Environment,
   Lightformer,
-  AdaptiveDpr,
 } from "@react-three/drei";
 import {
   Group,
@@ -65,6 +64,7 @@ import {
   cameraBounds,
   cabinetCamera,
   boundsCorners,
+  orbitLimits,
   CABINET_FOV,
 } from "./framing";
 import type { CameraView, CameraPreset } from "./framing";
@@ -1113,24 +1113,31 @@ function Controls({
   const boundsKey = [...bounds.min.toArray(), ...bounds.max.toArray()].join(
     ",",
   );
+  const aspect = size.width / Math.max(1, size.height);
+  const view = useMemo(
+    () => cabinetCamera(bounds, preset, aspect, cameraView),
+    [preset, cameraView, boundsKey, aspect],
+  );
+  const limits = useMemo(
+    () => orbitLimits(design, view, focus),
+    [view, focus, design.cabinets],
+  );
   useEffect(() => {
-    const view = cabinetCamera(
-      bounds,
-      preset,
-      size.width / size.height,
-      cameraView,
-    );
     ref.current?.setLookAt(...view.position, ...view.target, true);
-  }, [preset, cameraView, boundsKey, size.width, size.height]);
+  }, [view]);
   return (
     <CameraControls
       ref={ref}
       makeDefault
       enabled={!dragging}
-      minDistance={2}
-      maxDistance={20}
+      minDistance={limits.minDistance}
+      maxDistance={limits.maxDistance}
+      minAzimuthAngle={limits.minAzimuth}
+      maxAzimuthAngle={limits.maxAzimuth}
       minPolarAngle={0.02}
       maxPolarAngle={Math.PI / 2 - 0.04}
+      azimuthRotateSpeed={0.55}
+      polarRotateSpeed={0.55}
       dollyToCursor
       smoothTime={0.2}
     />
@@ -1350,7 +1357,6 @@ export default function Scene({
           design={committedDesign}
           cameraView={cameraView}
         />
-        <AdaptiveDpr pixelated />
         <Rendering capture={capture} />
       </Canvas>
     </SceneBoundary>

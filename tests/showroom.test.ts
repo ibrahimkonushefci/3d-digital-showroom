@@ -154,11 +154,16 @@ it("keeps legacy catalogs usable without presentation metadata", () => {
     presentationPresets(CatalogSchema.parse(legacy)).length,
   ).toBeGreaterThan(0);
 });
-it("quality measurement ignores idle gaps and degrades slow active frames", () => {
+it("quality measurement ignores idle gaps and only moves between balanced and high", () => {
   expect(qualityForFrames("high", Array(150).fill(500))).toBe("high");
   expect(qualityForFrames("high", Array(120).fill(25))).toBe("balanced");
-  expect(qualityForFrames("balanced", Array(120).fill(35))).toBe("lightweight");
+  // Slow tablets stay on balanced; lightweight is only chosen manually.
+  expect(qualityForFrames("balanced", Array(120).fill(60))).toBe("balanced");
   expect(qualityForFrames("balanced", Array(120).fill(12))).toBe("high");
+  // Hysteresis: frames between the thresholds keep the current level.
+  expect(qualityForFrames("balanced", Array(120).fill(18))).toBe("balanced");
+  expect(qualityForFrames("high", Array(120).fill(18))).toBe("high");
+  expect(qualityForFrames("lightweight", Array(120).fill(5))).toBe("lightweight");
 });
 it("quality and transient opening states cannot change prices", () => {
   const d = design(),

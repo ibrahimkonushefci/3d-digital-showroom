@@ -39,8 +39,19 @@ export function SurfaceMaterial({
   useEffect(() => () => maps.forEach((m) => m.dispose()), [maps]);
   const response = furnitureResponse(material);
   const offset = material.texture ? 1 : 0;
+  // three.js compiles map usage into the shader and r3f does not flag a
+  // recompile when a map appears or disappears, so a plain → textured switch
+  // would keep rendering the untextured (white) program. Remount instead.
+  const signature = [
+    !!material.texture,
+    !performance && !!material.normalMap,
+    !performance && !!material.roughnessMap,
+    lacquer,
+    world,
+  ].join();
   return (
     <meshPhysicalMaterial
+      key={signature}
       map={material.texture ? maps[0] : undefined}
       color={material.texture ? "#ffffff" : material.color}
       normalMap={!performance && material.normalMap ? maps[offset] : undefined}
