@@ -611,6 +611,9 @@ export default function Designer() {
 
   const edit = (next: DesignDocument) => state.edit(next, catalog);
   const price = calculatePrice(design, catalog, language);
+  const priceText = design.exact
+    ? money(price.total, language)
+    : `${money(price.low, language)} – ${money(price.high, language)}`;
   const layouts: Layout[] =
     kind === "kitchen"
       ? ["straight", "l", "u", "parallel", "island"]
@@ -914,11 +917,7 @@ export default function Designer() {
               </small>
             )}
             <span>{t("estimate")}</span>
-            <strong>
-              {design.exact
-                ? money(price.total, language)
-                : `${money(price.low, language)} – ${money(price.high, language)}`}
-            </strong>
+            <strong>{priceText}</strong>
             <small>{t("indicative")}</small>
             <button className="button primary" onClick={summary}>
               {t("summary")}
@@ -926,6 +925,16 @@ export default function Designer() {
             </button>
           </div>
         </aside>
+      </div>
+      <div className="mobile-offer-bar">
+        <div>
+          <span>{t("estimate")}</span>
+          <strong>{priceText}</strong>
+        </div>
+        <button className="button" onClick={summary}>
+          {t("summary")}
+          <ArrowRight size={18} />
+        </button>
       </div>
     </main>
   );

@@ -163,7 +163,9 @@ it("quality measurement ignores idle gaps and only moves between balanced and hi
   // Hysteresis: frames between the thresholds keep the current level.
   expect(qualityForFrames("balanced", Array(120).fill(18))).toBe("balanced");
   expect(qualityForFrames("high", Array(120).fill(18))).toBe("high");
-  expect(qualityForFrames("lightweight", Array(120).fill(5))).toBe("lightweight");
+  expect(qualityForFrames("lightweight", Array(120).fill(5))).toBe(
+    "lightweight",
+  );
 });
 it("quality and transient opening states cannot change prices", () => {
   const d = design(),

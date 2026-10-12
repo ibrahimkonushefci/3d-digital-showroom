@@ -22,6 +22,7 @@ export default function Home() {
   );
   const designs = presets.map((p) => p.design);
   const [front, setFront] = useState("");
+  const [heroReady, setHeroReady] = useState(false);
   const furniture =
     (brand.modules.kitchenDesigner || brand.modules.wardrobeDesigner) &&
     designs.length > 0;
@@ -81,21 +82,25 @@ export default function Home() {
         </div>
         <div className="hero-scene">
           {furniture && featured ? (
-            <Suspense
-              fallback={
-                <img
-                  className="hero-loading-preview"
-                  src={"/" + presets[0]?.thumbnail}
-                  alt={t("sceneLoading")}
+            <>
+              <Suspense fallback={null}>
+                <Scene
+                  design={hero}
+                  catalog={catalog}
+                  cameraView={presets[0]?.camera}
+                  onFirstFrame={() => setHeroReady(true)}
                 />
-              }
-            >
-              <Scene
-                design={hero}
-                catalog={catalog}
-                cameraView={presets[0]?.camera}
+              </Suspense>
+              {/* The photo-like preview stays until the 3D scene has drawn. */}
+              <img
+                className={
+                  "hero-loading-preview" + (heroReady ? " is-hidden" : "")
+                }
+                src={"/" + presets[0]?.thumbnail}
+                alt={heroReady ? "" : t("sceneLoading")}
+                aria-hidden={heroReady}
               />
-            </Suspense>
+            </>
           ) : (
             <p className="empty-state">{t("noFurniture")}</p>
           )}

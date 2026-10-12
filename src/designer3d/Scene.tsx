@@ -20,11 +20,7 @@ import {
   type ReactNode,
 } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import {
-  CameraControls,
-  Environment,
-  Lightformer,
-} from "@react-three/drei";
+import { CameraControls, Environment, Lightformer } from "@react-three/drei";
 import {
   Group,
   MathUtils,
@@ -1210,6 +1206,16 @@ function StudioSun({
     </>
   );
 }
+/** Rendered beside the furniture, so it only commits once nothing suspends. */
+function FirstFrame({ onFirstFrame }: { onFirstFrame: () => void }) {
+  const done = useRef(false);
+  useFrame(() => {
+    if (done.current) return;
+    done.current = true;
+    requestAnimationFrame(onFirstFrame);
+  });
+  return null;
+}
 class SceneBoundary extends Component<
   { children: ReactNode; fallback: ReactNode },
   { failed: boolean }
@@ -1229,6 +1235,7 @@ export default function Scene({
   interactive = false,
   capture,
   cameraView,
+  onFirstFrame,
 }: {
   cameraView?: CameraView;
   design: DesignDocument;
@@ -1236,6 +1243,8 @@ export default function Scene({
   preset?: CameraPreset;
   interactive?: boolean;
   capture?: RegisterCapture;
+  /** Called once the furniture has committed and drawn its first frame. */
+  onFirstFrame?: () => void;
 }) {
   const preview = useDesigner((s) => s.dragPreview);
   const opened = useDesigner((s) => s.opened);
@@ -1252,9 +1261,6 @@ export default function Scene({
       fallback={<div className="scene-fallback">{t("webglError")}</div>}
     >
       <Canvas
-        style={
-          interactive ? { height: "calc(100% - 128px)", top: 80 } : undefined
-        }
         role="img"
         aria-label={t("sceneLabel")}
         frameloop="demand"
@@ -1358,6 +1364,7 @@ export default function Scene({
           cameraView={cameraView}
         />
         <Rendering capture={capture} />
+        {onFirstFrame && <FirstFrame onFirstFrame={onFirstFrame} />}
       </Canvas>
     </SceneBoundary>
   );

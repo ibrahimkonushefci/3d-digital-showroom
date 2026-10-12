@@ -2455,3 +2455,153 @@ td:nth-child(2) {
   min-width: 44px;
   min-height: 44px;
 }
+
+/* Showroom workspace: the designer fills the screen so the 3D view, the
+   finishes and the price are visible together without page scrolling. The
+   canvas panel stacks toolbar / canvas / caption instead of overlaying them,
+   so the camera framing is never covered by controls. */
+.designer-heading .eyebrow {
+  display: none;
+}
+.canvas-panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+}
+.canvas-panel > .canvas-controls {
+  position: static;
+  justify-self: start;
+  max-width: calc(100% - 24px);
+  margin: 12px 12px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.canvas-panel > .canvas-controls::-webkit-scrollbar {
+  display: none;
+}
+.canvas-panel > .canvas-controls,
+.canvas-panel > .canvas-controls .canvas-controls-group {
+  flex-wrap: nowrap;
+}
+.canvas-panel > .canvas-controls button {
+  flex: none;
+  white-space: nowrap;
+}
+.canvas-panel > .canvas-caption,
+.canvas-panel > .orbit-hint {
+  position: static;
+  margin: 0;
+}
+.canvas-panel > .canvas-caption {
+  padding: 4px 20px 0;
+}
+.canvas-panel > .orbit-hint {
+  padding: 2px 12px 10px;
+}
+@media (min-width: 900px) {
+  #root:has(> .designer-page) {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+  }
+  #root:has(> .designer-page) > .site-footer {
+    display: none;
+  }
+  #root:has(> .designer-page) > .site-header {
+    flex: none;
+  }
+  .designer-page {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding-top: 14px;
+    padding-bottom: 16px;
+  }
+  .designer-heading {
+    margin-bottom: 12px;
+  }
+  .designer-heading h1 {
+    font-size: 26px;
+    margin-top: 0;
+  }
+  .designer-page .designer-workspace {
+    flex: 1;
+    height: auto;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .designer-page .canvas-panel {
+    min-height: 0;
+  }
+  .designer-page .design-controls {
+    max-height: none;
+    min-height: 0;
+  }
+}
+/* Portrait tablets and phones: the full panel scrolls with the page, so a
+   compact bar keeps the price and the offer button on screen. */
+.mobile-offer-bar {
+  display: none;
+}
+@media (max-width: 899px) {
+  .designer-page .canvas-panel {
+    height: clamp(380px, 56dvh, 680px);
+  }
+  .designer-page {
+    padding-bottom: 112px;
+  }
+  .designer-page .design-controls > .price-bar > span,
+  .designer-page .design-controls > .price-bar > strong,
+  .designer-page .design-controls > .price-bar > small:not([role="status"]),
+  .designer-page .design-controls > .price-bar > .button.primary {
+    display: none;
+  }
+  .mobile-offer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    z-index: 20;
+    padding: 12px 12px 12px 18px;
+    border-radius: 14px;
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 8px 35px #0003;
+  }
+  .mobile-offer-bar > div {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .mobile-offer-bar span {
+    font-size: 11px;
+    opacity: 0.8;
+  }
+  .mobile-offer-bar strong {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+  }
+  .mobile-offer-bar .button {
+    flex: none;
+    min-height: 48px;
+    background: #ffffff;
+    color: var(--primary);
+  }
+}
+.hero-scene > .hero-loading-preview {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.hero-scene > .hero-loading-preview.is-hidden {
+  opacity: 0;
+}

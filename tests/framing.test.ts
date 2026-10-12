@@ -128,7 +128,11 @@ it("never lets a single-sided layout orbit behind its cabinet runs", () => {
     ["wardrobe", "corner"],
   ] as const) {
     const d = generateLayout(newDesign(kind, layout), catalog)!;
-    const view = cabinetCamera(cameraBounds(d, "perspective"), "perspective", 1.4);
+    const view = cabinetCamera(
+      cameraBounds(d, "perspective"),
+      "perspective",
+      1.4,
+    );
     const { minAzimuth, maxAzimuth } = orbitLimits(d, view);
     for (const azimuth of [minAzimuth, maxAzimuth])
       for (const c of d.cabinets.filter((c) => c.wall !== "island"))
