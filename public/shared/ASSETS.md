@@ -8,7 +8,7 @@ Baseline diffuse sources were CC0 Poly Haven assets downloaded through @Browser.
 - Original concrete source: https://polyhaven.com/a/concrete_floor_01
 - License: https://polyhaven.com/license
 - Inter: @fontsource/inter, SIL Open Font License; bundled with application CSS.
-- DejaVuSans.ttf: DejaVu Fonts, Bitstream Vera license; used for Unicode PDF offers. See FONT-LICENSE.txt.
+- DejaVuSans.ttf and DejaVuSans-Bold.ttf: DejaVu Fonts 2.37 (https://github.com/dejavu-fonts/dejavu-fonts/releases/tag/version_2_37), Bitstream Vera / Arev license; used for Unicode PDF offers. See FONT-LICENSE.txt (the release's LICENSE file). Subset with fonttools `pyftsubset` to Basic Latin, Latin-1, Latin Extended-A, Ș/ș/Ț/ț, dashes, quotes, bullet, ellipsis, €, №, ™ and − (about 50 KB each instead of 750 KB), which covers Albanian, English and German offers.
 
 Environment reflections are generated locally from area-light geometry; no remote HDRI request. The setup kitchen illustration and furniture geometry are original project assets.
 

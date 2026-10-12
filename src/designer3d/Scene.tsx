@@ -1118,8 +1118,13 @@ function Controls({
     () => orbitLimits(design, view, focus),
     [view, focus, design.cabinets],
   );
+  // Snap into the first view instead of flying in from the default camera,
+  // so captures taken right after mounting are framed; animate later moves.
+  const placed = useRef(false);
   useEffect(() => {
-    ref.current?.setLookAt(...view.position, ...view.target, true);
+    if (!ref.current) return;
+    ref.current.setLookAt(...view.position, ...view.target, placed.current);
+    placed.current = true;
   }, [view]);
   return (
     <CameraControls

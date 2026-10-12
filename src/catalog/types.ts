@@ -34,6 +34,24 @@ export const BrandSchema = z.object({
     address: z.string().max(200),
     city: z.string().max(80),
   }),
+  /** Registration and payment details printed on every offer page. */
+  legal: z
+    .object({
+      businessNumber: z.string().max(40).default(""),
+      fiscalNumber: z.string().max(40).default(""),
+      vatNumber: z.string().max(40).default(""),
+      bankName: z.string().max(80).default(""),
+      iban: z.string().max(40).default(""),
+      website: z.string().max(120).default(""),
+    })
+    .default({
+      businessNumber: "",
+      fiscalNumber: "",
+      vatNumber: "",
+      bankName: "",
+      iban: "",
+      website: "",
+    }),
   languages: z.array(LanguageSchema).min(1),
   defaultLanguage: LanguageSchema,
   modules: z.object({
@@ -306,6 +324,7 @@ export const OfferDetailsSchema = z.object({
   salesperson: z.string().max(100),
   paymentTerms: z.string().max(200),
   notes: z.string().max(1500),
+  discountPercent: z.number().min(0).max(30).optional(),
 });
 export type OfferDetails = z.infer<typeof OfferDetailsSchema>;
 export const DesignSchema = z.object({

@@ -14,7 +14,7 @@ import {
 import CaptureAlternative from "../designer3d/CaptureAlternative";
 import { useDesigner } from "../designer3d/store";
 import { loadDesign } from "../persistence";
-import { calculatePrice } from "../pricing";
+import { calculatePrice, estimateLabel } from "../pricing";
 import { proposalFinishes } from "../documents/finishes";
 export default function Compare() {
   const { brand, catalog } = useBrand(),
@@ -97,8 +97,8 @@ export default function Compare() {
                   </p>
                   {price ? (
                     <strong>
-                      {money(price.low, language)} –{" "}
-                      {money(price.high, language)} · {t("indicative")}
+                      {estimateLabel(price, item.design.exact, language)} ·{" "}
+                      {t("indicative")}
                     </strong>
                   ) : (
                     <p role="alert">{t("comparisonUnavailable")}</p>
@@ -152,8 +152,8 @@ export default function Compare() {
       {a && b && (
         <p className="comparison-difference">
           <strong>
-            {t("priceDifference")}: {b.total - a.total >= 0 ? "+" : ""}
-            {money(b.total - a.total, language)}
+            {t("priceDifference")}: {b.total - a.total >= 0 ? "+" : "−"}
+            {money(Math.abs(b.total - a.total), language)}
           </strong>{" "}
           · {t("indicative")}
         </p>

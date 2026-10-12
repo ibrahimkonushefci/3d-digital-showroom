@@ -53,6 +53,19 @@ export function OfferFields({
         value={details.validityDays}
         onChange={(v) => onChange({ ...details, validityDays: Math.max(1, v) })}
       />
+      <NumberField
+        label={t("discount")}
+        unit="%"
+        min={0}
+        max={30}
+        value={details.discountPercent ?? 0}
+        onChange={(v) =>
+          onChange({
+            ...details,
+            discountPercent: Math.min(30, Math.max(0, v)),
+          })
+        }
+      />
       <Field label={t("paymentTerms")}>
         <input
           maxLength={200}

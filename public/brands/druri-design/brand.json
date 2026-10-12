@@ -15,9 +15,17 @@
     "phone": "",
     "whatsapp": "",
     "viber": "",
-    "email": "",
-    "address": "",
+    "email": "info@druridesign.example",
+    "address": "Rr. Shembull 45",
     "city": "Prishtinë"
+  },
+  "legal": {
+    "businessNumber": "810000002",
+    "fiscalNumber": "600000002",
+    "vatNumber": "330000002",
+    "bankName": "Banka Shembull",
+    "iban": "XK05 0000 0000 0000 0002",
+    "website": "druridesign.example"
   },
   "languages": ["sq", "en", "de"],
   "defaultLanguage": "sq",

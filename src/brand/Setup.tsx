@@ -215,6 +215,28 @@ export default function Setup() {
                 />
               </Field>
             ))}
+            {(
+              [
+                "businessNumber",
+                "fiscalNumber",
+                "vatNumber",
+                "bankName",
+                "iban",
+                "website",
+              ] as const
+            ).map((k) => (
+              <Field key={k} label={t(k)}>
+                <input
+                  value={draft.legal[k]}
+                  onChange={(e) =>
+                    setDraft((d) => ({
+                      ...d,
+                      legal: { ...d.legal, [k]: e.target.value },
+                    }))
+                  }
+                />
+              </Field>
+            ))}
           </div>
           <div className="color-fields">
             {(["primary", "accent"] as const).map((k) => (

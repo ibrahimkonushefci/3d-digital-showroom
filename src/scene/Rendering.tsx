@@ -39,7 +39,7 @@ export function RefreshShadows({
   );
 }
 export function Rendering({ capture }: { capture?: RegisterCapture }) {
-  const { gl, scene, camera, invalidate, setDpr } = useThree();
+  const { gl, scene, camera, invalidate, setDpr, advance } = useThree();
   const quality = useQuality();
   const frames = useRef<number[]>([]),
     exporting = useRef(false),
@@ -125,7 +125,10 @@ export function Rendering({ capture }: { capture?: RegisterCapture }) {
           Math.round(oldSize.y * ratio),
           false,
         );
-        render();
+        // Run one complete frame rather than a bare render, so camera controls,
+        // wall cut-aways and animations are applied even when no frame has run
+        // since they changed (a background tab, or a capture right after load).
+        advance(performance.now());
         return gl.domElement.toDataURL("image/png");
       } finally {
         hidden.forEach((o) => (o.visible = true));
@@ -138,6 +141,6 @@ export function Rendering({ capture }: { capture?: RegisterCapture }) {
     return () => {
       live = false;
     };
-  }, [capture, gl, camera, scene, invalidate]);
+  }, [capture, gl, camera, scene, invalidate, advance]);
   return null;
 }

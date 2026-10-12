@@ -15,9 +15,17 @@
     "phone": "",
     "whatsapp": "",
     "viber": "",
-    "email": "",
-    "address": "",
+    "email": "info@formastudio.example",
+    "address": "Rr. Shembull 12",
     "city": "Prishtinë"
+  },
+  "legal": {
+    "businessNumber": "810000001",
+    "fiscalNumber": "600000001",
+    "vatNumber": "330000001",
+    "bankName": "Banka Shembull",
+    "iban": "XK05 0000 0000 0000 0001",
+    "website": "formastudio.example"
   },
   "languages": ["sq", "en", "de"],
   "defaultLanguage": "sq",

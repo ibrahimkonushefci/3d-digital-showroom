@@ -53,7 +53,7 @@ import type {
 } from "../catalog/types";
 import type { CameraPreset } from "./Scene";
 import { loadDesign } from "../persistence";
-import { calculatePrice } from "../pricing";
+import { calculatePrice, estimateLabel } from "../pricing";
 import {
   ErrorNotice,
   Field,
@@ -611,9 +611,7 @@ export default function Designer() {
 
   const edit = (next: DesignDocument) => state.edit(next, catalog);
   const price = calculatePrice(design, catalog, language);
-  const priceText = design.exact
-    ? money(price.total, language)
-    : `${money(price.low, language)} – ${money(price.high, language)}`;
+  const priceText = estimateLabel(price, design.exact, language);
   const layouts: Layout[] =
     kind === "kitchen"
       ? ["straight", "l", "u", "parallel", "island"]

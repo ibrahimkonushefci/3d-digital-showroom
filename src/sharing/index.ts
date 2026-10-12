@@ -55,10 +55,38 @@ export function messageUrl(
 ) {
   const raw = brand.contact[service] || brand.contact.phone;
   const number = raw.replace(/[^0-9+]/g, "");
-  if (!number.replace(/\D/g, "")) return anyoneUrl(message);
+  if (!number.replace(/\D/g, ""))
+    // Without a number, let the user pick a chat in the same app.
+    return service === "whatsapp"
+      ? anyoneUrl(message)
+      : `viber://forward?text=${encodeURIComponent(message)}`;
   return service === "whatsapp"
     ? `https://wa.me/${number.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`
     : `viber://chat?number=${encodeURIComponent(number)}&text=${encodeURIComponent(message)}`;
+}
+
+export function hasContact(service: "whatsapp" | "viber", brand: BrandConfig) {
+  return /\d/.test(brand.contact[service] || brand.contact.phone);
+}
+
+/**
+ * Hands the PDF itself to the native share sheet (iPad/iPhone Safari,
+ * Android Chrome), so WhatsApp receives the document with the message.
+ */
+export async function shareOfferPdf(file: File, title: string, text: string) {
+  const data = { files: [file], title, text };
+  if (!navigator.canShare?.(data)) return "unsupported" as const;
+  try {
+    await navigator.share(data);
+    return "shared" as const;
+  } catch (e) {
+    if (e instanceof DOMException && e.name === "AbortError")
+      return "aborted" as const;
+    // Safari only shares shortly after a tap; a slow export can miss it.
+    if (e instanceof DOMException && e.name === "NotAllowedError")
+      return "blocked" as const;
+    return "unsupported" as const;
+  }
 }
 
 export function anyoneUrl(text: string) {

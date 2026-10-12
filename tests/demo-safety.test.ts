@@ -49,7 +49,7 @@ describe("demo safety", () => {
       withDemoContacts({ ...brand, demo: false }, "+38344123456").contact.phone,
     ).toBe("");
     expect(messageUrl("viber", brand, "hello")).toBe(
-      "https://wa.me/?text=hello",
+      "viber://forward?text=hello",
     );
     expect(
       messageUrl(

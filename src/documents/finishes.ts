@@ -21,14 +21,15 @@ export function proposalFinishes(
             ? catalog.countertopTiers
             : [];
       const tier = tiers.find((t) => t.decors.includes(m.id));
+      // "Granit · Granit" reads as a mistake: skip a tier named like its decor.
+      const joined = (l: "sq" | "en" | "de") =>
+        tier!.name[l] === m.name[l]
+          ? m.name[l]
+          : `${tier!.name[l]} · ${m.name[l]}`;
       return tier
         ? {
             ...m,
-            name: {
-              sq: `${tier.name.sq} · ${m.name.sq}`,
-              en: `${tier.name.en} · ${m.name.en}`,
-              de: `${tier.name.de} · ${m.name.de}`,
-            },
+            name: { sq: joined("sq"), en: joined("en"), de: joined("de") },
           }
         : m;
     });

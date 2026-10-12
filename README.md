@@ -49,7 +49,7 @@ pnpm dev
 | Foundation         | Responsive shell; Albanian/English/German; EUR/cm; validated, versioned brand/catalog data; CSS themes; two fictional company brands; PIN setup with logo color extraction, device saving and ZIP export; PWA caching/status/update prompt.                                      |
 | Room and furniture | Room dimensions and wall openings; procedural carcasses, fronts, worktops, handles, plinths and interiors; local textures and generated environment lighting; three camera presets and orbit controls.                                                                           |
 | Editing            | Straight, L, U, parallel and island kitchens; straight, corner and walk-in wardrobes; module selection, sizing, swapping, adding, deleting and wall positioning; collision/opening/aisle checks; rejected edits preserve the design; animations, undo/redo and performance mode. |
-| Offers             | Catalog pricing, materials, accessories, installation and VAT; configurable range/single estimate; branded Unicode PDFs with screenshot/parts/dimensions; compressed validated share links; messaging preparation.                                                               |
+| Offers             | Catalog pricing per position and size with unit prices, discount, installation and VAT (single figure incl. VAT by default, range optional); branded two-page PDF offers with company registration/bank footer, client block, totals and signature/stamp boxes; PDF sharing through the native share sheet; compressed validated share links. |
 
 `default` / Forma Studio and `druri-design` contain furniture catalogs. Company contacts remain blank until configured, or use the demo phone environment fallback. Demo badges identify fictional companies and sample prices.
 
@@ -57,7 +57,7 @@ pnpm dev
 
 1. Open `/setup?brand=druri-design`. Enter the default demo PIN **2468**. Change it before a meeting through `VITE_SETUP_PIN` in `.env`; rebuild afterward. The PIN is a front-end convenience, **not authentication**.
 2. Upload a logo. Suggested dominant colors appear. Select a suggestion or use the primary/accent color inputs.
-3. Enter the company name, a lowercase hyphenated folder name, tagline, city, business telephone, email/address and WhatsApp/Viber numbers. Check the live preview.
+3. Enter the company name, a lowercase hyphenated folder name, tagline, city, business telephone, email/address and WhatsApp/Viber numbers, plus the registration and payment details printed on every offer page: NUI, fiscal number, VAT number, bank, IBAN and website (`legal` in `brand.json`). Check the live preview.
 4. Select **Use on this device** for a meeting on this browser. The override survives reload. Settings → **Remove device branding** restores the deployed brand. Each underlying demo brand has its own override.
 5. Select **Export brand ZIP**. Unzip the company folder into `public/brands/`. It contains `brand.json`, `catalog.json` and `logo.png`. Shared texture/font assets stay in `public/shared/`.
 6. Edit the exported `brand.json` if needed: `modules` controls which furniture tools appear and are accessible; `languages` and `defaultLanguage` control supported UI languages; `colors` contains all four theme values. Retain `version: 1` and `font: "Inter"`.
@@ -80,7 +80,7 @@ Shared links from device branding carry company name, colors, supported tools/la
 - `accessories`: fixed price per matching module. LED uses wall-cabinet running length and `pricing.ledPerMeter`.
 - `pricing`: installation %, VAT %, estimate range % (default 7), minimum aisle in cm, LED/plinth rates and panel multiplier.
 
-Installation applies to the subtotal; VAT applies after installation. Totals remain unrounded internally and display rounded EUR values. The default range is total ± `rangePercent`. A single estimate is a display preference, not a binding quotation. Prices are recalculated against the currently deployed catalog when a shared design opens; URLs carry no trusted quote total.
+An optional offer discount (0–30 %) applies to the subtotal first; installation applies to the discounted subtotal; VAT applies after installation. New designs quote VAT included as a single figure. Totals remain unrounded internally and display rounded EUR values. The default range is total ± `rangePercent`. A single estimate is a display preference, not a binding quotation. Prices are recalculated against the currently deployed catalog when a shared design opens; URLs carry no trusted quote total.
 
 Catalog groups are validated against the enabled kitchen/wardrobe tools. Preserve furniture IDs when changing catalogs so saved furniture designs continue to resolve.
 
@@ -89,7 +89,7 @@ Catalog groups are validated against the enabled kitchen/wardrobe tools. Preserv
 - Choose a prepared design on Home: cashmere L, warm-white straight, anthracite island, straight wardrobe or corner wardrobe. Existing drafts load unchanged; presets replace a design only when explicitly chosen.
 - Room → enter dimensions/openings → Apply. Layout → choose a layout. Rebuilding the room/layout regenerates modules, so make detailed edits afterward.
 - Showroom mode: tap a module to inspect/open it. Wardrobe Interior view hides fronts without changing the design; select a compartment for approximate clearances and shelf/drawer counts. Overall view returns to the complete design. Switch to Edit modules to resize, swap, delete, add beside a module, or enter a position along a wall. Position edits snap to 10 cm; cabinets use catalog widths. A failed change explains the fit problem and retains the previous valid design.
-- Open Your offer to adjust installation/VAT/single estimate, download a PDF or copy a share link. WhatsApp/Viber open a prepared draft; the user sends it. If no number exists, WhatsApp opens without a recipient so the customer can choose someone. “Dërgoja dikujt” uses native sharing where available and recipientless WhatsApp otherwise.
+- Open Your offer to enter the client, salesperson and discount and adjust installation/VAT/single estimate. **Send offer (PDF)** opens the iPad/iPhone share sheet with the PDF attached and a message in the company's voice (offer number, total, validity, design link); choose WhatsApp and the client. If iOS reports the tap expired while the PDF was being prepared, the button says the offer is ready and the next tap sends it. Desktop browsers download the PDF and open WhatsApp to attach it. WhatsApp/Viber buttons send the text with the link; Viber only appears when a number is configured. “Dërgoja dikujt” uses native sharing where available and recipientless WhatsApp otherwise.
 
 
 ## Offline preparation

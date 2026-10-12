@@ -227,8 +227,9 @@ export function newDesign(
       internalLed: kind === "wardrobe",
     },
     installation: true,
-    vat: false,
-    exact: false,
+    // Consumer offers in Kosovo are quoted including VAT, as one figure.
+    vat: true,
+    exact: true,
   };
 }
 export function generateLayout(
