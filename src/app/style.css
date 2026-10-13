@@ -2625,3 +2625,217 @@ td:nth-child(2) {
   font-weight: 600;
   padding-top: 12px;
 }
+
+/* Reset configuration sits beside undo/redo; icon-only on phones. */
+.designer-heading .reset-design {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin: 0;
+  white-space: nowrap;
+}
+@media (max-width: 620px) {
+  .designer-heading .history-buttons {
+    gap: 6px;
+  }
+  .designer-heading .reset-design {
+    flex: none;
+    align-self: center;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  .designer-heading .reset-design span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}
+
+/* Immersive showroom: the 3D view takes the whole screen and the options
+   live in a sheet, so a phone or tablet presents like a showroom display. */
+.canvas-panel > .immersive-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e1e1d6;
+  border-radius: 50%;
+  background: #fffdf5e6;
+  color: var(--primary);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px #0000000f;
+}
+.designer-page.is-immersive .canvas-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  height: 100dvh;
+  min-height: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) 0
+    env(safe-area-inset-left);
+}
+.designer-page.is-immersive .canvas-panel > .immersive-toggle {
+  top: calc(12px + env(safe-area-inset-top));
+  right: calc(12px + env(safe-area-inset-right));
+}
+.designer-page .canvas-panel > .canvas-controls {
+  max-width: calc(100% - 80px);
+}
+.designer-page.is-immersive .canvas-panel > .canvas-caption,
+.designer-page.is-immersive .canvas-panel > .orbit-hint,
+.designer-page.is-immersive .mobile-offer-bar,
+.designer-page.is-immersive .design-controls > .price-bar {
+  display: none;
+}
+.immersive-dock {
+  position: absolute;
+  left: 50%;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  z-index: 3;
+  transform: translateX(-50%);
+  width: min(560px, calc(100% - 24px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.immersive-selection,
+.immersive-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fffdf5eb;
+  border: 1px solid #e1e1d6;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 30px #0000001f;
+}
+.immersive-selection {
+  border-radius: 999px;
+  padding: 4px 4px 4px 14px;
+  font-size: 12px;
+  max-width: 100%;
+}
+.immersive-selection > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.immersive-selection button,
+.immersive-options {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: white;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.immersive-bar {
+  width: 100%;
+  border-radius: 16px;
+  padding: 6px;
+}
+.immersive-options {
+  min-height: 44px;
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid #dcdccf;
+}
+.immersive-bar > strong {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.immersive-bar > .button {
+  margin: 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.design-controls > .sheet-close {
+  display: none;
+}
+.designer-page.is-immersive .design-controls {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 61;
+  height: auto;
+  max-height: min(72dvh, 640px);
+  border-radius: 18px 18px 0 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -12px 40px #00000029;
+  transform: translateY(105%);
+  visibility: hidden;
+  transition:
+    transform 0.28s ease,
+    visibility 0s linear 0.28s;
+}
+.designer-page.is-immersive.sheet-open .design-controls {
+  transform: none;
+  visibility: visible;
+  transition: transform 0.28s ease;
+}
+.designer-page.is-immersive .design-controls > .sheet-close {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: none;
+  min-height: 28px;
+  background: transparent;
+  border: 0;
+}
+.designer-page.is-immersive .design-controls > .sheet-close span {
+  width: 44px;
+  height: 5px;
+  border-radius: 3px;
+  background: #cfcfc4;
+}
+.designer-page.is-immersive .design-controls .panel-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+@media (min-width: 900px) {
+  .designer-page.is-immersive .design-controls {
+    left: auto;
+    right: 20px;
+    bottom: 20px;
+    width: 390px;
+    max-height: calc(100dvh - 40px);
+    border-radius: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .designer-page.is-immersive .design-controls,
+  .designer-page.is-immersive.sheet-open .design-controls {
+    transition: none;
+  }
+}

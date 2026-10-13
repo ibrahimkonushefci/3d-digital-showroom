@@ -45,7 +45,7 @@
   "perspective": "Perspektive",
   "frontCamera": "Vorne",
   "top": "Oben",
-  "orbitHint": "Ziehen zum Drehen · mit zwei Fingern zoomen · Modul antippen",
+  "orbitHint": "Ziehen zum Drehen · mit zwei Fingern zoomen · Umschalt+Ziehen oder zwei Finger zum Verschieben",
   "selectCabinet": "Einen Schrank zum Bearbeiten antippen.",
   "openClose": "Öffnen / schließen",
   "delete": "Entfernen",
@@ -158,7 +158,7 @@
   "sliding": "Schiebefenster",
   "moduleSingular": "Modul",
   "showroom": "Showroom",
-  "showroomHint": "Front antippen zum Öffnen · Ziehen zum Drehen",
+  "showroomHint": "Front antippen zum Öffnen · Ziehen zum Drehen · Zwei Finger zum Verschieben",
   "proposal": "Ihr Gestaltungsvorschlag",
   "finishes": "Ausgewählte Oberflächen",
   "imageUnavailable": "Das Vorschaubild ist nicht verfügbar. Konfiguration und Kostenschätzung sind enthalten.",
@@ -238,5 +238,12 @@
   "sendOffer": "Angebot senden (PDF)",
   "offerMessage": "Guten Tag{name}! Anbei das Angebot {number} von {company}: {total}, gültig für {days} Tage. Ihr 3D-Entwurf: {link}",
   "pdfDownloadedAttach": "PDF heruntergeladen. Bitte im WhatsApp-Chat anhängen.",
-  "readyToSend": "Das Angebot ist bereit. Zum Senden erneut tippen."
+  "readyToSend": "Das Angebot ist bereit. Zum Senden erneut tippen.",
+  "inspect": "Aus der Nähe ansehen",
+  "resetDesign": "Konfiguration zurücksetzen",
+  "resetDesignHelp": "Stellt die Standardmodule, Materialien und Oberflächen wieder her. Kundendaten bleiben erhalten.",
+  "resetDesignDone": "Konfiguration auf den Standardentwurf zurückgesetzt.",
+  "showroomMode": "Vollbild",
+  "exitShowroomMode": "Vollbild beenden",
+  "options": "Optionen"
 }

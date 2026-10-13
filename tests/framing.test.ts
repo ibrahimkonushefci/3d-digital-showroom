@@ -96,7 +96,12 @@ it("fits a selected wardrobe compartment with open-door clearance at tablet and 
       }
     }
 });
-import { orbitLimits, viewAzimuth } from "../src/designer3d/framing";
+import {
+  orbitLimits,
+  recenterTarget,
+  viewAzimuth,
+  viewDistance,
+} from "../src/designer3d/framing";
 const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
 const deg = (d: number) => (d * Math.PI) / 180;
 it("keeps the authored view inside the orbit limits for every layout and preset", () => {
@@ -119,7 +124,7 @@ it("keeps the authored view inside the orbit limits for every layout and preset"
       }
     }
 });
-it("never lets a single-sided layout orbit behind its cabinet runs", () => {
+it("never lets the camera look at the back of a run, while facing at least one front", () => {
   for (const [kind, layout] of [
     ["kitchen", "straight"],
     ["kitchen", "l"],
@@ -134,12 +139,92 @@ it("never lets a single-sided layout orbit behind its cabinet runs", () => {
       1.4,
     );
     const { minAzimuth, maxAzimuth } = orbitLimits(d, view);
-    for (const azimuth of [minAzimuth, maxAzimuth])
-      for (const c of d.cabinets.filter((c) => c.wall !== "island"))
+    const runs = d.cabinets.filter((c) => c.wall !== "island");
+    for (const azimuth of [minAzimuth, maxAzimuth]) {
+      for (const c of runs)
         expect(Math.abs(wrap(azimuth - c.rotation))).toBeLessThanOrEqual(
-          deg(82) + 1e-6,
+          deg(105) + 1e-6,
         );
+      expect(
+        Math.min(...runs.map((c) => Math.abs(wrap(azimuth - c.rotation)))),
+      ).toBeLessThanOrEqual(deg(85) + 1e-6);
+    }
   }
+});
+it("lets L-shaped kitchens and corner wardrobes face either wing square-on", () => {
+  for (const [kind, layout] of [
+    ["kitchen", "l"],
+    ["wardrobe", "corner"],
+  ] as const) {
+    const d = generateLayout(newDesign(kind, layout), catalog)!;
+    const view = cabinetCamera(
+      cameraBounds(d, "perspective"),
+      "perspective",
+      0.55,
+    );
+    const { minAzimuth, maxAzimuth } = orbitLimits(d, view);
+    const normals = new Set(d.cabinets.map((c) => wrap(c.rotation)));
+    expect(normals.size).toBeGreaterThan(1);
+    for (const normal of normals) {
+      // Express the wing's normal on the limits' continuous branch.
+      const a = viewAzimuth(view) + wrap(normal - viewAzimuth(view));
+      expect(a).toBeGreaterThanOrEqual(minAzimuth - 1e-6);
+      expect(a).toBeLessThanOrEqual(maxAzimuth + 1e-6);
+    }
+  }
+});
+it("always zooms out past the whole-furniture view, even while inspecting one unit", () => {
+  const layouts = [
+    ["kitchen", ["straight", "l", "u", "parallel", "island"]],
+    ["wardrobe", ["straight", "corner", "walkin"]],
+  ] as const;
+  for (const [kind, names] of layouts)
+    for (const layout of names) {
+      const d = generateLayout(newDesign(kind, layout), catalog)!;
+      for (const aspect of [0.46, 0.55, 1.4, 2.2]) {
+        const overview = cabinetCamera(
+          cameraBounds(d, "perspective"),
+          "perspective",
+          aspect,
+        );
+        const c = d.cabinets[0];
+        const focused = cabinetCamera(
+          cabinetBounds({ ...d, cabinets: [c] }).expandByScalar(0.35),
+          "perspective",
+          aspect,
+          inspectionCamera(d, c.id)!,
+        );
+        const limits = orbitLimits(d, focused, c.id, viewDistance(overview));
+        expect(limits.maxDistance).toBeGreaterThan(viewDistance(overview));
+        expect(limits.minDistance).toBeLessThan(viewDistance(focused));
+      }
+    }
+});
+it("re-centers the orbit point as the camera zooms back out", () => {
+  const home = new Vector3(0, 1, 0),
+    drifted = new Vector3(2, 0.4, -1);
+  // Zooming in leaves the cursor-chosen target alone.
+  expect(recenterTarget(drifted, home, 5, 4, 10).equals(drifted)).toBe(true);
+  // Reaching the overview distance lands exactly on the overview center.
+  expect(recenterTarget(drifted, home, 5, 10, 10).distanceTo(home)).toBeCloseTo(
+    0,
+  );
+  expect(recenterTarget(drifted, home, 5, 14, 10).distanceTo(home)).toBeCloseTo(
+    0,
+  );
+  // Halfway out, halfway back; repeated steps converge monotonically.
+  expect(recenterTarget(drifted, home, 4, 7, 10).distanceTo(home)).toBeCloseTo(
+    drifted.distanceTo(home) / 2,
+  );
+  let target = drifted.clone(),
+    previous = Infinity;
+  for (let d = 3; d < 10; d += 0.5) {
+    target = recenterTarget(target, home, d, d + 0.5, 10);
+    const gap = target.distanceTo(home);
+    expect(gap).toBeLessThanOrEqual(previous + 1e-9);
+    previous = gap;
+  }
+  expect(previous).toBeCloseTo(0);
 });
 it("limits inspection to the selected cabinet's front, including front-wall runs across ±π", () => {
   for (const layout of ["l", "parallel", "u"] as const) {

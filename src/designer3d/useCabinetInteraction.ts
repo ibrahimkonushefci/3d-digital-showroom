@@ -99,12 +99,21 @@ export function useCabinetInteraction(
       else useDesigner.getState().cancelDrag();
       a.release();
     },
+    // A tap demonstrates the unit in place; the camera never moves for it.
     onClick: (e: ThreeEvent<MouseEvent>) => {
       if (!interactive || e.delta > 8) return;
       e.stopPropagation();
       const s = useDesigner.getState();
       s.select(c.id);
       if (mode === "showroom" && operable) s.toggleOpen(c.id);
+    },
+    // Flying in to inspect is a deliberate gesture.
+    onDoubleClick: (e: ThreeEvent<MouseEvent>) => {
+      if (!interactive || mode !== "showroom" || e.delta > 8) return;
+      e.stopPropagation();
+      const s = useDesigner.getState();
+      s.select(c.id);
+      s.focus(c.id);
     },
   };
 }

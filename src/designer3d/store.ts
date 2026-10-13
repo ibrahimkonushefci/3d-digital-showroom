@@ -5,11 +5,13 @@ export function reconcileCabinets(
   design: DesignDocument,
   selected: string | null,
   opened: string[],
+  focused: string | null = null,
 ) {
   const ids = new Set(design.cabinets.map((c) => c.id));
   return {
     selected: selected && ids.has(selected) ? selected : null,
     opened: opened.filter((id) => ids.has(id)),
+    focused: focused && ids.has(focused) ? focused : null,
   };
 }
 type State = {
@@ -36,6 +38,8 @@ type State = {
   past: DesignDocument[];
   future: DesignDocument[];
   selected: string | null;
+  /** Cabinet the camera is deliberately inspecting; independent of selection. */
+  focused: string | null;
   opened: string[];
   screenshot: string | null;
   error: string | null;
@@ -43,6 +47,9 @@ type State = {
   setDesign: (d: DesignDocument | null) => void;
   edit: (d: DesignDocument, c: Catalog) => boolean;
   select: (id: string | null) => void;
+  focus: (id: string | null) => void;
+  /** Replace the design with a default as one undoable step. */
+  resetDesign: (d: DesignDocument, c: Catalog) => boolean;
   toggleOpen: (id: string) => void;
   toggleAllOpen: () => void;
   undo: () => void;
@@ -61,7 +68,7 @@ export const useDesigner = create<State>((set, get) => ({
   dragPreview: null,
   dragging: false,
   setInteractionMode: (interactionMode) =>
-    set({ interactionMode, dragPreview: null, dragging: false }),
+    set({ interactionMode, focused: null, dragPreview: null, dragging: false }),
   previewDrag: (dragPreview) => set({ dragPreview, dragging: !!dragPreview }),
   cancelDrag: () => set({ dragPreview: null, dragging: false }),
   finishDrag: (catalog) => {
@@ -74,6 +81,7 @@ export const useDesigner = create<State>((set, get) => ({
   past: [],
   future: [],
   selected: null,
+  focused: null,
   opened: [],
   screenshot: null,
   error: null,
@@ -91,6 +99,7 @@ export const useDesigner = create<State>((set, get) => ({
       past: [],
       future: [],
       selected: null,
+      focused: null,
       opened: [],
       error: null,
       screenshot: null,
@@ -103,7 +112,7 @@ export const useDesigner = create<State>((set, get) => ({
     const prev = get().design;
     set({
       design,
-      ...reconcileCabinets(design, get().selected, get().opened),
+      ...reconcileCabinets(design, get().selected, get().opened, get().focused),
       dragPreview: null,
       dragging: false,
       past: prev ? [...get().past.slice(-29), prev] : [],
@@ -114,6 +123,12 @@ export const useDesigner = create<State>((set, get) => ({
     return true;
   },
   select: (selected) => set({ selected }),
+  focus: (focused) => set({ focused }),
+  resetDesign: (design, catalog) => {
+    if (!get().edit(design, catalog)) return false;
+    set({ selected: null, focused: null, opened: [], cameraView: null });
+    return true;
+  },
   toggleOpen: (id) =>
     set((s) => ({
       opened: s.opened.includes(id)
@@ -137,7 +152,12 @@ export const useDesigner = create<State>((set, get) => ({
         design: past.at(-1)!,
         past: past.slice(0, -1),
         future: [design, ...future],
-        ...reconcileCabinets(past.at(-1)!, get().selected, get().opened),
+        ...reconcileCabinets(
+          past.at(-1)!,
+          get().selected,
+          get().opened,
+          get().focused,
+        ),
         error: null,
         screenshot: null,
       });
@@ -150,7 +170,12 @@ export const useDesigner = create<State>((set, get) => ({
         design: future[0],
         past: [...past, design],
         future: future.slice(1),
-        ...reconcileCabinets(future[0], get().selected, get().opened),
+        ...reconcileCabinets(
+          future[0],
+          get().selected,
+          get().opened,
+          get().focused,
+        ),
         error: null,
         screenshot: null,
       });

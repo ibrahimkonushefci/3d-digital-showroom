@@ -45,7 +45,7 @@
   "perspective": "Perspective",
   "frontCamera": "Front",
   "top": "Top",
-  "orbitHint": "Drag to orbit · pinch to zoom · tap a module to edit",
+  "orbitHint": "Drag to orbit · pinch to zoom · Shift+drag or two fingers to pan",
   "selectCabinet": "Tap a cabinet to edit it.",
   "openClose": "Open / close",
   "delete": "Remove",
@@ -158,7 +158,7 @@
   "sliding": "Sliding",
   "moduleSingular": "module",
   "showroom": "Showroom",
-  "showroomHint": "Tap a front to open it · Drag to look around",
+  "showroomHint": "Tap a front to open it · Drag to look around · Two fingers to pan",
   "proposal": "Your design proposal",
   "finishes": "Selected finishes",
   "imageUnavailable": "The preview image is unavailable. Your configuration and estimate are included.",
@@ -238,5 +238,12 @@
   "sendOffer": "Send offer (PDF)",
   "offerMessage": "Hello{name}! Please find offer {number} from {company}: {total}, valid for {days} days. Your 3D design: {link}",
   "pdfDownloadedAttach": "PDF downloaded. Attach it in the WhatsApp chat.",
-  "readyToSend": "The offer is ready. Tap again to send it."
+  "readyToSend": "The offer is ready. Tap again to send it.",
+  "inspect": "Inspect up close",
+  "resetDesign": "Reset configuration",
+  "resetDesignHelp": "Restores the default modules, materials and finishes. Client details are kept.",
+  "resetDesignDone": "Configuration reset to the default design.",
+  "showroomMode": "Full screen",
+  "exitShowroomMode": "Exit full screen",
+  "options": "Options"
 }

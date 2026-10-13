@@ -104,3 +104,34 @@ export function presentationPresets(catalog: Catalog): ShowroomPreset[] {
       design,
     }));
 }
+
+/** The authored starting design for a furniture type. */
+export function defaultDesign(
+  kind: DesignDocument["kind"],
+  catalog: Catalog,
+): DesignDocument {
+  return (
+    presentationPresets(catalog).find((p) => p.design.kind === kind)?.design ||
+    generateLayout(
+      newDesign(kind, kind === "kitchen" ? "l" : "straight"),
+      catalog,
+    )!
+  );
+}
+
+/**
+ * Restore the default layout, modules and finishes while keeping the
+ * document's identity and the client's offer terms.
+ */
+export function resetConfiguration(
+  current: DesignDocument,
+  catalog: Catalog,
+): DesignDocument {
+  return {
+    ...defaultDesign(current.kind, catalog),
+    id: current.id,
+    offer: current.offer,
+    vat: current.vat,
+    installation: current.installation,
+  };
+}

@@ -3,4 +3,5 @@ dist/
 .vite/
 .env.local
 *.tsbuildinfo
-.DS_Store.pnpm-store/
+.DS_Store
+.pnpm-store/

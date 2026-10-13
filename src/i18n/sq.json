@@ -45,7 +45,7 @@
   "perspective": "Perspektivë",
   "frontCamera": "Përballë",
   "top": "Nga lart",
-  "orbitHint": "Tërhiqni për rrotullim · zmadhoni me dy gishta · prekni një modul",
+  "orbitHint": "Tërhiqni për rrotullim · zmadhoni me dy gishta · Shift+tërhiq ose dy gishta për zhvendosje",
   "selectCabinet": "Prekni një dollap për ta ndryshuar.",
   "openClose": "Hap / mbyll",
   "delete": "Fshije",
@@ -158,7 +158,7 @@
   "sliding": "Rrëshqitëse",
   "moduleSingular": "modul",
   "showroom": "Salloni",
-  "showroomHint": "Prekni një front për ta hapur · Tërhiqni për të rrotulluar pamjen",
+  "showroomHint": "Prekni një front për ta hapur · Tërhiqni për të rrotulluar · Dy gishta për zhvendosje",
   "proposal": "Propozimi juaj i dizajnit",
   "finishes": "Materialet e zgjedhura",
   "imageUnavailable": "Pamja nuk është e disponueshme. Konfigurimi dhe vlerësimi janë përfshirë.",
@@ -238,5 +238,12 @@
   "sendOffer": "Dërgo ofertën (PDF)",
   "offerMessage": "Përshëndetje{name}! Ju dërgojmë ofertën {number} nga {company}: {total}, e vlefshme {days} ditë. Dizajni juaj në 3D: {link}",
   "pdfDownloadedAttach": "PDF-ja u shkarkua. Bashkëngjiteni në bisedën e WhatsApp.",
-  "readyToSend": "Oferta është gati. Prekni sërish për ta dërguar."
+  "readyToSend": "Oferta është gati. Prekni sërish për ta dërguar.",
+  "inspect": "Shiko nga afër",
+  "resetDesign": "Rivendos konfigurimin",
+  "resetDesignHelp": "Rikthen modulet, materialet dhe përfundimet e paracaktuara. Të dhënat e klientit ruhen.",
+  "resetDesignDone": "Konfigurimi u rivendos në modelin e paracaktuar.",
+  "showroomMode": "Ekran i plotë",
+  "exitShowroomMode": "Dil nga ekrani i plotë",
+  "options": "Opsionet"
 }

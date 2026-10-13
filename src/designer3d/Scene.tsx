@@ -20,11 +20,19 @@ import {
   type ReactNode,
 } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { CameraControls, Environment, Lightformer } from "@react-three/drei";
+import {
+  CameraControls,
+  CameraControlsImpl,
+  Environment,
+  Lightformer,
+} from "@react-three/drei";
 import {
   Group,
   MathUtils,
   Object3D,
+  Plane,
+  Ray,
+  Spherical,
   Vector3,
   Color,
   PMREMGenerator,
@@ -61,6 +69,8 @@ import {
   cabinetCamera,
   boundsCorners,
   orbitLimits,
+  recenterTarget,
+  viewDistance,
   CABINET_FOV,
 } from "./framing";
 import type { CameraView, CameraPreset } from "./framing";
@@ -1080,15 +1090,28 @@ function Controls({
   design,
   cameraView,
   focus,
+  reframe,
 }: {
   focus?: string | null;
   cameraView?: CameraView;
   preset: CameraPreset;
   design: DesignDocument;
+  /** Changing this re-applies the framed view even if nothing else changed. */
+  reframe?: unknown;
 }) {
   const ref = useRef<CameraControls>(null);
   const dragging = useDesigner((s) => s.dragging);
-  const { size } = useThree();
+  const { size, camera, gl, events } = useThree();
+  const overall = useMemo(
+    () => cameraBounds(design, preset),
+    [
+      preset,
+      design.cabinets,
+      design.room.width,
+      design.room.depth,
+      design.room.height,
+    ],
+  );
   const bounds = useMemo(
     () =>
       focus
@@ -1096,36 +1119,136 @@ function Controls({
             ...design,
             cabinets: design.cabinets.filter((c) => c.id === focus),
           }).expandByScalar(0.35)
-        : cameraBounds(design, preset),
-    [
-      preset,
-      focus,
-      design.cabinets,
-      design.room.width,
-      design.room.depth,
-      design.room.height,
-    ],
+        : overall,
+    [focus, overall],
   );
-  const boundsKey = [...bounds.min.toArray(), ...bounds.max.toArray()].join(
-    ",",
-  );
+  const key = (b: typeof bounds) =>
+    [...b.min.toArray(), ...b.max.toArray()].join(",");
+  const boundsKey = key(bounds),
+    overallKey = key(overall);
   const aspect = size.width / Math.max(1, size.height);
   const view = useMemo(
     () => cabinetCamera(bounds, preset, aspect, cameraView),
     [preset, cameraView, boundsKey, aspect],
   );
+  // The whole-furniture view anchors zoom-out and re-centering, even while
+  // a single cabinet is being inspected.
+  const overview = useMemo(
+    () => (focus ? cabinetCamera(overall, preset, aspect) : view),
+    [focus, view, overallKey, preset, aspect],
+  );
+  const home = useRef({ target: new Vector3(), distance: 10 });
+  home.current = {
+    target: new Vector3(...overview.target),
+    distance: viewDistance(overview),
+  };
   const limits = useMemo(
-    () => orbitLimits(design, view, focus),
-    [view, focus, design.cabinets],
+    () => orbitLimits(design, view, focus, home.current.distance),
+    [view, focus, design.cabinets, overview],
   );
   // Snap into the first view instead of flying in from the default camera,
   // so captures taken right after mounting are framed; animate later moves.
-  const placed = useRef(false);
+  // A resize alone (phone URL bar, rotation) never undoes the user's own
+  // camera move; any deliberate change of framing does.
+  const placed = useRef<string | null>(null);
+  const userMoved = useRef(false);
+  const frameKey = [
+    preset,
+    focus ?? "",
+    boundsKey,
+    JSON.stringify(cameraView ?? null),
+    String(reframe ?? ""),
+  ].join("|");
   useEffect(() => {
-    if (!ref.current) return;
-    ref.current.setLookAt(...view.position, ...view.target, placed.current);
-    placed.current = true;
-  }, [view]);
+    const c = ref.current;
+    if (!c) return;
+    // The orbit point stays on the furniture: a little slack sideways, but
+    // never below the floor or above the tallest unit.
+    c.setBoundary(overall.clone().expandByVector(new Vector3(0.4, 0, 0.4)));
+    if (placed.current === frameKey && userMoved.current) return;
+    c.setLookAt(...view.position, ...view.target, placed.current !== null);
+    placed.current = frameKey;
+    userMoved.current = false;
+  }, [view, frameKey, overall]);
+
+  // Wheel, trackpad scroll and trackpad pinch all become one bounded dolly:
+  // zooming in heads for what is under the cursor, zooming out glides back
+  // to the whole-furniture framing instead of drifting into empty space.
+  useEffect(() => {
+    const c = ref.current;
+    // The element drei connects the controls to; capture runs before them.
+    const el = (events.connected as HTMLElement | undefined) ?? gl.domElement;
+    if (!c || !el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (!c.enabled) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      const pixels =
+        e.deltaMode === 1
+          ? e.deltaY * 16
+          : e.deltaMode === 2
+            ? e.deltaY * 400
+            : e.deltaY;
+      const delta = MathUtils.clamp(pixels, -200, 200);
+      const from = c.getSpherical(new Spherical(), true).radius;
+      const to = MathUtils.clamp(
+        from * Math.exp(delta * (e.ctrlKey ? 0.012 : 0.002)),
+        c.minDistance,
+        c.maxDistance,
+      );
+      if (Math.abs(to - from) < 1e-4) return;
+      const target = c.getTarget(new Vector3(), true);
+      let next = target;
+      if (to < from) {
+        const rect = el.getBoundingClientRect();
+        const ray = new Ray(camera.position.clone());
+        ray.direction
+          .set(
+            ((e.clientX - rect.left) / rect.width) * 2 - 1,
+            -((e.clientY - rect.top) / rect.height) * 2 + 1,
+            0.5,
+          )
+          .unproject(camera)
+          .sub(camera.position)
+          .normalize();
+        const plane = new Plane().setFromNormalAndCoplanarPoint(
+          camera.getWorldDirection(new Vector3()),
+          target,
+        );
+        const cursor = ray.intersectPlane(plane, new Vector3());
+        if (cursor) next = target.clone().lerp(cursor, 1 - to / from);
+      } else
+        next = recenterTarget(
+          target,
+          home.current.target,
+          from,
+          to,
+          home.current.distance,
+        );
+      userMoved.current = true;
+      void c.dollyTo(to, true);
+      void c.moveTo(next.x, next.y, next.z, true);
+    };
+    // Shift turns a left-drag into a pan, for trackpads without a right drag.
+    const ACTION = CameraControlsImpl.ACTION;
+    const pan = (e: KeyboardEvent) => {
+      c.mouseButtons.left = e.shiftKey ? ACTION.TRUCK : ACTION.ROTATE;
+    };
+    const unpan = () => (c.mouseButtons.left = ACTION.ROTATE);
+    el.addEventListener("wheel", onWheel, { capture: true, passive: false });
+    window.addEventListener("keydown", pan);
+    window.addEventListener("keyup", pan);
+    window.addEventListener("blur", unpan);
+    return () => {
+      el.removeEventListener("wheel", onWheel, { capture: true });
+      window.removeEventListener("keydown", pan);
+      window.removeEventListener("keyup", pan);
+      window.removeEventListener("blur", unpan);
+    };
+  }, [camera, gl, events.connected]);
+
+  // Pinching out on touch screens re-centers the same way.
+  const pinch = useRef(0);
   return (
     <CameraControls
       ref={ref}
@@ -1137,10 +1260,32 @@ function Controls({
       maxAzimuthAngle={limits.maxAzimuth}
       minPolarAngle={0.02}
       maxPolarAngle={Math.PI / 2 - 0.04}
-      azimuthRotateSpeed={0.55}
+      minZoom={1}
+      maxZoom={1}
+      // Negative: dragging right walks the camera to the right of the room.
+      azimuthRotateSpeed={-0.55}
       polarRotateSpeed={0.55}
-      dollyToCursor
       smoothTime={0.2}
+      onControlStart={() => {
+        userMoved.current = true;
+        pinch.current = ref.current?.getSpherical(new Spherical()).radius ?? 0;
+      }}
+      onControl={() => {
+        const c = ref.current;
+        if (!c) return;
+        const radius = c.getSpherical(new Spherical()).radius;
+        if (radius > pinch.current + 1e-4) {
+          const next = recenterTarget(
+            c.getTarget(new Vector3()),
+            home.current.target,
+            pinch.current,
+            radius,
+            home.current.distance,
+          );
+          void c.moveTo(next.x, next.y, next.z, true);
+        }
+        pinch.current = radius;
+      }}
     />
   );
 }
@@ -1241,7 +1386,10 @@ export default function Scene({
   capture,
   cameraView,
   onFirstFrame,
+  reframe,
 }: {
+  /** Changing this re-frames the camera, e.g. for "overall view". */
+  reframe?: unknown;
   cameraView?: CameraView;
   design: DesignDocument;
   catalog: Catalog;
@@ -1254,7 +1402,7 @@ export default function Scene({
   const preview = useDesigner((s) => s.dragPreview);
   const opened = useDesigner((s) => s.opened);
   const focus = useDesigner((s) =>
-    interactive && s.interactionMode === "showroom" ? s.selected : null,
+    interactive && s.interactionMode === "showroom" ? s.focused : null,
   );
   const design = interactive && preview ? preview : committedDesign;
   const performance = useQuality() === "lightweight";
@@ -1367,6 +1515,7 @@ export default function Scene({
           focus={focus}
           design={committedDesign}
           cameraView={cameraView}
+          reframe={reframe}
         />
         <Rendering capture={capture} />
         {onFirstFrame && <FirstFrame onFirstFrame={onFirstFrame} />}

@@ -24,11 +24,16 @@ import {
   Sliders,
   Copy,
   ChevronDown,
+  Maximize2,
+  Minimize2,
+  RefreshCcw,
+  ScanSearch,
+  X,
 } from "lucide-react";
 import { useBrand } from "../brand";
 import { useT, useLanguage, label, money, type TranslationKey } from "../i18n";
 import { useDesigner } from "./store";
-import { presentationPresets } from "./presets";
+import { defaultDesign, resetConfiguration } from "./presets";
 import { storageMeasurements } from "./storage";
 import { inspectionCamera } from "./framing";
 import CaptureAlternative from "./CaptureAlternative";
@@ -36,7 +41,6 @@ import { saveAlternative } from "./comparison";
 import {
   examples,
   generateLayout,
-  newDesign,
   uid,
   wallOffset,
   wallPosition,
@@ -558,6 +562,11 @@ export default function Designer() {
     "styles" | "layout" | "cabinets" | "details"
   >("styles");
   const [preset, setPreset] = useState<CameraPreset>("perspective");
+  // Showroom presentation: canvas fills the screen, options in a sheet.
+  const [immersive, setImmersive] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [reframe, setReframe] = useState(0);
+  const [resetDone, setResetDone] = useState(false);
   const [saving, setSaving] = useState<{
     slot: "A" | "B";
     design: DesignDocument;
@@ -576,17 +585,7 @@ export default function Designer() {
     if (useDesigner.getState().design?.kind !== kind) {
       const previousError = useDesigner.getState().error;
       const saved = loadDesign(brand.slug, kind, catalog);
-      const example = presentationPresets(catalog).find(
-        (p) => p.design.kind === kind,
-      )?.design;
-      state.setDesign(
-        saved ||
-          example ||
-          generateLayout(
-            newDesign(kind, kind === "kitchen" ? "l" : "straight"),
-            catalog,
-          )!,
-      );
+      state.setDesign(saved || defaultDesign(kind, catalog));
       if (previousError) state.setError(previousError);
     }
   }, [kind, catalog, brand.slug]);
@@ -597,10 +596,45 @@ export default function Designer() {
     }
   }, [selected, state.interactionMode]);
 
+  // Only a deliberate inspection moves the camera; a tap just opens the unit.
+  const focused = state.focused;
   useEffect(() => {
-    if (state.interactionMode === "showroom" && selected && design)
-      state.setCameraView(inspectionCamera(design, selected));
-  }, [selected, state.interactionMode]);
+    if (state.interactionMode === "showroom" && focused && design)
+      state.setCameraView(inspectionCamera(design, focused));
+  }, [focused, state.interactionMode]);
+  useEffect(() => {
+    if (!resetDone) return;
+    const timer = setTimeout(() => setResetDone(false), 6000);
+    return () => clearTimeout(timer);
+  }, [resetDone]);
+  useEffect(() => {
+    if (!immersive) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      if (sheetOpen) setSheetOpen(false);
+      else setImmersive(false);
+    };
+    // Leaving browser full screen (Esc, system gesture) leaves the mode too.
+    const onFullscreen = () => {
+      if (!document.fullscreenElement) setImmersive(false);
+    };
+    window.addEventListener("keydown", onKey);
+    document.addEventListener("fullscreenchange", onFullscreen);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("fullscreenchange", onFullscreen);
+    };
+  }, [immersive, sheetOpen]);
+  useEffect(() => {
+    setReframe((n) => n + 1);
+    setSheetOpen(false);
+  }, [immersive]);
+  useEffect(
+    () => () => {
+      if (document.fullscreenElement) void document.exitFullscreen?.();
+    },
+    [],
+  );
   useEffect(() => {
     setSaving(null);
     setComparisonStatus(null);
@@ -617,6 +651,43 @@ export default function Designer() {
       ? ["straight", "l", "u", "parallel", "island"]
       : ["straight", "corner", "walkin"];
 
+  const overallView = () => {
+    state.select(null);
+    state.focus(null);
+    state.setCameraView(null);
+    setReframe((n) => n + 1);
+  };
+  const inspect = (id: string) => {
+    state.select(id);
+    state.focus(id);
+    setSheetOpen(false);
+  };
+  const resetConfigurationClick = () => {
+    if (state.resetDesign(resetConfiguration(design, catalog), catalog)) {
+      setPreset("perspective");
+      setReframe((n) => n + 1);
+      setResetDone(true);
+    }
+  };
+  const toggleImmersive = () => {
+    const next = !immersive;
+    setImmersive(next);
+    // Real full screen where the browser allows it (not iPhone Safari);
+    // the fixed overlay alone is enough everywhere else.
+    try {
+      if (next && !document.fullscreenElement)
+        void document.documentElement.requestFullscreen?.()?.catch(() => {});
+      else if (!next && document.fullscreenElement)
+        void document.exitFullscreen?.()?.catch(() => {});
+    } catch {
+      /* Full screen is an enhancement only. */
+    }
+  };
+  const selectedModule =
+    state.interactionMode === "showroom" && selected
+      ? design.cabinets.find((c) => c.id === selected)
+      : undefined;
+
   const summary = async () => {
     if (capture.current) {
       try {
@@ -629,7 +700,13 @@ export default function Designer() {
   };
 
   return (
-    <main className="designer-page">
+    <main
+      className={
+        "designer-page" +
+        (immersive ? " is-immersive" : "") +
+        (immersive && sheetOpen ? " sheet-open" : "")
+      }
+    >
       {saving && (
         <CaptureAlternative
           design={saving.design}
@@ -697,8 +774,30 @@ export default function Designer() {
           >
             <Redo2 size={20} />
           </button>
+          <button
+            className="button secondary reset-design"
+            onClick={resetConfigurationClick}
+            title={t("resetDesignHelp")}
+          >
+            <RefreshCcw size={16} />
+            <span>{t("resetDesign")}</span>
+          </button>
         </div>
       </div>
+      {resetDone && (
+        <div className="notice" role="status">
+          <span>{t("resetDesignDone")}</span>
+          <button
+            className="button secondary"
+            onClick={() => {
+              state.undo();
+              setResetDone(false);
+            }}
+          >
+            {t("undo")}
+          </button>
+        </div>
+      )}
 
       <ErrorNotice
         message={state.error}
@@ -715,8 +814,7 @@ export default function Designer() {
                   className={preset === p ? "active" : ""}
                   onClick={() => {
                     setPreset(p);
-                    state.select(null);
-                    state.setCameraView(null);
+                    overallView();
                   }}
                 >
                   {t(p === "front" ? "frontCamera" : p)}
@@ -728,8 +826,7 @@ export default function Designer() {
               title={t("resetCamera")}
               onClick={() => {
                 setPreset("perspective");
-                state.setCameraView(null);
-                state.select(null);
+                overallView();
               }}
             >
               <RotateCcw size={14} />
@@ -766,8 +863,59 @@ export default function Designer() {
               cameraView={state.cameraView || undefined}
               interactive
               capture={registerCapture}
+              reframe={reframe}
             />
           </Suspense>
+          <button
+            className="immersive-toggle"
+            aria-pressed={immersive}
+            aria-label={t(immersive ? "exitShowroomMode" : "showroomMode")}
+            title={t(immersive ? "exitShowroomMode" : "showroomMode")}
+            onClick={toggleImmersive}
+          >
+            {immersive ? <X size={20} /> : <Maximize2 size={18} />}
+          </button>
+          {immersive && !sheetOpen && (
+            <div className="immersive-dock">
+              {selectedModule && (
+                <div className="immersive-selection">
+                  <span>
+                    {label(
+                      catalog.modules.find(
+                        (m) => m.id === selectedModule.moduleId,
+                      )!.name,
+                      language,
+                    )}
+                  </span>
+                  {focused ? (
+                    <button onClick={overallView}>
+                      <Minimize2 size={15} />
+                      {t("overallView")}
+                    </button>
+                  ) : (
+                    <button onClick={() => inspect(selectedModule.id)}>
+                      <ScanSearch size={15} />
+                      {t("inspect")}
+                    </button>
+                  )}
+                </div>
+              )}
+              <div className="immersive-bar">
+                <button
+                  className="immersive-options"
+                  onClick={() => setSheetOpen(true)}
+                >
+                  <Sliders size={17} />
+                  {t("options")}
+                </button>
+                <strong>{priceText}</strong>
+                <button className="button primary" onClick={summary}>
+                  {t("summary")}
+                  <ArrowRight size={16} />
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="canvas-caption">
             <span>
@@ -791,6 +939,15 @@ export default function Designer() {
         </section>
 
         <aside className="design-controls">
+          {immersive && (
+            <button
+              className="sheet-close"
+              aria-label={t("cancel")}
+              onClick={() => setSheetOpen(false)}
+            >
+              <span />
+            </button>
+          )}
           <div className="panel-tabs">
             {(
               [
@@ -825,10 +982,8 @@ export default function Designer() {
             {state.interactionMode === "showroom" && selected && (
               <Inspection
                 design={design}
-                onClose={() => {
-                  state.select(null);
-                  state.setCameraView(null);
-                }}
+                onInspect={inspect}
+                onClose={overallView}
               />
             )}
             {panel === "styles" && (
@@ -853,7 +1008,7 @@ export default function Designer() {
                 <p>{t("inspectionHelp")}</p>
                 <div className="module-list">
                   {design.cabinets.map((c) => (
-                    <button key={c.id} onClick={() => state.select(c.id)}>
+                    <button key={c.id} onClick={() => inspect(c.id)}>
                       {label(
                         catalog.modules.find((m) => m.id === c.moduleId)!.name,
                         language,
@@ -1776,9 +1931,11 @@ function RoomPanel({
 
 function Inspection({
   design,
+  onInspect,
   onClose,
 }: {
   design: DesignDocument;
+  onInspect: (id: string) => void;
   onClose: () => void;
 }) {
   const { catalog } = useBrand(),
@@ -1825,9 +1982,16 @@ function Inspection({
       >
         {t(state.opened.includes(c.id) ? "closeUnit" : "openUnit")}
       </button>
-      <button className="button secondary" onClick={onClose}>
-        {t("overallView")}
-      </button>
+      {state.focused === c.id ? (
+        <button className="button secondary" onClick={onClose}>
+          {t("overallView")}
+        </button>
+      ) : (
+        <button className="button secondary" onClick={() => onInspect(c.id)}>
+          <ScanSearch size={16} />
+          {t("inspect")}
+        </button>
+      )}
     </section>
   );
 }

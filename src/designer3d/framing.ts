@@ -127,6 +127,10 @@ export type OrbitLimits = {
 };
 const DEG = Math.PI / 180;
 const wrapAngle = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
+/** Orbit stays within this angle of at least one run's front… */
+export const FRONT_SPAN = 85 * DEG;
+/** …and never further than this from any run, so backs stay hidden. */
+export const BEHIND_LIMIT = 105 * DEG;
 
 /** Azimuth as camera-controls measures it: atan2(x, z) of position − target. */
 export function viewAzimuth(view: CameraView) {
@@ -136,32 +140,42 @@ export function viewAzimuth(view: CameraView) {
   );
 }
 
+/** Camera-to-target distance of a solved view. */
+export function viewDistance(view: CameraView) {
+  return new Vector3(...view.position).distanceTo(new Vector3(...view.target));
+}
+
 /**
- * Keep orbiting on the side the furniture faces, so a swipe never lands
- * behind a run of cabinets. Limits are expressed around the view's own
- * azimuth because camera-controls clamps without wrapping.
+ * Keep orbiting on the side the furniture faces: the camera must face at
+ * least one run head-on and may never swing round to look at the back of
+ * any run. An L-shape can therefore be seen square-on from either wing.
+ * Limits are expressed around the view's own azimuth because
+ * camera-controls clamps without wrapping.
  */
 export function orbitLimits(
   design: DesignDocument,
   view: CameraView,
   focusId?: string | null,
+  overviewDistance = 15,
 ): OrbitLimits {
   const start = viewAzimuth(view);
   const focus = focusId
     ? design.cabinets.find((c) => c.id === focusId)
     : undefined;
-  const faces = [
+  const normals = [
     ...new Set(
       design.cabinets
         .filter((c) => c.wall !== "island")
         .map((c) => Math.round(wrapAngle(c.rotation) / DEG)),
     ),
-  ].map((n) => ({ normal: n * DEG, span: 82 * DEG }));
-  if (focus) faces.push({ normal: focus.rotation, span: 55 * DEG });
+  ].map((n) => n * DEG);
+  const within = (a: number, normal: number, span: number) =>
+    Math.abs(wrapAngle(a - normal)) <= span + 1e-6;
   const allowed = (a: number) =>
-    faces.every(
-      ({ normal, span }) => Math.abs(wrapAngle(a - normal)) <= span + 1e-6,
-    );
+    normals.every((n) => within(a, n, BEHIND_LIMIT)) &&
+    (focus
+      ? within(a, focus.rotation, 70 * DEG)
+      : !normals.length || normals.some((n) => within(a, n, FRONT_SPAN)));
   const reach = (direction: 1 | -1) => {
     let steps = 0;
     while (steps < 179 && allowed(start + direction * (steps + 1) * DEG))
@@ -170,18 +184,37 @@ export function orbitLimits(
   };
   let minAzimuth = start - reach(-1),
     maxAzimuth = start + reach(1);
-  // U-shapes and parallel runs face each other: no angle sees every front,
-  // so allow a modest swing around the authored view instead.
-  if (maxAzimuth - minAzimuth < 30 * DEG) {
-    minAzimuth = start - 30 * DEG;
-    maxAzimuth = start + 30 * DEG;
+  // U-shapes, parallel runs and walk-ins face each other: no angle sees every
+  // front, so allow a comfortable swing around the authored view instead.
+  if (maxAzimuth - minAzimuth < 60 * DEG) {
+    minAzimuth = start - 40 * DEG;
+    maxAzimuth = start + 40 * DEG;
   }
   return {
     minAzimuth,
     maxAzimuth,
-    minDistance: focus ? 1.2 : 2,
-    maxDistance: focus ? 6 : 20,
+    minDistance: focus ? 1.2 : 1.6,
+    // Zooming out always reaches past the whole-furniture view, focused or not.
+    maxDistance: Math.max(6, overviewDistance * 1.35),
   };
+}
+/**
+ * Pull the orbit point back toward the overview center as the user zooms
+ * out, reaching it exactly when the camera is back at the overview
+ * distance. Zooming in leaves the (cursor-following) target untouched.
+ */
+export function recenterTarget(
+  target: Vector3,
+  home: Vector3,
+  previousDistance: number,
+  distance: number,
+  homeDistance: number,
+) {
+  if (distance <= previousDistance + 1e-6) return target.clone();
+  if (previousDistance >= homeDistance || distance >= homeDistance)
+    return home.clone();
+  const keep = (homeDistance - distance) / (homeDistance - previousDistance);
+  return home.clone().add(target.clone().sub(home).multiplyScalar(keep));
 }
 
 /** Front-facing inspection heading, with the rendered camera fitting open clearance. */
