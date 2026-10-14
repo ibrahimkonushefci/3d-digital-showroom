@@ -78,17 +78,25 @@ export function sinkCutout(c: Cabinet): Point2[] {
 }
 export function worktopRuns(cabinets: Cabinet[], catalog: Catalog) {
   const bases = cabinets.filter((c) => c.level === "base");
-  return [...new Set(bases.map((c) => c.height))].map((height) => ({
-    height,
-    outlines: worktopOutlines(bases.filter((c) => c.height === height)),
-    holes: bases
-      .filter(
-        (c) =>
-          c.height === height &&
-          catalog.modules.find((m) => m.id === c.moduleId)?.type === "sink",
-      )
-      .map(sinkCutout),
-  }));
+  // Main corners stay a single union; islands are a separate disconnected slab.
+  return (["main", "island"] as const).flatMap((zone) => {
+    const members = bases.filter(
+      (c) => (c.wall === "island" ? "island" : "main") === zone,
+    );
+    return [...new Set(members.map((c) => c.height))].map((height) => ({
+      zone,
+      height,
+      cabinets: members.filter((c) => c.height === height),
+      outlines: worktopOutlines(members.filter((c) => c.height === height)),
+      holes: members
+        .filter(
+          (c) =>
+            c.height === height &&
+            catalog.modules.find((m) => m.id === c.moduleId)?.type === "sink",
+        )
+        .map(sinkCutout),
+    }));
+  });
 }
 export function pointInPolygon(p: Point2, polygon: Point2[]) {
   let inside = false;

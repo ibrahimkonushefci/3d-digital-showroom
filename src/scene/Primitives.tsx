@@ -1,30 +1,20 @@
+import {
+  useInteriorOcclusion,
+  type Cavity,
+} from "./lighting/InteriorOcclusion";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
-import { Suspense, useMemo, useEffect } from "react";
+import { Suspense, createContext, useContext } from "react";
+import { BoxGeometry, type BufferGeometry } from "three";
+import { mapPanelGeometry, panelOffset, type Grain } from "./materialMapping";
 import { Edges } from "@react-three/drei";
 import type { Material } from "../catalog/types";
 import { furnitureResponse } from "./furnitureMaterials";
 import { SurfaceMaterial } from "./Materials";
-const bevelCache = new Map<
-  string,
-  { geometry: RoundedBoxGeometry; users: number }
->();
-function rounded(size: [number, number, number], bevel: number) {
-  const key = [...size, bevel].join(":");
-  let entry = bevelCache.get(key);
-  if (!entry) {
-    entry = {
-      geometry: new RoundedBoxGeometry(
-        ...size,
-        4,
-        Math.min(bevel, ...size.map((n) => n / 3)),
-      ),
-      users: 0,
-    };
-    bevelCache.set(key, entry);
-  }
-  return { key, entry };
-}
+import { ResourceCache, useSharedResource } from "./resources";
+const bevelCache = new ResourceCache<BufferGeometry>();
+export const PanelMapping = createContext({ cabinetId: "room", role: "panel" });
 type BoxProps = {
+  cavity?: Cavity;
   size: [number, number, number];
   position?: [number, number, number];
   color?: string;
@@ -38,8 +28,12 @@ type BoxProps = {
   roughness?: number;
   lacquer?: boolean;
   castShadow?: boolean;
+  panelRole?: string;
+  grain?: Grain;
+  decorative?: boolean;
 };
 export function Box({
+  cavity,
   size,
   position = [0, 0, 0],
   color = "#eeece2",
@@ -53,53 +47,81 @@ export function Box({
   roughness,
   lacquer = false,
   castShadow = true,
+  panelRole,
+  grain,
+  decorative = false,
 }: BoxProps) {
+  const occlusion = useInteriorOcclusion(cavity);
   bevel = bevel || (lacquer ? 0.0015 : 0);
   const response = material
     ? furnitureResponse(material)
-    : { roughness: 0.4, clearcoat: 0.35, clearcoatRoughness: 0.35 };
-  const resource = useMemo(
-    () => (bevel > 0 ? rounded(size, bevel) : null),
-    [size[0], size[1], size[2], bevel],
+    : {
+        roughness: 0.4,
+        clearcoat: 0.35,
+        clearcoatRoughness: 0.35,
+        envMapIntensity: 0.6,
+      };
+  const identity = useContext(PanelMapping);
+  const mapping = material?.mapping;
+  const role =
+    identity.role + ":" + (panelRole || [...position, ...size].join(":"));
+  const offset =
+    mapping?.variation === "stable-offset"
+      ? panelOffset(identity.cabinetId, role)
+      : ([0, 0] as [number, number]);
+  const radius = Math.min(bevel, ...size.map((n) => n / 3));
+  const geometry = useSharedResource(
+    bevelCache,
+    JSON.stringify([size, radius, mapping, offset, grain, !!material?.aoMap]),
+    () => {
+      const g =
+        radius > 0
+          ? new RoundedBoxGeometry(...size, 1, radius)
+          : new BoxGeometry(...size);
+      if (mapping)
+        return mapPanelGeometry(g, size, radius, mapping, offset, grain);
+      if (material?.aoMap) g.setAttribute("uv1", g.getAttribute("uv").clone());
+      return g;
+    },
   );
-  const geometry = resource?.entry.geometry;
-  useEffect(() => {
-    if (!resource) return;
-    resource.entry.users++;
-    return () => {
-      resource.entry.users--;
-      queueMicrotask(() => {
-        if (
-          !resource.entry.users &&
-          bevelCache.get(resource.key) === resource.entry
-        ) {
-          resource.entry.geometry.dispose();
-          bevelCache.delete(resource.key);
-        }
-      });
-    };
-  }, [resource]);
   return (
-    <mesh position={position} castShadow={castShadow} receiveShadow>
+    <mesh
+      position={position}
+      castShadow={castShadow}
+      receiveShadow
+      raycast={decorative ? () => {} : undefined}
+    >
       {geometry ? (
         <primitive object={geometry} attach="geometry" />
       ) : (
         <boxGeometry args={size} />
       )}
-      {material && (material.texture || material.normalMap) ? (
+      {material &&
+      (material.texture ||
+        material.normalMap ||
+        material.roughnessMap ||
+        material.aoMap) ? (
         <Suspense
           fallback={
             <meshPhysicalMaterial
+              {...occlusion}
               color={material.color}
-              roughness={lacquer ? response.roughness : material.roughness}
+              roughness={
+                material.response || lacquer
+                  ? response.roughness
+                  : material.roughness
+              }
               metalness={lacquer ? 0.02 : metal}
-              clearcoat={lacquer ? response.clearcoat : 0}
+              clearcoat={material.response || lacquer ? response.clearcoat : 0}
               clearcoatRoughness={response.clearcoatRoughness}
-              envMapIntensity={lacquer ? 1 : 0.6}
+              envMapIntensity={
+                material.response ? response.envMapIntensity : lacquer ? 1 : 0.6
+              }
             />
           }
         >
           <SurfaceMaterial
+            cavity={cavity}
             material={material}
             world={world}
             lacquer={lacquer}
@@ -107,16 +129,19 @@ export function Box({
         </Suspense>
       ) : (
         <meshPhysicalMaterial
+          {...occlusion}
           color={material?.color || color}
           roughness={
-            lacquer
+            material?.response || lacquer
               ? response.roughness
               : (roughness ?? material?.roughness ?? 0.65)
           }
           metalness={lacquer ? 0.02 : metal}
-          clearcoat={lacquer ? response.clearcoat : 0}
+          clearcoat={material?.response || lacquer ? response.clearcoat : 0}
           clearcoatRoughness={response.clearcoatRoughness}
-          envMapIntensity={lacquer ? 1 : 0.6}
+          envMapIntensity={
+            material?.response ? response.envMapIntensity : lacquer ? 1 : 0.6
+          }
           emissive={emissive}
           emissiveIntensity={emissive ? 1.5 : 0}
           transparent={transparent}

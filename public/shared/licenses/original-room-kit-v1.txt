@@ -1,0 +1,15 @@
+Original room kit v1 — authored in this project on 14 October 2026.
+
+Source: scripts/author-room-kit.mjs (original code and generic geometry).
+Authoring: Codex for the owner of this project. No downloaded meshes, scans,
+supplier logos, product files, textile images or third-party textures are used.
+Runtime files: hashed shared/models/*.glb listed in asset-manifest.json.
+
+These original project assets may be used, modified, optimized, commercially
+distributed, self-hosted, bundled offline and included in white-label clients
+with this application. No purchased or third-party asset license is required.
+This permission describes project use, not supplier-product authenticity or a
+claim that generated generic models reproduce any manufacturer's product.
+
+The kit uses the installed Three.js authoring/export utilities (MIT); its
+existing package notice remains in the project's dependency distribution.

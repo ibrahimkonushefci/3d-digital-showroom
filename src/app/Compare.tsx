@@ -1,3 +1,4 @@
+import { interiorAssociations, interiorSummary } from "../documents/finishes";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useBrand } from "../brand";
@@ -15,7 +16,7 @@ import CaptureAlternative from "../designer3d/CaptureAlternative";
 import { useDesigner } from "../designer3d/store";
 import { loadDesign } from "../persistence";
 import { calculatePrice, estimateLabel } from "../pricing";
-import { proposalFinishes } from "../documents/finishes";
+import { finishAssociations } from "../documents/finishes";
 export default function Compare() {
   const { brand, catalog } = useBrand(),
     t = useT(),
@@ -90,11 +91,56 @@ export default function Compare() {
                     {t(item.design.layout)} · {item.design.room.width} ×{" "}
                     {item.design.room.depth} × {item.design.room.height} cm
                   </p>
-                  <p>
-                    {proposalFinishes(item.design, catalog)
-                      .map((m) => label(m.name, language))
-                      .join(" · ")}
-                  </p>
+                  {price && (
+                    <>
+                      <ul>
+                        {finishAssociations(item.design, catalog, language).map(
+                          (row) => (
+                            <li key={row.scope}>
+                              <strong>
+                                {row.scope.split(" · ")[0]} ({row.quantity})
+                              </strong>
+                              : {row.brief}
+                            </li>
+                          ),
+                        )}
+                      </ul>
+                      {item.design.kind === "wardrobe" && (
+                        <p>
+                          {t("interiorInventory")}:{" "}
+                          {interiorSummary(item.design, catalog, language)}
+                        </p>
+                      )}
+                      {item.design.kind === "wardrobe" && (
+                        <details>
+                          <summary>{t("interiorInventory")}</summary>
+                          {interiorAssociations(
+                            item.design,
+                            catalog,
+                            language,
+                          ).map((row) => (
+                            <p key={row.scope}>
+                              <strong>{row.scope}</strong>
+                              <br />
+                              {row.description}
+                            </p>
+                          ))}
+                        </details>
+                      )}
+                      <details>
+                        <summary>{t("finishAssociations")}</summary>
+                        {finishAssociations(item.design, catalog, language).map(
+                          (row) => (
+                            <p key={row.scope}>
+                              <strong>{row.scope}</strong>
+                              <br />
+                              {row.description}
+                            </p>
+                          ),
+                        )}
+                      </details>
+                    </>
+                  )}
                   {price ? (
                     <strong>
                       {estimateLabel(price, item.design.exact, language)} ·{" "}

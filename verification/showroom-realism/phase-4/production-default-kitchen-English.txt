@@ -1,0 +1,187 @@
+- banner:
+  - link "Forma Studio Digital Showroom":
+    - /url: /?brand=default
+    - strong: Forma Studio
+    - generic: Digital Showroom
+  - navigation "Home":
+    - link "Home":
+      - /url: /?brand=default
+    - link "Kitchens":
+      - /url: /designer/kitchen?brand=default
+    - link "Wardrobes":
+      - /url: /designer/wardrobe?brand=default
+  - generic "Reload to finish offline setup":
+    - generic: Reload to finish offline setup
+    - button "Finish setup"
+  - button "Shqip": SQ
+  - button "English" [active] [pressed]: EN
+  - button "Deutsch": DE
+  - link "Settings":
+    - /url: /settings?brand=default
+- main:
+  - link "Back to your design":
+    - /url: /designer/kitchen?brand=default
+    - text: Back to your design
+  - generic: Forma Studio
+  - heading "Your offer" [level=1]
+  - generic: Indicative offer
+  - img "Interactive 3D showroom"
+  - heading "Materials by zone / cabinet" [level=2]
+  - paragraph:
+    - strong: Tall · Positions 1, 2 · 2 pcs
+    - text: "Front finish: Chipboard (Egger / Kronospan) · Anthracite · Carcass: White · Handles: Stainless steel bar · Front style: Flat fronts · Plinth: Black"
+  - paragraph:
+    - strong: Base · Positions 3, 4, 5, 6, 7, 8 · 6 pcs
+    - text: "Front finish: Chipboard (Egger / Kronospan) · Natural oak · Carcass: Oak · Handles: Stainless steel bar · Front style: Flat fronts · Plinth: Matching fronts (Natural oak)"
+  - paragraph:
+    - strong: Wall · Positions 9, 10, 11, 12, 13, 14 · 6 pcs
+    - text: "Front finish: Chipboard (Egger / Kronospan) · Warm white · Carcass: White · Handles: Stainless steel bar · Front style: Flat fronts"
+  - paragraph:
+    - strong: Island · Positions 15 · 1 pcs
+    - text: "Front finish: Chipboard (Egger / Kronospan) · Walnut · Carcass: White · Handles: Stainless steel bar · Front style: Panelled fronts · Plinth: Black"
+  - paragraph:
+    - strong: Island · Positions 16, 17, 18 · 3 pcs
+    - text: "Front finish: Fenix · Anthracite · Carcass: White · Handles: Stainless steel bar · Front style: Flat fronts · Plinth: Black"
+  - paragraph:
+    - strong: Main worktop · 3.6 m
+    - text: "Travertine · 12 mm · Backsplash: None"
+  - paragraph:
+    - strong: Island worktop · 2.4 m
+    - text: Quartz · 20 mm
+  - heading "Your configuration" [level=2]
+  - table:
+    - rowgroup:
+      - row "Item Quantity Amount":
+        - columnheader "Item"
+        - columnheader "Quantity"
+        - columnheader "Amount"
+    - rowgroup:
+      - row "Oven tower · Chipboard (Egger / Kronospan) · Anthracite · White · Flat fronts · 60 × 60 × 210 cm 1 pcs 258 €":
+        - cell "Oven tower · Chipboard (Egger / Kronospan) · Anthracite · White · Flat fronts · 60 × 60 × 210 cm":
+          - text: Oven tower · Chipboard (Egger / Kronospan) · Anthracite · White · Flat fronts
+          - generic: · 60 × 60 × 210 cm
+        - cell "1 pcs"
+        - cell "258 €"
+      - row "Fridge space · Chipboard (Egger / Kronospan) · Anthracite · White · Flat fronts · 60 × 60 × 210 cm 1 pcs 234 €":
+        - cell "Fridge space · Chipboard (Egger / Kronospan) · Anthracite · White · Flat fronts · 60 × 60 × 210 cm":
+          - text: Fridge space · Chipboard (Egger / Kronospan) · Anthracite · White · Flat fronts
+          - generic: · 60 × 60 × 210 cm
+        - cell "1 pcs"
+        - cell "234 €"
+      - row "Sink unit · Chipboard (Egger / Kronospan) · Natural oak · Oak · Flat fronts · 60 × 60 × 72 cm 1 pcs 176 €":
+        - cell "Sink unit · Chipboard (Egger / Kronospan) · Natural oak · Oak · Flat fronts · 60 × 60 × 72 cm":
+          - text: Sink unit · Chipboard (Egger / Kronospan) · Natural oak · Oak · Flat fronts
+          - generic: · 60 × 60 × 72 cm
+        - cell "1 pcs"
+        - cell "176 €"
+      - row "Dishwasher space · Chipboard (Egger / Kronospan) · Natural oak · Oak · Flat fronts · 60 × 60 × 72 cm 1 pcs 101 €":
+        - cell "Dishwasher space · Chipboard (Egger / Kronospan) · Natural oak · Oak · Flat fronts · 60 × 60 × 72 cm":
+          - text: Dishwasher space · Chipboard (Egger / Kronospan) · Natural oak · Oak · Flat fronts
+          - generic: · 60 × 60 × 72 cm
+        - cell "1 pcs"
+        - cell "101 €"
+      - row "Three drawers · Chipboard (Egger / Kronospan) · Natural oak · Oak · Flat fronts · 60 × 60 × 72 cm 2 pcs 416 €":
+        - cell "Three drawers · Chipboard (Egger / Kronospan) · Natural oak · Oak · Flat fronts · 60 × 60 × 72 cm":
+          - text: Three drawers · Chipboard (Egger / Kronospan) · Natural oak · Oak · Flat fronts
+          - generic: · 60 × 60 × 72 cm
+        - cell "2 pcs"
+        - cell "416 €"
+      - row "Drawer organizer 6 pcs 210 €":
+        - cell "Drawer organizer"
+        - cell "6 pcs"
+        - cell "210 €"
+      - row "Base doors · Chipboard (Egger / Kronospan) · Natural oak · Oak · Flat fronts · 60 × 60 × 72 cm 2 pcs 296 €":
+        - cell "Base doors · Chipboard (Egger / Kronospan) · Natural oak · Oak · Flat fronts · 60 × 60 × 72 cm":
+          - text: Base doors · Chipboard (Egger / Kronospan) · Natural oak · Oak · Flat fronts
+          - generic: · 60 × 60 × 72 cm
+        - cell "2 pcs"
+        - cell "296 €"
+      - row "Wall cabinet · Chipboard (Egger / Kronospan) · Warm white · White · Flat fronts · 60 × 35 × 72 cm 5 pcs 630 €":
+        - cell "Wall cabinet · Chipboard (Egger / Kronospan) · Warm white · White · Flat fronts · 60 × 35 × 72 cm":
+          - text: Wall cabinet · Chipboard (Egger / Kronospan) · Warm white · White · Flat fronts
+          - generic: · 60 × 35 × 72 cm
+        - cell "5 pcs"
+        - cell "630 €"
+      - row "Integrated extractor hood · Chipboard (Egger / Kronospan) · Warm white · White · Flat fronts · 60 × 35 × 72 cm 1 pcs 108 €":
+        - cell "Integrated extractor hood · Chipboard (Egger / Kronospan) · Warm white · White · Flat fronts · 60 × 35 × 72 cm":
+          - text: Integrated extractor hood · Chipboard (Egger / Kronospan) · Warm white · White · Flat fronts
+          - generic: · 60 × 35 × 72 cm
+        - cell "1 pcs"
+        - cell "108 €"
+      - row "Three drawers · Chipboard (Egger / Kronospan) · Walnut · White · Panelled fronts · 60 × 60 × 72 cm 1 pcs 233 €":
+        - cell "Three drawers · Chipboard (Egger / Kronospan) · Walnut · White · Panelled fronts · 60 × 60 × 72 cm":
+          - text: Three drawers · Chipboard (Egger / Kronospan) · Walnut · White · Panelled fronts
+          - generic: · 60 × 60 × 72 cm
+        - cell "1 pcs"
+        - cell "233 €"
+      - row "Three drawers · Fenix · Anthracite · White · Flat fronts · 60 × 60 × 72 cm 3 pcs 1,099 €":
+        - cell "Three drawers · Fenix · Anthracite · White · Flat fronts · 60 × 60 × 72 cm":
+          - text: Three drawers · Fenix · Anthracite · White · Flat fronts
+          - generic: · 60 × 60 × 72 cm
+        - cell "3 pcs"
+        - cell "1,099 €"
+      - row "Countertop – 12 mm compact · Travertine · Main worktop 3.6 m 540 €":
+        - cell "Countertop – 12 mm compact · Travertine · Main worktop"
+        - cell "3.6 m"
+        - cell "540 €"
+      - row "Countertop – Quartz · Island worktop 2.4 m 768 €":
+        - cell "Countertop – Quartz · Island worktop"
+        - cell "2.4 m"
+        - cell "768 €"
+      - row "Stainless steel bar 38 pcs 342 €":
+        - cell "Stainless steel bar"
+        - cell "38 pcs"
+        - cell "342 €"
+      - row "Plinth · Black 3.6 m 43 €":
+        - cell "Plinth · Black"
+        - cell "3.6 m"
+        - cell "43 €"
+      - row "Plinth · Matching fronts 3.6 m 43 €":
+        - cell "Plinth · Matching fronts"
+        - cell "3.6 m"
+        - cell "43 €"
+      - row "Under-cabinet lighting 3.6 m 79 €":
+        - cell "Under-cabinet lighting"
+        - cell "3.6 m"
+        - cell "79 €"
+    - rowgroup:
+      - row "Installation (8%) 446 €":
+        - cell "Installation (8%)"
+        - cell "446 €"
+      - row "VAT (18%) 1,084 €":
+        - cell "VAT (18%)"
+        - cell "1,084 €"
+      - row "Total incl. VAT 7,107 €":
+        - cell "Total incl. VAT"
+        - cell "7,107 €"
+  - complementary:
+    - generic: Estimated total
+    - heading "7,107 €" [level=2]
+    - paragraph: Indicative price. The final offer is confirmed after measuring and choosing materials.
+    - generic "Customer details"
+    - generic: Installation · 8%
+    - checkbox "Installation · 8%" [checked]
+    - generic: VAT · 18%
+    - checkbox "VAT · 18%" [checked]
+    - generic: Show a single estimate
+    - checkbox "Show a single estimate" [checked]
+    - button "Send offer (PDF)":
+      - text: Send offer (PDF)
+    - button "Download PDF offer":
+      - text: Download PDF offer
+    - button "Copy design link":
+      - text: Copy design link
+    - button "Send to anyone":
+      - text: Send to anyone
+    - button "WhatsApp":
+      - text: WhatsApp
+    - textbox "Copy this link": http://127.0.0.1:52746/designer/kitchen?brand=default#design=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
+    - strong: Forma Studio
+    - generic: Prishtinë
+- contentinfo:
+  - strong: Forma Studio
+  - generic: Prishtinë · Dimensions in cm
+  - generic: Fictional demo brand · sample prices
+  - link "Explore materials":
+    - /url: /material-switcher?brand=default
+    - text: Explore materials

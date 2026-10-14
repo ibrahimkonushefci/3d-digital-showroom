@@ -1,3 +1,5 @@
+import { validateInteriorReferences } from "./interiorValidation";
+import { validateFinishReferences } from "./finishes";
 import type {
   Cabinet,
   Catalog,
@@ -6,12 +8,14 @@ import type {
   Room,
   Wall,
 } from "../catalog/types";
+import { countertopThickness } from "../scene/furnitureMaterials";
+import { cabinetElevation } from "../scene/construction";
 export function uid() {
   return (
     globalThis.crypto?.randomUUID?.() || Math.random().toString(36).slice(2)
   );
 }
-export function bounds(c: Cabinet) {
+export function bounds(c: Cabinet, worktopThickness = 0.038) {
   const turned = Math.abs(Math.sin(c.rotation)) > 0.5;
   const w = turned ? c.depth : c.width,
     d = turned ? c.width : c.depth;
@@ -20,11 +24,8 @@ export function bounds(c: Cabinet) {
     x1: c.x + w / 2,
     z0: c.z - d / 2,
     z1: c.z + d / 2,
-    y0: c.level === "wall" ? 140 : c.level === "wardrobe" ? 0 : 10,
-    y1:
-      (c.level === "wall" ? 140 : c.level === "wardrobe" ? 0 : 10) +
-      c.height +
-      (c.level === "base" ? 4 : 0),
+    y0: cabinetElevation(c, worktopThickness).bottom * 100,
+    y1: cabinetElevation(c, worktopThickness).top * 100,
   };
 }
 export function wallPosition(
@@ -84,15 +85,7 @@ export function validateDesign(
       ["l", "u", "parallel", "island"].includes(design.layout))
   )
     return false;
-  if (
-    !catalog.fronts.some((m) => m.id === design.style.front) ||
-    !catalog.carcasses.some((m) => m.id === design.style.carcass) ||
-    !catalog.countertops.some((m) => m.id === design.style.countertop) ||
-    !catalog.handles.some((m) => m.id === design.style.handle) ||
-    !catalog.backsplashes.some((m) => m.id === design.style.backsplash) ||
-    !catalog.plinths.some((m) => m.id === design.style.plinth)
-  )
-    return false;
+  if (validateFinishReferences(design, catalog).length || validateInteriorReferences(design, catalog).length) return false;
   const ids = new Set<string>();
   for (const o of room.openings) {
     const length = ["left", "right"].includes(o.wall) ? room.depth : room.width;
@@ -134,7 +127,7 @@ export function validateDesign(
           Math.abs(c.z - expected.z) > 0.01))
     )
       return false;
-    const b = bounds(c);
+    const b = bounds(c, countertopThickness(design, catalog, c.wall));
     if (
       b.x0 < -0.1 ||
       b.z0 < -0.1 ||
@@ -179,8 +172,14 @@ export function validateDesign(
   }
   for (let i = 0; i < cabinets.length; i++)
     for (let j = i + 1; j < cabinets.length; j++) {
-      const a = bounds(cabinets[i]),
-        b = bounds(cabinets[j]);
+      const a = bounds(
+          cabinets[i],
+          countertopThickness(design, catalog, cabinets[i].wall),
+        ),
+        b = bounds(
+          cabinets[j],
+          countertopThickness(design, catalog, cabinets[j].wall),
+        );
       if (
         intersects(a.x0, a.x1, b.x0, b.x1) &&
         intersects(a.z0, a.z1, b.z0, b.z1) &&
@@ -205,7 +204,7 @@ export function newDesign(
   layout: Layout = "l",
 ): DesignDocument {
   return {
-    version: 2,
+    version: 3,
     id: uid(),
     kind,
     layout,

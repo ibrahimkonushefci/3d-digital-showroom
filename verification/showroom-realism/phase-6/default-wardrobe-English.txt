@@ -1,0 +1,137 @@
+- banner:
+  - link "Forma Studio Digital Showroom":
+    - /url: /?brand=default
+    - strong: Forma Studio
+    - generic: Digital Showroom
+  - navigation "Home":
+    - link "Home":
+      - /url: /?brand=default
+    - link "Kitchens":
+      - /url: /designer/kitchen?brand=default
+    - link "Wardrobes":
+      - /url: /designer/wardrobe?brand=default
+  - generic "Offline ready":
+    - generic: Offline ready
+  - button "Shqip": SQ
+  - button "English" [active] [pressed]: EN
+  - button "Deutsch": DE
+  - link "Settings":
+    - /url: /settings?brand=default
+- main:
+  - link "Back to your design":
+    - /url: /designer/wardrobe?brand=default
+    - text: Back to your design
+  - generic: Forma Studio
+  - heading "Your offer" [level=1]
+  - generic: Indicative offer
+  - img "Interactive 3D showroom"
+  - heading "Materials by zone / cabinet" [level=2]
+  - paragraph:
+    - strong: Wardrobe · Positions 1, 2, 3, 4 · 4 pcs
+    - text: "Front finish: Chipboard (Egger / Kronospan) · Cashmere · Carcass: Oak · Handles: Stainless steel bar · Front style: Flat fronts · Plinth: Matching fronts (Cashmere)"
+  - heading "Interior inventory" [level=2]
+  - paragraph: Heights are measured from the internal floor. Fit rules and prices are illustrative. Decorative contents are excluded from inventory.
+  - paragraph:
+    - strong: Positions 1 · Hanging wardrobe (80 cm)
+    - text: "Hanging rail: 195.4 cm"
+  - paragraph:
+    - strong: Positions 2 · Shelved wardrobe (80 cm)
+    - text: "Shelf: 72 cm · Shelf: 139.9 cm · Shelf: 185.9 cm · Pull-out basket: 0 cm"
+  - paragraph:
+    - strong: Positions 3 · Wardrobe drawers (80 cm)
+    - text: "Shelf: 65.3 cm · Shelf: 127.3 cm · Shelf: 187.3 cm · Interior drawer: 0 cm · Interior drawer: 22 cm · Interior drawer: 44 cm"
+  - paragraph:
+    - strong: Positions 4 · Sliding wardrobe (100 cm)
+    - text: "Hanging rail: 195.4 cm"
+  - heading "Your configuration" [level=2]
+  - table:
+    - rowgroup:
+      - row "Item Quantity Amount":
+        - columnheader "Item"
+        - columnheader "Quantity"
+        - columnheader "Amount"
+    - rowgroup:
+      - row "Hanging wardrobe · 80 × 60 × 230 cm 1 pcs 276 €":
+        - cell "Hanging wardrobe · 80 × 60 × 230 cm":
+          - text: Hanging wardrobe
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 pcs"
+        - cell "276 €"
+      - row "Shelved wardrobe · 80 × 60 × 230 cm 1 pcs 252 €":
+        - cell "Shelved wardrobe · 80 × 60 × 230 cm":
+          - text: Shelved wardrobe
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 pcs"
+        - cell "252 €"
+      - row "Wardrobe drawers · 80 × 60 × 230 cm 1 pcs 352 €":
+        - cell "Wardrobe drawers · 80 × 60 × 230 cm":
+          - text: Wardrobe drawers
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 pcs"
+        - cell "352 €"
+      - row "Drawer organizer 1 pcs 35 €":
+        - cell "Drawer organizer"
+        - cell "1 pcs"
+        - cell "35 €"
+      - row "Sliding wardrobe · 100 × 60 × 230 cm 1 pcs 410 €":
+        - cell "Sliding wardrobe · 100 × 60 × 230 cm":
+          - text: Sliding wardrobe
+          - generic: · 100 × 60 × 230 cm
+        - cell "1 pcs"
+        - cell "410 €"
+      - row "Stainless steel bar 7 pcs 63 €":
+        - cell "Stainless steel bar"
+        - cell "7 pcs"
+        - cell "63 €"
+      - row "Plinth 3.4 m 41 €":
+        - cell "Plinth"
+        - cell "3.4 m"
+        - cell "41 €"
+      - row "Internal wardrobe LED 3.4 m 119 €":
+        - cell "Internal wardrobe LED"
+        - cell "3.4 m"
+        - cell "119 €"
+      - row "Interior addition · Pull-out basket · Positions 2 (80 cm) 1 pcs 55 €":
+        - cell "Interior addition · Pull-out basket · Positions 2 (80 cm)"
+        - cell "1 pcs"
+        - cell "55 €"
+    - rowgroup:
+      - row "Installation (8%) 128 €":
+        - cell "Installation (8%)"
+        - cell "128 €"
+      - row "VAT (18%) 312 €":
+        - cell "VAT (18%)"
+        - cell "312 €"
+      - row "Total incl. VAT 2,043 €":
+        - cell "Total incl. VAT"
+        - cell "2,043 €"
+  - complementary:
+    - generic: Estimated total
+    - heading "2,043 €" [level=2]
+    - paragraph: Indicative price. The final offer is confirmed after measuring and choosing materials.
+    - generic "Customer details"
+    - generic: Installation · 8%
+    - checkbox "Installation · 8%" [checked]
+    - generic: VAT · 18%
+    - checkbox "VAT · 18%" [checked]
+    - generic: Show a single estimate
+    - checkbox "Show a single estimate" [checked]
+    - button "Send offer (PDF)":
+      - text: Send offer (PDF)
+    - button "Download PDF offer":
+      - text: Download PDF offer
+    - button "Copy design link":
+      - text: Copy design link
+    - button "Send to anyone":
+      - text: Send to anyone
+    - button "WhatsApp":
+      - text: WhatsApp
+    - strong: Forma Studio
+    - generic: Prishtinë
+- contentinfo:
+  - strong: Forma Studio
+  - generic: Prishtinë · Dimensions in cm
+  - generic: Fictional demo brand · sample prices
+  - link "Explore materials":
+    - /url: /material-switcher?brand=default
+    - text: Explore materials

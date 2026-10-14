@@ -96,3 +96,15 @@ it("resets to the authored default as one undoable step, keeping client data", (
     expect(useDesigner.getState().design).toEqual(edited);
   }
 });
+
+import { beginCapture, useCaptureBusy } from "../src/pwa/busy";
+it("keeps updates blocked through concurrent captures and releases once per operation", () => {
+  const finishMain = beginCapture(),
+    finishAlternative = beginCapture();
+  expect(useCaptureBusy.getState().count).toBe(2);
+  finishMain();
+  finishMain();
+  expect(useCaptureBusy.getState().count).toBe(1);
+  finishAlternative();
+  expect(useCaptureBusy.getState().count).toBe(0);
+});

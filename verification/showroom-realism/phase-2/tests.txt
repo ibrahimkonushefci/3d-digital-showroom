@@ -1,0 +1,44 @@
+$ vitest run
+
+ RUN  v3.2.7 /Users/ibrahimi/3d_designer
+
+(node:410) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:408) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:403) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:411) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:404) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/realism.test.ts (6 tests) 17ms
+(node:409) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/interaction.test.ts (3 tests) 23ms
+ ✓ tests/framing.test.ts (11 tests) 73ms
+ ✓ tests/offers.test.ts (7 tests) 46ms
+ ✓ tests/showroom.test.ts (15 tests) 71ms
+(node:405) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/phase0-compatibility.test.ts (10 tests) 71ms
+ ✓ tests/core.test.ts (30 tests) 117ms
+ ✓ tests/proposal.test.ts (4 tests) 165ms
+ ✓ tests/demo-safety.test.ts (4 tests) 67ms
+ ✓ tests/assets.test.ts (3 tests) 72ms
+ ✓ tests/comparison.test.ts (4 tests) 34ms
+ ✓ tests/model-manifest.test.ts (2 tests) 11ms
+ ✓ tests/material-mapping.test.ts (7 tests) 24ms
+ ✓ tests/room-placement.test.ts (6 tests) 127ms
+(node:426) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:428) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/phase0-resources.test.ts (6 tests) 9ms
+ ✓ tests/cabinet-shell.test.ts (1 test) 22ms
+
+ Test Files  16 passed (16)
+      Tests  119 passed (119)
+   Start at  16:00:14
+   Duration  1.21s (transform 825ms, setup 0ms, collect 3.63s, tests 950ms, environment 1ms, prepare 1.02s)
+

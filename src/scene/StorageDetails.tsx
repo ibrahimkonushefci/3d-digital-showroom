@@ -1,5 +1,6 @@
 import { useRef, useMemo } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
+import { useSceneInvalidation } from "./activity";
 import { Group, MathUtils, Shape } from "three";
 import { Box } from "./Primitives";
 export function StorageDetails({
@@ -16,7 +17,7 @@ export function StorageDetails({
   open: boolean;
 }) {
   const ref = useRef<Group>(null),
-    { invalidate } = useThree();
+    invalidate = useSceneInvalidation();
   const outline = useMemo(() => {
     const s = new Shape();
     s.moveTo(-w * 0.32, -d * 0.29);
@@ -38,6 +39,7 @@ export function StorageDetails({
     ref.current.position.z = next * (kind === "pantry" ? 0.38 : 0.22);
     ref.current.rotation.y = kind === "corner" ? next * -0.7 : 0;
     if (Math.abs(next - target) > 0.001) invalidate();
+    else invalidate.settled();
   });
   if (!["pantry", "corner"].includes(kind)) return null;
   return (

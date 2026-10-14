@@ -1,0 +1,62 @@
+- banner:
+  - link "Forma Studio Digital Showroom":
+    - /url: /?brand=default&kind=wardrobe
+    - strong: Forma Studio
+    - generic: Digital Showroom
+  - navigation "Home":
+    - link "Home":
+      - /url: /?brand=default&kind=wardrobe
+    - link "Kitchens":
+      - /url: /designer/kitchen?brand=default&kind=wardrobe
+    - link "Wardrobes":
+      - /url: /designer/wardrobe?brand=default&kind=wardrobe
+  - generic "Offline ready":
+    - generic: Offline ready
+  - button "Shqip": SQ
+  - button "English" [pressed]: EN
+  - button "Deutsch": DE
+  - link "Settings":
+    - /url: /settings?brand=default&kind=wardrobe
+- main:
+  - heading "Compare A / B · Wardrobes" [level=1]
+  - paragraph: Two alternatives stored on this device. Estimates use the active catalog.
+  - article:
+    - heading "A · Shelf 72 · Basket" [level=2]
+    - img "A · Shelf 72 · Basket"
+    - paragraph: Straight · 360 × 300 × 270 cm
+    - list:
+      - strong: Wardrobe (4 pcs)
+      - text: ": Chipboard (Egger / Kronospan) · Cashmere / Oak"
+    - paragraph: "Interior inventory: Hanging rail × 2 · Shelf × 6 · Pull-out basket × 1 · Interior drawer × 3"
+    - generic "Interior inventory"
+    - generic "Materials by zone / cabinet"
+    - strong: 2,043 € · Indicative offer
+    - button "Choose and continue"
+    - button "Save A" [disabled]
+    - link "Edit modules":
+      - /url: /designer/wardrobe?brand=default
+  - article:
+    - heading "B · Shelf 72 · No basket" [level=2]
+    - img "B · Shelf 72 · No basket"
+    - paragraph: Straight · 360 × 300 × 270 cm
+    - list:
+      - strong: Wardrobe (4 pcs)
+      - text: ": Chipboard (Egger / Kronospan) · Cashmere / Oak"
+    - paragraph: "Interior inventory: Hanging rail × 2 · Shelf × 6 · Interior drawer × 3"
+    - generic "Interior inventory"
+    - generic "Materials by zone / cabinet"
+    - strong: 1,973 € · Indicative offer
+    - button "Choose and continue"
+    - button "Save B" [disabled]
+    - link "Edit modules":
+      - /url: /designer/wardrobe?brand=default
+  - paragraph:
+    - strong: "Difference B − A: −70 €"
+    - text: · Indicative offer
+- contentinfo:
+  - strong: Forma Studio
+  - generic: Prishtinë · Dimensions in cm
+  - generic: Fictional demo brand · sample prices
+  - link "Explore materials":
+    - /url: /material-switcher?brand=default&kind=wardrobe
+    - text: Explore materials

@@ -1,0 +1,20 @@
+[
+  {
+    "brand": "druri-design",
+    "kind": "kitchen",
+    "total": "4,934 €",
+    "matched": true
+  },
+  {
+    "brand": "druri-design",
+    "kind": "wardrobe",
+    "total": "2,050 €",
+    "matched": true
+  },
+  {
+    "brand": "default",
+    "kind": "wardrobe",
+    "total": "2,043 €",
+    "matched": true
+  }
+]

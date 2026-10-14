@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "sceneId": "default:japandi:temporary-capture",
+  "scope": "desktop-browser",
+  "device": {
+    "label": "@Browser desktop",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+  },
+  "recordedAt": "2026-10-13T17:39:51.914Z",
+  "viewport": {
+    "width": 960,
+    "height": 640,
+    "dpr": 1
+  },
+  "renderer": "WebKit WebGL",
+  "quality": "balanced",
+  "movingFrames": {
+    "samples": 0,
+    "p50Ms": null,
+    "p95Ms": null,
+    "maxMs": null
+  },
+  "sceneReadyMs": 246.29999995231628,
+  "passes": {
+    "main": {
+      "calls": 248,
+      "triangles": 81746,
+      "cpuSubmitMs": 1.6999999284744263
+    },
+    "shadow": {
+      "calls": 466,
+      "triangles": 161088,
+      "cpuSubmitMs": 0
+    },
+    "offscreen": {
+      "calls": 251,
+      "triangles": 81752,
+      "cpuSubmitMs": 1.100000023841858
+    },
+    "probe": {
+      "calls": 55,
+      "triangles": 660,
+      "cpuSubmitMs": 5.799999952316284
+    }
+  },
+  "rendererCounts": {
+    "textures": 22,
+    "geometries": 194
+  },
+  "estimates": {
+    "texturesBytes": 44739248,
+    "renderTargetsBytes": 44040192,
+    "geometryBytes": 2711100,
+    "framebufferBytes": 13657600,
+    "totalBytes": 105148140,
+    "capturePeakBytes": 201677480
+  },
+  "notes": [
+    "Browser frame intervals and CPU submission time; GPU execution time is not measured.",
+    "Main/shadow/offscreen counts are the latest demand frame; offscreen is contact depth/blur. Probe counts/time are cumulative initial PMREM work for this scene, not per-frame. No continuous probe refresh exists.",
+    "CPU submit time includes the shadow work in that render; shadow CPU time cannot be separated (0 means unavailable).",
+    "Scene-ready means first complete main pass with loader idle, measured from profiler commit; excludes route/catalog loading and is not cold-network interactivity.",
+    "Memory estimates exclude driver/system allocation, decoded CPU images, shader programs, and opaque internal buffers. Shared resources may be counted in each Canvas at capture peak."
+  ]
+}

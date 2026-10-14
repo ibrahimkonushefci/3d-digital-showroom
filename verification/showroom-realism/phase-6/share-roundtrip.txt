@@ -1,0 +1,132 @@
+- banner:
+  - link "Forma Studio Digital Showroom":
+    - /url: /?brand=default
+    - strong: Forma Studio
+    - generic: Digital Showroom
+  - navigation "Home":
+    - link "Home":
+      - /url: /?brand=default
+    - link "Kitchens":
+      - /url: /designer/kitchen?brand=default
+    - link "Wardrobes":
+      - /url: /designer/wardrobe?brand=default
+  - generic "Offline ready":
+    - generic: Offline ready
+  - text: An update is ready
+  - button "Save and update"
+  - button "Later"
+  - button "Shqip": SQ
+  - button "English" [pressed]: EN
+  - button "Deutsch": DE
+  - link "Settings":
+    - /url: /settings?brand=default
+- main:
+  - heading "Wardrobes" [level=1]
+  - button "Showroom" [pressed]
+  - button "Edit modules"
+  - button "Undo" [disabled]:
+  - button "Redo" [disabled]:
+  - button "Reset configuration":
+    - generic: Reset configuration
+  - button "Hero" [pressed]
+  - button "Front"
+  - button "Top"
+  - button "Overall view":
+    - text: Overall view
+  - button "Inspect up close" [disabled]:
+    - text: Inspect up close
+  - button "Interior view"
+  - button "Open all fronts":
+    - text: Open all fronts
+  - img "Interactive 3D showroom"
+  - button "Full screen":
+  - generic: 360 × 300 × 270 cm
+  - generic: 4 modules
+  - paragraph: Tap a front to open it · Drag to look around · Two fingers to pan
+  - complementary:
+    - button "Styles & Finishes":
+      - generic: Styles & Finishes
+    - button "Room & Layout":
+      - generic: Room & Layout
+    - button "Wardrobes":
+      - generic: Wardrobes
+    - button "Storage & Lighting":
+      - generic: Storage & Lighting
+    - heading "Finish scope" [level=3]
+    - group "Finish scope":
+      - button "All · defaults" [pressed]
+      - button "Wardrobe"
+    - paragraph: Changes defaults. Zone and cabinet overrides stay in place.
+    - button "Apply defaults to all / clear overrides"
+    - paragraph: "Global default · Front finish: Cashmere"
+    - heading "Front finish" [level=3]
+    - generic: Front finish · Material tier
+    - combobox "Front finish · Material tier":
+      - option "Chipboard (Egger / Kronospan)" [selected]
+      - option "Foil-wrapped MDF"
+      - option "Matt lacquered MDF"
+      - option "High-gloss acrylic"
+      - option "Fenix"
+    - heading "Color Cashmere" [level=3]:
+      - text: Color
+      - generic: Cashmere
+    - button "Cashmere" [pressed]:
+      - generic: ✓
+    - button "Sage green"
+    - button "Anthracite"
+    - button "Warm white"
+    - button "Soft black"
+    - button "Natural oak"
+    - button "Walnut"
+    - button "Gloss white"
+    - button "H3303 ST10 · Natural Hamilton Oak"
+    - button "K190 · Black"
+    - heading "Curated Collections" [level=3]
+    - paragraph: A collection applies to all and clears overrides in one undo step.
+    - button "Milano Oak Oak decor & stainless handles":
+      - strong: Milano Oak
+      - generic: Oak decor & stainless handles
+    - button "Nordic Cashmere Cashmere matte & warm oak carcass":
+      - strong: Nordic Cashmere
+      - generic: Cashmere matte & warm oak carcass
+    - button "Metropolitan Anthracite Deep matte anthracite & black profiles":
+      - strong: Metropolitan Anthracite
+      - generic: Deep matte anthracite & black profiles
+    - button "Modern White & Oak Warm white & natural oak interior":
+      - strong: Modern White & Oak
+      - generic: Warm white & natural oak interior
+    - button "Boutique Walnut Rich walnut fronts & dark interior":
+      - strong: Boutique Walnut
+      - generic: Rich walnut fronts & dark interior
+    - heading "Handles" [level=3]
+    - button "Handleless / push"
+    - button "Stainless steel bar" [pressed]
+    - button "Gola profile"
+    - button "Matt black bar"
+    - generic: Front style
+    - button "Flat fronts" [pressed]
+    - button "Panelled fronts"
+    - heading "Plinth Matching fronts" [level=3]:
+      - text: Plinth
+      - generic: Matching fronts
+    - button "Matching fronts" [pressed]:
+      - generic: ✓
+    - button "Black"
+    - heading "Carcass Oak" [level=3]:
+      - text: Carcass
+      - generic: Oak
+    - button "White"
+    - button "Oak" [pressed]:
+      - generic: ✓
+    - button "Graphite"
+    - text: Alternative name
+    - textbox "Alternative name":
+      - /placeholder: Straight
+    - button "Save A"
+    - button "Save B"
+    - button "Compare A / B"
+    - generic: Estimated total
+    - strong: 2,043 €
+    - generic: Indicative offer
+    - button "Your offer":
+      - text: Your offer

@@ -1,13 +1,13 @@
-import { selectFamily } from "../scene/furnitureMaterials";
+import { InteriorEditor } from "./InteriorEditor";
+import { FinishScopeControl } from "./FinishScopeControl";
 import {
-  lazy,
-  Suspense,
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-  useMemo,
-} from "react";
+  applyFinishChange,
+  applyToAll,
+  scopeValue,
+  type FinishScope,
+} from "./finishes";
+import { selectFamily } from "../scene/furnitureMaterials";
+import { lazy, Suspense, useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ArrowRight,
@@ -54,9 +54,10 @@ import type {
   Opening,
   Room,
   Wall,
+  FinishOverride,
 } from "../catalog/types";
 import type { CameraPreset } from "./Scene";
-import { loadDesign } from "../persistence";
+import { readDesign } from "../persistence";
 import { calculatePrice, estimateLabel } from "../pricing";
 import {
   ErrorNotice,
@@ -313,8 +314,51 @@ export function Materials({
   const { catalog } = useBrand(),
     t = useT(),
     { language } = useLanguage();
-  const style = (key: keyof DesignDocument["style"], value: string | boolean) =>
-    onChange({ ...design, style: { ...design.style, [key]: value } });
+  const selectedId = useDesigner((s) => s.selected);
+  const selected = design.cabinets.some((c) => c.id === selectedId)
+    ? selectedId
+    : null;
+  const [requestedScope, setScope] = useState<FinishScope>("all");
+  const scope: FinishScope =
+    typeof requestedScope === "object"
+      ? selected
+        ? { cabinetId: selected }
+        : "all"
+      : requestedScope !== "all" &&
+          !design.cabinets.some(
+            (c) =>
+              (c.wall === "island" ? "island" : c.level) === requestedScope,
+          )
+        ? "all"
+        : requestedScope;
+  const [worktopZone, setWorktopZone] = useState<"default" | "main" | "island">(
+    "default",
+  );
+  const hasIsland = design.cabinets.some(
+    (c) => c.wall === "island" && c.level === "base",
+  );
+  const topZone = worktopZone === "island" && !hasIsland ? "main" : worktopZone;
+  const countertop =
+    (topZone === "default" ? undefined : design.worktopFinishes?.[topZone]) ??
+    design.style.countertop;
+  const value = (key: keyof FinishOverride) => scopeValue(design, scope, key);
+  const style = (key: keyof FinishOverride, next: string) =>
+    onChange(applyFinishChange(design, scope, { [key]: next }));
+  const clearScope = () => {
+    if (scope === "all") return onChange(applyToAll(design));
+    if (typeof scope === "object")
+      return onChange({
+        ...design,
+        cabinets: design.cabinets.map((c) => {
+          if (c.id !== scope.cabinetId) return c;
+          const { finishOverride: _, ...rest } = c;
+          return rest;
+        }),
+      });
+    const zones = { ...design.finishZones };
+    delete zones[scope];
+    onChange({ ...design, finishZones: zones });
+  };
 
   const currentThemes =
     design.kind === "wardrobe" ? WARDROBE_THEMES : KITCHEN_THEMES;
@@ -338,71 +382,136 @@ export function Materials({
       catalog.plinths.find((p) => p.id === theme.plinth)?.id ||
       catalog.plinths[0]?.id;
 
-    onChange({
-      ...design,
-      style: {
-        ...design.style,
-        front: validFront,
-        countertop: validCountertop,
-        carcass: validCarcass,
-        handle: validHandle,
-        plinth: validPlinth,
-        led: theme.led,
-        profile: theme.profile,
-      },
-      environment: {
-        floor: theme.floor,
-        wallColor: design.environment?.wallColor || "#e5e0d7",
-        internalLed:
-          design.kind === "wardrobe"
-            ? true
-            : design.environment?.internalLed || false,
-      },
+    // Collections explicitly cover the displayed scope. All resets overrides in one edit.
+    const base = scope === "all" ? applyToAll(design) : design;
+    let next = applyFinishChange(base, scope, {
+      front: validFront,
+      carcass: validCarcass,
+      handle: validHandle,
+      plinth: validPlinth,
+      profile: theme.profile,
     });
+    if (scope === "all")
+      next = {
+        ...next,
+        style: { ...next.style, countertop: validCountertop, led: theme.led },
+        environment: {
+          floor: theme.floor,
+          wallColor: design.environment?.wallColor || "#e5e0d7",
+          internalLed:
+            design.kind === "wardrobe" ||
+            design.environment?.internalLed ||
+            false,
+        },
+      };
+    else if (scope === "base" || scope === "island")
+      next = {
+        ...next,
+        worktopFinishes: {
+          ...next.worktopFinishes,
+          [scope === "island" ? "island" : "main"]: validCountertop,
+        },
+      };
+    onChange(next);
   };
-
-  const activeThemeId = useMemo(() => {
-    return (
-      currentThemes.find(
-        (th) =>
-          th.front === design.style.front &&
-          (design.kind === "wardrobe"
-            ? th.carcass === design.style.carcass
-            : th.countertop === design.style.countertop),
-      )?.id || null
-    );
-  }, [
-    design.style.front,
-    design.style.countertop,
-    design.style.carcass,
-    design.kind,
-    currentThemes,
-  ]);
+  const activeThemeId = currentThemes.find(
+    (th) =>
+      th.front === value("front") &&
+      th.carcass === value("carcass") &&
+      th.handle === value("handle") &&
+      th.plinth === value("plinth") &&
+      th.profile === value("profile") &&
+      (design.kind === "wardrobe" ||
+        (scope === "island"
+          ? (design.worktopFinishes?.island ?? design.style.countertop)
+          : (design.worktopFinishes?.main ?? design.style.countertop)) ===
+          th.countertop),
+  )?.id;
 
   return (
     <>
+      <FinishScopeControl
+        design={design}
+        selected={selected}
+        value={scope}
+        onChange={setScope}
+      />
+      <button className="button secondary full" onClick={clearScope}>
+        {t(scope === "all" ? "applyAllFinishes" : "inheritFinishes")}
+      </button>
+      {scope === "all" && (
+        <p className="helper">
+          {t("globalDefault")} · {t("front")}:{" "}
+          {label(
+            catalog.fronts.find((m) => m.id === design.style.front)!.name,
+            language,
+          )}
+        </p>
+      )}
       <h3>{t("front")}</h3>
       <TierSwatches
         tiers={catalog.frontTiers}
         title={t("front")}
         items={catalog.fronts}
-        value={design.style.front}
+        value={value("front")}
         onChange={(v) => style("front", v)}
       />
 
       {design.kind === "kitchen" && (
         <>
           <h3>{t("countertop")}</h3>
+          <p className="helper">{t("worktopScopeHint")}</p>
+          {
+            <Field label={t("worktopScope")}>
+              <select
+                value={topZone}
+                onChange={(e) =>
+                  setWorktopZone(
+                    e.target.value as "default" | "main" | "island",
+                  )
+                }
+              >
+                <option value="default">{t("globalDefault")}</option>
+                <option value="main">{t("mainWorktop")}</option>
+                {hasIsland && (
+                  <option value="island">{t("islandWorktop")}</option>
+                )}
+              </select>
+            </Field>
+          }
           <TierSwatches
             tiers={catalog.countertopTiers}
             title={t("countertop")}
             items={catalog.countertops}
-            value={design.style.countertop}
-            onChange={(v) => style("countertop", v)}
+            value={countertop}
+            onChange={(v) =>
+              onChange(
+                topZone === "default"
+                  ? { ...design, style: { ...design.style, countertop: v } }
+                  : {
+                      ...design,
+                      worktopFinishes: {
+                        ...design.worktopFinishes,
+                        [topZone]: v,
+                      },
+                    },
+              )
+            }
           />
+          {topZone !== "default" && design.worktopFinishes?.[topZone] && (
+            <button
+              className="button secondary"
+              onClick={() => {
+                const next = { ...design.worktopFinishes };
+                delete next[topZone];
+                onChange({ ...design, worktopFinishes: next });
+              }}
+            >
+              {t("useGlobalFinish")}
+            </button>
+          )}
           {["quartz", "granite"].includes(
-            catalog.countertops.find((m) => m.id === design.style.countertop)
-              ?.tier || "",
+            catalog.countertops.find((m) => m.id === countertop)?.tier || "",
           ) && <p className="helper">{t("illustrativeThickness")}</p>}
         </>
       )}
@@ -410,6 +519,15 @@ export function Materials({
       {!compact && (
         <>
           <h3>{t("curatedThemes")}</h3>
+          <p className="helper">
+            {t(
+              scope === "all"
+                ? "collectionAllHint"
+                : typeof scope === "object"
+                  ? "collectionSelectedHint"
+                  : "collectionScopeHint",
+            )}
+          </p>
           <div className="theme-card-grid">
             {currentThemes.map((th) => {
               const active = activeThemeId === th.id;
@@ -443,16 +561,19 @@ export function Materials({
 
       {!compact && (
         <>
-          <h3>{t("handle")}</h3>
+          <h3>
+            {t("handle")}{" "}
+            {!value("handle") && <span>{t("mixedFinishes")}</span>}
+          </h3>
           <div className="segmented-pills">
             {catalog.handles.map((h) => (
               <button
                 key={h.id}
                 type="button"
                 className={
-                  "segmented-pill " +
-                  (design.style.handle === h.id ? "active" : "")
+                  "segmented-pill " + (value("handle") === h.id ? "active" : "")
                 }
+                aria-pressed={value("handle") === h.id}
                 onClick={() => style("handle", h.id)}
               >
                 {label(h.name, language)}
@@ -460,14 +581,18 @@ export function Materials({
             ))}
           </div>
 
-          <Field label={t("frontStyle")}>
+          <Field
+            label={`${t("frontStyle")}${!value("profile") ? " · " + t("mixedFinishes") : ""}`}
+          >
             <div className="segmented-pills">
               <button
                 type="button"
                 className={
                   "segmented-pill " +
-                  (design.style.profile === "flat" ? "active" : "")
+                  (value("profile") === "flat" ? "active" : "")
                 }
+                aria-label={t("flat")}
+                aria-pressed={value("profile") === "flat"}
                 onClick={() => style("profile", "flat")}
               >
                 {t("flat")}
@@ -476,8 +601,9 @@ export function Materials({
                 type="button"
                 className={
                   "segmented-pill " +
-                  (design.style.profile === "panel" ? "active" : "")
+                  (value("profile") === "panel" ? "active" : "")
                 }
+                aria-pressed={value("profile") === "panel"}
                 onClick={() => style("profile", "panel")}
               >
                 {t("classic")}
@@ -486,9 +612,28 @@ export function Materials({
           </Field>
 
           <Swatches
+            title={t("plinth")}
+            items={catalog.plinths}
+            value={value("plinth")}
+            onChange={(v) => style("plinth", v)}
+          />
+          {design.kind === "kitchen" && (
+            <Swatches
+              title={t("backsplash")}
+              items={catalog.backsplashes}
+              value={design.style.backsplash}
+              onChange={(v) =>
+                onChange({
+                  ...design,
+                  style: { ...design.style, backsplash: v },
+                })
+              }
+            />
+          )}
+          <Swatches
             title={t("carcass")}
             items={catalog.carcasses}
-            value={design.style.carcass}
+            value={value("carcass")}
             onChange={(v) => style("carcass", v)}
           />
         </>
@@ -532,6 +677,7 @@ function TierSwatches({
             )
           }
         >
+          {!tier && <option value="">{t("mixedFinishes")}</option>}
           {tiers.map((t) => (
             <option key={t.id} value={t.id}>
               {label(t.name, language)}
@@ -541,7 +687,7 @@ function TierSwatches({
       </Field>
       <Swatches
         title={t("color")}
-        items={items.filter((m) => !tier || tier.decors.includes(m.id))}
+        items={items.filter((m) => !!tier && tier.decors.includes(m.id))}
         value={value}
         onChange={onChange}
       />
@@ -558,10 +704,22 @@ export default function Designer() {
     navigate = useNavigate();
   const state = useDesigner();
   const { design, selected, past, future } = state;
+  const [replacement, setReplacement] = useState<{
+    before: DesignDocument;
+    next: DesignDocument;
+  } | null>(null);
+  const replacementRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (replacement && replacement.before !== design) setReplacement(null);
+  }, [design, replacement]);
+  useEffect(() => {
+    replacementRef.current?.scrollIntoView({ block: "center" });
+  }, [replacement]);
+  const [loadFailure, setLoadFailure] = useState<string | null>(null);
   const [panel, setPanel] = useState<
     "styles" | "layout" | "cabinets" | "details"
   >("styles");
-  const [preset, setPreset] = useState<CameraPreset>("perspective");
+  const [preset, setPreset] = useState<CameraPreset>("hero");
   // Showroom presentation: canvas fills the screen, options in a sheet.
   const [immersive, setImmersive] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -576,16 +734,15 @@ export default function Designer() {
   const [comparisonStatus, setComparisonStatus] = useState<
     "comparisonSaved" | "comparisonError" | null
   >(null);
-  const capture = useRef<(() => Promise<string>) | null>(null);
-  const registerCapture = useCallback((fn: () => Promise<string>) => {
-    capture.current = fn;
-  }, []);
 
   useEffect(() => {
+    setLoadFailure(null);
     if (useDesigner.getState().design?.kind !== kind) {
       const previousError = useDesigner.getState().error;
-      const saved = loadDesign(brand.slug, kind, catalog);
-      state.setDesign(saved || defaultDesign(kind, catalog));
+      const saved = readDesign(brand.slug, kind, catalog);
+      setLoadFailure(saved.error);
+      if (saved.error) return;
+      state.setDesign(saved.design || defaultDesign(kind, catalog));
       if (previousError) state.setError(previousError);
     }
   }, [kind, catalog, brand.slug]);
@@ -596,6 +753,9 @@ export default function Designer() {
     }
   }, [selected, state.interactionMode]);
 
+  useEffect(() => {
+    if (state.selectedInterior) setPanel("details");
+  }, [state.selectedInterior?.cabinetId, state.selectedInterior?.componentId]);
   // Only a deliberate inspection moves the camera; a tap just opens the unit.
   const focused = state.focused;
   useEffect(() => {
@@ -640,10 +800,28 @@ export default function Designer() {
     setComparisonStatus(null);
     setAlternativeName("");
   }, [kind, brand.slug]);
+  if (loadFailure)
+    return (
+      <main className="page">
+        <ErrorNotice message={loadFailure} />
+      </main>
+    );
   if (!design || design.kind !== kind)
     return <div className="startup">{t("sceneLoading")}</div>;
 
-  const edit = (next: DesignDocument) => state.edit(next, catalog);
+  const edit = (next: DesignDocument) => {
+    const losesCustomInterior = design.cabinets.some(
+      (c) => c.interior && !next.cabinets.some((n) => n.id === c.id),
+    );
+    const regenerated = next.cabinets.every(
+      (c) => !design.cabinets.some((n) => n.id === c.id),
+    );
+    if (losesCustomInterior && regenerated) {
+      setReplacement({ before: design, next });
+      return false;
+    }
+    return state.edit(next, catalog);
+  };
   const price = calculatePrice(design, catalog, language);
   const priceText = estimateLabel(price, design.exact, language);
   const layouts: Layout[] =
@@ -659,12 +837,14 @@ export default function Designer() {
   };
   const inspect = (id: string) => {
     state.select(id);
+    setPreset("hero");
     state.focus(id);
+    setReframe((n) => n + 1);
     setSheetOpen(false);
   };
   const resetConfigurationClick = () => {
     if (state.resetDesign(resetConfiguration(design, catalog), catalog)) {
-      setPreset("perspective");
+      setPreset("hero");
       setReframe((n) => n + 1);
       setResetDone(true);
     }
@@ -688,15 +868,12 @@ export default function Designer() {
       ? design.cabinets.find((c) => c.id === selected)
       : undefined;
 
-  const summary = async () => {
-    if (capture.current) {
-      try {
-        state.setScreenshot(await capture.current());
-      } catch {
-        /* Summary can retry capture. */
-      }
-    }
-    navigate("/summary" + location.search);
+  // Summary owns its closed overall capture; navigation never waits on the
+  // live inspection camera or reuses an image of an older configuration.
+  const summary = () => {
+    const query = new URLSearchParams(location.search);
+    query.set("kind", design.kind);
+    navigate("/summary?" + query.toString());
   };
 
   return (
@@ -799,6 +976,29 @@ export default function Designer() {
         </div>
       )}
 
+      {replacement && (
+        <div
+          className="notice interior-replacement"
+          role="alert"
+          ref={replacementRef}
+        >
+          <p>{t("interiorRegenerateWarning")}</p>
+          <button
+            className="button secondary"
+            onClick={() => setReplacement(null)}
+          >
+            {t("cancel")}
+          </button>
+          <button
+            className="button primary"
+            onClick={() => {
+              if (state.edit(replacement.next, catalog)) setReplacement(null);
+            }}
+          >
+            {t("interiorRebuild")}
+          </button>
+        </div>
+      )}
       <ErrorNotice
         message={state.error}
         onDismiss={() => state.setError(null)}
@@ -808,16 +1008,23 @@ export default function Designer() {
         <section className="canvas-panel">
           <div className="canvas-controls">
             <div className="canvas-controls-group">
-              {(["perspective", "front", "top"] as const).map((p) => (
+              {(["hero", "front", "top"] as const).map((p) => (
                 <button
                   key={p}
-                  className={preset === p ? "active" : ""}
+                  aria-pressed={preset === p && !focused}
+                  className={preset === p && !focused ? "active" : ""}
                   onClick={() => {
                     setPreset(p);
                     overallView();
                   }}
                 >
-                  {t(p === "front" ? "frontCamera" : p)}
+                  {t(
+                    p === "front"
+                      ? "frontCamera"
+                      : p === "hero"
+                        ? "heroCamera"
+                        : p,
+                  )}
                 </button>
               ))}
             </div>
@@ -825,12 +1032,20 @@ export default function Designer() {
             <button
               title={t("resetCamera")}
               onClick={() => {
-                setPreset("perspective");
+                setPreset("overall");
                 overallView();
               }}
             >
               <RotateCcw size={14} />
               <span>{t("overallView")}</span>
+            </button>
+            <button
+              disabled={!selected || state.interactionMode !== "showroom"}
+              aria-pressed={!!focused}
+              onClick={() => selected && inspect(selected)}
+            >
+              <ScanSearch size={15} />
+              <span>{t("inspect")}</span>
             </button>
             {kind === "wardrobe" && (
               <button
@@ -862,7 +1077,7 @@ export default function Designer() {
               preset={preset}
               cameraView={state.cameraView || undefined}
               interactive
-              capture={registerCapture}
+              suspended={!!saving}
               reframe={reframe}
             />
           </Suspense>
@@ -1020,7 +1235,10 @@ export default function Designer() {
               </>
             )}
             {panel === "details" && (
-              <DetailsSection design={design} onChange={edit} />
+              <>
+                <DetailsSection design={design} onChange={edit} />
+                <InteriorEditor design={design} />
+              </>
             )}
           </div>
 
@@ -1436,6 +1654,17 @@ function CabinetsSection({
     const n: Cabinet = {
       ...c,
       id: uid(),
+      ...(c.interior
+        ? {
+            interior: {
+              version: 1 as const,
+              components: c.interior.components.map((i) => ({
+                ...i,
+                id: uid(),
+              })),
+            },
+          }
+        : {}),
     };
     const offset = wallOffset(c) + c.width;
     Object.assign(
@@ -1511,6 +1740,17 @@ function CabinetsSection({
             </span>
           </div>
 
+          {c.interior && (
+            <>
+              <p className="helper">{t("interiorResizeHelp")}</p>
+              <button
+                className="button secondary full"
+                onClick={() => update({ interior: undefined })}
+              >
+                {t("interiorReset")}
+              </button>
+            </>
+          )}
           <Field label={t("width")}>
             <div className="segmented-pills">
               {selectedModule.widths.map((w) => (
@@ -1528,6 +1768,15 @@ function CabinetsSection({
             </div>
           </Field>
 
+          {c.level === "wardrobe" && (
+            <NumberField
+              label={t("height")}
+              value={c.height}
+              min={180}
+              max={selectedModule.height}
+              onChange={(height) => update({ height })}
+            />
+          )}
           {compatibleModules.length > 1 && (
             <Field label={t("swapType")}>
               <div className="segmented-pills">
@@ -1945,7 +2194,7 @@ function Inspection({
   const c = design.cabinets.find((c) => c.id === state.selected);
   if (!c) return null;
   const m = catalog.modules.find((m) => m.id === c.moduleId)!;
-  const storage = storageMeasurements(c, m),
+  const storage = storageMeasurements(c, m, catalog),
     cm = (m: number) => Math.round(m * 1000) / 10;
   return (
     <section className="inspection-card">

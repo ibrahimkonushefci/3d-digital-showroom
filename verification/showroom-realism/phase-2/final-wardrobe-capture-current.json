@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "sceneId": "default:wardrobe-straight:temporary-capture",
+  "scope": "desktop-browser",
+  "device": {
+    "label": "@Browser desktop",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+  },
+  "recordedAt": "2026-10-14T14:16:30.703Z",
+  "viewport": {
+    "width": 960,
+    "height": 640,
+    "dpr": 1
+  },
+  "renderer": "WebKit WebGL",
+  "quality": "balanced",
+  "movingFrames": {
+    "samples": 0,
+    "p50Ms": null,
+    "p95Ms": null,
+    "maxMs": null
+  },
+  "sceneReadyMs": 178.60000002384186,
+  "passes": {
+    "main": {
+      "calls": 56,
+      "triangles": 5068,
+      "cpuSubmitMs": 0.5
+    },
+    "shadow": {
+      "calls": 44,
+      "triangles": 4944,
+      "cpuSubmitMs": 0
+    },
+    "offscreen": {
+      "calls": 0,
+      "triangles": 0,
+      "cpuSubmitMs": 0
+    },
+    "probe": {
+      "calls": 55,
+      "triangles": 660,
+      "cpuSubmitMs": 5.699999928474426
+    }
+  },
+  "rendererCounts": {
+    "textures": 12,
+    "geometries": 31
+  },
+  "estimates": {
+    "texturesBytes": 44739248,
+    "renderTargetsBytes": 44040192,
+    "geometryBytes": 482920,
+    "framebufferBytes": 13657600,
+    "totalBytes": 102919960,
+    "capturePeakBytes": 203964136
+  },
+  "notes": [
+    "Browser frame intervals and CPU submission time; GPU execution time is not measured.",
+    "Main/shadow/offscreen counts are the latest demand frame; offscreen is contact depth/blur. Probe counts/time are cumulative initial PMREM work for this scene, not per-frame. No continuous probe refresh exists.",
+    "CPU submit time includes the shadow work in that render; shadow CPU time cannot be separated (0 means unavailable).",
+    "Scene-ready means first complete main pass with loader idle, measured from profiler commit; excludes route/catalog loading and is not cold-network interactivity.",
+    "Memory estimates exclude driver/system allocation, decoded CPU images, shader programs, and opaque internal buffers. Shared resources may be counted in each Canvas at capture peak."
+  ],
+  "peakDrawFrame": {
+    "main": 56,
+    "shadow": 44,
+    "offscreen": 41,
+    "total": 141
+  }
+}

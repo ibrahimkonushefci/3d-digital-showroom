@@ -1,0 +1,137 @@
+- banner:
+  - link "Druri Design Sallon digjital":
+    - /url: /?brand=druri-design
+    - strong: Druri Design
+    - generic: Sallon digjital
+  - navigation "Ballina":
+    - link "Ballina":
+      - /url: /?brand=druri-design
+    - link "Kuzhina":
+      - /url: /designer/kitchen?brand=druri-design
+    - link "Gardëroba":
+      - /url: /designer/wardrobe?brand=druri-design
+  - generic "Gati pa internet":
+    - generic: Gati pa internet
+  - button "Shqip" [active] [pressed]: SQ
+  - button "English": EN
+  - button "Deutsch": DE
+  - link "Cilësimet":
+    - /url: /settings?brand=druri-design
+- main:
+  - link "Kthehuni te dizajni":
+    - /url: /designer/wardrobe?brand=druri-design
+    - text: Kthehuni te dizajni
+  - generic: Druri Design
+  - heading "Oferta juaj" [level=1]
+  - generic: Ofertë orientuese
+  - img "Pamja 3D e sallonit"
+  - heading "Materialet sipas zonës / modulit" [level=2]
+  - paragraph:
+    - strong: Gardëroba · Pozicionet 1, 2, 3, 4 · 4 copë
+    - text: "Materiali i fronteve: Iverall (Egger / Kronospan) · Kashmir · Korpusi: Lis · Dorezat: Shufër inox · Stili i fronteve: Fronte të sheshta · Sokëlli: Si frontet (Kashmir)"
+  - heading "Inventari i brendësisë" [level=2]
+  - paragraph: Lartësitë maten nga dyshemeja e brendshme. Rregullat e përshtatjes dhe çmimet janë ilustruese. Përmbajtja dekorative nuk përfshihet në inventar.
+  - paragraph:
+    - strong: Pozicionet 1 · Gardërobë me varje (80 cm)
+    - text: "Shufër varëse: 195,4 cm"
+  - paragraph:
+    - strong: Pozicionet 2 · Gardërobë me rafte (80 cm)
+    - text: "Raft: 70,9 cm · Raft: 139,9 cm · Raft: 185,9 cm · Shportë tërheqëse: 0 cm"
+  - paragraph:
+    - strong: Pozicionet 3 · Gardërobë me sirtarë (80 cm)
+    - text: "Raft: 65,3 cm · Raft: 127,3 cm · Raft: 187,3 cm · Sirtar i brendshëm: 0 cm · Sirtar i brendshëm: 22 cm · Sirtar i brendshëm: 44 cm"
+  - paragraph:
+    - strong: Pozicionet 4 · Gardërobë rrëshqitëse (100 cm)
+    - text: "Shufër varëse: 195,4 cm"
+  - heading "Konfigurimi juaj" [level=2]
+  - table:
+    - rowgroup:
+      - row "Artikulli Sasia Shuma":
+        - columnheader "Artikulli"
+        - columnheader "Sasia"
+        - columnheader "Shuma"
+    - rowgroup:
+      - row "Gardërobë me varje · 80 × 60 × 230 cm 1 copë 276 €":
+        - cell "Gardërobë me varje · 80 × 60 × 230 cm":
+          - text: Gardërobë me varje
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 copë"
+        - cell "276 €"
+      - row "Gardërobë me rafte · 80 × 60 × 230 cm 1 copë 252 €":
+        - cell "Gardërobë me rafte · 80 × 60 × 230 cm":
+          - text: Gardërobë me rafte
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 copë"
+        - cell "252 €"
+      - row "Gardërobë me sirtarë · 80 × 60 × 230 cm 1 copë 352 €":
+        - cell "Gardërobë me sirtarë · 80 × 60 × 230 cm":
+          - text: Gardërobë me sirtarë
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 copë"
+        - cell "352 €"
+      - row "Organizues sirtari 1 copë 35 €":
+        - cell "Organizues sirtari"
+        - cell "1 copë"
+        - cell "35 €"
+      - row "Gardërobë rrëshqitëse · 100 × 60 × 230 cm 1 copë 410 €":
+        - cell "Gardërobë rrëshqitëse · 100 × 60 × 230 cm":
+          - text: Gardërobë rrëshqitëse
+          - generic: · 100 × 60 × 230 cm
+        - cell "1 copë"
+        - cell "410 €"
+      - row "Shufër inox 7 copë 63 €":
+        - cell "Shufër inox"
+        - cell "7 copë"
+        - cell "63 €"
+      - row "Sokëlli 3,4 m 41 €":
+        - cell "Sokëlli"
+        - cell "3,4 m"
+        - cell "41 €"
+      - row "LED brenda gardërobës 3,4 m 119 €":
+        - cell "LED brenda gardërobës"
+        - cell "3,4 m"
+        - cell "119 €"
+      - row "Shtesë e brendësisë · Shportë tërheqëse · Pozicionet 2 (80 cm) 1 copë 61 €":
+        - cell "Shtesë e brendësisë · Shportë tërheqëse · Pozicionet 2 (80 cm)"
+        - cell "1 copë"
+        - cell "61 €"
+    - rowgroup:
+      - row "Montimi (8%) 129 €":
+        - cell "Montimi (8%)"
+        - cell "129 €"
+      - row "TVSH (18%) 313 €":
+        - cell "TVSH (18%)"
+        - cell "313 €"
+      - row "Totali me TVSH 2.050 €":
+        - cell "Totali me TVSH"
+        - cell "2.050 €"
+  - complementary:
+    - generic: Vlerësimi total
+    - heading "2.050 €" [level=2]
+    - paragraph: Çmim orientues. Oferta përfundimtare konfirmohet pas matjes dhe përzgjedhjes së materialeve.
+    - generic "Të dhënat e klientit"
+    - generic: Montimi · 8%
+    - checkbox "Montimi · 8%" [checked]
+    - generic: TVSH · 18%
+    - checkbox "TVSH · 18%" [checked]
+    - generic: Shfaqni një vlerësim të vetëm
+    - checkbox "Shfaqni një vlerësim të vetëm" [checked]
+    - button "Dërgo ofertën (PDF)":
+      - text: Dërgo ofertën (PDF)
+    - button "Shkarkoni ofertën PDF":
+      - text: Shkarkoni ofertën PDF
+    - button "Kopjoni lidhjen":
+      - text: Kopjoni lidhjen
+    - button "Dërgoja dikujt":
+      - text: Dërgoja dikujt
+    - button "WhatsApp":
+      - text: WhatsApp
+    - strong: Druri Design
+    - generic: Prishtinë
+- contentinfo:
+  - strong: Druri Design
+  - generic: Prishtinë · Përmasat në cm
+  - generic: Markë demo fiktive · çmime shembull
+  - link "Zbuloni materialet":
+    - /url: /material-switcher?brand=druri-design
+    - text: Zbuloni materialet

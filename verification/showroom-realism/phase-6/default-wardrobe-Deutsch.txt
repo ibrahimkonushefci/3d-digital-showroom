@@ -1,0 +1,137 @@
+- banner:
+  - link "Forma Studio Digitaler Showroom":
+    - /url: /?brand=default
+    - strong: Forma Studio
+    - generic: Digitaler Showroom
+  - navigation "Start":
+    - link "Start":
+      - /url: /?brand=default
+    - link "Küchen":
+      - /url: /designer/kitchen?brand=default
+    - link "Kleiderschränke":
+      - /url: /designer/wardrobe?brand=default
+  - generic "Offline bereit":
+    - generic: Offline bereit
+  - button "Shqip": SQ
+  - button "English": EN
+  - button "Deutsch" [active] [pressed]: DE
+  - link "Einstellungen":
+    - /url: /settings?brand=default
+- main:
+  - link "Zurück zum Entwurf":
+    - /url: /designer/wardrobe?brand=default
+    - text: Zurück zum Entwurf
+  - generic: Forma Studio
+  - heading "Ihr Angebot" [level=1]
+  - generic: Unverbindliches Angebot
+  - img "Interaktiver 3D-Showroom"
+  - heading "Materialien nach Bereich / Schrank" [level=2]
+  - paragraph:
+    - strong: Kleiderschrank · Positionen 1, 2, 3, 4 · 4 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Kaschmir · Korpus: Eiche · Griffe: Edelstahl-Bügel · Frontstil: Glatte Fronten · Sockel: Wie Fronten (Kaschmir)"
+  - heading "Inventar der Innenausstattung" [level=2]
+  - paragraph: Höhen werden ab Innenboden gemessen. Passregeln und Preise sind beispielhaft. Dekorative Inhalte gehören nicht zum Inventar.
+  - paragraph:
+    - strong: Positionen 1 · Kleiderschrank (80 cm)
+    - text: "Kleiderstange: 195,4 cm"
+  - paragraph:
+    - strong: Positionen 2 · Regalschrank (80 cm)
+    - text: "Einlegeboden: 72 cm · Einlegeboden: 139,9 cm · Einlegeboden: 185,9 cm · Ausziehkorb: 0 cm"
+  - paragraph:
+    - strong: Positionen 3 · Schrank mit Schubladen (80 cm)
+    - text: "Einlegeboden: 65,3 cm · Einlegeboden: 127,3 cm · Einlegeboden: 187,3 cm · Innenschublade: 0 cm · Innenschublade: 22 cm · Innenschublade: 44 cm"
+  - paragraph:
+    - strong: Positionen 4 · Schiebetürenschrank (100 cm)
+    - text: "Kleiderstange: 195,4 cm"
+  - heading "Ihre Konfiguration" [level=2]
+  - table:
+    - rowgroup:
+      - row "Artikel Menge Betrag":
+        - columnheader "Artikel"
+        - columnheader "Menge"
+        - columnheader "Betrag"
+    - rowgroup:
+      - row "Kleiderschrank · 80 × 60 × 230 cm 1 Stk. 276 €":
+        - cell "Kleiderschrank · 80 × 60 × 230 cm":
+          - text: Kleiderschrank
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 Stk."
+        - cell "276 €"
+      - row "Regalschrank · 80 × 60 × 230 cm 1 Stk. 252 €":
+        - cell "Regalschrank · 80 × 60 × 230 cm":
+          - text: Regalschrank
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 Stk."
+        - cell "252 €"
+      - row "Schrank mit Schubladen · 80 × 60 × 230 cm 1 Stk. 352 €":
+        - cell "Schrank mit Schubladen · 80 × 60 × 230 cm":
+          - text: Schrank mit Schubladen
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 Stk."
+        - cell "352 €"
+      - row "Schubladeneinsatz 1 Stk. 35 €":
+        - cell "Schubladeneinsatz"
+        - cell "1 Stk."
+        - cell "35 €"
+      - row "Schiebetürenschrank · 100 × 60 × 230 cm 1 Stk. 410 €":
+        - cell "Schiebetürenschrank · 100 × 60 × 230 cm":
+          - text: Schiebetürenschrank
+          - generic: · 100 × 60 × 230 cm
+        - cell "1 Stk."
+        - cell "410 €"
+      - row "Edelstahl-Bügel 7 Stk. 63 €":
+        - cell "Edelstahl-Bügel"
+        - cell "7 Stk."
+        - cell "63 €"
+      - row "Sockel 3,4 m 41 €":
+        - cell "Sockel"
+        - cell "3,4 m"
+        - cell "41 €"
+      - row "LED im Kleiderschrank 3,4 m 119 €":
+        - cell "LED im Kleiderschrank"
+        - cell "3,4 m"
+        - cell "119 €"
+      - row "Zusätzliche Innenausstattung · Ausziehkorb · Positionen 2 (80 cm) 1 Stk. 55 €":
+        - cell "Zusätzliche Innenausstattung · Ausziehkorb · Positionen 2 (80 cm)"
+        - cell "1 Stk."
+        - cell "55 €"
+    - rowgroup:
+      - row "Montage (8%) 128 €":
+        - cell "Montage (8%)"
+        - cell "128 €"
+      - row "MwSt. (18%) 312 €":
+        - cell "MwSt. (18%)"
+        - cell "312 €"
+      - row "Gesamtbetrag inkl. MwSt. 2.043 €":
+        - cell "Gesamtbetrag inkl. MwSt."
+        - cell "2.043 €"
+  - complementary:
+    - generic: Geschätzter Gesamtpreis
+    - heading "2.043 €" [level=2]
+    - paragraph: Richtpreis. Das endgültige Angebot wird nach Aufmaß und Materialauswahl bestätigt.
+    - generic "Kundendaten"
+    - generic: Montage · 8%
+    - checkbox "Montage · 8%" [checked]
+    - generic: MwSt. · 18%
+    - checkbox "MwSt. · 18%" [checked]
+    - generic: Einzelne Schätzung anzeigen
+    - checkbox "Einzelne Schätzung anzeigen" [checked]
+    - button "Angebot senden (PDF)":
+      - text: Angebot senden (PDF)
+    - button "PDF-Angebot herunterladen":
+      - text: PDF-Angebot herunterladen
+    - button "Entwurfslink kopieren":
+      - text: Entwurfslink kopieren
+    - button "An jemanden senden":
+      - text: An jemanden senden
+    - button "WhatsApp":
+      - text: WhatsApp
+    - strong: Forma Studio
+    - generic: Prishtinë
+- contentinfo:
+  - strong: Forma Studio
+  - generic: Prishtinë · Maße in cm
+  - generic: Fiktive Demomarke · Beispielpreise
+  - link "Materialien entdecken":
+    - /url: /material-switcher?brand=default
+    - text: Materialien entdecken

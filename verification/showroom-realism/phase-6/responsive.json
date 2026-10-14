@@ -1,0 +1,172 @@
+[
+  {
+    "label": "wardrobe-storage-portrait",
+    "canvas": {
+      "bottom": 128.90625,
+      "height": 595.40625,
+      "left": 25,
+      "right": 780,
+      "top": -466.5,
+      "width": 755,
+      "x": 25,
+      "y": -466.5
+    },
+    "height": 1180,
+    "overflow": false,
+    "small": [],
+    "width": 820
+  },
+  {
+    "label": "wardrobe-german-phone",
+    "canvas": {
+      "bottom": 1078.640625,
+      "height": 595.40625,
+      "left": 16,
+      "right": 771,
+      "top": 483.234375,
+      "width": 755,
+      "x": 16,
+      "y": 483.234375
+    },
+    "height": 844,
+    "overflow": false,
+    "small": [],
+    "width": 390
+  },
+  {
+    "label": "wardrobe-german-phone-settled",
+    "canvas": {
+      "bottom": 768.9453125,
+      "height": 285.7109375,
+      "left": 16,
+      "right": 359,
+      "top": 483.234375,
+      "width": 343,
+      "x": 16,
+      "y": 483.234375
+    },
+    "height": 844,
+    "overflow": false,
+    "small": [],
+    "width": 390
+  },
+  {
+    "label": "wardrobe-1024-settled",
+    "canvas": {
+      "bottom": 704.703125,
+      "height": 427.703125,
+      "left": 25,
+      "right": 664,
+      "top": 277,
+      "width": 639,
+      "x": 25,
+      "y": 277
+    },
+    "height": 768,
+    "overflow": false,
+    "small": [],
+    "width": 1024
+  },
+  {
+    "label": "wardrobe-1180",
+    "canvas": {
+      "bottom": 756.703125,
+      "height": 527.703125,
+      "left": 25,
+      "right": 813,
+      "top": 229,
+      "width": 788,
+      "x": 25,
+      "y": 229
+    },
+    "height": 820,
+    "overflow": false,
+    "small": [],
+    "width": 1180
+  },
+  {
+    "label": "kitchen-1180",
+    "canvas": {
+      "bottom": 756.703125,
+      "height": 527.703125,
+      "left": 25,
+      "right": 813,
+      "top": 229,
+      "width": 788,
+      "x": 25,
+      "y": 229
+    },
+    "height": 820,
+    "overflow": false,
+    "small": [],
+    "width": 1180
+  },
+  {
+    "label": "kitchen-1024",
+    "canvas": {
+      "bottom": 704.703125,
+      "height": 475.703125,
+      "left": 25,
+      "right": 664,
+      "top": 229,
+      "width": 639,
+      "x": 25,
+      "y": 229
+    },
+    "height": 768,
+    "overflow": false,
+    "small": [],
+    "width": 1024
+  },
+  {
+    "label": "kitchen-820",
+    "canvas": {
+      "bottom": 890.40625,
+      "height": 595.40625,
+      "left": 25,
+      "right": 780,
+      "top": 295,
+      "width": 755,
+      "x": 25,
+      "y": 295
+    },
+    "height": 1180,
+    "overflow": false,
+    "small": [],
+    "width": 820
+  },
+  {
+    "label": "kitchen-390",
+    "canvas": {
+      "bottom": 681.8984375,
+      "height": 296.6640625,
+      "left": 16,
+      "right": 359,
+      "top": 385.234375,
+      "width": 343,
+      "x": 16,
+      "y": 385.234375
+    },
+    "height": 844,
+    "overflow": false,
+    "small": [],
+    "width": 390
+  },
+  {
+    "label": "wardrobe-final-german-phone",
+    "canvas": {
+      "bottom": 718.3046875,
+      "height": 235.0703125,
+      "left": 16,
+      "right": 359,
+      "top": 483.234375,
+      "width": 343,
+      "x": 16,
+      "y": 483.234375
+    },
+    "height": 844,
+    "overflow": false,
+    "small": [],
+    "width": 390
+  }
+]

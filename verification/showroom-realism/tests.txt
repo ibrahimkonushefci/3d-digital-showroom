@@ -1,0 +1,36 @@
+$ vitest run
+
+ RUN  v3.2.7 /Users/ibrahimi/3d_designer
+
+(node:64265) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64269) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64262) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64263) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64264) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64268) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/interaction.test.ts (3 tests) 23ms
+ ✓ tests/comparison.test.ts (4 tests) 33ms
+ ✓ tests/demo-safety.test.ts (4 tests) 35ms
+ ✓ tests/framing.test.ts (10 tests) 96ms
+ ✓ tests/showroom.test.ts (15 tests) 81ms
+ ✓ tests/phase0-compatibility.test.ts (10 tests) 113ms
+ ✓ tests/offers.test.ts (7 tests) 57ms
+ ✓ tests/core.test.ts (30 tests) 177ms
+ ✓ tests/proposal.test.ts (4 tests) 300ms
+ ✓ tests/assets.test.ts (2 tests) 23ms
+ ✓ tests/realism.test.ts (3 tests) 13ms
+(node:64294) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/phase0-resources.test.ts (6 tests) 11ms
+
+ Test Files  12 passed (12)
+      Tests  98 passed (98)
+   Start at  19:51:46
+   Duration  1.77s (transform 844ms, setup 0ms, collect 3.34s, tests 963ms, environment 10ms, prepare 1.50s)
+

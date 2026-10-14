@@ -1,0 +1,14 @@
+{
+  "scope": "normal editor, DEV-only DOM counter; no measurement panel",
+  "before": {
+    "time": "2026-10-14T18:52:40.510Z",
+    "canvases": 1,
+    "frames": 24
+  },
+  "after": {
+    "time": "2026-10-14T18:52:59.947Z",
+    "canvases": 1,
+    "frames": 24
+  },
+  "idle": true
+}

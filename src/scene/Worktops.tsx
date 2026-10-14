@@ -2,8 +2,10 @@ import { useMemo, useEffect, Suspense } from "react";
 import { Shape, Path, ExtrudeGeometry } from "three";
 import type { Catalog, DesignDocument } from "../catalog/types";
 import { worktopRuns, pointInPolygon } from "./countertopGeometry";
-import { countertopThickness } from "./furnitureMaterials";
+
 import { SurfaceMaterial } from "./Materials";
+import { resolveRunStyle } from "../designer3d/finishes";
+import { slabUvGenerator } from "./materialMapping";
 export function Worktops({
   design,
   catalog,
@@ -11,11 +13,15 @@ export function Worktops({
   design: DesignDocument;
   catalog: Catalog;
 }) {
-  const thickness = countertopThickness(design, catalog);
   const slabs = useMemo(
     () =>
-      worktopRuns(design.cabinets, catalog).flatMap((run) =>
-        run.outlines.map((points) => {
+      worktopRuns(design.cabinets, catalog).flatMap((run) => {
+        const { countertop: material, thickness } = resolveRunStyle(
+          design,
+          run,
+          catalog,
+        );
+        return run.outlines.map((points) => {
           const shape = new Shape();
           points.forEach(([x, z], i) =>
             i ? shape.lineTo(x, z) : shape.moveTo(x, z),
@@ -33,23 +39,40 @@ export function Worktops({
               shape.holes.push(path);
             }
           const geometry = new ExtrudeGeometry(shape, {
-            depth: thickness,
+            // ExtrudeGeometry adds bevelThickness at both ends; keep the tier's outer thickness.
+            depth: thickness - 0.004,
             bevelEnabled: true,
             bevelThickness: 0.002,
             bevelSize: 0.002,
-            bevelSegments: 4,
+            bevelSegments: 2,
             steps: 1,
             curveSegments: 8,
+            ...(material.mapping
+              ? {
+                  UVGenerator: slabUvGenerator(
+                    [points, ...run.holes],
+                    material.mapping,
+                  ),
+                }
+              : {}),
           });
-          return { geometry, y: 0.1 + run.height / 100 + thickness };
-        }),
-      ),
-    [design.cabinets, catalog, thickness],
+          geometry.setAttribute("uv1", geometry.getAttribute("uv").clone());
+          return {
+            geometry,
+            material,
+            y: 0.1 + run.height / 100 + thickness - 0.002,
+          };
+        });
+      }),
+    [
+      design.cabinets,
+      design.style.countertop,
+      design.style.backsplash,
+      design.worktopFinishes,
+      catalog,
+    ],
   );
   useEffect(() => () => slabs.forEach((s) => s.geometry.dispose()), [slabs]);
-  const material = catalog.countertops.find(
-    (m) => m.id === design.style.countertop,
-  )!;
   return (
     <>
       {slabs.map((s, i) => (
@@ -61,8 +84,10 @@ export function Worktops({
           castShadow
           receiveShadow
         >
-          <Suspense fallback={<meshStandardMaterial color={material.color} />}>
-            <SurfaceMaterial material={material} world />
+          <Suspense
+            fallback={<meshStandardMaterial color={s.material.color} />}
+          >
+            <SurfaceMaterial material={s.material} world />
           </Suspense>
         </mesh>
       ))}

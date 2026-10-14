@@ -1,0 +1,185 @@
+- banner:
+  - link "Druri Design Digitaler Showroom":
+    - /url: /?brand=druri-design
+    - strong: Druri Design
+    - generic: Digitaler Showroom
+  - navigation "Start":
+    - link "Start":
+      - /url: /?brand=druri-design
+    - link "Küchen":
+      - /url: /designer/kitchen?brand=druri-design
+    - link "Kleiderschränke":
+      - /url: /designer/wardrobe?brand=druri-design
+  - generic "Offline bereit":
+    - generic: Offline bereit
+  - button "Shqip": SQ
+  - button "English": EN
+  - button "Deutsch" [active] [pressed]: DE
+  - link "Einstellungen":
+    - /url: /settings?brand=druri-design
+- main:
+  - link "Zurück zum Entwurf":
+    - /url: /designer/kitchen?brand=druri-design
+    - text: Zurück zum Entwurf
+  - generic: Druri Design
+  - heading "Ihr Angebot" [level=1]
+  - generic: Unverbindliches Angebot
+  - img "Interaktiver 3D-Showroom"
+  - heading "Materialien nach Bereich / Schrank" [level=2]
+  - paragraph:
+    - strong: Hochschränke · Positionen 1, 2 · 2 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Anthrazit · Korpus: Weiß · Griffe: Edelstahl-Bügel · Frontstil: Glatte Fronten · Sockel: Schwarz"
+  - paragraph:
+    - strong: Unterschränke · Positionen 3, 4, 5, 6, 7, 8 · 6 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Natureiche · Korpus: Eiche · Griffe: Edelstahl-Bügel · Frontstil: Glatte Fronten · Sockel: Wie Fronten (Natureiche)"
+  - paragraph:
+    - strong: Oberschränke · Positionen 9, 10, 11, 12, 13, 14 · 6 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Warmweiß · Korpus: Weiß · Griffe: Edelstahl-Bügel · Frontstil: Glatte Fronten"
+  - paragraph:
+    - strong: Insel · Positionen 15 · 1 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Walnuss · Korpus: Weiß · Griffe: Edelstahl-Bügel · Frontstil: Rahmenfronten · Sockel: Schwarz"
+  - paragraph:
+    - strong: Insel · Positionen 16, 17, 18 · 3 Stk.
+    - text: "Frontmaterial: Fenix · Anthrazit · Korpus: Weiß · Griffe: Edelstahl-Bügel · Frontstil: Glatte Fronten · Sockel: Schwarz"
+  - paragraph:
+    - strong: Hauptarbeitsplatte · 3,6 m
+    - text: "Travertin · 12 mm · Rückwand: Keine"
+  - paragraph:
+    - strong: Inselarbeitsplatte · 2,4 m
+    - text: Quarz · 20 mm
+  - heading "Ihre Konfiguration" [level=2]
+  - table:
+    - rowgroup:
+      - row "Artikel Menge Betrag":
+        - columnheader "Artikel"
+        - columnheader "Menge"
+        - columnheader "Betrag"
+    - rowgroup:
+      - row "Backofenschrank · Spanplatte (Egger / Kronospan) · Anthrazit · Weiß · Glatte Fronten · 60 × 60 × 210 cm 1 Stk. 258 €":
+        - cell "Backofenschrank · Spanplatte (Egger / Kronospan) · Anthrazit · Weiß · Glatte Fronten · 60 × 60 × 210 cm":
+          - text: Backofenschrank · Spanplatte (Egger / Kronospan) · Anthrazit · Weiß · Glatte Fronten
+          - generic: · 60 × 60 × 210 cm
+        - cell "1 Stk."
+        - cell "258 €"
+      - row "Kühlschrankplatz · Spanplatte (Egger / Kronospan) · Anthrazit · Weiß · Glatte Fronten · 60 × 60 × 210 cm 1 Stk. 234 €":
+        - cell "Kühlschrankplatz · Spanplatte (Egger / Kronospan) · Anthrazit · Weiß · Glatte Fronten · 60 × 60 × 210 cm":
+          - text: Kühlschrankplatz · Spanplatte (Egger / Kronospan) · Anthrazit · Weiß · Glatte Fronten
+          - generic: · 60 × 60 × 210 cm
+        - cell "1 Stk."
+        - cell "234 €"
+      - row "Spülenschrank · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm 1 Stk. 176 €":
+        - cell "Spülenschrank · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm":
+          - text: Spülenschrank · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten
+          - generic: · 60 × 60 × 72 cm
+        - cell "1 Stk."
+        - cell "176 €"
+      - row "Geschirrspülerplatz · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm 1 Stk. 101 €":
+        - cell "Geschirrspülerplatz · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm":
+          - text: Geschirrspülerplatz · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten
+          - generic: · 60 × 60 × 72 cm
+        - cell "1 Stk."
+        - cell "101 €"
+      - row "Drei Schubladen · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm 2 Stk. 416 €":
+        - cell "Drei Schubladen · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm":
+          - text: Drei Schubladen · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten
+          - generic: · 60 × 60 × 72 cm
+        - cell "2 Stk."
+        - cell "416 €"
+      - row "Schubladeneinsatz 6 Stk. 210 €":
+        - cell "Schubladeneinsatz"
+        - cell "6 Stk."
+        - cell "210 €"
+      - row "Unterschrank · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm 2 Stk. 296 €":
+        - cell "Unterschrank · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm":
+          - text: Unterschrank · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten
+          - generic: · 60 × 60 × 72 cm
+        - cell "2 Stk."
+        - cell "296 €"
+      - row "Oberschrank · Spanplatte (Egger / Kronospan) · Warmweiß · Weiß · Glatte Fronten · 60 × 35 × 72 cm 5 Stk. 630 €":
+        - cell "Oberschrank · Spanplatte (Egger / Kronospan) · Warmweiß · Weiß · Glatte Fronten · 60 × 35 × 72 cm":
+          - text: Oberschrank · Spanplatte (Egger / Kronospan) · Warmweiß · Weiß · Glatte Fronten
+          - generic: · 60 × 35 × 72 cm
+        - cell "5 Stk."
+        - cell "630 €"
+      - row "Integrierte Dunstabzugshaube · Spanplatte (Egger / Kronospan) · Warmweiß · Weiß · Glatte Fronten · 60 × 35 × 72 cm 1 Stk. 108 €":
+        - cell "Integrierte Dunstabzugshaube · Spanplatte (Egger / Kronospan) · Warmweiß · Weiß · Glatte Fronten · 60 × 35 × 72 cm":
+          - text: Integrierte Dunstabzugshaube · Spanplatte (Egger / Kronospan) · Warmweiß · Weiß · Glatte Fronten
+          - generic: · 60 × 35 × 72 cm
+        - cell "1 Stk."
+        - cell "108 €"
+      - row "Drei Schubladen · Spanplatte (Egger / Kronospan) · Walnuss · Weiß · Rahmenfronten · 60 × 60 × 72 cm 1 Stk. 233 €":
+        - cell "Drei Schubladen · Spanplatte (Egger / Kronospan) · Walnuss · Weiß · Rahmenfronten · 60 × 60 × 72 cm":
+          - text: Drei Schubladen · Spanplatte (Egger / Kronospan) · Walnuss · Weiß · Rahmenfronten
+          - generic: · 60 × 60 × 72 cm
+        - cell "1 Stk."
+        - cell "233 €"
+      - row "Drei Schubladen · Fenix · Anthrazit · Weiß · Glatte Fronten · 60 × 60 × 72 cm 3 Stk. 1.099 €":
+        - cell "Drei Schubladen · Fenix · Anthrazit · Weiß · Glatte Fronten · 60 × 60 × 72 cm":
+          - text: Drei Schubladen · Fenix · Anthrazit · Weiß · Glatte Fronten
+          - generic: · 60 × 60 × 72 cm
+        - cell "3 Stk."
+        - cell "1.099 €"
+      - row "Arbeitsplatte – Kompakt 12 mm · Travertin · Hauptarbeitsplatte 3,6 m 540 €":
+        - cell "Arbeitsplatte – Kompakt 12 mm · Travertin · Hauptarbeitsplatte"
+        - cell "3,6 m"
+        - cell "540 €"
+      - row "Arbeitsplatte – Quarz · Inselarbeitsplatte 2,4 m 768 €":
+        - cell "Arbeitsplatte – Quarz · Inselarbeitsplatte"
+        - cell "2,4 m"
+        - cell "768 €"
+      - row "Edelstahl-Bügel 38 Stk. 342 €":
+        - cell "Edelstahl-Bügel"
+        - cell "38 Stk."
+        - cell "342 €"
+      - row "Sockel · Schwarz 3,6 m 43 €":
+        - cell "Sockel · Schwarz"
+        - cell "3,6 m"
+        - cell "43 €"
+      - row "Sockel · Wie Fronten 3,6 m 43 €":
+        - cell "Sockel · Wie Fronten"
+        - cell "3,6 m"
+        - cell "43 €"
+      - row "Unterbauleuchten 3,6 m 79 €":
+        - cell "Unterbauleuchten"
+        - cell "3,6 m"
+        - cell "79 €"
+    - rowgroup:
+      - row "Montage (8%) 446 €":
+        - cell "Montage (8%)"
+        - cell "446 €"
+      - row "MwSt. (18%) 1.084 €":
+        - cell "MwSt. (18%)"
+        - cell "1.084 €"
+      - row "Gesamtbetrag inkl. MwSt. 7.107 €":
+        - cell "Gesamtbetrag inkl. MwSt."
+        - cell "7.107 €"
+  - complementary:
+    - generic: Geschätzter Gesamtpreis
+    - heading "7.107 €" [level=2]
+    - paragraph: Richtpreis. Das endgültige Angebot wird nach Aufmaß und Materialauswahl bestätigt.
+    - generic "Kundendaten"
+    - generic: Montage · 8%
+    - checkbox "Montage · 8%" [checked]
+    - generic: MwSt. · 18%
+    - checkbox "MwSt. · 18%" [checked]
+    - generic: Einzelne Schätzung anzeigen
+    - checkbox "Einzelne Schätzung anzeigen" [checked]
+    - button "Angebot senden (PDF)":
+      - text: Angebot senden (PDF)
+    - button "PDF-Angebot herunterladen":
+      - text: PDF-Angebot herunterladen
+    - button "Entwurfslink kopieren":
+      - text: Entwurfslink kopieren
+    - button "An jemanden senden":
+      - text: An jemanden senden
+    - button "WhatsApp":
+      - text: WhatsApp
+    - strong: Druri Design
+    - generic: Prishtinë
+- contentinfo:
+  - strong: Druri Design
+  - generic: Prishtinë · Maße in cm
+  - generic: Fiktive Demomarke · Beispielpreise
+  - link "Materialien entdecken":
+    - /url: /material-switcher?brand=druri-design
+    - text: Materialien entdecken

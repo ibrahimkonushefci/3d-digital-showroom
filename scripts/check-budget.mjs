@@ -1,4 +1,4 @@
-import { readdir, stat, readFile } from "node:fs/promises";
+import { readdir, stat, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 const root = process.argv[2] || "dist";
 async function walk(dir) {
@@ -24,6 +24,30 @@ const cached = (
     urls.map(async (u) => (await stat(join(root, u.replace(/^\//, "")))).size),
   )
 ).reduce((a, b) => a + b, 0);
+const result = {
+  shippedBytes: shipped,
+  uniquePrecacheBytes: cached,
+  precacheUrls: urls.length,
+  workingTargetBytes: 9_000_000,
+  strictCeilingBytes: 10_000_000,
+  largestFiles: (
+    await Promise.all(
+      files.map(async (f) => ({
+        path: f.slice(root.length + 1),
+        bytes: (await stat(f)).size,
+      })),
+    )
+  )
+    .sort((a, b) => b.bytes - a.bytes)
+    .slice(0, 10),
+};
+const jsonIndex = process.argv.indexOf("--json");
+if (jsonIndex !== -1) {
+  const path = process.argv[jsonIndex + 1];
+  if (!path || path.startsWith("--"))
+    throw Error("--json requires an output path");
+  await writeFile(path, JSON.stringify(result, null, 2) + "\n");
+}
 console.log(
   `Asset budget: shipped ${shipped.toLocaleString()} bytes; unique precache ${cached.toLocaleString()} bytes (${urls.length} URLs).`,
 );

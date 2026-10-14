@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "roomLighting": {
+    "source": "kitchen-warm-v1-staged-window",
+    "direction": [
+      -0.9161573349021891,
+      0.4008188340197077,
+      0
+    ],
+    "shadowSize": 1024,
+    "shadowCasters": 1
+  },
+  "roomEnvironment": {
+    "mode": "runtime",
+    "resolution": 128,
+    "refreshes": 1,
+    "lastMs": 8,
+    "fallbackReason": "",
+    "signature": "[\"room-lighting-v1\",\"kitchen\",{\"width\":480,\"depth\":420,\"height\":270,\"openings\":[{\"id\":\"kitchen-warm-v1-staged-window\",\"wall\":\"left\",\"type\":\"window\",\"offset\":150,\"width\":120,\"height\":110,\"sill\":115}]},[[\"classic-cabinet-01\",\"oven\",\"tall\",\"back\",30,30,0,60,210,60],[\"classic-cabinet-02\",\"fridge\",\"tall\",\"back\",90,30,0,60,210,60],[\"classic-cabinet-03\",\"sink\",\"base\",\"back\",150,30,0,60,72,60],[\"classic-cabinet-04\",\"dishwasher\",\"base\",\"back\",210,30,0,60,72,60],[\"classic-cabinet-05\",\"base-drawers\",\"base\",\"back\",270,30,0,60,72,60],[\"classic-cabinet-06\",\"base-doors\",\"base\",\"back\",330,30,0,60,72,60],[\"classic-cabinet-07\",\"base-drawers\",\"base\",\"back\",390,30,0,60,72,60],[\"classic-cabinet-08\",\"base-doors\",\"base\",\"back\",450,30,0,60,72,60],[\"classic-cabinet-09\",\"wall-doors\",\"wall\",\"back\",150,17.5,0,60,72,35],[\"classic-cabinet-10\",\"wall-doors\",\"wall\",\"back\",210,17.5,0,60,72,35],[\"classic-cabinet-11\",\"wall-hood\",\"wall\",\"back\",270,17.5,0,60,72,35],[\"classic-cabinet-12\",\"wall-doors\",\"wall\",\"back\",330,17.5,0,60,72,35],[\"classic-cabinet-13\",\"wall-doors\",\"wall\",\"back\",390,17.5,0,60,72,35],[\"classic-cabinet-14\",\"wall-doors\",\"wall\",\"back\",450,17.5,0,60,72,35],[\"classic-cabinet-15\",\"base-drawers\",\"base\",\"island\",150,210,0,60,72,60],[\"classic-cabinet-16\",\"base-drawers\",\"base\",\"island\",210,210,0,60,72,60],[\"classic-cabinet-17\",\"base-drawers\",\"base\",\"island\",270,210,0,60,72,60],[\"classic-cabinet-18\",\"base-drawers\",\"base\",\"island\",330,210,0,60,72,60]]]"
+  },
+  "sceneId": "default:classic",
+  "scope": "desktop-browser",
+  "device": {
+    "label": "@Browser desktop",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+  },
+  "recordedAt": "2026-10-14T15:21:19.697Z",
+  "viewport": {
+    "width": 1225,
+    "height": 650,
+    "dpr": 1.5
+  },
+  "renderer": "WebKit WebGL",
+  "quality": "balanced",
+  "movingFrames": {
+    "samples": 661,
+    "p50Ms": 16.699999928474426,
+    "p95Ms": 23.40000009536743,
+    "maxMs": 187.09999990463257
+  },
+  "sceneReadyMs": 952.2000000476837,
+  "passes": {
+    "main": {
+      "calls": 293,
+      "triangles": 29196,
+      "cpuSubmitMs": 2.5
+    },
+    "shadow": {
+      "calls": 273,
+      "triangles": 28708,
+      "cpuSubmitMs": 0
+    },
+    "offscreen": {
+      "calls": 0,
+      "triangles": 0,
+      "cpuSubmitMs": 0
+    },
+    "probe": {
+      "calls": 149,
+      "triangles": 10004,
+      "cpuSubmitMs": 13.699999809265137
+    }
+  },
+  "rendererCounts": {
+    "textures": 14,
+    "geometries": 93
+  },
+  "estimates": {
+    "texturesBytes": 45001392,
+    "renderTargetsBytes": 13352960,
+    "geometryBytes": 1608528,
+    "framebufferBytes": 14328600,
+    "totalBytes": 74291480,
+    "capturePeakBytes": 74291480
+  },
+  "notes": [
+    "Browser frame intervals and CPU submission time; GPU execution time is not measured.",
+    "Main/shadow/offscreen counts are the latest demand frame; offscreen is contact depth/blur. Probe counts/time are cumulative authored/debounced PMREM work for this scene, not per-frame. RoomEnvironment records refresh cost and fallback; orbit/front/finish changes do not refresh it.",
+    "CPU submit time includes the shadow work in that render; shadow CPU time cannot be separated (0 means unavailable).",
+    "Scene-ready means first complete main pass with loader idle, measured from profiler commit; excludes route/catalog loading and is not cold-network interactivity.",
+    "Memory estimates exclude driver/system allocation, decoded CPU images, shader programs, and opaque internal buffers. Shared resources may be counted in each Canvas at capture peak."
+  ],
+  "peakDrawFrame": {
+    "main": 293,
+    "shadow": 273,
+    "offscreen": 199,
+    "total": 765
+  }
+}

@@ -29,9 +29,12 @@ it("keeps every catalog material local with existing normal and roughness maps",
     ]) {
       expect(m.normalMap).toBeTruthy();
       expect(m.roughnessMap).toBeTruthy();
-      for (const path of [m.texture, m.normalMap, m.roughnessMap].filter(
-        Boolean,
-      ) as string[])
+      for (const path of [
+        m.texture,
+        m.normalMap,
+        m.roughnessMap,
+        m.aoMap,
+      ].filter(Boolean) as string[])
         expect(
           existsSync(
             path.startsWith("shared/")
@@ -40,5 +43,33 @@ it("keeps every catalog material local with existing normal and roughness maps",
           ),
         ).toBe(true);
     }
+  }
+});
+it("declares authored physical scales, response and matching relationships for both illustrative catalogs", () => {
+  for (const brand of ["default", "druri-design"]) {
+    const c = CatalogSchema.parse(
+      JSON.parse(readFileSync(`public/brands/${brand}/catalog.json`, "utf8")),
+    );
+    for (const m of [
+      ...c.fronts,
+      ...c.carcasses,
+      ...c.countertops,
+      ...c.plinths,
+      ...c.backsplashes,
+    ]) {
+      expect(m.mapping?.scaleBasis).toBe("authored-illustrative");
+      expect(m.response).toBeDefined();
+      if (m.supplier) expect(m.supplier.appearance).toBe("illustrative");
+    }
+    expect(c.plinths.find((m) => m.id === "matching")?.matches).toBe("front");
+    expect(c.fronts.find((m) => m.id === "oak")?.mapping?.sourceGrain).toBe(
+      "horizontal",
+    );
+    expect(c.fronts.find((m) => m.id === "walnut")?.mapping?.sourceGrain).toBe(
+      "vertical",
+    );
+    expect(c.backsplashes.find((m) => m.id === "stone")?.matches).toBe(
+      "countertop",
+    );
   }
 });

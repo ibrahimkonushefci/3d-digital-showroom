@@ -1,3 +1,6 @@
+import { validateInteriorReferences } from "./interiorValidation";
+import { resolveInterior } from "./interiors";
+import { validateFinishReferences } from "./finishes";
 import { create } from "zustand";
 import type { Catalog, DesignDocument } from "../catalog/types";
 import { validateDesign } from "./layout";
@@ -14,7 +17,38 @@ export function reconcileCabinets(
     focused: focused && ids.has(focused) ? focused : null,
   };
 }
+export type InteriorSelection = { cabinetId: string; componentId: string };
+function reconcileInterior(
+  design: DesignDocument,
+  catalog: Catalog | null,
+  selectedInterior: InteriorSelection | null,
+  openedInterior: InteriorSelection[],
+) {
+  const exists = (selection: InteriorSelection) => {
+    const c = design.cabinets.find((c) => c.id === selection.cabinetId);
+    const m = catalog?.modules.find((m) => m.id === c?.moduleId);
+    return (
+      !!c &&
+      !!m &&
+      !!catalog &&
+      resolveInterior(c, m, catalog).some((i) => i.id === selection.componentId)
+    );
+  };
+  return {
+    selectedInterior:
+      selectedInterior && exists(selectedInterior) ? selectedInterior : null,
+    openedInterior: openedInterior.filter(exists),
+  };
+}
 type State = {
+  interiorDecoration: boolean;
+  setInteriorDecoration: (value: boolean) => void;
+  selectedInterior: InteriorSelection | null;
+  openedInterior: InteriorSelection[];
+  interiorCatalog: Catalog | null;
+  selectInterior: (selection: InteriorSelection | null) => void;
+  toggleInteriorOpen: (selection: InteriorSelection) => void;
+
   interior: boolean;
   setInterior: (value: boolean) => void;
   design: DesignDocument | null;
@@ -59,6 +93,30 @@ type State = {
   setPerformance: (v: boolean) => void;
 };
 export const useDesigner = create<State>((set, get) => ({
+  interiorDecoration: true,
+  setInteriorDecoration: (interiorDecoration) => set({ interiorDecoration }),
+  selectedInterior: null,
+  openedInterior: [],
+  interiorCatalog: null,
+  selectInterior: (selection) =>
+    set({
+      selectedInterior: selection,
+      ...(selection ? { selected: selection.cabinetId } : {}),
+    }),
+  toggleInteriorOpen: (selection) =>
+    set((s) => ({
+      openedInterior: s.openedInterior.some(
+        (i) =>
+          i.cabinetId === selection.cabinetId &&
+          i.componentId === selection.componentId,
+      )
+        ? s.openedInterior.filter(
+            (i) =>
+              i.cabinetId !== selection.cabinetId ||
+              i.componentId !== selection.componentId,
+          )
+        : [...s.openedInterior, selection],
+    })),
   interior: false,
   setInterior: (interior) => set({ interior }),
   design: null,
@@ -92,6 +150,9 @@ export const useDesigner = create<State>((set, get) => ({
     set({
       design,
       interior: false,
+      selectedInterior: null,
+      openedInterior: [],
+      interiorCatalog: null,
       cameraView: null,
       dragPreview: null,
       dragging: false,
@@ -105,6 +166,15 @@ export const useDesigner = create<State>((set, get) => ({
       screenshot: null,
     }),
   edit: (design, catalog) => {
+    const interiorIssues = validateInteriorReferences(design, catalog);
+    if (interiorIssues.length) {
+      set({ error: interiorIssues[0].code });
+      return false;
+    }
+    if (validateFinishReferences(design, catalog).length) {
+      set({ error: "incompatibleDesign" });
+      return false;
+    }
     if (!validateDesign(design, catalog)) {
       set({ error: "fitError" });
       return false;
@@ -112,6 +182,13 @@ export const useDesigner = create<State>((set, get) => ({
     const prev = get().design;
     set({
       design,
+      interiorCatalog: catalog,
+      ...reconcileInterior(
+        design,
+        catalog,
+        get().selectedInterior,
+        get().openedInterior,
+      ),
       ...reconcileCabinets(design, get().selected, get().opened, get().focused),
       dragPreview: null,
       dragging: false,
@@ -122,11 +199,23 @@ export const useDesigner = create<State>((set, get) => ({
     });
     return true;
   },
-  select: (selected) => set({ selected }),
+  select: (selected) =>
+    set((s) => ({
+      selected,
+      selectedInterior:
+        s.selectedInterior?.cabinetId === selected ? s.selectedInterior : null,
+    })),
   focus: (focused) => set({ focused }),
   resetDesign: (design, catalog) => {
     if (!get().edit(design, catalog)) return false;
-    set({ selected: null, focused: null, opened: [], cameraView: null });
+    set({
+      selected: null,
+      focused: null,
+      opened: [],
+      cameraView: null,
+      selectedInterior: null,
+      openedInterior: [],
+    });
     return true;
   },
   toggleOpen: (id) =>
@@ -150,6 +239,12 @@ export const useDesigner = create<State>((set, get) => ({
     if (past.length && design)
       set({
         design: past.at(-1)!,
+        ...reconcileInterior(
+          past.at(-1)!,
+          get().interiorCatalog,
+          get().selectedInterior,
+          get().openedInterior,
+        ),
         past: past.slice(0, -1),
         future: [design, ...future],
         ...reconcileCabinets(
@@ -168,6 +263,12 @@ export const useDesigner = create<State>((set, get) => ({
     if (future.length && design)
       set({
         design: future[0],
+        ...reconcileInterior(
+          future[0],
+          get().interiorCatalog,
+          get().selectedInterior,
+          get().openedInterior,
+        ),
         past: [...past, design],
         future: future.slice(1),
         ...reconcileCabinets(

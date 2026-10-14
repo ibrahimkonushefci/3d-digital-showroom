@@ -1,0 +1,187 @@
+- banner:
+  - link "Forma Studio Digitaler Showroom":
+    - /url: /?brand=default
+    - strong: Forma Studio
+    - generic: Digitaler Showroom
+  - navigation "Start":
+    - link "Start":
+      - /url: /?brand=default
+    - link "Küchen":
+      - /url: /designer/kitchen?brand=default
+    - link "Kleiderschränke":
+      - /url: /designer/wardrobe?brand=default
+  - generic "Zum Abschluss der Offline-Einrichtung neu laden":
+    - generic: Zum Abschluss der Offline-Einrichtung neu laden
+    - button "Einrichtung abschließen"
+  - button "Shqip": SQ
+  - button "English": EN
+  - button "Deutsch" [active] [pressed]: DE
+  - link "Einstellungen":
+    - /url: /settings?brand=default
+- main:
+  - link "Zurück zum Entwurf":
+    - /url: /designer/kitchen?brand=default
+    - text: Zurück zum Entwurf
+  - generic: Forma Studio
+  - heading "Ihr Angebot" [level=1]
+  - generic: Unverbindliches Angebot
+  - img "Interaktiver 3D-Showroom"
+  - heading "Materialien nach Bereich / Schrank" [level=2]
+  - paragraph:
+    - strong: Hochschränke · Positionen 1, 2 · 2 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Anthrazit · Korpus: Weiß · Griffe: Edelstahl-Bügel · Frontstil: Glatte Fronten · Sockel: Schwarz"
+  - paragraph:
+    - strong: Unterschränke · Positionen 3, 4, 5, 6, 7, 8 · 6 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Natureiche · Korpus: Eiche · Griffe: Edelstahl-Bügel · Frontstil: Glatte Fronten · Sockel: Wie Fronten (Natureiche)"
+  - paragraph:
+    - strong: Oberschränke · Positionen 9, 10, 11, 12, 13, 14 · 6 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Warmweiß · Korpus: Weiß · Griffe: Edelstahl-Bügel · Frontstil: Glatte Fronten"
+  - paragraph:
+    - strong: Insel · Positionen 15 · 1 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Walnuss · Korpus: Weiß · Griffe: Edelstahl-Bügel · Frontstil: Rahmenfronten · Sockel: Schwarz"
+  - paragraph:
+    - strong: Insel · Positionen 16, 17, 18 · 3 Stk.
+    - text: "Frontmaterial: Fenix · Anthrazit · Korpus: Weiß · Griffe: Edelstahl-Bügel · Frontstil: Glatte Fronten · Sockel: Schwarz"
+  - paragraph:
+    - strong: Hauptarbeitsplatte · 3,6 m
+    - text: "Travertin · 12 mm · Rückwand: Keine"
+  - paragraph:
+    - strong: Inselarbeitsplatte · 2,4 m
+    - text: Quarz · 20 mm
+  - heading "Ihre Konfiguration" [level=2]
+  - table:
+    - rowgroup:
+      - row "Artikel Menge Betrag":
+        - columnheader "Artikel"
+        - columnheader "Menge"
+        - columnheader "Betrag"
+    - rowgroup:
+      - row "Backofenschrank · Spanplatte (Egger / Kronospan) · Anthrazit · Weiß · Glatte Fronten · 60 × 60 × 210 cm 1 Stk. 258 €":
+        - cell "Backofenschrank · Spanplatte (Egger / Kronospan) · Anthrazit · Weiß · Glatte Fronten · 60 × 60 × 210 cm":
+          - text: Backofenschrank · Spanplatte (Egger / Kronospan) · Anthrazit · Weiß · Glatte Fronten
+          - generic: · 60 × 60 × 210 cm
+        - cell "1 Stk."
+        - cell "258 €"
+      - row "Kühlschrankplatz · Spanplatte (Egger / Kronospan) · Anthrazit · Weiß · Glatte Fronten · 60 × 60 × 210 cm 1 Stk. 234 €":
+        - cell "Kühlschrankplatz · Spanplatte (Egger / Kronospan) · Anthrazit · Weiß · Glatte Fronten · 60 × 60 × 210 cm":
+          - text: Kühlschrankplatz · Spanplatte (Egger / Kronospan) · Anthrazit · Weiß · Glatte Fronten
+          - generic: · 60 × 60 × 210 cm
+        - cell "1 Stk."
+        - cell "234 €"
+      - row "Spülenschrank · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm 1 Stk. 176 €":
+        - cell "Spülenschrank · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm":
+          - text: Spülenschrank · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten
+          - generic: · 60 × 60 × 72 cm
+        - cell "1 Stk."
+        - cell "176 €"
+      - row "Geschirrspülerplatz · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm 1 Stk. 101 €":
+        - cell "Geschirrspülerplatz · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm":
+          - text: Geschirrspülerplatz · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten
+          - generic: · 60 × 60 × 72 cm
+        - cell "1 Stk."
+        - cell "101 €"
+      - row "Drei Schubladen · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm 2 Stk. 416 €":
+        - cell "Drei Schubladen · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm":
+          - text: Drei Schubladen · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten
+          - generic: · 60 × 60 × 72 cm
+        - cell "2 Stk."
+        - cell "416 €"
+      - row "Schubladeneinsatz 6 Stk. 210 €":
+        - cell "Schubladeneinsatz"
+        - cell "6 Stk."
+        - cell "210 €"
+      - row "Unterschrank · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm 2 Stk. 296 €":
+        - cell "Unterschrank · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten · 60 × 60 × 72 cm":
+          - text: Unterschrank · Spanplatte (Egger / Kronospan) · Natureiche · Eiche · Glatte Fronten
+          - generic: · 60 × 60 × 72 cm
+        - cell "2 Stk."
+        - cell "296 €"
+      - row "Oberschrank · Spanplatte (Egger / Kronospan) · Warmweiß · Weiß · Glatte Fronten · 60 × 35 × 72 cm 5 Stk. 630 €":
+        - cell "Oberschrank · Spanplatte (Egger / Kronospan) · Warmweiß · Weiß · Glatte Fronten · 60 × 35 × 72 cm":
+          - text: Oberschrank · Spanplatte (Egger / Kronospan) · Warmweiß · Weiß · Glatte Fronten
+          - generic: · 60 × 35 × 72 cm
+        - cell "5 Stk."
+        - cell "630 €"
+      - row "Integrierte Dunstabzugshaube · Spanplatte (Egger / Kronospan) · Warmweiß · Weiß · Glatte Fronten · 60 × 35 × 72 cm 1 Stk. 108 €":
+        - cell "Integrierte Dunstabzugshaube · Spanplatte (Egger / Kronospan) · Warmweiß · Weiß · Glatte Fronten · 60 × 35 × 72 cm":
+          - text: Integrierte Dunstabzugshaube · Spanplatte (Egger / Kronospan) · Warmweiß · Weiß · Glatte Fronten
+          - generic: · 60 × 35 × 72 cm
+        - cell "1 Stk."
+        - cell "108 €"
+      - row "Drei Schubladen · Spanplatte (Egger / Kronospan) · Walnuss · Weiß · Rahmenfronten · 60 × 60 × 72 cm 1 Stk. 233 €":
+        - cell "Drei Schubladen · Spanplatte (Egger / Kronospan) · Walnuss · Weiß · Rahmenfronten · 60 × 60 × 72 cm":
+          - text: Drei Schubladen · Spanplatte (Egger / Kronospan) · Walnuss · Weiß · Rahmenfronten
+          - generic: · 60 × 60 × 72 cm
+        - cell "1 Stk."
+        - cell "233 €"
+      - row "Drei Schubladen · Fenix · Anthrazit · Weiß · Glatte Fronten · 60 × 60 × 72 cm 3 Stk. 1.099 €":
+        - cell "Drei Schubladen · Fenix · Anthrazit · Weiß · Glatte Fronten · 60 × 60 × 72 cm":
+          - text: Drei Schubladen · Fenix · Anthrazit · Weiß · Glatte Fronten
+          - generic: · 60 × 60 × 72 cm
+        - cell "3 Stk."
+        - cell "1.099 €"
+      - row "Arbeitsplatte – Kompakt 12 mm · Travertin · Hauptarbeitsplatte 3,6 m 540 €":
+        - cell "Arbeitsplatte – Kompakt 12 mm · Travertin · Hauptarbeitsplatte"
+        - cell "3,6 m"
+        - cell "540 €"
+      - row "Arbeitsplatte – Quarz · Inselarbeitsplatte 2,4 m 768 €":
+        - cell "Arbeitsplatte – Quarz · Inselarbeitsplatte"
+        - cell "2,4 m"
+        - cell "768 €"
+      - row "Edelstahl-Bügel 38 Stk. 342 €":
+        - cell "Edelstahl-Bügel"
+        - cell "38 Stk."
+        - cell "342 €"
+      - row "Sockel · Schwarz 3,6 m 43 €":
+        - cell "Sockel · Schwarz"
+        - cell "3,6 m"
+        - cell "43 €"
+      - row "Sockel · Wie Fronten 3,6 m 43 €":
+        - cell "Sockel · Wie Fronten"
+        - cell "3,6 m"
+        - cell "43 €"
+      - row "Unterbauleuchten 3,6 m 79 €":
+        - cell "Unterbauleuchten"
+        - cell "3,6 m"
+        - cell "79 €"
+    - rowgroup:
+      - row "Montage (8%) 446 €":
+        - cell "Montage (8%)"
+        - cell "446 €"
+      - row "MwSt. (18%) 1.084 €":
+        - cell "MwSt. (18%)"
+        - cell "1.084 €"
+      - row "Gesamtbetrag inkl. MwSt. 7.107 €":
+        - cell "Gesamtbetrag inkl. MwSt."
+        - cell "7.107 €"
+  - complementary:
+    - generic: Geschätzter Gesamtpreis
+    - heading "7.107 €" [level=2]
+    - paragraph: Richtpreis. Das endgültige Angebot wird nach Aufmaß und Materialauswahl bestätigt.
+    - generic "Kundendaten"
+    - generic: Montage · 8%
+    - checkbox "Montage · 8%" [checked]
+    - generic: MwSt. · 18%
+    - checkbox "MwSt. · 18%" [checked]
+    - generic: Einzelne Schätzung anzeigen
+    - checkbox "Einzelne Schätzung anzeigen" [checked]
+    - button "Angebot senden (PDF)":
+      - text: Angebot senden (PDF)
+    - button "PDF-Angebot herunterladen":
+      - text: PDF-Angebot herunterladen
+    - button "Entwurfslink kopieren":
+      - text: Entwurfslink kopieren
+    - button "An jemanden senden":
+      - text: An jemanden senden
+    - button "WhatsApp":
+      - text: WhatsApp
+    - textbox "Diesen Link kopieren": http://127.0.0.1:52746/designer/kitchen?brand=default#design=N4IgbgpgTgzglgewHYgFwEYA0IDGBDAFzwBsEBzASQBM0QqIAzPAV2IJG3vjJVVDhqoQ6ACwAjdADYxAJhkBaEQE48ABkVVJADnlKlI9ei1Uc6HJPQQIqmtgDWcJIJAOCOABYQU2YngCeCMzsQnAwvk4cIFAICAC2aKAA7gIE7mgiWqqcEAAOqekyWSCecGTuwTIA7EUIOV6OZDBoANr8zq4eXvKJeFCx8mDo8jBEZBBU3Y5UCImRPcTEtMSM7NgEfnW0yU4zkQgMDDAQwegArEXJVPkYhdglZSfoRfALaOhnAL4Auh-YXmBwaJIWJeYKgBikBBQJZ4WKOQgQOYkYgAYQQpGhQgAxBBTtYqJVIo4CNAkCQADLjNBMYhHX64PBiRzHJqoVogAS0VRKAkidAMHDyADMWnQlUUeBwEHkYiUOB0DEqDEYQqFykqEBEkViCCorAg1FoCEg3hAl2ukiK93KaBkT2yeTSqEt2AAHmghUUAF4eorRIgERC8C7I2hiSV2SLLSCLIREV6-Nq0SqVHAiEQMYzyLRC+WKS0iXRaGQMXTcpTSER4NUyHDa3X6w1CBhQARjOYpJ0u4oQUo21B2or0R1obvu1BKb2+7D+whBtAh15CcM4SM+CAx2jxxaJjnOKiiIVKMxDNVaHQiSSX+RqOTZ7Q8sQQTLWVT1vXLJsgeBINdmzujlavYPGglQyA6FpFOOZxTqgnozggAbzqgi6xiAK5-tGEBoeGRwgLunJCKckh4JI2gyEK8iqCIMh4IoVanDeAqSPIeIpng6Z4GoR7vo2+6hO4PQwJ40LYOaXZAX2wRgRBElura9ogD6cF+ohc7IAuYmhsuEZRhu2FhngeEEc4Yj0FQQroGIOiqEYhYGHgOiilZ8jKrKdoMKoQqSDyvGfqZRnSlQUB4Ik0BNGJAHOpJIGoDJdC5JB8kDtU2DKfBURqYGGkoVpS7obp66bjpxmYEmy4QDgQpiEKeBKDelQZooByMVoDCnDo2gMFQYiqHgDCSFK6B+QaAVHPI0xQhF-5XHJPZSaB4EJSO0XJaqsEZbO2XBnlOGFSAWF7aV5UgBkqo4GZdGqNYYiKFoSjSng1ROZU6BPTgxF2XW2A6h+o2GeNwWheFHazYBdzAf28XDklIDjkeG2qUhOWoYZq56cVBXHXuXLHuGHUTFVVCMcoOCCk+ODqFVIpCjIEjeRII1frhQUxLAoOw9a0lLTDc3jiI5xpdOmXIztZraQV6NFQZJWIiZtBUIrqYQLWujWYKVYHrokqFgeb3oBRVBaHg6BKEzzjzMQE1s9N4ng-NsXQ4lTpCqcyUwULGCVAAdG7IvqWLlto5h+loUH8tCNVDDiFo+BUZITDNVo0qikK0oyFekqSI1eLHubWzItbU0c3NXOLbJHp++Og6e2KvsIaLmni-lGEYzLzc7mVONCJqA0yBkrVGOoyhKKWx6qOoVCj2R1RqmYWj50IlvyO4MS2DNnOQ9zFdwVXtqpUpbw+37W3IajOlSwdocFwmXeESAJsMKP6CaPIKsindGq6EotPyDIeKnEagwMQpx0C1UXh3Iu7NIpg1Wg7KGPNnaVzWhlZSdcT5ZTPrtYObcw6hgjiABgFEVDvAUALUUEoxCCljpZbMk5rJKEqFxHy69fp8RvlbSa0CN6ly3uXZa1xXZrUnLXY+DcA5NyDhfEOmNw532cJkLQz1BoynoJRPkv8eRx1UEQuqT8Z4iFYQ2fyHCoG2yit2MucVEErSEXDdIgtD5e3rv7bakiJat2lng2+J0cDAKoAwKy0oxBiG6ooHAdobykXqm1NqxMTyqAThAlmE0QphW4XbOBVinYrTHG8Rxyka6uKwR3WgoRwjr0OgDRE2AGCOAEgAeUgFAVs9AEiEKBMEZuSAgiRByNEOpyxaA5DwEgAyHwCFKAojIKesd5AXSrPRH+2YvLShwPQScQ9PLKmSYFVJwMMkWJiggneeSByKUKYpU+KNsEhDCKMyp19Zb4XkbQEQVVKrq3mVKYeVBlBlggJRHAD1iJWEqAnHquzAZpJBjAzeC1rGnKgvvWCRTrmBwluUh5uDqkvJOqcU4GdRSnEojmSoJNiYKFkEQ+ZUyZBKKoFxD6hIfrGP+rLfZ6TzGwMsXwxFAi+YelQQpJGEjcqlLuRUnFzzvjYBGH4IZfAOnIC6aM1IIUcBwBJJEfAUB8AwFZGadwWqam4ECEgEkUACC1FoAAR2YL0AgPo7gPMVQVUSks7AwByL4YStAkDIFNT64kTp0K+EvssQQBAoDMAgNgfp+w4BuohIQF5HIkAjGRGK6NsbsBgFTagHNcaQAQFdJKYIRa83hWQkKWp9ThIAC1A2slACzdpLYVVGjwH+XV+rDUIG7X04gIbaCxEIB4BoaapHgk6VsY12r6RYoiEqjtFraDKiQHAV0N4LXuA1SayI7hXWIh0tCCZYkoR2GtTkAAYvWzwLaQBjscFuEKzTAxjKJPc5dIB7WOp9BMj4QA
+    - strong: Forma Studio
+    - generic: Prishtinë
+- contentinfo:
+  - strong: Forma Studio
+  - generic: Prishtinë · Maße in cm
+  - generic: Fiktive Demomarke · Beispielpreise
+  - link "Materialien entdecken":
+    - /url: /material-switcher?brand=default
+    - text: Materialien entdecken

@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "id": "wardrobe-warm-v1",
+  "revision": 2,
+  "compatibleKinds": ["wardrobe"],
+  "compatibleLayouts": ["straight", "corner", "walkin"],
+  "supportedRoomCm": {
+    "min": [240, 240, 220],
+    "max": [650, 650, 330]
+  },
+  "finishes": {
+    "wall": "#e5e0d7",
+    "skirting": "#c3baaa",
+    "rug": "#b8ac98"
+  },
+  "stagedOpening": {
+    "wall": "left",
+    "width": 100,
+    "height": 120,
+    "sill": 100
+  },
+  "propAnchors": ["free-dressing-zone", "rail", "shelf"],
+  "exclusionPolicy": "cabinet-and-swept-fronts-and-doors",
+  "lightRecipe": {
+    "version": 1,
+    "daylightIntensity": 1.9,
+    "ceilingIntensity": 1.5,
+    "fillIntensity": 0.55,
+    "windowBrightness": 3.1,
+    "wallBrightness": 0.65
+  },
+  "environmentReference": "authored-room-probe-v1",
+  "cameraShots": ["existing-preset", "overall", "inspection"]
+}

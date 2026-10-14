@@ -1,0 +1,113 @@
+- banner:
+  - link "Forma Studio Sallon digjital":
+    - /url: /?brand=default
+    - strong: Forma Studio
+    - generic: Sallon digjital
+  - navigation "Ballina":
+    - link "Ballina":
+      - /url: /?brand=default
+    - link "Kuzhina":
+      - /url: /designer/kitchen?brand=default
+    - link "Gardëroba":
+      - /url: /designer/wardrobe?brand=default
+  - generic "Gati pa internet":
+    - generic: Gati pa internet
+  - button "Shqip" [pressed]: SQ
+  - button "English": EN
+  - button "Deutsch": DE
+  - link "Cilësimet":
+    - /url: /settings?brand=default
+- main:
+  - heading "Gardëroba" [level=1]
+  - button "Salloni" [pressed]
+  - button "Ndryshoni modulet"
+  - button "Ktheje pas" [disabled]:
+  - button "Ribëje" [disabled]:
+  - button "Rivendos konfigurimin":
+    - generic: Rivendos konfigurimin
+  - button "Perspektivë"
+  - button "Përballë"
+  - button "Nga lart"
+  - button "Pamja e plotë":
+    - text: Pamja e plotë
+  - button "Pamja e brendshme"
+  - button "Hap të gjitha":
+    - text: Hap të gjitha
+  - img "Pamja 3D e sallonit"
+  - button "Ekran i plotë":
+  - generic: 360 × 300 × 270 cm
+  - generic: 4 module
+  - paragraph: Prekni një front për ta hapur · Tërhiqni për të rrotulluar · Dy gishta për zhvendosje
+  - complementary:
+    - button "Stilet & Materialet":
+      - generic: Stilet & Materialet
+    - button "Dhoma & Forma":
+      - generic: Dhoma & Forma
+    - button "Gardëroba":
+      - generic: Gardëroba
+    - button "Brendësia & Ndriçimi":
+      - generic: Brendësia & Ndriçimi
+    - heading "Materiali i fronteve" [level=3]
+    - generic: Materiali i fronteve · Lloji i materialit
+    - combobox "Materiali i fronteve · Lloji i materialit":
+      - option "Iverall (Egger / Kronospan)" [selected]
+      - option "MDF me folje"
+      - option "MDF e llakuar mat"
+      - option "Akrilik me shkëlqim"
+      - option "Fenix"
+    - heading "Ngjyra Kashmir" [level=3]:
+      - text: Ngjyra
+      - generic: Kashmir
+    - button "Kashmir" [pressed]:
+      - generic: ✓
+    - button "Gjelbër sherebele"
+    - button "Antracit"
+    - button "E bardhë e ngrohtë"
+    - button "E zezë mat"
+    - button "Lis natyral"
+    - button "Arrë"
+    - button "E bardhë me shkëlqim"
+    - button "H3303 ST10 · Natural Hamilton Oak"
+    - button "K190 · Black"
+    - heading "Koleksionet e zgjedhura" [level=3]
+    - button "Lis Milano Dekor lisi & doreza inox":
+      - strong: Lis Milano
+      - generic: Dekor lisi & doreza inox
+    - button "Kashmir Nordik Kashmir mat & korpus lisi të ngrohtë":
+      - strong: Kashmir Nordik
+      - generic: Kashmir mat & korpus lisi të ngrohtë
+    - button "Antracit Metropol Antracit mat & profile të zeza":
+      - strong: Antracit Metropol
+      - generic: Antracit mat & profile të zeza
+    - button "E Bardhë & Lis E bardhë e ngrohtë & brendësi lisi":
+      - strong: E Bardhë & Lis
+      - generic: E bardhë e ngrohtë & brendësi lisi
+    - button "Arrë Luksoze Arrë e pasur & brendësi e errët":
+      - strong: Arrë Luksoze
+      - generic: Arrë e pasur & brendësi e errët
+    - heading "Dorezat" [level=3]
+    - button "Pa doreza / push"
+    - button "Shufër inox"
+    - button "Profil gola"
+    - button "Shufër e zezë mat"
+    - generic: Stili i fronteve
+    - button "Stili i fronteve Fronte me panele": Fronte të sheshta
+    - button "Fronte me panele"
+    - heading "Korpusi Lis" [level=3]:
+      - text: Korpusi
+      - generic: Lis
+    - button "E bardhë"
+    - button "Lis" [pressed]:
+      - generic: ✓
+    - button "Grafit"
+    - text: Emri i alternativës
+    - textbox "Emri i alternativës":
+      - /placeholder: E drejtë
+    - button "Ruaj A"
+    - button "Ruaj B"
+    - button "Krahasoni A / B"
+    - generic: Vlerësimi total
+    - strong: 1.973 €
+    - generic: Ofertë orientuese
+    - button "Oferta juaj":
+      - text: Oferta juaj

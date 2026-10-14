@@ -15,7 +15,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "iverall"
+      "tier": "iverall",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "sage",
@@ -30,7 +46,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "iverall"
+      "tier": "iverall",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "anthracite",
@@ -45,7 +77,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "iverall"
+      "tier": "iverall",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "white",
@@ -60,7 +108,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "iverall"
+      "tier": "iverall",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "black",
@@ -75,7 +139,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "iverall"
+      "tier": "iverall",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "oak",
@@ -91,7 +171,24 @@
       "texture": "shared/textures/veneer-color.webp",
       "normalMap": "shared/textures/veneer-normal.webp",
       "roughnessMap": "shared/textures/veneer-roughness.webp",
-      "tier": "iverall"
+      "tier": "iverall",
+      "mapping": {
+        "tileSizeCm": [
+          120,
+          120
+        ],
+        "grain": "vertical",
+        "variation": "stable-offset",
+        "scaleBasis": "authored-illustrative",
+        "sourceGrain": "horizontal"
+      },
+      "response": {
+        "roughness": 0.68,
+        "normalStrength": 0.12,
+        "clearcoat": 0.025,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "walnut",
@@ -107,7 +204,24 @@
       "texture": "shared/textures/walnut-color.webp",
       "normalMap": "shared/textures/walnut-normal.webp",
       "roughnessMap": "shared/textures/walnut-roughness.webp",
-      "tier": "iverall"
+      "tier": "iverall",
+      "mapping": {
+        "tileSizeCm": [
+          120,
+          120
+        ],
+        "grain": "vertical",
+        "variation": "stable-offset",
+        "scaleBasis": "authored-illustrative",
+        "sourceGrain": "vertical"
+      },
+      "response": {
+        "roughness": 0.68,
+        "normalStrength": 0.12,
+        "clearcoat": 0.025,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "gloss",
@@ -122,7 +236,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "iverall"
+      "tier": "iverall",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.18,
+        "normalStrength": 0.06,
+        "clearcoat": 0.65,
+        "clearcoatRoughness": 0.18,
+        "envMapIntensity": 0.9
+      }
     },
     {
       "id": "foil-cashmere",
@@ -137,7 +267,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "foil"
+      "tier": "foil",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "foil-sage",
@@ -152,7 +298,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "foil"
+      "tier": "foil",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "foil-anthracite",
@@ -167,7 +329,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "foil"
+      "tier": "foil",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "foil-white",
@@ -182,7 +360,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "foil"
+      "tier": "foil",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "foil-black",
@@ -197,7 +391,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "foil"
+      "tier": "foil",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "lacquer-cashmere",
@@ -212,7 +422,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "lacquer"
+      "tier": "lacquer",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "lacquer-sage",
@@ -227,7 +453,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "lacquer"
+      "tier": "lacquer",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "lacquer-anthracite",
@@ -242,7 +484,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "lacquer"
+      "tier": "lacquer",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "lacquer-white",
@@ -257,7 +515,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "lacquer"
+      "tier": "lacquer",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "lacquer-black",
@@ -272,7 +546,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "lacquer"
+      "tier": "lacquer",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "acrylic-cashmere",
@@ -287,7 +577,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "acrylic"
+      "tier": "acrylic",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.18,
+        "normalStrength": 0.06,
+        "clearcoat": 0.65,
+        "clearcoatRoughness": 0.18,
+        "envMapIntensity": 0.9
+      }
     },
     {
       "id": "acrylic-sage",
@@ -302,7 +608,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "acrylic"
+      "tier": "acrylic",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.18,
+        "normalStrength": 0.06,
+        "clearcoat": 0.65,
+        "clearcoatRoughness": 0.18,
+        "envMapIntensity": 0.9
+      }
     },
     {
       "id": "acrylic-anthracite",
@@ -317,7 +639,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "acrylic"
+      "tier": "acrylic",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.18,
+        "normalStrength": 0.06,
+        "clearcoat": 0.65,
+        "clearcoatRoughness": 0.18,
+        "envMapIntensity": 0.9
+      }
     },
     {
       "id": "acrylic-white",
@@ -332,7 +670,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "acrylic"
+      "tier": "acrylic",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.18,
+        "normalStrength": 0.06,
+        "clearcoat": 0.65,
+        "clearcoatRoughness": 0.18,
+        "envMapIntensity": 0.9
+      }
     },
     {
       "id": "acrylic-black",
@@ -347,7 +701,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "acrylic"
+      "tier": "acrylic",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.18,
+        "normalStrength": 0.06,
+        "clearcoat": 0.65,
+        "clearcoatRoughness": 0.18,
+        "envMapIntensity": 0.9
+      }
     },
     {
       "id": "fenix-cashmere",
@@ -362,7 +732,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "fenix"
+      "tier": "fenix",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.92,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "fenix-sage",
@@ -377,7 +763,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "fenix"
+      "tier": "fenix",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.92,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "fenix-anthracite",
@@ -392,7 +794,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "fenix"
+      "tier": "fenix",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.92,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "fenix-white",
@@ -407,7 +825,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "fenix"
+      "tier": "fenix",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.92,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "fenix-black",
@@ -422,7 +856,23 @@
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
       "roughnessMap": "shared/textures/smooth-roughness.webp",
-      "tier": "fenix"
+      "tier": "fenix",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.92,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "egger-h3303",
@@ -445,6 +895,23 @@
         "name": "Natural Hamilton Oak",
         "source": "https://www.egger.com/en/furniture-interior-design/decors/H3303_10?country=GE",
         "appearance": "illustrative"
+      },
+      "mapping": {
+        "tileSizeCm": [
+          120,
+          120
+        ],
+        "grain": "vertical",
+        "variation": "stable-offset",
+        "scaleBasis": "authored-illustrative",
+        "sourceGrain": "horizontal"
+      },
+      "response": {
+        "roughness": 0.68,
+        "normalStrength": 0.12,
+        "clearcoat": 0.025,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
       }
     },
     {
@@ -467,6 +934,22 @@
         "name": "Light Grey",
         "source": "https://www.egger.com/en/furniture-interior-design/decors/U708_PM?country=MT",
         "appearance": "illustrative"
+      },
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
       }
     },
     {
@@ -489,6 +972,22 @@
         "name": "Graphite Grey",
         "source": "https://www.egger.com/en/furniture-interior-design/decors/U961_PM",
         "appearance": "illustrative"
+      },
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
       }
     },
     {
@@ -511,6 +1010,22 @@
         "name": "Black",
         "source": "https://kronospan.com/en_EN/decors/view/kronodesign/color/K190/",
         "appearance": "illustrative"
+      },
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
       }
     }
   ],
@@ -527,7 +1042,23 @@
       "multiplier": 1,
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
-      "roughnessMap": "shared/textures/smooth-roughness.webp"
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "oak",
@@ -542,7 +1073,24 @@
       "perMeter": 0,
       "texture": "shared/textures/veneer-color.webp",
       "normalMap": "shared/textures/veneer-normal.webp",
-      "roughnessMap": "shared/textures/veneer-roughness.webp"
+      "roughnessMap": "shared/textures/veneer-roughness.webp",
+      "mapping": {
+        "tileSizeCm": [
+          120,
+          120
+        ],
+        "grain": "vertical",
+        "variation": "stable-offset",
+        "scaleBasis": "authored-illustrative",
+        "sourceGrain": "horizontal"
+      },
+      "response": {
+        "roughness": 0.68,
+        "normalStrength": 0.12,
+        "clearcoat": 0.025,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "dark",
@@ -556,7 +1104,23 @@
       "multiplier": 1,
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
-      "roughnessMap": "shared/textures/smooth-roughness.webp"
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     }
   ],
   "countertops": [
@@ -574,7 +1138,23 @@
       "texture": "shared/textures/travertine-color.webp",
       "normalMap": "shared/textures/travertine-normal.webp",
       "roughnessMap": "shared/textures/travertine-roughness.webp",
-      "tier": "compact"
+      "tier": "compact",
+      "mapping": {
+        "tileSizeCm": [
+          120,
+          120
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.78,
+        "normalStrength": 0.1,
+        "clearcoat": 0.03,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.85
+      }
     },
     {
       "id": "marble",
@@ -590,7 +1170,23 @@
       "texture": "shared/textures/marble-color.webp",
       "normalMap": "shared/textures/marble-normal.webp",
       "roughnessMap": "shared/textures/marble-roughness.webp",
-      "tier": "laminate"
+      "tier": "laminate",
+      "mapping": {
+        "tileSizeCm": [
+          120,
+          120
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.6,
+        "normalStrength": 0.07,
+        "clearcoat": 0.03,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.85
+      }
     },
     {
       "id": "concrete",
@@ -606,7 +1202,23 @@
       "texture": "shared/textures/concrete-color.webp",
       "normalMap": "shared/textures/concrete-normal.webp",
       "roughnessMap": "shared/textures/concrete-roughness.webp",
-      "tier": "laminate"
+      "tier": "laminate",
+      "mapping": {
+        "tileSizeCm": [
+          120,
+          120
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.6,
+        "normalStrength": 0.07,
+        "clearcoat": 0.03,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.85
+      }
     },
     {
       "id": "oak",
@@ -622,7 +1234,24 @@
       "texture": "shared/textures/veneer-color.webp",
       "normalMap": "shared/textures/veneer-normal.webp",
       "roughnessMap": "shared/textures/veneer-roughness.webp",
-      "tier": "laminate"
+      "tier": "laminate",
+      "mapping": {
+        "tileSizeCm": [
+          120,
+          120
+        ],
+        "grain": "horizontal",
+        "variation": "stable-offset",
+        "scaleBasis": "authored-illustrative",
+        "sourceGrain": "horizontal"
+      },
+      "response": {
+        "roughness": 0.6,
+        "normalStrength": 0.07,
+        "clearcoat": 0.03,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.85
+      }
     },
     {
       "id": "quartz",
@@ -638,7 +1267,23 @@
       "roughnessMap": "shared/textures/quartz-roughness.webp",
       "roughness": 0.3,
       "multiplier": 1,
-      "perMeter": 320
+      "perMeter": 320,
+      "mapping": {
+        "tileSizeCm": [
+          120,
+          120
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.32,
+        "normalStrength": 0.07,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.85
+      }
     },
     {
       "id": "granite",
@@ -654,7 +1299,23 @@
       "roughnessMap": "shared/textures/granite-roughness.webp",
       "roughness": 0.3,
       "multiplier": 1,
-      "perMeter": 280
+      "perMeter": 280,
+      "mapping": {
+        "tileSizeCm": [
+          120,
+          120
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.38,
+        "normalStrength": 0.07,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.85
+      }
     },
     {
       "id": "egger-f206",
@@ -677,6 +1338,22 @@
         "name": "Black Pietra Grigia",
         "source": "https://www.egger.com/en/furniture-interior-design/decors/F206_PM?country=XK",
         "appearance": "illustrative"
+      },
+      "mapping": {
+        "tileSizeCm": [
+          120,
+          120
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.78,
+        "normalStrength": 0.1,
+        "clearcoat": 0.03,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.85
       }
     }
   ],
@@ -693,7 +1370,23 @@
       "multiplier": 1,
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
-      "roughnessMap": "shared/textures/smooth-roughness.webp"
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     },
     {
       "id": "stone",
@@ -707,7 +1400,24 @@
       "multiplier": 1,
       "perMeter": 65,
       "normalMap": "shared/textures/smooth-normal.webp",
-      "roughnessMap": "shared/textures/smooth-roughness.webp"
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      },
+      "matches": "countertop"
     }
   ],
   "plinths": [
@@ -723,7 +1433,24 @@
       "multiplier": 1,
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
-      "roughnessMap": "shared/textures/smooth-roughness.webp"
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      },
+      "matches": "front"
     },
     {
       "id": "black",
@@ -737,7 +1464,23 @@
       "multiplier": 1,
       "perMeter": 0,
       "normalMap": "shared/textures/smooth-normal.webp",
-      "roughnessMap": "shared/textures/smooth-roughness.webp"
+      "roughnessMap": "shared/textures/smooth-roughness.webp",
+      "mapping": {
+        "tileSizeCm": [
+          20,
+          20
+        ],
+        "grain": "none",
+        "variation": "none",
+        "scaleBasis": "authored-illustrative"
+      },
+      "response": {
+        "roughness": 0.82,
+        "normalStrength": 0.06,
+        "clearcoat": 0.01,
+        "clearcoatRoughness": 0.55,
+        "envMapIntensity": 0.65
+      }
     }
   ],
   "handles": [
@@ -793,7 +1536,16 @@
       "kind": "kitchen",
       "type": "doors",
       "level": "base",
-      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
       "height": 72,
       "depth": 60,
       "pricePerMeter": 235,
@@ -809,7 +1561,16 @@
       "kind": "kitchen",
       "type": "drawers",
       "level": "base",
-      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
       "height": 72,
       "depth": 60,
       "pricePerMeter": 330,
@@ -826,7 +1587,12 @@
       "kind": "kitchen",
       "type": "sink",
       "level": "base",
-      "widths": [60, 80, 90, 100],
+      "widths": [
+        60,
+        80,
+        90,
+        100
+      ],
       "height": 72,
       "depth": 60,
       "pricePerMeter": 280,
@@ -842,7 +1608,10 @@
       "kind": "kitchen",
       "type": "dishwasher",
       "level": "base",
-      "widths": [45, 60],
+      "widths": [
+        45,
+        60
+      ],
       "height": 72,
       "depth": 60,
       "pricePerMeter": 160,
@@ -858,7 +1627,9 @@
       "kind": "kitchen",
       "type": "oven",
       "level": "tall",
-      "widths": [60],
+      "widths": [
+        60
+      ],
       "height": 210,
       "depth": 60,
       "pricePerMeter": 430,
@@ -874,7 +1645,9 @@
       "kind": "kitchen",
       "type": "fridge",
       "level": "tall",
-      "widths": [60],
+      "widths": [
+        60
+      ],
       "height": 210,
       "depth": 60,
       "pricePerMeter": 390,
@@ -890,7 +1663,16 @@
       "kind": "kitchen",
       "type": "pantry",
       "level": "tall",
-      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
       "height": 210,
       "depth": 60,
       "pricePerMeter": 450,
@@ -907,7 +1689,9 @@
       "kind": "kitchen",
       "type": "corner",
       "level": "base",
-      "widths": [90],
+      "widths": [
+        90
+      ],
       "height": 72,
       "depth": 90,
       "pricePerMeter": 390,
@@ -924,7 +1708,16 @@
       "kind": "kitchen",
       "type": "doors",
       "level": "wall",
-      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
       "height": 72,
       "depth": 35,
       "pricePerMeter": 210,
@@ -940,7 +1733,16 @@
       "kind": "kitchen",
       "type": "glass",
       "level": "wall",
-      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
       "height": 72,
       "depth": 35,
       "pricePerMeter": 265,
@@ -956,7 +1758,16 @@
       "kind": "kitchen",
       "type": "open",
       "level": "wall",
-      "widths": [30, 40, 45, 50, 60, 80, 90, 100],
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90,
+        100
+      ],
       "height": 72,
       "depth": 35,
       "pricePerMeter": 155,
@@ -972,11 +1783,23 @@
       "kind": "wardrobe",
       "type": "hanging",
       "level": "wardrobe",
-      "widths": [40, 50, 60, 80, 100],
+      "widths": [
+        40,
+        50,
+        60,
+        80,
+        100
+      ],
       "height": 230,
       "depth": 60,
       "pricePerMeter": 345,
-      "handleCount": 2
+      "handleCount": 2,
+      "interiorPricing": {
+        "includedPresetId": "legacy-hanging",
+        "additionPrices": {},
+        "removalCredits": {},
+        "includedAllowance": 0
+      }
     },
     {
       "id": "wardrobe-shelves",
@@ -988,11 +1811,23 @@
       "kind": "wardrobe",
       "type": "doors",
       "level": "wardrobe",
-      "widths": [40, 50, 60, 80, 100],
+      "widths": [
+        40,
+        50,
+        60,
+        80,
+        100
+      ],
       "height": 230,
       "depth": 60,
       "pricePerMeter": 315,
-      "handleCount": 2
+      "handleCount": 2,
+      "interiorPricing": {
+        "includedPresetId": "legacy-shelves",
+        "additionPrices": {},
+        "removalCredits": {},
+        "includedAllowance": 0
+      }
     },
     {
       "id": "wardrobe-drawers",
@@ -1004,12 +1839,24 @@
       "kind": "wardrobe",
       "type": "drawers",
       "level": "wardrobe",
-      "widths": [40, 50, 60, 80, 100],
+      "widths": [
+        40,
+        50,
+        60,
+        80,
+        100
+      ],
       "height": 230,
       "depth": 60,
       "pricePerMeter": 440,
       "handleCount": 3,
-      "accessory": "organizer"
+      "accessory": "organizer",
+      "interiorPricing": {
+        "includedPresetId": "legacy-drawers",
+        "additionPrices": {},
+        "removalCredits": {},
+        "includedAllowance": 0
+      }
     },
     {
       "id": "wardrobe-open",
@@ -1021,11 +1868,23 @@
       "kind": "wardrobe",
       "type": "open",
       "level": "wardrobe",
-      "widths": [40, 50, 60, 80, 100],
+      "widths": [
+        40,
+        50,
+        60,
+        80,
+        100
+      ],
       "height": 230,
       "depth": 60,
       "pricePerMeter": 270,
-      "handleCount": 0
+      "handleCount": 0,
+      "interiorPricing": {
+        "includedPresetId": "legacy-shelves",
+        "additionPrices": {},
+        "removalCredits": {},
+        "includedAllowance": 0
+      }
     },
     {
       "id": "wardrobe-sliding",
@@ -1037,11 +1896,23 @@
       "kind": "wardrobe",
       "type": "sliding",
       "level": "wardrobe",
-      "widths": [40, 50, 60, 80, 100],
+      "widths": [
+        40,
+        50,
+        60,
+        80,
+        100
+      ],
       "height": 230,
       "depth": 60,
       "pricePerMeter": 410,
-      "handleCount": 0
+      "handleCount": 0,
+      "interiorPricing": {
+        "includedPresetId": "legacy-hanging",
+        "additionPrices": {},
+        "removalCredits": {},
+        "includedAllowance": 0
+      }
     },
     {
       "id": "wall-hood",
@@ -1053,7 +1924,15 @@
       "kind": "kitchen",
       "type": "hood",
       "level": "wall",
-      "widths": [30, 40, 45, 50, 60, 80, 90],
+      "widths": [
+        30,
+        40,
+        45,
+        50,
+        60,
+        80,
+        90
+      ],
       "height": 72,
       "depth": 35,
       "pricePerMeter": 180,
@@ -1204,7 +2083,11 @@
         "de": "Laminat 38 mm"
       },
       "perMeter": 75,
-      "decors": ["marble", "concrete", "oak"],
+      "decors": [
+        "marble",
+        "concrete",
+        "oak"
+      ],
       "thicknessMm": 38
     },
     {
@@ -1215,7 +2098,10 @@
         "de": "Kompakt 12 mm"
       },
       "perMeter": 150,
-      "decors": ["travertine", "egger-f206"],
+      "decors": [
+        "travertine",
+        "egger-f206"
+      ],
       "thicknessMm": 12
     },
     {
@@ -1226,7 +2112,9 @@
         "de": "Quarz"
       },
       "perMeter": 320,
-      "decors": ["quartz"],
+      "decors": [
+        "quartz"
+      ],
       "thicknessMm": 20
     },
     {
@@ -1237,7 +2125,9 @@
         "de": "Granit"
       },
       "perMeter": 280,
-      "decors": ["granite"],
+      "decors": [
+        "granite"
+      ],
       "thicknessMm": 20
     }
   ],
@@ -1284,7 +2174,18 @@
       "room": {
         "width": 420,
         "depth": 360,
-        "height": 270
+        "height": 270,
+        "openings": [
+          {
+            "id": "kitchen-warm-v1-staged-window",
+            "wall": "left",
+            "type": "window",
+            "offset": 90,
+            "width": 120,
+            "height": 110,
+            "sill": 115
+          }
+        ]
       },
       "style": {
         "front": "cashmere",
@@ -1297,8 +2198,16 @@
         "profile": "flat"
       },
       "camera": {
-        "position": [3.7, 2.45, 4.7],
-        "target": [0, 1.1, -0.4]
+        "position": [
+          3.7,
+          2.45,
+          4.7
+        ],
+        "target": [
+          0,
+          1.1,
+          -0.4
+        ]
       },
       "cabinets": [
         {
@@ -1391,7 +2300,9 @@
           "offset": 330,
           "width": 60
         }
-      ]
+      ],
+      "roomSceneId": "kitchen-warm-v1",
+      "sceneRevision": 1
     },
     {
       "id": "modern",
@@ -1406,7 +2317,18 @@
       "room": {
         "width": 420,
         "depth": 300,
-        "height": 270
+        "height": 270,
+        "openings": [
+          {
+            "id": "kitchen-warm-v1-staged-window",
+            "wall": "left",
+            "type": "window",
+            "offset": 90,
+            "width": 120,
+            "height": 110,
+            "sill": 115
+          }
+        ]
       },
       "style": {
         "front": "white",
@@ -1419,8 +2341,16 @@
         "profile": "flat"
       },
       "camera": {
-        "position": [2.4, 2.2, 5],
-        "target": [0, 1, -1]
+        "position": [
+          2.4,
+          2.2,
+          5
+        ],
+        "target": [
+          0,
+          1,
+          -1
+        ]
       },
       "cabinets": [
         {
@@ -1495,7 +2425,9 @@
           "offset": 360,
           "width": 60
         }
-      ]
+      ],
+      "roomSceneId": "kitchen-warm-v1",
+      "sceneRevision": 1
     },
     {
       "id": "classic",
@@ -1510,7 +2442,18 @@
       "room": {
         "width": 480,
         "depth": 420,
-        "height": 270
+        "height": 270,
+        "openings": [
+          {
+            "id": "kitchen-warm-v1-staged-window",
+            "wall": "left",
+            "type": "window",
+            "offset": 150,
+            "width": 120,
+            "height": 110,
+            "sill": 115
+          }
+        ]
       },
       "style": {
         "front": "anthracite",
@@ -1523,8 +2466,16 @@
         "profile": "flat"
       },
       "camera": {
-        "position": [0.3, 2.6, 5.8],
-        "target": [0, 1.1, -0.3]
+        "position": [
+          0.3,
+          2.6,
+          5.8
+        ],
+        "target": [
+          0,
+          1.1,
+          -0.3
+        ]
       },
       "cabinets": [
         {
@@ -1635,7 +2586,9 @@
           "offset": 300,
           "width": 60
         }
-      ]
+      ],
+      "roomSceneId": "kitchen-warm-v1",
+      "sceneRevision": 1
     },
     {
       "id": "wardrobe-straight",
@@ -1650,7 +2603,18 @@
       "room": {
         "width": 360,
         "depth": 300,
-        "height": 270
+        "height": 270,
+        "openings": [
+          {
+            "id": "wardrobe-warm-v1-staged-window",
+            "wall": "left",
+            "type": "window",
+            "offset": 100,
+            "width": 100,
+            "height": 120,
+            "sill": 100
+          }
+        ]
       },
       "style": {
         "front": "cashmere",
@@ -1663,8 +2627,16 @@
         "profile": "flat"
       },
       "camera": {
-        "position": [2, 2, 5],
-        "target": [0, 1, -1]
+        "position": [
+          2,
+          2,
+          5
+        ],
+        "target": [
+          0,
+          1,
+          -1
+        ]
       },
       "cabinets": [
         {
@@ -1691,7 +2663,9 @@
           "offset": 240,
           "width": 100
         }
-      ]
+      ],
+      "roomSceneId": "wardrobe-warm-v1",
+      "sceneRevision": 1
     },
     {
       "id": "wardrobe",
@@ -1706,7 +2680,18 @@
       "room": {
         "width": 360,
         "depth": 300,
-        "height": 270
+        "height": 270,
+        "openings": [
+          {
+            "id": "wardrobe-warm-v1-staged-window",
+            "wall": "right",
+            "type": "window",
+            "offset": 100,
+            "width": 100,
+            "height": 120,
+            "sill": 100
+          }
+        ]
       },
       "style": {
         "front": "cashmere",
@@ -1719,8 +2704,16 @@
         "profile": "flat"
       },
       "camera": {
-        "position": [3.7, 2.45, 4.7],
-        "target": [0, 1.1, -0.4]
+        "position": [
+          3.7,
+          2.45,
+          4.7
+        ],
+        "target": [
+          0,
+          1.1,
+          -0.4
+        ]
       },
       "cabinets": [
         {
@@ -1759,6 +2752,184 @@
           "offset": 140,
           "width": 80
         }
+      ],
+      "roomSceneId": "wardrobe-warm-v1",
+      "sceneRevision": 1
+    }
+  ],
+  "interiorItems": [
+    {
+      "id": "storage-shelf",
+      "name": {
+        "sq": "Raft",
+        "en": "Shelf",
+        "de": "Einlegeboden"
+      },
+      "kind": "shelf",
+      "compatibleModuleTypes": [
+        "doors",
+        "open",
+        "hanging",
+        "drawers",
+        "sliding"
+      ],
+      "minWidthCm": 30,
+      "maxWidthCm": 200,
+      "minDepthCm": 35,
+      "maxDepthCm": 80,
+      "occupiedHeightCm": 1.8,
+      "clearanceAboveCm": 0,
+      "clearanceBelowCm": 0,
+      "mounting": {
+        "stepCm": 2,
+        "originCm": 0
+      },
+      "material": "carcass",
+      "price": 24,
+      "extensionCm": 0,
+      "basis": "illustrative"
+    },
+    {
+      "id": "storage-rail",
+      "name": {
+        "sq": "Shufër varëse",
+        "en": "Hanging rail",
+        "de": "Kleiderstange"
+      },
+      "kind": "rail",
+      "compatibleModuleTypes": [
+        "doors",
+        "open",
+        "hanging",
+        "drawers",
+        "sliding"
+      ],
+      "minWidthCm": 30,
+      "maxWidthCm": 200,
+      "minDepthCm": 35,
+      "maxDepthCm": 80,
+      "occupiedHeightCm": 1.6,
+      "clearanceAboveCm": 0,
+      "clearanceBelowCm": 90,
+      "mounting": {
+        "stepCm": 2,
+        "originCm": 0
+      },
+      "material": "metal",
+      "price": 18,
+      "extensionCm": 0,
+      "basis": "illustrative"
+    },
+    {
+      "id": "storage-drawer",
+      "name": {
+        "sq": "Sirtar i brendshëm",
+        "en": "Interior drawer",
+        "de": "Innenschublade"
+      },
+      "kind": "drawer",
+      "compatibleModuleTypes": [
+        "doors",
+        "open",
+        "hanging",
+        "drawers",
+        "sliding"
+      ],
+      "minWidthCm": 40,
+      "maxWidthCm": 100,
+      "minDepthCm": 50,
+      "maxDepthCm": 80,
+      "occupiedHeightCm": 20.2,
+      "clearanceAboveCm": 0,
+      "clearanceBelowCm": 0,
+      "mounting": {
+        "stepCm": 2,
+        "originCm": 0
+      },
+      "material": "carcass",
+      "price": 85,
+      "extensionCm": 38,
+      "basis": "illustrative"
+    },
+    {
+      "id": "storage-basket",
+      "name": {
+        "sq": "Shportë tërheqëse",
+        "en": "Pull-out basket",
+        "de": "Ausziehkorb"
+      },
+      "kind": "basket",
+      "compatibleModuleTypes": [
+        "doors",
+        "open",
+        "hanging",
+        "drawers",
+        "sliding"
+      ],
+      "minWidthCm": 40,
+      "maxWidthCm": 100,
+      "minDepthCm": 50,
+      "maxDepthCm": 80,
+      "occupiedHeightCm": 18,
+      "clearanceAboveCm": 2,
+      "clearanceBelowCm": 0,
+      "mounting": {
+        "stepCm": 2,
+        "originCm": 0
+      },
+      "material": "metal",
+      "price": 55,
+      "extensionCm": 38,
+      "basis": "illustrative"
+    }
+  ],
+  "interiorPresets": [
+    {
+      "id": "legacy-shelves",
+      "name": {
+        "sq": "Rafte standarde",
+        "en": "Standard shelves",
+        "de": "Standardböden"
+      },
+      "layout": "shelves",
+      "compatibleModuleTypes": [
+        "doors",
+        "open",
+        "hanging",
+        "drawers",
+        "sliding"
+      ]
+    },
+    {
+      "id": "legacy-hanging",
+      "name": {
+        "sq": "Varje standarde",
+        "en": "Standard hanging",
+        "de": "Standard Kleiderstange"
+      },
+      "layout": "hanging",
+      "compatibleModuleTypes": [
+        "doors",
+        "open",
+        "hanging",
+        "drawers",
+        "sliding"
+      ]
+    },
+    {
+      "id": "legacy-drawers",
+      "name": {
+        "sq": "Sirtarë dhe rafte",
+        "en": "Drawers and shelves",
+        "de": "Schubladen und Böden"
+      },
+      "layout": "drawers",
+      "compatibleModuleTypes": [
+        "doors",
+        "open",
+        "hanging",
+        "drawers",
+        "sliding"
       ]
     }
   ]

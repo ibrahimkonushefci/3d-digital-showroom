@@ -1,0 +1,37 @@
+$ vitest run
+
+ RUN  v3.2.7 /Users/ibrahimi/3d_designer
+
+(node:39750) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39758) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39754) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39755) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39751) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39753) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/comparison.test.ts (4 tests) 235ms
+ ✓ tests/interaction.test.ts (3 tests) 210ms
+ ✓ tests/demo-safety.test.ts (4 tests) 112ms
+ ✓ tests/framing.test.ts (11 tests) 336ms
+ ✓ tests/showroom.test.ts (15 tests) 158ms
+ ✓ tests/phase0-compatibility.test.ts (10 tests) 191ms
+ ✓ tests/offers.test.ts (7 tests) 216ms
+ ✓ tests/core.test.ts (30 tests) 386ms
+ ✓ tests/proposal.test.ts (4 tests) 504ms
+ ✓ tests/assets.test.ts (3 tests) 57ms
+ ✓ tests/realism.test.ts (6 tests) 45ms
+ ✓ tests/material-mapping.test.ts (7 tests) 31ms
+(node:39784) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ tests/phase0-resources.test.ts (6 tests) 15ms
+
+ Test Files  13 passed (13)
+      Tests  110 passed (110)
+   Start at  11:51:44
+   Duration  2.65s (transform 1.26s, setup 0ms, collect 7.06s, tests 2.50s, environment 4ms, prepare 1.91s)
+

@@ -86,6 +86,7 @@ export function Swatches({
   selectedLabel?: string;
 }) {
   const { language } = useLanguage();
+  const t = useT();
   const { assetUrl } = useBrand();
   return (
     <div className="swatch-section">
@@ -93,10 +94,12 @@ export function Swatches({
         {title}
         <span>
           {selectedLabel ||
-            label(
-              items.find((m) => m.id === value)?.name || items[0].name,
-              language,
-            )}
+            (value
+              ? label(
+                  items.find((m) => m.id === value)?.name || items[0].name,
+                  language,
+                )
+              : t("mixedFinishes"))}
         </span>
       </h3>
       <div className="swatches">

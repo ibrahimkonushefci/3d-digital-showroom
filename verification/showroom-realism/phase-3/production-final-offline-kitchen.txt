@@ -1,0 +1,125 @@
+- banner:
+  - link "Forma Studio Digitaler Showroom":
+    - /url: /?brand=default&kind=kitchen
+    - strong: Forma Studio
+    - generic: Digitaler Showroom
+  - navigation "Start":
+    - link "Start":
+      - /url: /?brand=default&kind=kitchen
+    - link "Küchen" [active]:
+      - /url: /designer/kitchen?brand=default&kind=kitchen
+    - link "Kleiderschränke":
+      - /url: /designer/wardrobe?brand=default&kind=kitchen
+  - generic "Offline bereit":
+    - generic: Offline bereit
+  - button "Shqip": SQ
+  - button "English": EN
+  - button "Deutsch" [pressed]: DE
+  - link "Einstellungen":
+    - /url: /settings?brand=default&kind=kitchen
+- main:
+  - heading "Küchen" [level=1]
+  - button "Showroom" [pressed]
+  - button "Module bearbeiten"
+  - button "Rückgängig" [disabled]:
+  - button "Wiederholen" [disabled]:
+  - button "Konfiguration zurücksetzen":
+    - generic: Konfiguration zurücksetzen
+  - button "Perspektive"
+  - button "Vorne"
+  - button "Oben"
+  - button "Gesamtansicht":
+    - text: Gesamtansicht
+  - button "Alle öffnen":
+    - text: Alle öffnen
+  - img "Interaktiver 3D-Showroom"
+  - button "Vollbild":
+  - generic: 420 × 360 × 270 cm
+  - generic: 15 module
+  - paragraph: Front antippen zum Öffnen · Ziehen zum Drehen · Zwei Finger zum Verschieben
+  - complementary:
+    - button "Stile & Materialien":
+      - generic: Stile & Materialien
+    - button "Raum & Layout":
+      - generic: Raum & Layout
+    - button "Schränke & Module":
+      - generic: Schränke & Module
+    - button "Geräte & Beleuchtung":
+      - generic: Geräte & Beleuchtung
+    - heading "Frontmaterial" [level=3]
+    - generic: Frontmaterial · Materialstufe
+    - combobox "Frontmaterial · Materialstufe":
+      - option "Spanplatte (Egger / Kronospan)" [selected]
+      - option "MDF mit Folie"
+      - option "Matt lackiertes MDF"
+      - option "Hochglanz-Acryl"
+      - option "Fenix"
+    - heading "Farbe Kaschmir" [level=3]:
+      - text: Farbe
+      - generic: Kaschmir
+    - button "Kaschmir" [pressed]:
+      - generic: ✓
+    - button "Salbeigrün"
+    - button "Anthrazit"
+    - button "Warmweiß"
+    - button "Mattschwarz"
+    - button "Natureiche"
+    - button "Walnuss"
+    - button "Weiß Hochglanz"
+    - button "H3303 ST10 · Natural Hamilton Oak"
+    - button "K190 · Black"
+    - heading "Arbeitsplatte" [level=3]
+    - generic: Arbeitsplatte · Materialstufe
+    - combobox "Arbeitsplatte · Materialstufe":
+      - option "Laminat 38 mm"
+      - option "Kompakt 12 mm" [selected]
+      - option "Quarz"
+      - option "Granit"
+    - heading "Farbe Travertin" [level=3]:
+      - text: Farbe
+      - generic: Travertin
+    - button "Travertin" [pressed]:
+      - generic: ✓
+    - button "F206 PM · Black Pietra Grigia"
+    - heading "Kuratierte Kollektionen" [level=3]
+    - button "Japandi Minimal Kaschmir matt & Travertinstein":
+      - strong: Japandi Minimal
+      - generic: Kaschmir matt & Travertinstein
+    - button "Modernes Anthrazit Tiefes Anthrazit & Granit":
+      - strong: Modernes Anthrazit
+      - generic: Tiefes Anthrazit & Granit
+    - button "Nordisches Salbei Salbeigrün & Carrara-Marmor":
+      - strong: Nordisches Salbei
+      - generic: Salbeigrün & Carrara-Marmor
+    - button "Warmweiß & Eiche Warmweiß & Eichenplatte":
+      - strong: Warmweiß & Eiche
+      - generic: Warmweiß & Eichenplatte
+    - button "Eichendekor Natureiche & Travertin":
+      - strong: Eichendekor
+      - generic: Natureiche & Travertin
+    - heading "Griffe" [level=3]
+    - button "Grifflos / Push"
+    - button "Edelstahl-Bügel"
+    - button "Gola-Profil"
+    - button "Mattschwarzer Bügel"
+    - generic: Frontstil
+    - button "Frontstil Rahmenfronten": Glatte Fronten
+    - button "Rahmenfronten"
+    - heading "Korpus Weiß" [level=3]:
+      - text: Korpus
+      - generic: Weiß
+    - button "Weiß" [pressed]:
+      - generic: ✓
+    - button "Eiche"
+    - button "Graphit"
+    - text: Name der Alternative
+    - textbox "Name der Alternative":
+      - /placeholder: L-Form
+    - button "A speichern"
+    - button "B speichern"
+    - button "A / B vergleichen"
+    - generic: Geschätzter Gesamtpreis
+    - strong: 4.768 €
+    - generic: Unverbindliches Angebot
+    - button "Ihr Angebot":
+      - text: Ihr Angebot

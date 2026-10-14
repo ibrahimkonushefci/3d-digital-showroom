@@ -1,0 +1,34 @@
+{
+  "changes": 30,
+  "sequence": [
+    "oak",
+    "walnut",
+    "cashmere"
+  ],
+  "before": {
+    "textures": 19,
+    "geometries": 107
+  },
+  "after": {
+    "textures": 14,
+    "geometries": 83
+  },
+  "beforeBytes": 82758386,
+  "afterBytes": 64883696,
+  "probeBefore": {
+    "mode": "runtime",
+    "resolution": 128,
+    "refreshes": 1,
+    "lastMs": 16.699999928474426,
+    "fallbackReason": "",
+    "signature": "[\"room-lighting-v2\",\"kitchen\",{\"width\":420,\"depth\":360,\"height\":270,\"openings\":[{\"id\":\"kitchen-warm-v1-staged-window\",\"wall\":\"left\",\"type\":\"window\",\"offset\":90,\"width\":120,\"height\":110,\"sill\":115}]},[[\"japandi-cabinet-01\",\"corner\",\"base\",\"back\",45,45,0,90,72,90],[\"japandi-cabinet-02\",\"sink\",\"base\",\"back\",120,30,0,60,72,60],[\"japandi-cabinet-03\",\"dishwasher\",\"base\",\"back\",180,30,0,60,72,60],[\"japandi-cabinet-04\",\"base-drawers\",\"base\",\"back\",240,30,0,60,72,60],[\"japandi-cabinet-05\",\"base-doors\",\"base\",\"back\",300,30,0,60,72,60],[\"japandi-cabinet-06\",\"base-drawers\",\"base\",\"back\",360,30,0,60,72,60],[\"japandi-cabinet-07\",\"base-drawers\",\"base\",\"left\",30,120,1.5707963267948966,60,72,60],[\"japandi-cabinet-08\",\"base-doors\",\"base\",\"left\",30,180,1.5707963267948966,60,72,60],[\"japandi-cabinet-09\",\"oven\",\"tall\",\"left\",30,240,1.5707963267948966,60,210,60],[\"japandi-cabinet-10\",\"fridge\",\"tall\",\"left\",30,300,1.5707963267948966,60,210,60],[\"japandi-cabinet-11\",\"wall-doors\",\"wall\",\"back\",120,17.5,0,60,72,35],[\"japandi-cabinet-12\",\"wall-doors\",\"wall\",\"back\",180,17.5,0,60,72,35],[\"japandi-cabinet-13\",\"wall-hood\",\"wall\",\"back\",240,17.5,0,60,72,35],[\"japandi-cabinet-14\",\"wall-doors\",\"wall\",\"back\",300,17.5,0,60,72,35],[\"japandi-cabinet-15\",\"wall-doors\",\"wall\",\"back\",360,17.5,0,60,72,35]]]"
+  },
+  "probeAfter": {
+    "mode": "runtime",
+    "resolution": 128,
+    "refreshes": 1,
+    "lastMs": 16.699999928474426,
+    "fallbackReason": "",
+    "signature": "[\"room-lighting-v2\",\"kitchen\",{\"width\":420,\"depth\":360,\"height\":270,\"openings\":[{\"id\":\"kitchen-warm-v1-staged-window\",\"wall\":\"left\",\"type\":\"window\",\"offset\":90,\"width\":120,\"height\":110,\"sill\":115}]},[[\"japandi-cabinet-01\",\"corner\",\"base\",\"back\",45,45,0,90,72,90],[\"japandi-cabinet-02\",\"sink\",\"base\",\"back\",120,30,0,60,72,60],[\"japandi-cabinet-03\",\"dishwasher\",\"base\",\"back\",180,30,0,60,72,60],[\"japandi-cabinet-04\",\"base-drawers\",\"base\",\"back\",240,30,0,60,72,60],[\"japandi-cabinet-05\",\"base-doors\",\"base\",\"back\",300,30,0,60,72,60],[\"japandi-cabinet-06\",\"base-drawers\",\"base\",\"back\",360,30,0,60,72,60],[\"japandi-cabinet-07\",\"base-drawers\",\"base\",\"left\",30,120,1.5707963267948966,60,72,60],[\"japandi-cabinet-08\",\"base-doors\",\"base\",\"left\",30,180,1.5707963267948966,60,72,60],[\"japandi-cabinet-09\",\"oven\",\"tall\",\"left\",30,240,1.5707963267948966,60,210,60],[\"japandi-cabinet-10\",\"fridge\",\"tall\",\"left\",30,300,1.5707963267948966,60,210,60],[\"japandi-cabinet-11\",\"wall-doors\",\"wall\",\"back\",120,17.5,0,60,72,35],[\"japandi-cabinet-12\",\"wall-doors\",\"wall\",\"back\",180,17.5,0,60,72,35],[\"japandi-cabinet-13\",\"wall-hood\",\"wall\",\"back\",240,17.5,0,60,72,35],[\"japandi-cabinet-14\",\"wall-doors\",\"wall\",\"back\",300,17.5,0,60,72,35],[\"japandi-cabinet-15\",\"wall-doors\",\"wall\",\"back\",360,17.5,0,60,72,35]]]"
+  }
+}

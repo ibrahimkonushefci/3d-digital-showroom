@@ -1,0 +1,20 @@
+[
+  {
+    "file": "browser-wardrobe-en.pdf",
+    "pages": 3,
+    "outOfBoundsWords": []
+  },
+  {
+    "file": "browser-kitchen-de.pdf",
+    "pages": 3,
+    "outOfBoundsWords": []
+  },
+  {
+    "file": "browser-offline-wardrobe-sq.pdf",
+    "pages": 3,
+    "outOfBoundsWords": [],
+    "hasAlbanianGlyphs": true,
+    "hasBasket": true,
+    "hasTotal": true
+  }
+]

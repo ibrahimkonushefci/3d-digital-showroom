@@ -1,0 +1,1093 @@
+{
+  "version": 1,
+  "revision": "room-kit-v1",
+  "assets": [
+    {
+      "id": "oven",
+      "revision": 1,
+      "path": "shared/models/oven-balanced-1be30d4f4a.glb",
+      "sha256": "1be30d4f4adfa49e04681473f1c54c624629cd455602bb4c81438a5fcb1337e9",
+      "bytes": 46052,
+      "triangles": 596,
+      "drawCalls": 4,
+      "geometryBytes": 42912,
+      "nativeDimensions": [
+        0.5799999833106995,
+        0.5899999737739563,
+        0.0970000009983778
+      ],
+      "bounds": {
+        "min": [
+          -0.28999999165534973,
+          -0.29499998688697815,
+          -0.023000000044703484
+        ],
+        "max": [
+          0.28999999165534973,
+          0.29499998688697815,
+          0.07400000095367432
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/oven-lightweight-9d666741bd.glb",
+        "sha256": "9d666741bd23715847cb92202ed8a80973ca7e0203b986a320ef37cc9bc2877c",
+        "bytes": 20692,
+        "triangles": 244,
+        "drawCalls": 4,
+        "geometryBytes": 17568,
+        "nativeDimensions": [
+          0.5799999833106995,
+          0.5899999737739563,
+          0.0970000009983778
+        ],
+        "bounds": {
+          "min": [
+            -0.28999999165534973,
+            -0.29499998688697815,
+            -0.023000000044703484
+          ],
+          "max": [
+            0.28999999165534973,
+            0.29499998688697815,
+            0.07400000095367432
+          ]
+        }
+      },
+      "materialSlots": [
+        "dark",
+        "glass",
+        "steel",
+        "ceramic"
+      ],
+      "origin": "center",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "42d2ef362c2569c2fedce7baee9fb224b4dc64dbb7354f5d4c61a8a1399a4dc2",
+      "quotedProduct": false
+    },
+    {
+      "id": "fridge",
+      "revision": 1,
+      "path": "shared/models/fridge-balanced-7a29332a60.glb",
+      "sha256": "7a29332a605977a0158f9f1ce85ec076d08ddea540b0024842e54c978ed0a407",
+      "bytes": 44720,
+      "triangles": 588,
+      "drawCalls": 3,
+      "geometryBytes": 42336,
+      "nativeDimensions": [
+        0.574999988079071,
+        1.879999978467822,
+        0.0729999989271164
+      ],
+      "bounds": {
+        "min": [
+          -0.2874999940395355,
+          0.015000002458691597,
+          -0.010999999940395355
+        ],
+        "max": [
+          0.2874999940395355,
+          1.8949999809265137,
+          0.06199999898672104
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/fridge-lightweight-43d19af03a.glb",
+        "sha256": "43d19af03ad046cfdfccfb4178c600cb3673a10601916ef2c93f114d2fef2817",
+        "bytes": 10148,
+        "triangles": 108,
+        "drawCalls": 3,
+        "geometryBytes": 7776,
+        "nativeDimensions": [
+          0.574999988079071,
+          1.879999978467822,
+          0.0729999989271164
+        ],
+        "bounds": {
+          "min": [
+            -0.2874999940395355,
+            0.015000002458691597,
+            -0.010999999940395355
+          ],
+          "max": [
+            0.2874999940395355,
+            1.8949999809265137,
+            0.06199999898672104
+          ]
+        }
+      },
+      "materialSlots": [
+        "steel",
+        "dark",
+        "glass"
+      ],
+      "origin": "floor-front",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "3f13c5a2938ab312296b05cacd49296e19e49c24bcbcc97b38723e64a26acaa8",
+      "quotedProduct": false
+    },
+    {
+      "id": "tap",
+      "revision": 1,
+      "path": "shared/models/tap-balanced-669b8f0940.glb",
+      "sha256": "669b8f09408bccd9ba09b7276145087d3ad039e8f841abb4968e28d920df02a9",
+      "bytes": 50952,
+      "triangles": 684,
+      "drawCalls": 2,
+      "geometryBytes": 49248,
+      "nativeDimensions": [
+        0.08700000122189522,
+        0.3496699629537761,
+        0.1900000013411045
+      ],
+      "bounds": {
+        "min": [
+          -0.05900000035762787,
+          1.6763807009212428e-10,
+          -0.02800000086426735
+        ],
+        "max": [
+          0.02800000086426735,
+          0.3496699631214142,
+          0.16200000047683716
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/tap-lightweight-c13bf181f8.glb",
+        "sha256": "c13bf181f8c3dc281611e4e7332f8d9c53fa2e927a402bca972a278d29c050bd",
+        "bytes": 18112,
+        "triangles": 228,
+        "drawCalls": 2,
+        "geometryBytes": 16416,
+        "nativeDimensions": [
+          0.08700000122189522,
+          0.3490826485864818,
+          0.1900000013411045
+        ],
+        "bounds": {
+          "min": [
+            -0.05900000035762787,
+            1.6763807009212428e-10,
+            -0.02800000086426735
+          ],
+          "max": [
+            0.02800000086426735,
+            0.3490826487541199,
+            0.16200000047683716
+          ]
+        }
+      },
+      "materialSlots": [
+        "steel",
+        "dark"
+      ],
+      "origin": "countertop",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "5f6a7b939de5ca2f4a44ca314eacb9d64bab6b90f296382312d76c70dc1a6795",
+      "quotedProduct": false
+    },
+    {
+      "id": "stool",
+      "revision": 1,
+      "path": "shared/models/stool-balanced-681df2f95b.glb",
+      "sha256": "681df2f95bece3c1229cf65d6185ea3fe1599c6e9b4b415db167e2bcef3e399c",
+      "bytes": 41912,
+      "triangles": 548,
+      "drawCalls": 3,
+      "geometryBytes": 39456,
+      "nativeDimensions": [
+        0.41999998688697815,
+        0.8049460798501968,
+        0.3799999952316284
+      ],
+      "bounds": {
+        "min": [
+          -0.20999999344348907,
+          0,
+          -0.1899999976158142
+        ],
+        "max": [
+          0.20999999344348907,
+          0.8049460798501968,
+          0.1899999976158142
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/stool-lightweight-87159e40ac.glb",
+        "sha256": "87159e40acf21b3fe7ba20f80a06a6e1191e32012727d3196c7308ac7882dccf",
+        "bytes": 15132,
+        "triangles": 176,
+        "drawCalls": 3,
+        "geometryBytes": 12672,
+        "nativeDimensions": [
+          0.41999998688697815,
+          0.8049344271421432,
+          0.3799999952316284
+        ],
+        "bounds": {
+          "min": [
+            -0.20999999344348907,
+            0,
+            -0.1899999976158142
+          ],
+          "max": [
+            0.20999999344348907,
+            0.8049344271421432,
+            0.1899999976158142
+          ]
+        }
+      },
+      "materialSlots": [
+        "oak",
+        "textile",
+        "dark"
+      ],
+      "origin": "floor",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "5c8fc691e07fd8e7741cd6694adb8e603f55a85607fe96a1c0b056f2c2edb733",
+      "quotedProduct": false
+    },
+    {
+      "id": "pendant",
+      "revision": 1,
+      "path": "shared/models/pendant-balanced-8c688eb0e6.glb",
+      "sha256": "8c688eb0e6f7716374f58f91b3c2ec7e7c333913bccae9dbd4f38d4c7378bf5b",
+      "bytes": 20128,
+      "triangles": 256,
+      "drawCalls": 2,
+      "geometryBytes": 18432,
+      "nativeDimensions": [
+        0.3400000035762787,
+        0.6690000297501684,
+        0.3400000035762787
+      ],
+      "bounds": {
+        "min": [
+          -0.17000000178813934,
+          -0.6690000295639038,
+          -0.17000000178813934
+        ],
+        "max": [
+          0.17000000178813934,
+          1.8626451769865326e-10,
+          0.17000000178813934
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/pendant-lightweight-833971e007.glb",
+        "sha256": "833971e007ac939ef8f9680d72d8c1d77b081dc5a1d01626cd0a0791dc5b4d0b",
+        "bytes": 10908,
+        "triangles": 128,
+        "drawCalls": 2,
+        "geometryBytes": 9216,
+        "nativeDimensions": [
+          0.3400000035762787,
+          0.6690000297501684,
+          0.3400000035762787
+        ],
+        "bounds": {
+          "min": [
+            -0.17000000178813934,
+            -0.6690000295639038,
+            -0.17000000178813934
+          ],
+          "max": [
+            0.17000000178813934,
+            1.8626451769865326e-10,
+            0.17000000178813934
+          ]
+        }
+      },
+      "materialSlots": [
+        "dark",
+        "ceramic"
+      ],
+      "origin": "ceiling",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "158f31bb7cd4772d60654d975ebeda2e245902f3f2ebe56070d691015d71a3b9",
+      "quotedProduct": false
+    },
+    {
+      "id": "bench",
+      "revision": 1,
+      "path": "shared/models/bench-balanced-850dfff04f.glb",
+      "sha256": "850dfff04f2fe466272b1033cfd0e3a7045e7b3647a84abdd1cffcb1d8e90b18",
+      "bytes": 56176,
+      "triangles": 756,
+      "drawCalls": 2,
+      "geometryBytes": 54432,
+      "nativeDimensions": [
+        1.0499999523162842,
+        0.45149999225139625,
+        0.4000000059604645
+      ],
+      "bounds": {
+        "min": [
+          -0.5249999761581421,
+          0,
+          -0.20000000298023224
+        ],
+        "max": [
+          0.5249999761581421,
+          0.45149999225139625,
+          0.20000000298023224
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/bench-lightweight-7b447fc83e.glb",
+        "sha256": "7b447fc83ef27e036f35a572b8bc82971dce21e859a8c4993f7b7d6136de977a",
+        "bytes": 7780,
+        "triangles": 84,
+        "drawCalls": 2,
+        "geometryBytes": 6048,
+        "nativeDimensions": [
+          1.0499999523162842,
+          0.45149999225139625,
+          0.4000000059604645
+        ],
+        "bounds": {
+          "min": [
+            -0.5249999761581421,
+            0,
+            -0.20000000298023224
+          ],
+          "max": [
+            0.5249999761581421,
+            0.45149999225139625,
+            0.20000000298023224
+          ]
+        }
+      },
+      "materialSlots": [
+        "oak",
+        "textile"
+      ],
+      "origin": "floor",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "8489471dc3be6ca1985fca727d2a164982cc3f50a4a31bcc7337a5b3fcde7f8e",
+      "quotedProduct": false
+    },
+    {
+      "id": "counter-set",
+      "revision": 1,
+      "path": "shared/models/counter-set-balanced-cee65a26e6.glb",
+      "sha256": "cee65a26e6e2ce572bf492717e1b28460173ea5fbe0b491286ca4f042e5008ab",
+      "bytes": 50940,
+      "triangles": 684,
+      "drawCalls": 2,
+      "geometryBytes": 49248,
+      "nativeDimensions": [
+        0.2800000011920929,
+        0.15549999513477086,
+        0.18000000715255737
+      ],
+      "bounds": {
+        "min": [
+          -0.14000000059604645,
+          -3.799796033376879e-10,
+          -0.09000000357627869
+        ],
+        "max": [
+          0.14000000059604645,
+          0.15549999475479126,
+          0.09000000357627869
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/counter-set-lightweight-44a98a14d9.glb",
+        "sha256": "44a98a14d932ffeba64418954c27f942d2c0036e0597e4399a91995803e9a24d",
+        "bytes": 18152,
+        "triangles": 228,
+        "drawCalls": 2,
+        "geometryBytes": 16416,
+        "nativeDimensions": [
+          0.2800000011920929,
+          0.15549999513477086,
+          0.18000000715255737
+        ],
+        "bounds": {
+          "min": [
+            -0.14000000059604645,
+            -3.799796033376879e-10,
+            -0.09000000357627869
+          ],
+          "max": [
+            0.14000000059604645,
+            0.15549999475479126,
+            0.09000000357627869
+          ]
+        }
+      },
+      "materialSlots": [
+        "oak",
+        "ceramic"
+      ],
+      "origin": "countertop",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "7309bca5c35977dcd87c194e28c73fc260493681c97eb1546a825f00bfb9bfed",
+      "quotedProduct": false
+    },
+    {
+      "id": "shirt",
+      "revision": 1,
+      "path": "shared/models/shirt-balanced-285e276d04.glb",
+      "sha256": "285e276d04a54c54f238e242ccf8e060dceb0510095fd3dbd611e51b314eb1d6",
+      "bytes": 93888,
+      "triangles": 1280,
+      "drawCalls": 2,
+      "geometryBytes": 92160,
+      "nativeDimensions": [
+        0.07999999821186066,
+        0.6199790686368942,
+        0.48761141300201416
+      ],
+      "bounds": {
+        "min": [
+          -0.03999999910593033,
+          -0.5849999785423279,
+          -0.24380570650100708
+        ],
+        "max": [
+          0.03999999910593033,
+          0.034979090094566345,
+          0.24380570650100708
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/shirt-lightweight-408142c1c1.glb",
+        "sha256": "408142c1c17b9b2bcec24b2dd576458f3cddcfcc871dd15c15f3766372c36e71",
+        "bytes": 31416,
+        "triangles": 412,
+        "drawCalls": 2,
+        "geometryBytes": 29664,
+        "nativeDimensions": [
+          0.07608452439308167,
+          0.614104388281703,
+          0.4802001863718033
+        ],
+        "bounds": {
+          "min": [
+            -0.03804226219654083,
+            -0.5849999785423279,
+            -0.24380570650100708
+          ],
+          "max": [
+            0.03804226219654083,
+            0.029104409739375114,
+            0.2363944798707962
+          ]
+        }
+      },
+      "materialSlots": [
+        "oak",
+        "textile"
+      ],
+      "origin": "rail",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "d58500b8b263a53b5bddd1a795e053d84e5881bfd005a16a453de8f445305806",
+      "quotedProduct": false
+    },
+    {
+      "id": "coat",
+      "revision": 1,
+      "path": "shared/models/coat-balanced-18d00e6767.glb",
+      "sha256": "18d00e676716691991c11fc89cd31d4e32d778f4740be8c5446a027b2be3607d",
+      "bytes": 93888,
+      "triangles": 1280,
+      "drawCalls": 2,
+      "geometryBytes": 92160,
+      "nativeDimensions": [
+        0.07999999821186066,
+        0.8799791187047958,
+        0.4893052875995636
+      ],
+      "bounds": {
+        "min": [
+          -0.03999999910593033,
+          -0.8450000286102295,
+          -0.2446526437997818
+        ],
+        "max": [
+          0.03999999910593033,
+          0.034979090094566345,
+          0.2446526437997818
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/coat-lightweight-2fd8ac0e80.glb",
+        "sha256": "2fd8ac0e8097be4ff789b26191360b067fcd88889fe17a8404c569fce0975511",
+        "bytes": 31380,
+        "triangles": 412,
+        "drawCalls": 2,
+        "geometryBytes": 29664,
+        "nativeDimensions": [
+          0.07608452439308167,
+          0.8741044383496046,
+          0.4817323088645935
+        ],
+        "bounds": {
+          "min": [
+            -0.03804226219654083,
+            -0.8450000286102295,
+            -0.2446526437997818
+          ],
+          "max": [
+            0.03804226219654083,
+            0.029104409739375114,
+            0.2370796650648117
+          ]
+        }
+      },
+      "materialSlots": [
+        "oak",
+        "sage"
+      ],
+      "origin": "rail",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "d58500b8b263a53b5bddd1a795e053d84e5881bfd005a16a453de8f445305806",
+      "quotedProduct": false
+    },
+    {
+      "id": "trousers",
+      "revision": 1,
+      "path": "shared/models/trousers-balanced-36e7302e15.glb",
+      "sha256": "36e7302e150464ad18124fdf8b02d05826c761dee5b9909a2aa45a39fa642679",
+      "bytes": 55760,
+      "triangles": 740,
+      "drawCalls": 3,
+      "geometryBytes": 53280,
+      "nativeDimensions": [
+        0.04900000058114529,
+        0.7949790805578232,
+        0.3810698091983795
+      ],
+      "bounds": {
+        "min": [
+          -0.02250000089406967,
+          -0.7599999904632568,
+          -0.19246628880500793
+        ],
+        "max": [
+          0.026499999687075615,
+          0.034979090094566345,
+          0.18860352039337158
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/trousers-lightweight-49e603230c.glb",
+        "sha256": "49e603230c978d3566b24d798f3f490f9ab027c138aa5dbdae7c42d318c42b05",
+        "bytes": 15200,
+        "triangles": 176,
+        "drawCalls": 3,
+        "geometryBytes": 12672,
+        "nativeDimensions": [
+          0.0489265862852335,
+          0.789104400202632,
+          0.3677564114332199
+        ],
+        "bounds": {
+          "min": [
+            -0.02250000089406967,
+            -0.7599999904632568,
+            -0.18157397210597992
+          ],
+          "max": [
+            0.026426585391163826,
+            0.029104409739375114,
+            0.18618243932724
+          ]
+        }
+      },
+      "materialSlots": [
+        "oak",
+        "ink",
+        "sole"
+      ],
+      "origin": "rail",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "d58500b8b263a53b5bddd1a795e053d84e5881bfd005a16a453de8f445305806",
+      "quotedProduct": false
+    },
+    {
+      "id": "fold",
+      "revision": 1,
+      "path": "shared/models/fold-balanced-a778bfbfab.glb",
+      "sha256": "a778bfbfab8d73ed34f6483d7b668a241e6edf89d9b9f0e69295849af6fb5198",
+      "bytes": 21848,
+      "triangles": 280,
+      "drawCalls": 2,
+      "geometryBytes": 20160,
+      "nativeDimensions": [
+        0.28999999165534973,
+        0.06499999850988386,
+        0.23000000417232513
+      ],
+      "bounds": {
+        "min": [
+          -0.14499999582767487,
+          -8.940696516468449e-10,
+          -0.11500000208616257
+        ],
+        "max": [
+          0.14499999582767487,
+          0.06499999761581421,
+          0.11500000208616257
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/fold-lightweight-54306ba8ee.glb",
+        "sha256": "54306ba8ee51b51b622f4d7aec286b4b9e4e51f5f7ff85ae97a4aa9d6f9cb98e",
+        "bytes": 6336,
+        "triangles": 64,
+        "drawCalls": 2,
+        "geometryBytes": 4608,
+        "nativeDimensions": [
+          0.28999999165534973,
+          0.06480901777744291,
+          0.23000000417232513
+        ],
+        "bounds": {
+          "min": [
+            -0.14499999582767487,
+            -8.940696516468449e-10,
+            -0.11500000208616257
+          ],
+          "max": [
+            0.14499999582767487,
+            0.06480901688337326,
+            0.11500000208616257
+          ]
+        }
+      },
+      "materialSlots": [
+        "textile",
+        "sole"
+      ],
+      "origin": "shelf",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "888ceb336d350aa9a00fe9ddd7af873456fa96aebf8cd1cfab1c2d1669aee9ad",
+      "quotedProduct": false
+    },
+    {
+      "id": "fold-ribbed",
+      "revision": 1,
+      "path": "shared/models/fold-ribbed-balanced-bee2708d74.glb",
+      "sha256": "bee2708d7454b9a3e47cb8883209301945bb5f9450845066d6f83e8df2b790c8",
+      "bytes": 33368,
+      "triangles": 440,
+      "drawCalls": 2,
+      "geometryBytes": 31680,
+      "nativeDimensions": [
+        0.28999999165534973,
+        0.06499999850988386,
+        0.23000000417232513
+      ],
+      "bounds": {
+        "min": [
+          -0.14499999582767487,
+          -8.940696516468449e-10,
+          -0.11500000208616257
+        ],
+        "max": [
+          0.14499999582767487,
+          0.06499999761581421,
+          0.11500000208616257
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/fold-ribbed-lightweight-a30847f18e.glb",
+        "sha256": "a30847f18e2eb91ed21dfabfb67be9cbcf34b5895feb1de37e8478c70009e353",
+        "bytes": 13536,
+        "triangles": 164,
+        "drawCalls": 2,
+        "geometryBytes": 11808,
+        "nativeDimensions": [
+          0.28999999165534973,
+          0.06480901777744291,
+          0.23000000417232513
+        ],
+        "bounds": {
+          "min": [
+            -0.14499999582767487,
+            -8.940696516468449e-10,
+            -0.11500000208616257
+          ],
+          "max": [
+            0.14499999582767487,
+            0.06480901688337326,
+            0.11500000208616257
+          ]
+        }
+      },
+      "materialSlots": [
+        "sage",
+        "sole"
+      ],
+      "origin": "shelf",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "888ceb336d350aa9a00fe9ddd7af873456fa96aebf8cd1cfab1c2d1669aee9ad",
+      "quotedProduct": false
+    },
+    {
+      "id": "shoes",
+      "revision": 1,
+      "path": "shared/models/shoes-balanced-ec1d1d6c5c.glb",
+      "sha256": "ec1d1d6c5c880b43da02b07f5ae355c994b70006d2eee6665edda2832a88337b",
+      "bytes": 83468,
+      "triangles": 1136,
+      "drawCalls": 2,
+      "geometryBytes": 81792,
+      "nativeDimensions": [
+        0.21700000762939453,
+        0.09699999663280323,
+        0.26499998569488525
+      ],
+      "bounds": {
+        "min": [
+          -0.10850000381469727,
+          0.000499999790918082,
+          -0.13249999284744263
+        ],
+        "max": [
+          0.10850000381469727,
+          0.09749999642372131,
+          0.13249999284744263
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/shoes-lightweight-8b410baa98.glb",
+        "sha256": "8b410baa9885aff48ff8a2d332ac5bc95871d75f8a2c01abb811f13a0166db8e",
+        "bytes": 23552,
+        "triangles": 304,
+        "drawCalls": 2,
+        "geometryBytes": 21888,
+        "nativeDimensions": [
+          0.21700000762939453,
+          0.09699999663280323,
+          0.26499998569488525
+        ],
+        "bounds": {
+          "min": [
+            -0.10850000381469727,
+            0.000499999790918082,
+            -0.13249999284744263
+          ],
+          "max": [
+            0.10850000381469727,
+            0.09749999642372131,
+            0.13249999284744263
+          ]
+        }
+      },
+      "materialSlots": [
+        "sole",
+        "dark"
+      ],
+      "origin": "shelf",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "3d96aa78686489ef2fa139ae83815f4f3c387edd103174e7bab3e34c639d34a4",
+      "quotedProduct": false
+    },
+    {
+      "id": "box-linen",
+      "revision": 1,
+      "path": "shared/models/box-linen-balanced-6f13d1f37a.glb",
+      "sha256": "6f13d1f37abb1d5067125503a27633e8d3f81f59423e1e3c3e9f2902f425917e",
+      "bytes": 26592,
+      "triangles": 336,
+      "drawCalls": 3,
+      "geometryBytes": 24192,
+      "nativeDimensions": [
+        0.3319999873638153,
+        0.207499994635582,
+        0.2919999957084656
+      ],
+      "bounds": {
+        "min": [
+          -0.16599999368190765,
+          1.19209286886246e-9,
+          -0.1459999978542328
+        ],
+        "max": [
+          0.16599999368190765,
+          0.20749999582767487,
+          0.1459999978542328
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/box-linen-lightweight-75f3863a0f.glb",
+        "sha256": "75f3863a0ff93f08e41ca6acd629635317d42bf8f870025dd0bfa205e2c048f6",
+        "bytes": 5840,
+        "triangles": 48,
+        "drawCalls": 3,
+        "geometryBytes": 3456,
+        "nativeDimensions": [
+          0.3319999873638153,
+          0.207499994635582,
+          0.2919999957084656
+        ],
+        "bounds": {
+          "min": [
+            -0.16599999368190765,
+            1.19209286886246e-9,
+            -0.1459999978542328
+          ],
+          "max": [
+            0.16599999368190765,
+            0.20749999582767487,
+            0.1459999978542328
+          ]
+        }
+      },
+      "materialSlots": [
+        "textile",
+        "oak",
+        "dark"
+      ],
+      "origin": "shelf",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "1c2e1a3f2817c0e41d89fa8ccb7858799e29b7e982f1a5667345da9eb3fae4bd",
+      "quotedProduct": false
+    },
+    {
+      "id": "box-ink",
+      "revision": 1,
+      "path": "shared/models/box-ink-balanced-88d3916c81.glb",
+      "sha256": "88d3916c81b50f90fd5a5fd3cad55c2f9c319fb0c4338c9638e5238f40c4347a",
+      "bytes": 26592,
+      "triangles": 336,
+      "drawCalls": 3,
+      "geometryBytes": 24192,
+      "nativeDimensions": [
+        0.3319999873638153,
+        0.207499994635582,
+        0.2919999957084656
+      ],
+      "bounds": {
+        "min": [
+          -0.16599999368190765,
+          1.19209286886246e-9,
+          -0.1459999978542328
+        ],
+        "max": [
+          0.16599999368190765,
+          0.20749999582767487,
+          0.1459999978542328
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/box-ink-lightweight-466de7d22f.glb",
+        "sha256": "466de7d22f382f587803bd91cbb1ea4ea575a1ce804733659fce3795941b1a73",
+        "bytes": 5840,
+        "triangles": 48,
+        "drawCalls": 3,
+        "geometryBytes": 3456,
+        "nativeDimensions": [
+          0.3319999873638153,
+          0.207499994635582,
+          0.2919999957084656
+        ],
+        "bounds": {
+          "min": [
+            -0.16599999368190765,
+            1.19209286886246e-9,
+            -0.1459999978542328
+          ],
+          "max": [
+            0.16599999368190765,
+            0.20749999582767487,
+            0.1459999978542328
+          ]
+        }
+      },
+      "materialSlots": [
+        "ink",
+        "oak",
+        "dark"
+      ],
+      "origin": "shelf",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v1",
+      "source": "scripts/author-room-kit.mjs",
+      "sourceSha256": "1c2e1a3f2817c0e41d89fa8ccb7858799e29b7e982f1a5667345da9eb3fae4bd",
+      "quotedProduct": false
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+- banner:
+  - link "Forma Studio Digital Showroom":
+    - /url: /?brand=default
+    - strong: Forma Studio
+    - generic: Digital Showroom
+  - navigation "Home":
+    - link "Home":
+      - /url: /?brand=default
+    - link "Kitchens":
+      - /url: /designer/kitchen?brand=default
+    - link "Wardrobes":
+      - /url: /designer/wardrobe?brand=default
+  - generic "Offline ready":
+    - generic: Offline ready
+  - button "Shqip": SQ
+  - button "English" [pressed]: EN
+  - button "Deutsch": DE
+  - link "Settings":
+    - /url: /settings?brand=default
+- main:
+  - link "Back to your design":
+    - /url: /designer/kitchen?brand=default
+    - text: Back to your design
+  - generic: Forma Studio
+  - heading "Your offer" [level=1]
+  - generic: Indicative offer
+  - img "Interactive 3D showroom"
+  - heading "Materials by zone / cabinet" [level=2]
+  - paragraph:
+    - strong: Base · Positions 1, 2, 3, 4, 5, 6, 7, 8 · 8 pcs
+    - text: "Front finish: Chipboard (Egger / Kronospan) · Natural oak · Carcass: White · Handles: Handleless / push · Front style: Flat fronts · Plinth: Black"
+  - paragraph:
+    - strong: Tall · Positions 9, 10 · 2 pcs
+    - text: "Front finish: Chipboard (Egger / Kronospan) · Cashmere · Carcass: White · Handles: Handleless / push · Front style: Flat fronts · Plinth: Black"
+  - paragraph:
+    - strong: Wall · Positions 11, 12, 13, 14, 15 · 5 pcs
+    - text: "Front finish: Chipboard (Egger / Kronospan) · Warm white · Carcass: White · Handles: Handleless / push · Front style: Flat fronts"
+  - paragraph:
+    - strong: Main worktop · 5.1 m
+    - text: "Travertine · 12 mm · Backsplash: None"
+  - heading "Your configuration" [level=2]
+  - table:
+    - rowgroup:
+      - row "Item Quantity Amount":
+        - columnheader "Item"
+        - columnheader "Quantity"
+        - columnheader "Amount"
+    - rowgroup:
+      - row "Corner carousel · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts · 90 × 90 × 72 cm 1 pcs 369 €":
+        - cell "Corner carousel · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts · 90 × 90 × 72 cm":
+          - text: Corner carousel · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts
+          - generic: · 90 × 90 × 72 cm
+        - cell "1 pcs"
+        - cell "369 €"
+      - row "Corner carousel 1 pcs 135 €":
+        - cell "Corner carousel"
+        - cell "1 pcs"
+        - cell "135 €"
+      - row "Sink unit · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts · 60 × 60 × 72 cm 1 pcs 176 €":
+        - cell "Sink unit · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts · 60 × 60 × 72 cm":
+          - text: Sink unit · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts
+          - generic: · 60 × 60 × 72 cm
+        - cell "1 pcs"
+        - cell "176 €"
+      - row "Dishwasher space · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts · 60 × 60 × 72 cm 1 pcs 101 €":
+        - cell "Dishwasher space · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts · 60 × 60 × 72 cm":
+          - text: Dishwasher space · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts
+          - generic: · 60 × 60 × 72 cm
+        - cell "1 pcs"
+        - cell "101 €"
+      - row "Three drawers · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts · 60 × 60 × 72 cm 3 pcs 624 €":
+        - cell "Three drawers · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts · 60 × 60 × 72 cm":
+          - text: Three drawers · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts
+          - generic: · 60 × 60 × 72 cm
+        - cell "3 pcs"
+        - cell "624 €"
+      - row "Drawer organizer 3 pcs 105 €":
+        - cell "Drawer organizer"
+        - cell "3 pcs"
+        - cell "105 €"
+      - row "Base doors · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts · 60 × 60 × 72 cm 2 pcs 296 €":
+        - cell "Base doors · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts · 60 × 60 × 72 cm":
+          - text: Base doors · Chipboard (Egger / Kronospan) · Natural oak · White · Flat fronts
+          - generic: · 60 × 60 × 72 cm
+        - cell "2 pcs"
+        - cell "296 €"
+      - row "Oven tower · Chipboard (Egger / Kronospan) · Cashmere · White · Flat fronts · 60 × 60 × 210 cm 1 pcs 258 €":
+        - cell "Oven tower · Chipboard (Egger / Kronospan) · Cashmere · White · Flat fronts · 60 × 60 × 210 cm":
+          - text: Oven tower · Chipboard (Egger / Kronospan) · Cashmere · White · Flat fronts
+          - generic: · 60 × 60 × 210 cm
+        - cell "1 pcs"
+        - cell "258 €"
+      - row "Fridge space · Chipboard (Egger / Kronospan) · Cashmere · White · Flat fronts · 60 × 60 × 210 cm 1 pcs 234 €":
+        - cell "Fridge space · Chipboard (Egger / Kronospan) · Cashmere · White · Flat fronts · 60 × 60 × 210 cm":
+          - text: Fridge space · Chipboard (Egger / Kronospan) · Cashmere · White · Flat fronts
+          - generic: · 60 × 60 × 210 cm
+        - cell "1 pcs"
+        - cell "234 €"
+      - row "Wall cabinet · Chipboard (Egger / Kronospan) · Warm white · White · Flat fronts · 60 × 35 × 72 cm 4 pcs 504 €":
+        - cell "Wall cabinet · Chipboard (Egger / Kronospan) · Warm white · White · Flat fronts · 60 × 35 × 72 cm":
+          - text: Wall cabinet · Chipboard (Egger / Kronospan) · Warm white · White · Flat fronts
+          - generic: · 60 × 35 × 72 cm
+        - cell "4 pcs"
+        - cell "504 €"
+      - row "Integrated extractor hood · Chipboard (Egger / Kronospan) · Warm white · White · Flat fronts · 60 × 35 × 72 cm 1 pcs 108 €":
+        - cell "Integrated extractor hood · Chipboard (Egger / Kronospan) · Warm white · White · Flat fronts · 60 × 35 × 72 cm":
+          - text: Integrated extractor hood · Chipboard (Egger / Kronospan) · Warm white · White · Flat fronts
+          - generic: · 60 × 35 × 72 cm
+        - cell "1 pcs"
+        - cell "108 €"
+      - row "Countertop – 12 mm compact · Travertine 5.1 m 765 €":
+        - cell "Countertop – 12 mm compact · Travertine"
+        - cell "5.1 m"
+        - cell "765 €"
+      - row "Plinth · Black 6.3 m 76 €":
+        - cell "Plinth · Black"
+        - cell "6.3 m"
+        - cell "76 €"
+      - row "Under-cabinet lighting 3 m 66 €":
+        - cell "Under-cabinet lighting"
+        - cell "3 m"
+        - cell "66 €"
+    - rowgroup:
+      - row "Installation (8%) 305 €":
+        - cell "Installation (8%)"
+        - cell "305 €"
+      - row "VAT (18%) 742 €":
+        - cell "VAT (18%)"
+        - cell "742 €"
+      - row "Total incl. VAT 4,863 €":
+        - cell "Total incl. VAT"
+        - cell "4,863 €"
+  - complementary:
+    - generic: Estimated total
+    - heading "4,863 €" [level=2]
+    - paragraph: Indicative price. The final offer is confirmed after measuring and choosing materials.
+    - generic "Customer details"
+    - generic: Installation · 8%
+    - checkbox "Installation · 8%" [checked]
+    - generic: VAT · 18%
+    - checkbox "VAT · 18%" [checked]
+    - generic: Show a single estimate
+    - checkbox "Show a single estimate" [checked]
+    - button "Send offer (PDF)":
+      - text: Send offer (PDF)
+    - button "Download PDF offer":
+      - text: Download PDF offer
+    - button "Copy design link":
+      - text: Copy design link
+    - button "Send to anyone":
+      - text: Send to anyone
+    - button "WhatsApp":
+      - text: WhatsApp
+    - strong: Forma Studio
+    - generic: Prishtinë
+- contentinfo:
+  - strong: Forma Studio
+  - generic: Prishtinë · Dimensions in cm
+  - generic: Fictional demo brand · sample prices
+  - link "Explore materials":
+    - /url: /material-switcher?brand=default
+    - text: Explore materials

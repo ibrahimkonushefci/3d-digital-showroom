@@ -1,27 +1,34 @@
-import {
-  DesignSchema,
-  type Catalog,
-  type DesignDocument,
-} from "../catalog/types";
+import { parseDesignDocument } from "../catalog/migrations";
+import { type Catalog, type DesignDocument } from "../catalog/types";
 import { validateDesign } from "../designer3d/layout";
 export function saveDesign(brand: string, d: DesignDocument) {
   localStorage.setItem(`showroom-design-${brand}-${d.kind}`, JSON.stringify(d));
   localStorage.setItem(`showroom-recent-${brand}`, d.kind);
+}
+export function readDesign(
+  brand: string,
+  kind: DesignDocument["kind"],
+  catalog: Catalog,
+): { design: DesignDocument | null; error: "incompatibleDesign" | null } {
+  try {
+    const data = localStorage.getItem(`showroom-design-${brand}-${kind}`);
+    if (!data) return { design: null, error: null };
+    const design = parseDesignDocument(JSON.parse(data));
+    if (design.kind !== kind || !validateDesign(design, catalog))
+      return { design: null, error: "incompatibleDesign" };
+    return { design, error: null };
+  } catch {
+    return { design: null, error: "incompatibleDesign" };
+  }
 }
 export function loadDesign(
   brand: string,
   kind: DesignDocument["kind"],
   catalog: Catalog,
 ) {
-  try {
-    const data = localStorage.getItem(`showroom-design-${brand}-${kind}`);
-    if (!data) return null;
-    const d = DesignSchema.parse(JSON.parse(data));
-    return d.kind === kind && validateDesign(d, catalog) ? d : null;
-  } catch {
-    return null;
-  }
+  return readDesign(brand, kind, catalog).design;
 }
+
 export function restoreSummary(
   brand: string,
   catalog: Catalog,

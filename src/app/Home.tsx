@@ -1,3 +1,4 @@
+import { applyFinishChange } from "../designer3d/finishes";
 import { lazy, Suspense, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowUpRight, ArrowRight, MoveUpRight } from "lucide-react";
@@ -27,15 +28,14 @@ export default function Home() {
     (brand.modules.kitchenDesigner || brand.modules.wardrobeDesigner) &&
     designs.length > 0;
   const featured = designs[0];
-  const hero = {
-    ...featured,
-    style: {
-      ...featured?.style,
-      front: catalog.fronts.some((m) => m.id === front)
-        ? front
-        : featured?.style.front,
-    },
-  };
+  const hero = featured
+    ? applyFinishChange(featured, "all", {
+        front: catalog.fronts.some((m) => m.id === front)
+          ? front
+          : featured.style.front,
+      })
+    : featured;
+
   const tools = [
     {
       key: "kitchens",

@@ -1,0 +1,138 @@
+- banner:
+  - link "Forma Studio Sallon digjital":
+    - /url: /?brand=default
+    - strong: Forma Studio
+    - generic: Sallon digjital
+  - navigation "Ballina":
+    - link "Ballina":
+      - /url: /?brand=default
+    - link "Kuzhina":
+      - /url: /designer/kitchen?brand=default
+    - link "Gardëroba":
+      - /url: /designer/wardrobe?brand=default
+  - generic "Gati pa internet":
+    - generic: Gati pa internet
+  - button "Shqip" [active] [pressed]: SQ
+  - button "English": EN
+  - button "Deutsch": DE
+  - link "Cilësimet":
+    - /url: /settings?brand=default
+- main:
+  - link "Kthehuni te dizajni":
+    - /url: /designer/wardrobe?brand=default
+    - text: Kthehuni te dizajni
+  - generic: Forma Studio
+  - heading "Oferta juaj" [level=1]
+  - generic: Ofertë orientuese
+  - img "Pamja 3D e sallonit"
+  - heading "Materialet sipas zonës / modulit" [level=2]
+  - paragraph:
+    - strong: Gardëroba · Pozicionet 1, 2, 3, 4 · 4 copë
+    - text: "Materiali i fronteve: Iverall (Egger / Kronospan) · Kashmir · Korpusi: Lis · Dorezat: Shufër inox · Stili i fronteve: Fronte të sheshta · Sokëlli: Si frontet (Kashmir)"
+  - heading "Inventari i brendësisë" [level=2]
+  - paragraph: Lartësitë maten nga dyshemeja e brendshme. Rregullat e përshtatjes dhe çmimet janë ilustruese. Përmbajtja dekorative nuk përfshihet në inventar.
+  - paragraph:
+    - strong: Pozicionet 1 · Gardërobë me varje (80 cm)
+    - text: "Shufër varëse: 195,4 cm"
+  - paragraph:
+    - strong: Pozicionet 2 · Gardërobë me rafte (80 cm)
+    - text: "Raft: 72 cm · Raft: 139,9 cm · Raft: 185,9 cm · Shportë tërheqëse: 0 cm"
+  - paragraph:
+    - strong: Pozicionet 3 · Gardërobë me sirtarë (80 cm)
+    - text: "Raft: 65,3 cm · Raft: 127,3 cm · Raft: 187,3 cm · Sirtar i brendshëm: 0 cm · Sirtar i brendshëm: 22 cm · Sirtar i brendshëm: 44 cm"
+  - paragraph:
+    - strong: Pozicionet 4 · Gardërobë rrëshqitëse (100 cm)
+    - text: "Shufër varëse: 195,4 cm"
+  - heading "Konfigurimi juaj" [level=2]
+  - table:
+    - rowgroup:
+      - row "Artikulli Sasia Shuma":
+        - columnheader "Artikulli"
+        - columnheader "Sasia"
+        - columnheader "Shuma"
+    - rowgroup:
+      - row "Gardërobë me varje · 80 × 60 × 230 cm 1 copë 276 €":
+        - cell "Gardërobë me varje · 80 × 60 × 230 cm":
+          - text: Gardërobë me varje
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 copë"
+        - cell "276 €"
+      - row "Gardërobë me rafte · 80 × 60 × 230 cm 1 copë 252 €":
+        - cell "Gardërobë me rafte · 80 × 60 × 230 cm":
+          - text: Gardërobë me rafte
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 copë"
+        - cell "252 €"
+      - row "Gardërobë me sirtarë · 80 × 60 × 230 cm 1 copë 352 €":
+        - cell "Gardërobë me sirtarë · 80 × 60 × 230 cm":
+          - text: Gardërobë me sirtarë
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 copë"
+        - cell "352 €"
+      - row "Organizues sirtari 1 copë 35 €":
+        - cell "Organizues sirtari"
+        - cell "1 copë"
+        - cell "35 €"
+      - row "Gardërobë rrëshqitëse · 100 × 60 × 230 cm 1 copë 410 €":
+        - cell "Gardërobë rrëshqitëse · 100 × 60 × 230 cm":
+          - text: Gardërobë rrëshqitëse
+          - generic: · 100 × 60 × 230 cm
+        - cell "1 copë"
+        - cell "410 €"
+      - row "Shufër inox 7 copë 63 €":
+        - cell "Shufër inox"
+        - cell "7 copë"
+        - cell "63 €"
+      - row "Sokëlli 3,4 m 41 €":
+        - cell "Sokëlli"
+        - cell "3,4 m"
+        - cell "41 €"
+      - row "LED brenda gardërobës 3,4 m 119 €":
+        - cell "LED brenda gardërobës"
+        - cell "3,4 m"
+        - cell "119 €"
+      - row "Shtesë e brendësisë · Shportë tërheqëse · Pozicionet 2 (80 cm) 1 copë 55 €":
+        - cell "Shtesë e brendësisë · Shportë tërheqëse · Pozicionet 2 (80 cm)"
+        - cell "1 copë"
+        - cell "55 €"
+    - rowgroup:
+      - row "Montimi (8%) 128 €":
+        - cell "Montimi (8%)"
+        - cell "128 €"
+      - row "TVSH (18%) 312 €":
+        - cell "TVSH (18%)"
+        - cell "312 €"
+      - row "Totali me TVSH 2.043 €":
+        - cell "Totali me TVSH"
+        - cell "2.043 €"
+  - complementary:
+    - generic: Vlerësimi total
+    - heading "2.043 €" [level=2]
+    - paragraph: Çmim orientues. Oferta përfundimtare konfirmohet pas matjes dhe përzgjedhjes së materialeve.
+    - generic "Të dhënat e klientit"
+    - generic: Montimi · 8%
+    - checkbox "Montimi · 8%" [checked]
+    - generic: TVSH · 18%
+    - checkbox "TVSH · 18%" [checked]
+    - generic: Shfaqni një vlerësim të vetëm
+    - checkbox "Shfaqni një vlerësim të vetëm" [checked]
+    - button "Dërgo ofertën (PDF)":
+      - text: Dërgo ofertën (PDF)
+    - button "Shkarkoni ofertën PDF":
+      - text: Shkarkoni ofertën PDF
+    - button "Kopjoni lidhjen":
+      - text: Kopjoni lidhjen
+    - button "Dërgoja dikujt":
+      - text: Dërgoja dikujt
+    - button "WhatsApp":
+      - text: WhatsApp
+    - textbox "Kopjoni këtë lidhje": http://127.0.0.1:52748/designer/wardrobe?brand=default#design=N4IgbgpgTgzglgewHYgFwEYA0IDGBDAFzwBsEBzASQBM0QqIAzPAV2IJG3vjJVVDhqo6OAOwA2AAwQATHgC0EAEZjFcgCwTpEOYoDM6XeoYiAHNLV4G6AKzppHEAGs4SQSADueKFSgJFEB2I8AE8EZnYhGAIoPDgyAAt2bF8EAFs0UHcBAni0XUlOCAAHHLyJCWx4iDjEtGkRCpAEIogkFzIYNABtfjdPb19-OX7UuTB0OSi8MggqYZcqBHcHT2JiWmJGJJACYJbaLNclhwQGBhgICPRy7CyqUowbkCqaq+lG+DW0a4kAXwBdX7YVpgOC+JCpVoRUAMUgIKAbPCpFyEAK3EjEADCCFICKEAGIINYIBIqCIHC4CNAkCQADKzNDRZgQIG4PCKFyXTqoHogAS0CxaCBiACcYh0ul01nUahwJjkeBF1jmahFInQEBEEBMGioigcqQQVFYEGoBy8Pj82nieCQZHaK2yuVQJkaLwSEWkuka9BKzoKIAAHmgNNgAF5lZIIIgERC8RqrdZCRR4HCOQIQSBJjwWwYBIG9WiSsToUwitRyBg4EWqWViOauiQiuQmPAifTWHBSaQMCQGo0ms1CfqWoYwKrESCdW5OtCuyrVD11b2FP1oAPBjDvcORkC+GNxtAJjG0FNpjNZ80DK0UpBUqCIPGgSCwQ8YbA4NJFZBQ7m8-lCMWpYmOWlbVrWOD1i25TNq27Y2F2Mi9qgRRQBAFwEKgfbYKhA44AQQ4gFE8LTNo44QMQDAOMEmLpKgIjSAWfJuEBZYVlWNbqJBDYwS2bYdohPYSChaEYRgDi4ca+GEcRMQzJME5UdgNF0QYIoAHQikxAEgKxIHseBXFQY2sH8Qh3bIah6GXKg9g4b4UkEW4smkQpFFKSAKnfCY1iadpLH5MBoEcRBxm8XBAkWcJujSPWeASGIFaKAwig4Oo7YVngVA4NIcgilQVg9gw0hiqSEkOcw0nOQQJHySmMCOJc1G0UeAK-P5tBiEoVBmNYuXaooEjqFIEyKmIIhyBIZxaFqJgmAw1giv2xqbIRI55nIPh4O40DTh4s4um6i61LZK50MUDwbnUTwRqgZ37oQb7Hl8yapum2CbJew65jeHVCNYCVZVlQ35BIE1qAtcwiq64rWPNJjoOgeC2Hgah2SAhoraafQ-WOxACA6M73M6PwLq8y4+hd-qNJuJWNLd93Ro9yBHuiL0gGe70gJ9FFXqO+b-NgUTBJsGQgAw4IRGy46QmhDj4FA+AwNyTR4Fzn7MHe0A1UUtAIGrDg2q4ouvQi2CczARRBOOtBID+En43ezoY4QODxIT3MMqgTIQPZpxwCb4tBOwrIuFMazM7wPvYGAhCMlAzLAoGqYRNH4C7W+ujtUAA
+    - strong: Forma Studio
+    - generic: Prishtinë
+- contentinfo:
+  - strong: Forma Studio
+  - generic: Prishtinë · Përmasat në cm
+  - generic: Markë demo fiktive · çmime shembull
+  - link "Zbuloni materialet":
+    - /url: /material-switcher?brand=default
+    - text: Zbuloni materialet

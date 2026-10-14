@@ -157,3 +157,55 @@ Before you start coding, briefly give me the plan and folder structure. At the e
 - how to add a new brand in under 15 minutes (step by step)
 - how to edit catalog prices
 - how to deploy
+
+## Authorized realism implementation status — 13 October 2026
+
+Phase 0 foundations are implemented in the current source: fixed-ID compatibility fixtures for both brands, development-only render measurements, shared current-style/interior resolution, and explicit shared/scene resource lifetimes. Existing v1/v2 reads, pricing, sales tools, branding and SQ/EN/DE remain supported. This does not introduce Design v3, finish zones, storage-component editing, new room assets, new lighting or camera choreography.
+
+Evidence and the physical-tablet protocol are in `verification/showroom-realism/BASELINE.md`; the development entry is `/preview-studio?brand=default`. Browser timing is separate from real-device acceptance. No physical tablet result or meeting-readiness claim is recorded. Stop after Phase 0; subsequent phases require explicit authorization.
+
+## Authorized Phase 1 implementation status — 14 October 2026
+
+Phase 1 was separately authorized and implements authored physical UVs/finish responses in both catalogs, explicit matching plinth/backsplash appearance, recessed backs, shelf setbacks, fitted drawer bodies and instanced fittings. Worktop cutouts/continuity remain procedural; the tier's true outer thickness also drives layout clearance and framing. Design versions, IDs, dimensions, prices, SQ/EN/DE, offers, sharing, A/B and persistence remain compatible. No runtime asset, dependency, furnished-room kit, lighting redesign, finish-zone or component editor was introduced.
+
+See `verification/showroom-realism/phase-1/REPORT.md` for matched evidence, final checks, browser timing failures and device-test instructions. Implementation checks pass; repeated browser p95 and physical-device acceptance remain open. Stop after Phase 1. Phase 2 requires explicit authorization and review of the visual/performance gaps.
+
+## Authorized Phase 2 implementation status — 14 October 2026
+
+Phase 2 was explicitly authorized and adds two furnished-room recipes, original fixed-size generic models with lower-detail variants and isolated fallbacks, clearance-based prop placement and rail/shelf-based wardrobe population. Actual preset windows are catalog data; user-defined openings and legacy solid rooms take precedence. Model/room decoration never enters the quote. Procedural cabinets/worktops, storage presets, dimensions, v1/v2 persistence, pricing, branding, SQ/EN/DE, offers, sharing, A/B and offline support remain supported.
+
+The Phase 1 performance gaps were reproduced/reviewed before the kit was added. Repeated contact work was bounded and duplicate directional/contact shadow work removed; carcass panels/handle parts are batched, and opaque closed interiors are hidden only after closing settles. All Phase 1 mapping/construction remains available for inspection. Models are original project geometry, self-hosted and under the existing budgets; no acquisition/purchase, dependency upgrade, deployment, Phase 3 lighting/reflection system or later editor was performed.
+
+Current evidence, test commands, reproduction steps and physical-device gaps are recorded in `verification/showroom-realism/phase-2/REPORT.md`. Implementation checks and short desktop samples are separate from owner/physical-tablet acceptance. Stop after Phase 2.
+
+## Authorized Phase 3 implementation status — 14 October 2026
+
+Phase 3 was explicitly authorized. It adds window-aligned direct light, a wall shadow shell independent of visible cutaways, room-authored reflections with a bounded structural refresh/fallback, stationary cabinet/shelf cavity contrast and capped combined kitchen/wardrobe LED fills. Moving doors and drawers remain dynamically lit; no closed-front shadow is baked into their interiors. Existing procedural furniture, v1/v2 drafts, commercial totals, brands, languages, offers, sharing, A/B and offline preparation remain supported.
+
+New code is in `src/scene/lighting/`; integration is in Scene, Rendering, Materials, Primitives, CabinetShell, RunLights and quality. Reflection and lighting diagnostics are development-only. V2 recipe files preserve prior public v1 recipe bytes. No purchase/acquisition, deployment, dependency upgrade, Phase 4 finish-zone state or later storage/camera editor was introduced. See `verification/showroom-realism/phase-3/REPORT.md` for measured checks and acceptance gaps. The phase is implemented and ready for owner review; physical-tablet performance/release acceptance remains open. Stop after Phase 3.
+
+## Authorized Phase 4 implementation status — 14 October 2026
+
+The user confirmed proceeding after Phase 3 while retaining the documented physical-device acceptance gaps. Phase 4 adds Design v3 finish zones, per-cabinet front/carcass/handle/profile/plinth overrides and independent main/island worktops. Global defaults remain in `design.style`; explicit scope controls, Mixed states and one-step override clearing use the existing undo/redo store. Shared finish/run resolvers drive furniture, thickness/clearance, prices, Summary, A/B and PDF material associations.
+
+Legacy v1/v2 furniture migrates in memory without regeneration; IDs, sizes, room, offers, existing storage keys and private-data exclusions are preserved. Unsupported references/future versions fail compatibility and do not overwrite a stored draft. Frozen legacy quote lines/totals remain exact, with discount → installation → VAT ordering retained. Matching products retain their own price while resolving the effective appearance.
+
+Important code: `src/designer3d/finishes.ts`, `FinishScopeControl.tsx`, `Designer.tsx`, `src/catalog/migrations.ts`, `types.ts`, `src/scene/renderInput.ts`, `Worktops.tsx`, `countertopGeometry.ts`, pricing, document finishes/offer, Summary and Compare. Evidence is in `verification/showroom-realism/phase-4/REPORT.md`. No new models/textures, purchases, dependency upgrades or deployment. Phase 3 lighting and all earlier dirty work remain present. Stop after Phase 4; individual storage editing and Phase 6 are not implemented.
+
+## Authorized Phase 5 implementation status — 14 October 2026
+
+The user confirmed proceeding after Phase 4. Phase 5 adds individually selected shelf/rail/drawer/basket inventories, translated catalog fit/mounting/pricing rules, touch-sized numeric/list controls and independent component opening. Untouched wardrobes resolve deterministic legacy presets without being rewritten. First editing materializes stable IDs; compatible resizing retains components and invalid edits retain the last valid geometry/quote/history. Layout/room regeneration has an explicit in-page replacement warning with Cancel/Rebuild and one-step Undo.
+
+Shared resolution feeds rendering, stationary cavity treatment, decorative population, measurements, quantity-difference pricing, Summary, A/B descriptions and PDF inventory. Included components are not charged again; zero removal credits are the shipped default, and published credits are bounded. Existing module accessories stay separate. V3 inventories survive persistence/sharing/A/B; transient component selection/opening and decoration visibility are excluded. Existing limits are preserved: 200 cabinets, 32 components per cabinet, 512 explicit components per design, current share payload and delivery budgets.
+
+Important files: `src/designer3d/interiors.ts`, `interiorValidation.ts`, `InteriorEditor.tsx`, `useInteriorInteraction.ts`, `storage.ts`, `store.ts`; `src/scene/InteriorComponents.tsx`; schema/catalogs, Scene/Designer, rendering/population, pricing, documents, Summary/Compare and SQ/EN/DE. `verification/showroom-realism/phase-5/REPORT.md` contains current evidence, exact startup/testing and acceptance gaps. Full-width editing ships; dividers/partial spans/dragging remain deferred, and full-width sliding pull-outs are blocked. Rules/prices are illustrative, not supplier specifications.
+
+159 tests, TypeScript, production build, asset/precache closure, budget and whitespace pass. Production/browser cache tests preserve custom inventory, branding, languages and commercial invariants. The requested viewport overrides stayed at 1280×720; exact tablet/portrait/phone controls and physical-device touch/thermal/performance/offline acceptance remain open. No new asset, acquisition, dependency upgrade, deployment or Git handoff. Stop after Phase 5; Phase 6 camera/touch/sales/release validation is not started.
+
+## Authorized Phase 6 implementation status — 14 October 2026
+
+The owner explicitly authorized Phase 6 after Phase 5, then clarified that the first presentation will use a laptop and no iPad/Android tablet is currently owned. Phase 6 implements composed room shots, touch-visible deliberate inspection, conservative safe-path transitions/cancellation/reduced motion, camera preservation through finish/component edits and resize, background demand-loop suspension, recoverable WebGL loss, responsive touch controls and unobstructed/deferable update handling. Tap/click opening and wheel/pinch zoom/recentering remain in use.
+
+Shared closed Overall capture serves A/B and the offer. Summary navigation no longer captures the live inspection scene; unsuccessful captures cannot reuse an unrelated old image. Active captures/exports and dragging block update activation. Existing dimensions, layouts, finish/storage resolution, illustrative pricing, migration/persistence/privacy, brand isolation and SQ/EN/DE remain intact. Camera and opening state remain transient. Important files: `cameraShots.ts`, `SceneControls.tsx`, `framing.ts`, Scene/Designer/CaptureAlternative, `SceneLifecycle.tsx`, Rendering, Summary, PWA Status/busy, CSS and translations. DEV-only metrics and context-loss/sustained-motion tools remain outside production.
+
+Final evidence and exact laptop test actions are in `verification/showroom-realism/REPORT.md` and `phase-6/`. Owner visual approval and the actual laptop meeting rehearsal remain the immediate acceptance task. Tablet touch/thermal/installed-PWA checks are deferred until hardware is available. Static Home thumbnails still await approval of final scenes before regeneration. No new phase, new asset, purchase, dependency upgrade, deployment, commit or push is included.

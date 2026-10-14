@@ -1,0 +1,53 @@
+{
+  "requested": [
+    {
+      "width": 1180,
+      "height": 820
+    },
+    {
+      "width": 1024,
+      "height": 768
+    },
+    {
+      "width": 820,
+      "height": 1180
+    },
+    {
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "observed": [
+    {
+      "height": 720,
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "height": 720,
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "height": 720,
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "height": 720,
+      "scrollWidth": 1280,
+      "width": 1280
+    }
+  ],
+  "freshTabRetry": {
+    "requested": {
+      "width": 1024,
+      "height": 768
+    },
+    "observed": {
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "verified": "1280x720 only"
+}

@@ -1,0 +1,122 @@
+- banner:
+  - link "Druri Design Digitaler Showroom":
+    - /url: /?brand=druri-design
+    - strong: Druri Design
+    - generic: Digitaler Showroom
+  - navigation "Start":
+    - link "Start":
+      - /url: /?brand=druri-design
+    - link "Küchen":
+      - /url: /designer/kitchen?brand=druri-design
+    - link "Kleiderschränke":
+      - /url: /designer/wardrobe?brand=druri-design
+  - generic "Offline bereit":
+    - generic: Offline bereit
+  - button "Shqip": SQ
+  - button "English": EN
+  - button "Deutsch" [active] [pressed]: DE
+  - link "Einstellungen":
+    - /url: /settings?brand=druri-design
+- main:
+  - link "Zurück zum Entwurf":
+    - /url: /designer/wardrobe?brand=druri-design
+    - text: Zurück zum Entwurf
+  - generic: Druri Design
+  - heading "Ihr Angebot" [level=1]
+  - generic: Unverbindliches Angebot
+  - img "Interaktiver 3D-Showroom"
+  - heading "Materialien nach Bereich / Schrank" [level=2]
+  - paragraph:
+    - strong: Kleiderschrank · Positionen 1 · 1 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Walnuss · Korpus: Graphit · Griffe: Edelstahl-Bügel · Frontstil: Glatte Fronten · Sockel: Wie Fronten (Walnuss)"
+  - paragraph:
+    - strong: Kleiderschrank · Positionen 2, 3, 4 · 3 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Kaschmir · Korpus: Eiche · Griffe: Edelstahl-Bügel · Frontstil: Glatte Fronten · Sockel: Wie Fronten (Kaschmir)"
+  - heading "Ihre Konfiguration" [level=2]
+  - table:
+    - rowgroup:
+      - row "Artikel Menge Betrag":
+        - columnheader "Artikel"
+        - columnheader "Menge"
+        - columnheader "Betrag"
+    - rowgroup:
+      - row "Kleiderschrank · Spanplatte (Egger / Kronospan) · Walnuss · Graphit · Glatte Fronten · 80 × 60 × 230 cm 1 Stk. 290 €":
+        - cell "Kleiderschrank · Spanplatte (Egger / Kronospan) · Walnuss · Graphit · Glatte Fronten · 80 × 60 × 230 cm":
+          - text: Kleiderschrank · Spanplatte (Egger / Kronospan) · Walnuss · Graphit · Glatte Fronten
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 Stk."
+        - cell "290 €"
+      - row "Regalschrank · Spanplatte (Egger / Kronospan) · Kaschmir · Eiche · Glatte Fronten · 80 × 60 × 230 cm 1 Stk. 252 €":
+        - cell "Regalschrank · Spanplatte (Egger / Kronospan) · Kaschmir · Eiche · Glatte Fronten · 80 × 60 × 230 cm":
+          - text: Regalschrank · Spanplatte (Egger / Kronospan) · Kaschmir · Eiche · Glatte Fronten
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 Stk."
+        - cell "252 €"
+      - row "Schrank mit Schubladen · Spanplatte (Egger / Kronospan) · Kaschmir · Eiche · Glatte Fronten · 80 × 60 × 230 cm 1 Stk. 352 €":
+        - cell "Schrank mit Schubladen · Spanplatte (Egger / Kronospan) · Kaschmir · Eiche · Glatte Fronten · 80 × 60 × 230 cm":
+          - text: Schrank mit Schubladen · Spanplatte (Egger / Kronospan) · Kaschmir · Eiche · Glatte Fronten
+          - generic: · 80 × 60 × 230 cm
+        - cell "1 Stk."
+        - cell "352 €"
+      - row "Schubladeneinsatz 1 Stk. 35 €":
+        - cell "Schubladeneinsatz"
+        - cell "1 Stk."
+        - cell "35 €"
+      - row "Schiebetürenschrank · Spanplatte (Egger / Kronospan) · Kaschmir · Eiche · Glatte Fronten · 100 × 60 × 230 cm 1 Stk. 410 €":
+        - cell "Schiebetürenschrank · Spanplatte (Egger / Kronospan) · Kaschmir · Eiche · Glatte Fronten · 100 × 60 × 230 cm":
+          - text: Schiebetürenschrank · Spanplatte (Egger / Kronospan) · Kaschmir · Eiche · Glatte Fronten
+          - generic: · 100 × 60 × 230 cm
+        - cell "1 Stk."
+        - cell "410 €"
+      - row "Edelstahl-Bügel 7 Stk. 63 €":
+        - cell "Edelstahl-Bügel"
+        - cell "7 Stk."
+        - cell "63 €"
+      - row "Sockel · Wie Fronten 3,4 m 41 €":
+        - cell "Sockel · Wie Fronten"
+        - cell "3,4 m"
+        - cell "41 €"
+      - row "LED im Kleiderschrank 3,4 m 119 €":
+        - cell "LED im Kleiderschrank"
+        - cell "3,4 m"
+        - cell "119 €"
+    - rowgroup:
+      - row "Montage (8%) 125 €":
+        - cell "Montage (8%)"
+        - cell "125 €"
+      - row "MwSt. (18%) 304 €":
+        - cell "MwSt. (18%)"
+        - cell "304 €"
+      - row "Gesamtbetrag inkl. MwSt. 1.990 €":
+        - cell "Gesamtbetrag inkl. MwSt."
+        - cell "1.990 €"
+  - complementary:
+    - generic: Geschätzter Gesamtpreis
+    - heading "1.990 €" [level=2]
+    - paragraph: Richtpreis. Das endgültige Angebot wird nach Aufmaß und Materialauswahl bestätigt.
+    - generic "Kundendaten"
+    - generic: Montage · 8%
+    - checkbox "Montage · 8%" [checked]
+    - generic: MwSt. · 18%
+    - checkbox "MwSt. · 18%" [checked]
+    - generic: Einzelne Schätzung anzeigen
+    - checkbox "Einzelne Schätzung anzeigen" [checked]
+    - button "Angebot senden (PDF)":
+      - text: Angebot senden (PDF)
+    - button "PDF-Angebot herunterladen":
+      - text: PDF-Angebot herunterladen
+    - button "Entwurfslink kopieren":
+      - text: Entwurfslink kopieren
+    - button "An jemanden senden":
+      - text: An jemanden senden
+    - button "WhatsApp":
+      - text: WhatsApp
+    - strong: Druri Design
+    - generic: Prishtinë
+- contentinfo:
+  - strong: Druri Design
+  - generic: Prishtinë · Maße in cm
+  - generic: Fiktive Demomarke · Beispielpreise
+  - link "Materialien entdecken":
+    - /url: /material-switcher?brand=druri-design
+    - text: Materialien entdecken

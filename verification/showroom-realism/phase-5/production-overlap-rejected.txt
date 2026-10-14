@@ -1,0 +1,121 @@
+- banner:
+  - link "Forma Studio Digital Showroom":
+    - /url: /?brand=default
+    - strong: Forma Studio
+    - generic: Digital Showroom
+  - navigation "Home":
+    - link "Home":
+      - /url: /?brand=default
+    - link "Kitchens":
+      - /url: /designer/kitchen?brand=default
+    - link "Wardrobes":
+      - /url: /designer/wardrobe?brand=default
+  - generic "Offline ready":
+    - generic: Offline ready
+  - button "Shqip": SQ
+  - button "English" [pressed]: EN
+  - button "Deutsch": DE
+  - link "Settings":
+    - /url: /settings?brand=default
+- main:
+  - heading "Wardrobes" [level=1]
+  - button "Showroom" [pressed]
+  - button "Edit modules"
+  - button "Undo":
+  - button "Redo" [disabled]:
+  - button "Reset configuration":
+    - generic: Reset configuration
+  - alert:
+    - generic: Components or required clearances overlap. The edit was rejected.
+    - button "Cancel": ×
+  - button "Perspective"
+  - button "Front"
+  - button "Top"
+  - button "Overall view":
+    - text: Overall view
+  - button "Interior view" [pressed]
+  - button "Open all fronts":
+    - text: Open all fronts
+  - img "Interactive 3D showroom"
+  - button "Full screen":
+  - generic: 360 × 300 × 270 cm
+  - generic: 4 modules
+  - paragraph: Tap a front to open it · Drag to look around · Two fingers to pan
+  - complementary:
+    - button "Styles & Finishes":
+      - generic: Styles & Finishes
+    - button "Room & Layout":
+      - generic: Room & Layout
+    - button "Wardrobes":
+      - generic: Wardrobes
+    - button "Storage & Lighting":
+      - generic: Storage & Lighting
+    - heading "Shelved wardrobe" [level=3]
+    - paragraph: 80 × 230 × 60 cm
+    - paragraph: "Approximate internal clearance: 76.4 × 52.5 cm"
+    - paragraph: "Shelves: 3 · Drawers: 0"
+    - paragraph: "Approximate internal clearance: 72 / 66.1 / 44.2 / 36.9 cm"
+    - button "Open compartment"
+    - button "Inspect up close":
+      - text: Inspect up close
+    - heading "Storage & Lighting" [level=2]
+    - generic: Internal wardrobe LED
+    - checkbox "Internal wardrobe LED" [checked]
+    - heading "Floor material" [level=3]
+    - button "Laminate"
+    - button "Tiles"
+    - button "Concrete"
+    - generic: Wall colour
+    - textbox "Wall colour": "#e5e0d7"
+    - generic: Cabinet to edit
+    - combobox "Cabinet to edit":
+      - option "1 · Hanging wardrobe · 80 cm"
+      - option "2 · Shelved wardrobe · 80 cm" [selected]
+      - option "3 · Wardrobe drawers · 80 cm"
+      - option "4 · Sliding wardrobe · 100 cm"
+    - generic: Decorative clothing and contents
+    - checkbox "Decorative clothing and contents" [checked]
+    - heading "Wardrobe interior · 2" [level=3]
+    - paragraph: Tap a component in Interior view or choose it in the list. Height is measured from the internal floor. Fit rules are illustrative, not manufacturing specifications.
+    - paragraph: "Interior price adjustment: 55 €"
+    - button "Showroom"
+    - generic "Interior components":
+      - button "1 · Shelf · 72.0 cm" [pressed]
+      - button "2 · Shelf · 139.9 cm"
+      - button "3 · Shelf · 185.9 cm"
+      - button "4 · Pull-out basket · 0.0 cm"
+    - strong: Shelf
+    - button "Move up"
+    - button "Move down"
+    - generic: Height from internal floor
+    - spinbutton "Height from internal floor": "140"
+    - generic: cm
+    - button "Apply height" [active]
+    - generic: Interior product
+    - combobox "Interior product":
+      - option "Shelf"
+      - option "Hanging rail"
+      - option "Interior drawer"
+      - option "Pull-out basket" [selected]
+    - button "Replace component"
+    - button "Remove component"
+    - button "Add component"
+    - generic: Interior preset
+    - combobox "Interior preset":
+      - option "Choose a preset" [selected]
+      - option "Standard shelves"
+      - option "Standard hanging"
+      - option "Drawers and shelves"
+    - button "Reset to included interior"
+    - paragraph: Moving is free. Included components are not charged twice. Removal does not reduce the package price unless the catalog specifies a credit. Clothing is decorative.
+    - text: Alternative name
+    - textbox "Alternative name":
+      - /placeholder: Straight
+    - button "Save A"
+    - button "Save B"
+    - button "Compare A / B"
+    - generic: Estimated total
+    - strong: 2,043 €
+    - generic: Indicative offer
+    - button "Your offer":
+      - text: Your offer

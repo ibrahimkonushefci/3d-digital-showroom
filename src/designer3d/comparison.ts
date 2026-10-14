@@ -1,3 +1,9 @@
+import { CAMERA_REVISION } from "./cameraShots";
+import { INTERIOR_REVISION } from "./interiors";
+import { FINISH_REVISION } from "./finishes";
+import { parseDesignDocument } from "../catalog/migrations";
+import { LIGHTING_REVISION } from "../scene/lighting/lightingRecipe";
+import { SCENE_REVISION } from "../scene/assets/manifest";
 import { openDB } from "idb";
 import {
   DesignSchema,
@@ -23,7 +29,15 @@ const db = () =>
     },
   });
 export const catalogSignature = (catalog: Catalog) =>
-  JSON.stringify(["furniture-sales-v1", catalog]);
+  JSON.stringify([
+    "furniture-sales-v1",
+    SCENE_REVISION,
+    LIGHTING_REVISION,
+    FINISH_REVISION,
+    INTERIOR_REVISION,
+    CAMERA_REVISION,
+    catalog,
+  ]);
 export function compatibleAlternative(value: Alternative, catalog: Catalog) {
   const parsed = DesignSchema.safeParse(value.design);
   return (
@@ -42,7 +56,7 @@ export function restoreAlternative(
 ) {
   if (!compatibleAlternative(value, catalog))
     throw Error("comparisonUnavailable");
-  return { ...DesignSchema.parse(value.design), offer: current?.offer };
+  return { ...parseDesignDocument(value.design), offer: current?.offer };
 }
 export async function loadAlternative(
   brand: string,
@@ -53,7 +67,7 @@ export async function loadAlternative(
   try {
     const value = await database.get("alternatives", key(brand, kind, slot));
     if (!value) return undefined;
-    const design = DesignSchema.parse(value.design);
+    const design = parseDesignDocument(value.design);
     if (
       design.kind !== kind ||
       value.version !== 1 ||
@@ -75,7 +89,7 @@ export async function saveAlternative(
   name: string,
   capture: () => Promise<string>,
 ) {
-  const { offer: _private, ...snapshot } = DesignSchema.parse(
+  const { offer: _private, ...snapshot } = parseDesignDocument(
     structuredClone(design),
   );
   if (!validateDesign(snapshot, catalog)) throw Error("comparisonUnavailable");

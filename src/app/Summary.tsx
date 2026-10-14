@@ -1,3 +1,6 @@
+import { beginCapture } from "../pwa/busy";
+import { interiorAssociations } from "../documents/finishes";
+import { finishAssociations } from "../documents/finishes";
 import { usePresentation } from "./preferences";
 import {
   useEffect,
@@ -66,6 +69,13 @@ export default function Summary() {
   const price = calculatePrice(design, catalog, language);
   const estimate = estimateLabel(price, design.exact, language);
   const url = () => shareUrl(design, brand, catalog.id, local);
+  const safeLink = (() => {
+    try {
+      return url();
+    } catch {
+      return "";
+    }
+  })();
   const offerText = () =>
     t("offerMessage", {
       name: design.offer?.customer.name ? " " + design.offer.customer.name : "",
@@ -76,7 +86,13 @@ export default function Summary() {
       link: url(),
     });
   const copy = async () => {
-    const value = url();
+    let value: string;
+    try {
+      value = url();
+    } catch {
+      setNotice("shareTooLarge");
+      return;
+    }
     setLink(value);
     try {
       await navigator.clipboard.writeText(value);
@@ -87,14 +103,21 @@ export default function Summary() {
     }
   };
   const send = (service: "whatsapp" | "viber") => {
-    const target = messageUrl(service, brand, offerText());
-    window.open(target, "_blank", "noopener,noreferrer");
+    try {
+      const target = messageUrl(service, brand, offerText());
+      window.open(target, "_blank", "noopener,noreferrer");
+    } catch {
+      setNotice("shareTooLarge");
+    }
   };
   const revision = JSON.stringify([design, language, presentation]);
   // Offer fields and price toggles do not change the picture.
   const look = JSON.stringify([
     design.cabinets,
     design.style,
+    design.finishZones,
+    design.worktopFinishes,
+    design.presentation,
     design.room,
     design.environment,
   ]);
@@ -111,9 +134,7 @@ export default function Summary() {
       }
       await new Promise((resolve) => setTimeout(resolve, 700));
     }
-    return lastRender.current?.look === look
-      ? lastRender.current.image
-      : state.screenshot;
+    return lastRender.current?.look === look ? lastRender.current.image : null;
   };
   const buildPdf = async () => {
     if (prepared.current?.revision === revision) return prepared.current.file;
@@ -137,14 +158,20 @@ export default function Summary() {
     return file;
   };
   const withBusy = async (task: () => Promise<void>) => {
+    const endCapture = beginCapture();
     setBusy(true);
     setNotice(null);
     try {
       await task();
-    } catch {
-      setNotice("exportError");
+    } catch (error) {
+      setNotice(
+        error instanceof Error && error.message === "shareTooLarge"
+          ? "shareTooLarge"
+          : "exportError",
+      );
     } finally {
       setBusy(false);
+      endCapture();
     }
   };
   const download = () =>
@@ -190,9 +217,39 @@ export default function Summary() {
         <div className="summary-left">
           <div className="summary-scene">
             <Suspense fallback={<p>{t("sceneLoading")}</p>}>
-              <Scene design={design} catalog={catalog} capture={register} />
+              <Scene
+                preset="overall"
+                design={design}
+                catalog={catalog}
+                capture={register}
+              />
             </Suspense>
           </div>
+          <section className="offer-table finish-associations">
+            <h2>{t("finishAssociations")}</h2>
+            {finishAssociations(design, catalog, language).map((r) => (
+              <p key={r.scope}>
+                <strong>
+                  {r.scope} · {r.quantity}
+                </strong>
+                <br />
+                {r.description}
+              </p>
+            ))}
+          </section>
+          {design.kind === "wardrobe" && (
+            <section className="offer-table">
+              <h2>{t("interiorInventory")}</h2>
+              <p>{t("interiorInventoryNote")}</p>
+              {interiorAssociations(design, catalog, language).map((row) => (
+                <p key={row.scope}>
+                  <strong>{row.scope}</strong>
+                  <br />
+                  {row.description}
+                </p>
+              ))}
+            </section>
+          )}
           <div className="offer-table">
             <h2>{t("parts")}</h2>
             <table>
@@ -301,11 +358,15 @@ export default function Summary() {
             <Link2 size={18} />
             {t("share")}
           </button>
-          <SendAnyone
-            title={brand.companyName}
-            text={t("message", { link: "" })}
-            url={url()}
-          />
+          {safeLink ? (
+            <SendAnyone
+              title={brand.companyName}
+              text={t("message", { link: "" })}
+              url={safeLink}
+            />
+          ) : (
+            <p role="alert">{t("shareTooLarge")}</p>
+          )}
           <div className="two-buttons">
             <button
               className="button secondary"

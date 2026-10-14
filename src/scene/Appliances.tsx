@@ -1,3 +1,5 @@
+import { ModelAsset } from "./assets/ModelAsset";
+import { applianceFits } from "./assets/placement";
 import { useMemo } from "react";
 import { Shape, CatmullRomCurve3, Vector3, DoubleSide } from "three";
 import { Box } from "./Primitives";
@@ -110,27 +112,37 @@ export function Sink({ width = 0.6 }: { width?: number }) {
         <ringGeometry args={[0.016, 0.023, 24]} />
         <meshStandardMaterial color="#bac2c4" metalness={0.9} roughness={0.2} />
       </mesh>
-      <mesh>
-        <tubeGeometry args={[curve, 32, 0.012, 10, false]} />
-        <meshStandardMaterial
-          color="#c3c9ca"
-          metalness={0.94}
-          roughness={0.21}
-        />
-      </mesh>
-      <Box
-        size={[0.038, 0.035, 0.038]}
-        position={[-0.105, 0.01, -0.21]}
-        bevel={0.008}
-        color="#899497"
-        metal={0.9}
-      />
-      <Box
-        size={[0.05, 0.012, 0.016]}
-        position={[-0.145, 0.047, -0.21]}
-        bevel={0.004}
-        color="#c3c9ca"
-        metal={0.9}
+      <ModelAsset
+        id="tap"
+        selectable
+        position={[-0.105, 0, -0.21]}
+        fallback={
+          <group>
+            {" "}
+            <mesh>
+              <tubeGeometry args={[curve, 32, 0.012, 10, false]} />
+              <meshStandardMaterial
+                color="#c3c9ca"
+                metalness={0.94}
+                roughness={0.21}
+              />
+            </mesh>
+            <Box
+              size={[0.038, 0.035, 0.038]}
+              position={[-0.105, 0.01, -0.21]}
+              bevel={0.008}
+              color="#899497"
+              metal={0.9}
+            />
+            <Box
+              size={[0.05, 0.012, 0.016]}
+              position={[-0.145, 0.047, -0.21]}
+              bevel={0.004}
+              color="#c3c9ca"
+              metal={0.9}
+            />
+          </group>
+        }
       />
     </group>
   );
@@ -189,7 +201,7 @@ export function Hood({
     </group>
   );
 }
-export function Oven({ width = 0.6 }: { width?: number }) {
+function ProceduralOven({ width = 0.6 }: { width?: number }) {
   return (
     <group>
       <Box
@@ -243,7 +255,7 @@ export function Oven({ width = 0.6 }: { width?: number }) {
     </group>
   );
 }
-export function Fridge({
+function ProceduralFridge({
   width = 0.6,
   height = 2.1,
 }: {
@@ -370,5 +382,32 @@ export function Garment({ color }: { color: string }) {
         <meshStandardMaterial color={color} roughness={1} />
       </mesh>
     </group>
+  );
+}
+
+export function Oven({ width = 0.6 }: { width?: number }) {
+  return (
+    <ModelAsset
+      id="oven"
+      selectable
+      disabled={!applianceFits("oven", width, 0.59)}
+      fallback={<ProceduralOven width={width} />}
+    />
+  );
+}
+export function Fridge({
+  width = 0.6,
+  height = 2.1,
+}: {
+  width?: number;
+  height?: number;
+}) {
+  return (
+    <ModelAsset
+      id="fridge"
+      selectable
+      disabled={!applianceFits("fridge", width, height)}
+      fallback={<ProceduralFridge width={width} height={height} />}
+    />
   );
 }

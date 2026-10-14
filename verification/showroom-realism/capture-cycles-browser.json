@@ -1,0 +1,182 @@
+[
+  {
+    "version": 1,
+    "sceneId": "default:japandi",
+    "scope": "desktop-browser",
+    "device": {
+      "label": "@Browser desktop",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+    },
+    "recordedAt": "2026-10-13T17:33:48.833Z",
+    "viewport": {
+      "width": 969,
+      "height": 650,
+      "dpr": 1
+    },
+    "renderer": "WebKit WebGL",
+    "quality": "balanced",
+    "movingFrames": {
+      "samples": 642,
+      "p50Ms": 16.5,
+      "p95Ms": 26.899999976158142,
+      "maxMs": 43.39999997615814
+    },
+    "sceneReadyMs": 378.60000002384186,
+    "passes": {
+      "main": {
+        "calls": 248,
+        "triangles": 81746,
+        "cpuSubmitMs": 1.600000023841858
+      },
+      "shadow": {
+        "calls": 233,
+        "triangles": 80544,
+        "cpuSubmitMs": 0
+      },
+      "offscreen": {
+        "calls": 0,
+        "triangles": 0,
+        "cpuSubmitMs": 0
+      }
+    },
+    "rendererCounts": {
+      "textures": 22,
+      "geometries": 196
+    },
+    "estimates": {
+      "texturesBytes": 44739248,
+      "renderTargetsBytes": 44040192,
+      "geometryBytes": 2711100,
+      "framebufferBytes": 5038800,
+      "totalBytes": 96529340,
+      "capturePeakBytes": 201677480
+    },
+    "notes": [
+      "Browser frame intervals and CPU submission time; GPU execution time is not measured.",
+      "Pass counts are the latest demand frame. Offscreen includes contact-shadow blur and PMREM/probes; no continuous probe refresh exists.",
+      "CPU submit time includes the shadow work in that render; shadow CPU time cannot be separated (0 means unavailable).",
+      "Scene-ready means first complete main pass with loader idle, measured from profiler commit; excludes route/catalog loading and is not cold-network interactivity.",
+      "Memory estimates exclude driver/system allocation, decoded CPU images, shader programs, and opaque internal buffers. Shared resources may be counted in each Canvas at capture peak."
+    ]
+  },
+  {
+    "version": 1,
+    "sceneId": "default:japandi",
+    "scope": "desktop-browser",
+    "device": {
+      "label": "@Browser desktop",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+    },
+    "recordedAt": "2026-10-13T17:33:49.493Z",
+    "viewport": {
+      "width": 969,
+      "height": 650,
+      "dpr": 1
+    },
+    "renderer": "WebKit WebGL",
+    "quality": "balanced",
+    "movingFrames": {
+      "samples": 642,
+      "p50Ms": 16.5,
+      "p95Ms": 26.899999976158142,
+      "maxMs": 43.39999997615814
+    },
+    "sceneReadyMs": 378.60000002384186,
+    "passes": {
+      "main": {
+        "calls": 248,
+        "triangles": 81746,
+        "cpuSubmitMs": 1.3000000715255737
+      },
+      "shadow": {
+        "calls": 233,
+        "triangles": 80544,
+        "cpuSubmitMs": 0
+      },
+      "offscreen": {
+        "calls": 0,
+        "triangles": 0,
+        "cpuSubmitMs": 0
+      }
+    },
+    "rendererCounts": {
+      "textures": 22,
+      "geometries": 196
+    },
+    "estimates": {
+      "texturesBytes": 44739248,
+      "renderTargetsBytes": 44040192,
+      "geometryBytes": 2711100,
+      "framebufferBytes": 5038800,
+      "totalBytes": 96529340,
+      "capturePeakBytes": 201677480
+    },
+    "notes": [
+      "Browser frame intervals and CPU submission time; GPU execution time is not measured.",
+      "Pass counts are the latest demand frame. Offscreen includes contact-shadow blur and PMREM/probes; no continuous probe refresh exists.",
+      "CPU submit time includes the shadow work in that render; shadow CPU time cannot be separated (0 means unavailable).",
+      "Scene-ready means first complete main pass with loader idle, measured from profiler commit; excludes route/catalog loading and is not cold-network interactivity.",
+      "Memory estimates exclude driver/system allocation, decoded CPU images, shader programs, and opaque internal buffers. Shared resources may be counted in each Canvas at capture peak."
+    ]
+  },
+  {
+    "version": 1,
+    "sceneId": "default:japandi",
+    "scope": "desktop-browser",
+    "device": {
+      "label": "@Browser desktop",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+    },
+    "recordedAt": "2026-10-13T17:33:50.164Z",
+    "viewport": {
+      "width": 969,
+      "height": 650,
+      "dpr": 1
+    },
+    "renderer": "WebKit WebGL",
+    "quality": "balanced",
+    "movingFrames": {
+      "samples": 642,
+      "p50Ms": 16.5,
+      "p95Ms": 26.899999976158142,
+      "maxMs": 43.39999997615814
+    },
+    "sceneReadyMs": 378.60000002384186,
+    "passes": {
+      "main": {
+        "calls": 248,
+        "triangles": 81746,
+        "cpuSubmitMs": 1.2999999523162842
+      },
+      "shadow": {
+        "calls": 233,
+        "triangles": 80544,
+        "cpuSubmitMs": 0
+      },
+      "offscreen": {
+        "calls": 0,
+        "triangles": 0,
+        "cpuSubmitMs": 0
+      }
+    },
+    "rendererCounts": {
+      "textures": 22,
+      "geometries": 196
+    },
+    "estimates": {
+      "texturesBytes": 44739248,
+      "renderTargetsBytes": 44040192,
+      "geometryBytes": 2711100,
+      "framebufferBytes": 5038800,
+      "totalBytes": 96529340,
+      "capturePeakBytes": 201677480
+    },
+    "notes": [
+      "Browser frame intervals and CPU submission time; GPU execution time is not measured.",
+      "Pass counts are the latest demand frame. Offscreen includes contact-shadow blur and PMREM/probes; no continuous probe refresh exists.",
+      "CPU submit time includes the shadow work in that render; shadow CPU time cannot be separated (0 means unavailable).",
+      "Scene-ready means first complete main pass with loader idle, measured from profiler commit; excludes route/catalog loading and is not cold-network interactivity.",
+      "Memory estimates exclude driver/system allocation, decoded CPU images, shader programs, and opaque internal buffers. Shared resources may be counted in each Canvas at capture peak."
+    ]
+  }
+]

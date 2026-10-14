@@ -1,3 +1,4 @@
+import { beginCapture } from "../pwa/busy";
 import { lazy, Suspense, useCallback, useEffect, useRef } from "react";
 import type { Catalog, DesignDocument } from "../catalog/types";
 const Scene = lazy(() => import("./Scene"));
@@ -18,6 +19,7 @@ export default function CaptureAlternative({
   const callbacks = useRef({ onCapture, onError });
   callbacks.current = { onCapture, onError };
   useEffect(() => {
+    const endCapture = beginCapture();
     const timer = setTimeout(() => {
       if (!finished.current) {
         finished.current = true;
@@ -26,6 +28,7 @@ export default function CaptureAlternative({
     }, 20000);
     return () => {
       clearTimeout(timer);
+      endCapture();
     };
   }, []);
   const register = useCallback(async (capture: () => Promise<string>) => {
@@ -47,7 +50,12 @@ export default function CaptureAlternative({
   return (
     <div aria-hidden="true" className="comparison-capture">
       <Suspense fallback={null}>
-        <Scene design={design} catalog={catalog} capture={register} />
+        <Scene
+          preset="overall"
+          design={design}
+          catalog={catalog}
+          capture={register}
+        />
       </Suspense>
     </div>
   );

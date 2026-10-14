@@ -1,0 +1,52 @@
+- banner:
+  - link "Forma Studio Digitaler Showroom":
+    - /url: /?brand=default&kind=kitchen
+    - strong: Forma Studio
+    - generic: Digitaler Showroom
+  - navigation "Start":
+    - link "Start":
+      - /url: /?brand=default&kind=kitchen
+    - link "Küchen":
+      - /url: /designer/kitchen?brand=default&kind=kitchen
+    - link "Kleiderschränke":
+      - /url: /designer/wardrobe?brand=default&kind=kitchen
+  - generic "Offline bereit":
+    - generic: Offline bereit
+  - button "Shqip": SQ
+  - button "English": EN
+  - button "Deutsch" [pressed]: DE
+  - link "Einstellungen":
+    - /url: /settings?brand=default&kind=kitchen
+- main:
+  - heading "A / B vergleichen · Küchen" [level=1]
+  - paragraph: Zwei Alternativen auf diesem Gerät. Schätzungen verwenden den aktiven Katalog.
+  - article:
+    - heading "A · Phase 3 cashmere" [level=2]
+    - img "A · Phase 3 cashmere"
+    - paragraph: L-Form · 420 × 360 × 270 cm
+    - paragraph: Spanplatte (Egger / Kronospan) · Kaschmir · Kompakt 12 mm · Travertin · Weiß
+    - strong: 4.768 € · Unverbindliches Angebot
+    - button "Auswählen und fortfahren"
+    - button "A speichern"
+    - link "Module bearbeiten":
+      - /url: /designer/kitchen?brand=default
+  - article:
+    - heading "B · Phase 3 anthracite" [level=2]
+    - img "B · Phase 3 anthracite"
+    - paragraph: L-Form · 420 × 360 × 270 cm
+    - paragraph: Spanplatte (Egger / Kronospan) · Anthrazit · Kompakt 12 mm · Travertin · Weiß
+    - strong: 4.768 € · Unverbindliches Angebot
+    - button "Auswählen und fortfahren"
+    - button "B speichern"
+    - link "Module bearbeiten":
+      - /url: /designer/kitchen?brand=default
+  - paragraph:
+    - strong: "Differenz B − A: +0 €"
+    - text: · Unverbindliches Angebot
+- contentinfo:
+  - strong: Forma Studio
+  - generic: Prishtinë · Maße in cm
+  - generic: Fiktive Demomarke · Beispielpreise
+  - link "Materialien entdecken":
+    - /url: /material-switcher?brand=default&kind=kitchen
+    - text: Materialien entdecken

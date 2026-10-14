@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import { PerspectiveCamera, Vector3 } from "three";
 import { CatalogSchema } from "../src/catalog/types";
 import { generateLayout, newDesign } from "../src/designer3d/layout";
+import { bounds, validateDesign, wallPosition } from "../src/designer3d/layout";
+import { countertopThickness } from "../src/scene/furnitureMaterials";
 import {
   cabinetBounds,
   cameraBounds,
@@ -14,6 +16,63 @@ import {
 const catalog = CatalogSchema.parse(
   JSON.parse(readFileSync("public/brands/default/catalog.json", "utf8")),
 );
+it("uses the selected worktop thickness in both clearance validation and camera bounds", () => {
+  const original = newDesign("kitchen", "straight");
+  const module = catalog.modules.find((m) => m.id === "base-doors")!;
+  const c = {
+    id: "thickness-fit",
+    moduleId: module.id,
+    width: 60,
+    height: module.height,
+    depth: module.depth,
+    level: module.level,
+    wall: "back" as const,
+    ...wallPosition("back", 100, 60, module.depth, original.room),
+  };
+  const d = { ...original, cabinets: [c] };
+  for (const [id, expected] of [
+    ["travertine", 0.012],
+    ["marble", 0.038],
+    ["quartz", 0.02],
+  ] as const) {
+    const design = { ...d, style: { ...d.style, countertop: id } };
+    const top = 0.1 + c.height / 100 + expected;
+    expect(
+      bounds(c, countertopThickness(design, catalog)).y1 / 100,
+    ).toBeCloseTo(top);
+    expect(cabinetBounds(design, catalog).max.y).toBeCloseTo(top + 0.02);
+    expect(
+      validateDesign(
+        { ...design, room: { ...design.room, height: top * 100 - 0.2 } },
+        catalog,
+      ),
+    ).toBe(false);
+  }
+  // A synthetic tall base module exercises a ceiling boundary within valid room dimensions.
+  const boundaryCatalog = {
+    ...catalog,
+    modules: catalog.modules.map((m) =>
+      m.id === module.id ? { ...m, height: 190 } : m,
+    ),
+  };
+  const boundaryDesign = {
+    ...d,
+    cabinets: [{ ...c, height: 190 }],
+    room: { ...d.room, height: 202, openings: [] },
+  };
+  expect(
+    validateDesign(
+      { ...boundaryDesign, style: { ...d.style, countertop: "travertine" } },
+      boundaryCatalog,
+    ),
+  ).toBe(true);
+  expect(
+    validateDesign(
+      { ...boundaryDesign, style: { ...d.style, countertop: "marble" } },
+      boundaryCatalog,
+    ),
+  ).toBe(false);
+});
 
 it("frames every cabinet at desktop and portrait aspect ratios for all layouts and views", () => {
   for (const layout of ["straight", "l", "u", "parallel", "island"] as const) {
@@ -248,4 +307,132 @@ it("limits inspection to the selected cabinet's front, including front-wall runs
       expect(limits.minDistance).toBeLessThan(2);
     }
   }
+});
+
+import { Box3 } from "three";
+import {
+  cameraObstacles,
+  cameraPath,
+  cameraStructureKey,
+  furnitureEnvelope,
+  roomShot,
+  sampleCameraPath,
+  segmentHitsBox,
+} from "../src/designer3d/cameraShots";
+it("fits room shots including swept open fronts without framing decorative room objects", () => {
+  for (const [kind, layouts] of [
+    ["kitchen", ["straight", "l", "u", "parallel", "island"]],
+    ["wardrobe", ["straight", "corner", "walkin"]],
+  ] as const)
+    for (const layout of layouts) {
+      const design = generateLayout(newDesign(kind, layout), catalog)!;
+      for (const aspect of [0.46, 0.7, 1.4, 2.4])
+        for (const shot of ["hero", "overall", "front"] as const) {
+          const opened = design.cabinets.map((c) => c.id);
+          const view = roomShot(design, catalog, shot, aspect, { opened });
+          const camera = new PerspectiveCamera(CABINET_FOV, aspect, 0.1, 100);
+          camera.position.set(...view.position);
+          camera.lookAt(new Vector3(...view.target));
+          camera.updateMatrixWorld();
+          for (const p of boundsCorners(
+            furnitureEnvelope(design, catalog, opened),
+          ).map((p) => p.project(camera))) {
+            expect(Math.abs(p.x)).toBeLessThanOrEqual(0.93);
+            expect(Math.abs(p.y)).toBeLessThanOrEqual(0.93);
+            expect(p.z).toBeLessThan(1);
+          }
+        }
+    }
+});
+it("retreats above obstacles and never interpolates through a cabinet or wall", () => {
+  const obstacle = new Box3(new Vector3(-1, 0, -1), new Vector3(1, 3, 1));
+  const from = { position: [-3, 1, 0], target: [0, 1, 0] } as const;
+  const to = { position: [3, 1, 0], target: [0, 1, 0] } as const;
+  const a = {
+    position: [...from.position],
+    target: [...from.target],
+  } as import("../src/designer3d/framing").CameraView;
+  const b = {
+    position: [...to.position],
+    target: [...to.target],
+  } as import("../src/designer3d/framing").CameraView;
+  const path = cameraPath(a, b, [obstacle]);
+  expect(path).toHaveLength(4);
+  for (let i = 1; i < path.length; i++)
+    expect(
+      segmentHitsBox(
+        new Vector3(...path[i - 1].position),
+        new Vector3(...path[i].position),
+        obstacle,
+      ),
+    ).toBe(false);
+  for (let t = 0; t <= 1; t += 0.01)
+    expect(
+      obstacle.containsPoint(
+        new Vector3(...sampleCameraPath(path, t).position),
+      ),
+    ).toBe(false);
+  expect(sampleCameraPath(path, 0)).toEqual(a);
+  expect(sampleCameraPath(path, 1)).toEqual(b);
+  expect(cameraPath(a, b, [obstacle], true)).toEqual([]);
+  // An unsafe manual start cannot retreat through the object: use a snap.
+  expect(cameraPath({ ...a, position: [0, 1, 0] }, b, [obstacle])).toEqual([]);
+});
+it("all planned hero/front/top/inspection transition segments are safe or use the bounded snap fallback", () => {
+  for (const [kind, layouts] of [
+    ["kitchen", ["straight", "l", "u", "parallel", "island"]],
+    ["wardrobe", ["straight", "corner", "walkin"]],
+  ] as const)
+    for (const layout of layouts) {
+      const design = generateLayout(newDesign(kind, layout), catalog)!;
+      const obstacles = cameraObstacles(design, catalog);
+      const shots = ["hero", "front", "top", "overall"].map((shot) =>
+        roomShot(
+          design,
+          catalog,
+          shot as import("../src/designer3d/framing").CameraPreset,
+          1.4,
+        ),
+      );
+      shots.push(
+        ...design.cabinets.map((c) =>
+          roomShot(design, catalog, "hero", 1.4, { focus: c.id }),
+        ),
+      );
+      for (let i = 1; i < shots.length; i++) {
+        const path = cameraPath(shots[i - 1], shots[i], obstacles);
+        for (let step = 1; step < path.length; step++)
+          expect(
+            obstacles.some((box) =>
+              segmentHitsBox(
+                new Vector3(...path[step - 1].position),
+                new Vector3(...path[step].position),
+                box,
+              ),
+            ),
+          ).toBe(false);
+      }
+    }
+});
+it("camera composition ignores finish and component placement changes but tracks real furniture geometry", () => {
+  const d = generateLayout(newDesign("wardrobe", "straight"), catalog)!;
+  const key = cameraStructureKey(d);
+  expect(
+    cameraStructureKey({
+      ...d,
+      style: { ...d.style, front: "walnut" },
+      cabinets: d.cabinets.map((c) => ({
+        ...c,
+        interior: { version: 1, components: [] },
+      })),
+    }),
+  ).toBe(key);
+  expect(
+    cameraStructureKey({
+      ...d,
+      cabinets: d.cabinets.map((c, i) =>
+        i ? c : { ...c, width: c.width + 10 },
+      ),
+    }),
+  ).not.toBe(key);
 });

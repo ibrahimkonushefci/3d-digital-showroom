@@ -1,4 +1,6 @@
-import { useEffect, useRef } from "react";
+import { beginCapture } from "../pwa/busy";
+import { environmentPending } from "./lighting/RoomEnvironment";
+import { useEffect, useRef, useState, memo } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows, useProgress } from "@react-three/drei";
 import {
@@ -8,6 +10,9 @@ import {
   Vector2,
 } from "three";
 import { qualityForFrames, useQuality, useRenderQuality } from "./quality";
+import { activityRevision, motionBoundary } from "./activity";
+import { useContactTargetOwnership } from "./resources";
+import { pendingModelLoads } from "./assets/ModelAsset";
 export type CaptureImage = () => Promise<string>;
 export type RegisterCapture = (capture: CaptureImage) => void;
 export const showroomGL = {
@@ -17,33 +22,68 @@ export const showroomGL = {
   outputColorSpace: SRGBColorSpace,
   toneMappingExposure: 0.98,
 };
-export function RefreshShadows({
-  revision,
-  scale = 12,
-}: {
-  revision: unknown;
-  scale?: number;
-}) {
-  const quality = useQuality();
-  return quality === "lightweight" ? null : (
+const pendingContacts = new WeakSet<import("three").Scene>();
+function OwnedContactShadows({ scale }: { scale: number }) {
+  useContactTargetOwnership();
+  return (
     <ContactShadows
-      key={JSON.stringify(revision)}
-      position={[0, -0.015, 0]}
+      position={[0, 0.001, 0]}
       opacity={0.28}
       scale={scale}
       blur={2.5}
-      far={scale / 4}
-      frames={90}
+      far={1.2}
+      frames={1}
       resolution={256}
     />
   );
 }
-export function Rendering({ capture }: { capture?: RegisterCapture }) {
+export const RefreshShadows = memo(
+  function RefreshShadows({
+    revision,
+    scale = 12,
+  }: {
+    revision: unknown;
+    scale?: number;
+  }) {
+    const quality = useQuality();
+    const { scene } = useThree();
+    // Contact depth is static presentation work, never a 90-frame motion pass.
+    // Wait for the current opening animation/load before recomputing it.
+    const [settled, setSettled] = useState(false);
+    useEffect(() => {
+      setSettled(false);
+      if (quality !== "lightweight") pendingContacts.add(scene);
+      const timer = setTimeout(() => {
+        setSettled(true);
+        pendingContacts.delete(scene);
+      }, 800);
+      return () => {
+        clearTimeout(timer);
+        pendingContacts.delete(scene);
+      };
+    }, [revision, quality, scene]);
+    return quality === "lightweight"
+      ? null
+      : settled && (
+          <OwnedContactShadows key={JSON.stringify(revision)} scale={scale} />
+        );
+  },
+  (a, b) =>
+    a.scale === b.scale &&
+    JSON.stringify(a.revision) === JSON.stringify(b.revision),
+);
+export function Rendering({
+  capture,
+  lockQuality = false,
+}: {
+  capture?: RegisterCapture;
+  lockQuality?: boolean;
+}) {
   const { gl, scene, camera, invalidate, setDpr, advance } = useThree();
   const quality = useQuality();
   const frames = useRef<number[]>([]),
     exporting = useRef(false),
-    motion = useRef({ signature: NaN, active: false });
+    motion = useRef({ signature: NaN, active: false, boundary: 0 });
   useEffect(() => {
     gl.shadowMap.type = PCFSoftShadowMap;
     setDpr(
@@ -56,7 +96,7 @@ export function Rendering({ capture }: { capture?: RegisterCapture }) {
   const render = () => gl.render(scene, camera);
   useFrame((_, dt) => {
     if (!exporting.current) {
-      // Sample consecutive moving frames only, excluding idle invalidations and shadow refreshes.
+      // Constant-size camera sample plus explicit furniture-animation activity.
       let signature = 0,
         index = 1;
       const measure = (o: import("three").Object3D) => {
@@ -71,24 +111,34 @@ export function Rendering({ capture }: { capture?: RegisterCapture }) {
           index++;
       };
       measure(camera);
-      scene.traverse(measure);
+      signature += activityRevision(scene) * 23;
       const active = Math.abs(signature - motion.current.signature) > 1e-7;
-      if (active && motion.current.active && dt > 0)
-        frames.current.push(Math.min(99, dt * 1000));
+      const boundary = motionBoundary(scene);
+      if (
+        active &&
+        motion.current.active &&
+        boundary === motion.current.boundary &&
+        dt > 0 &&
+        !document.hidden
+      )
+        frames.current.push(dt * 1000);
       else if (!active) frames.current = [];
-      motion.current = { signature, active };
+      motion.current = { signature, active, boundary };
       if (frames.current.length >= 120) {
         const next = qualityForFrames(quality, frames.current);
         frames.current = [];
-        if (next !== quality) useRenderQuality.getState().setLevel(next);
+        if (!lockQuality && next !== quality)
+          useRenderQuality.getState().setLevel(next);
       }
     }
-    render();
+    if (!document.hidden && !gl.getContext().isContextLost()) render();
   }, 1);
   useEffect(() => {
     let live = true;
     capture?.(async () => {
       if (!live || exporting.current) throw Error("Capture unavailable");
+      if (gl.getContext().isContextLost()) throw Error("Context lost");
+      const endCapture = beginCapture();
       exporting.current = true;
       const hidden: Array<import("three").Object3D> = [];
       const oldSize = gl.getSize(new Vector2()),
@@ -107,7 +157,13 @@ export function Rendering({ capture }: { capture?: RegisterCapture }) {
           );
           const key = transforms.map((n) => n.toFixed(3)).join(",");
           stable =
-            !useProgress.getState().active && key === previous ? stable + 1 : 0;
+            !useProgress.getState().active &&
+            !pendingModelLoads() &&
+            !pendingContacts.has(scene) &&
+            !environmentPending(scene) &&
+            key === previous
+              ? stable + 1
+              : 0;
           previous = key;
           if (stable >= 4) break;
           if (i === 99) throw Error("Scene still loading");
@@ -135,6 +191,7 @@ export function Rendering({ capture }: { capture?: RegisterCapture }) {
         gl.setPixelRatio(dpr);
         gl.setSize(oldSize.x, oldSize.y, false);
         exporting.current = false;
+        endCapture();
         invalidate();
       }
     });

@@ -24,7 +24,7 @@ it("migrates version one and excludes private offer information from shared desi
       notes: "Private notes",
     },
   });
-  expect(design.version).toBe(2);
+  expect(design.version).toBe(3);
   expect(
     decodeShare(encodeShare(design, brand, catalog.id, false)).design.offer,
   ).toBeUndefined();

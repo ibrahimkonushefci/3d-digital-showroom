@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "roomLighting": {
+    "source": "kitchen-warm-v1-staged-window",
+    "direction": [
+      -0.8872139507342692,
+      0.4436069753671345,
+      -0.1267448501048956
+    ],
+    "shadowSize": 1024,
+    "shadowCasters": 1
+  },
+  "roomEnvironment": {
+    "mode": "runtime",
+    "resolution": 128,
+    "refreshes": 1,
+    "lastMs": 17.700000047683716,
+    "fallbackReason": "",
+    "signature": "[\"room-lighting-v1\",\"kitchen\",{\"width\":420,\"depth\":360,\"height\":270,\"openings\":[{\"id\":\"kitchen-warm-v1-staged-window\",\"wall\":\"left\",\"type\":\"window\",\"offset\":90,\"width\":120,\"height\":110,\"sill\":115}]},[[\"japandi-cabinet-01\",\"corner\",\"base\",\"back\",45,45,0,90,72,90],[\"japandi-cabinet-02\",\"sink\",\"base\",\"back\",120,30,0,60,72,60],[\"japandi-cabinet-03\",\"dishwasher\",\"base\",\"back\",180,30,0,60,72,60],[\"japandi-cabinet-04\",\"base-drawers\",\"base\",\"back\",240,30,0,60,72,60],[\"japandi-cabinet-05\",\"base-doors\",\"base\",\"back\",300,30,0,60,72,60],[\"japandi-cabinet-06\",\"base-drawers\",\"base\",\"back\",360,30,0,60,72,60],[\"japandi-cabinet-07\",\"base-drawers\",\"base\",\"left\",30,120,1.5707963267948966,60,72,60],[\"japandi-cabinet-08\",\"base-doors\",\"base\",\"left\",30,180,1.5707963267948966,60,72,60],[\"japandi-cabinet-09\",\"oven\",\"tall\",\"left\",30,240,1.5707963267948966,60,210,60],[\"japandi-cabinet-10\",\"fridge\",\"tall\",\"left\",30,300,1.5707963267948966,60,210,60],[\"japandi-cabinet-11\",\"wall-doors\",\"wall\",\"back\",120,17.5,0,60,72,35],[\"japandi-cabinet-12\",\"wall-doors\",\"wall\",\"back\",180,17.5,0,60,72,35],[\"japandi-cabinet-13\",\"wall-hood\",\"wall\",\"back\",240,17.5,0,60,72,35],[\"japandi-cabinet-14\",\"wall-doors\",\"wall\",\"back\",300,17.5,0,60,72,35],[\"japandi-cabinet-15\",\"wall-doors\",\"wall\",\"back\",360,17.5,0,60,72,35]]]"
+  },
+  "sceneId": "default:japandi",
+  "scope": "desktop-browser",
+  "device": {
+    "label": "@Browser desktop",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+  },
+  "recordedAt": "2026-10-14T15:19:56.131Z",
+  "viewport": {
+    "width": 1225,
+    "height": 650,
+    "dpr": 1.5
+  },
+  "renderer": "WebKit WebGL",
+  "quality": "balanced",
+  "movingFrames": {
+    "samples": 0,
+    "p50Ms": null,
+    "p95Ms": null,
+    "maxMs": null
+  },
+  "sceneReadyMs": 970,
+  "passes": {
+    "main": {
+      "calls": 133,
+      "triangles": 16348,
+      "cpuSubmitMs": 1.7999999523162842
+    },
+    "shadow": {
+      "calls": 113,
+      "triangles": 15860,
+      "cpuSubmitMs": 0
+    },
+    "offscreen": {
+      "calls": 0,
+      "triangles": 0,
+      "cpuSubmitMs": 0
+    },
+    "probe": {
+      "calls": 130,
+      "triangles": 2220,
+      "cpuSubmitMs": 22.50000011920929
+    }
+  },
+  "rendererCounts": {
+    "textures": 16,
+    "geometries": 82
+  },
+  "estimates": {
+    "texturesBytes": 44739248,
+    "renderTargetsBytes": 14401536,
+    "geometryBytes": 1474416,
+    "framebufferBytes": 14328600,
+    "totalBytes": 74943800,
+    "capturePeakBytes": 74943800
+  },
+  "notes": [
+    "Browser frame intervals and CPU submission time; GPU execution time is not measured.",
+    "Main/shadow/offscreen counts are the latest demand frame; offscreen is contact depth/blur. Probe counts/time are cumulative authored/debounced PMREM work for this scene, not per-frame. RoomEnvironment records refresh cost and fallback; orbit/front/finish changes do not refresh it.",
+    "CPU submit time includes the shadow work in that render; shadow CPU time cannot be separated (0 means unavailable).",
+    "Scene-ready means first complete main pass with loader idle, measured from profiler commit; excludes route/catalog loading and is not cold-network interactivity.",
+    "Memory estimates exclude driver/system allocation, decoded CPU images, shader programs, and opaque internal buffers. Shared resources may be counted in each Canvas at capture peak."
+  ],
+  "peakDrawFrame": {
+    "main": 133,
+    "shadow": 113,
+    "offscreen": 80,
+    "total": 326
+  }
+}

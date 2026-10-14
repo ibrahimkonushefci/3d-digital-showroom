@@ -28,14 +28,16 @@ export function encodeShare(
   local: boolean,
 ) {
   const { logo: _, ...basic } = brand;
-  return LZString.compressToEncodedURIComponent(
-    JSON.stringify({
-      version: 1,
-      catalogId,
-      design: { ...design, offer: undefined },
-      ...(local ? { brand: { ...basic, catalogId } } : {}),
-    }),
-  );
+  const raw = JSON.stringify({
+    version: 1,
+    catalogId,
+    design: { ...DesignSchema.parse(design), offer: undefined },
+    ...(local ? { brand: { ...basic, catalogId } } : {}),
+  });
+  if (raw.length > 150000) throw Error("shareTooLarge");
+  const encoded = LZString.compressToEncodedURIComponent(raw);
+  if (encoded.length > 30000) throw Error("shareTooLarge");
+  return encoded;
 }
 export function shareUrl(
   design: DesignDocument,

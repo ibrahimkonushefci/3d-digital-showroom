@@ -1,0 +1,49 @@
+{
+  "shippedBytes": 4694705,
+  "uniquePrecacheBytes": 4662559,
+  "precacheUrls": 86,
+  "workingTargetBytes": 9000000,
+  "strictCeilingBytes": 10000000,
+  "largestFiles": [
+    {
+      "path": "assets/three-D7M8naSa.js",
+      "bytes": 1182436
+    },
+    {
+      "path": "assets/pdf-B7V_-z0v.js",
+      "bytes": 483643
+    },
+    {
+      "path": "shared/textures/granite-color.webp",
+      "bytes": 301424
+    },
+    {
+      "path": "assets/Scene-wZmN_R-Q.js",
+      "bytes": 295348
+    },
+    {
+      "path": "assets/index-DOyQT8Uf.js",
+      "bytes": 201336
+    },
+    {
+      "path": "assets/html2canvas.esm-DXEQVQnt.js",
+      "bytes": 201041
+    },
+    {
+      "path": "shared/textures/quartz-color.webp",
+      "bytes": 197290
+    },
+    {
+      "path": "shared/textures/marble-color.webp",
+      "bytes": 166000
+    },
+    {
+      "path": "assets/index.es-DavqPU5p.js",
+      "bytes": 158960
+    },
+    {
+      "path": "shared/textures/concrete-color.webp",
+      "bytes": 154682
+    }
+  ]
+}

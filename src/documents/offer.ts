@@ -1,4 +1,9 @@
-import { proposalFinishes } from "./finishes";
+import { interiorAssociations } from "./finishes";
+import {
+  proposalFinishes,
+  finishAssociations,
+  hasFinishOverrides,
+} from "./finishes";
 import { jsPDF } from "jspdf";
 import type {
   BrandConfig,
@@ -292,6 +297,51 @@ export async function createOffer({
     y = 40;
     return true;
   };
+  if (hasFinishOverrides(design)) {
+    font(13, "bold");
+    pdf.text(t("finishAssociations"), LEFT, y);
+    y += 9;
+    for (const row of finishAssociations(design, catalog, language)) {
+      font(8, "bold");
+      const title = pdf.splitTextToSize(
+        `${row.scope} · ${row.quantity}`,
+        WIDTH,
+      );
+      font(8);
+      const detail = pdf.splitTextToSize(row.description, WIDTH);
+      ensureSpace((title.length + detail.length) * 4 + 5);
+      font(8, "bold");
+      pdf.text(title, LEFT, y);
+      y += title.length * 4;
+      font(8);
+      pdf.text(detail, LEFT, y);
+      y += detail.length * 4 + 5;
+    }
+    ensureSpace(24);
+  }
+  if (design.cabinets.some((c) => c.interior)) {
+    ensureSpace(20);
+    font(13, "bold");
+    pdf.text(t("interiorInventory"), LEFT, y);
+    y += 9;
+    font(8);
+    const note = pdf.splitTextToSize(t("interiorInventoryNote"), WIDTH);
+    ensureSpace(note.length * 4 + 6);
+    pdf.text(note, LEFT, y);
+    y += note.length * 4 + 6;
+    for (const row of interiorAssociations(design, catalog, language)) {
+      const title = pdf.splitTextToSize(row.scope, WIDTH),
+        detail = pdf.splitTextToSize(row.description, WIDTH);
+      ensureSpace((title.length + detail.length) * 4 + 6);
+      font(8, "bold");
+      pdf.text(title, LEFT, y);
+      y += title.length * 4;
+      font(8);
+      pdf.text(detail, LEFT, y);
+      y += detail.length * 4 + 6;
+    }
+    ensureSpace(24);
+  }
   font(13, "bold");
   pdf.text(t("parts"), LEFT, y);
   y += 9;

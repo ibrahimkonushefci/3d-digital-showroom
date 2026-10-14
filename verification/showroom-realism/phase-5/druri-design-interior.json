@@ -1,0 +1,114 @@
+{
+  "version": 3,
+  "id": "f750287a-27b1-4d89-95b4-b4dcf89281e8",
+  "kind": "wardrobe",
+  "layout": "straight",
+  "room": {
+    "width": 360,
+    "depth": 300,
+    "height": 270,
+    "openings": [
+      {
+        "id": "wardrobe-warm-v1-staged-window",
+        "wall": "left",
+        "type": "window",
+        "offset": 100,
+        "width": 100,
+        "height": 120,
+        "sill": 100
+      }
+    ]
+  },
+  "cabinets": [
+    {
+      "id": "29daad98-b21e-444a-8da2-13e66ffd5ff3",
+      "moduleId": "wardrobe-hanging",
+      "width": 80,
+      "height": 230,
+      "depth": 60,
+      "level": "wardrobe",
+      "wall": "back",
+      "x": 40,
+      "z": 30,
+      "rotation": 0,
+      "interior": {
+        "version": 1,
+        "components": []
+      }
+    },
+    {
+      "id": "a65d55b7-bfb2-4b5a-a935-0913b6546f33",
+      "moduleId": "wardrobe-shelves",
+      "width": 80,
+      "height": 230,
+      "depth": 60,
+      "level": "wardrobe",
+      "wall": "back",
+      "x": 120,
+      "z": 30,
+      "rotation": 0,
+      "interior": {
+        "version": 1,
+        "components": [
+          {
+            "id": "a65d55b7-bfb2-4b5a-a935-0913b6546f33:preset:1",
+            "productId": "storage-shelf",
+            "yCm": 139.9
+          },
+          {
+            "id": "a65d55b7-bfb2-4b5a-a935-0913b6546f33:preset:2",
+            "productId": "storage-shelf",
+            "yCm": 185.9
+          },
+          {
+            "id": "a65d55b7-bfb2-4b5a-a935-0913b6546f33:basket",
+            "productId": "storage-basket",
+            "yCm": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "3dae885e-21cb-485d-a3d6-1a5d95bdf1ea",
+      "moduleId": "wardrobe-drawers",
+      "width": 80,
+      "height": 230,
+      "depth": 60,
+      "level": "wardrobe",
+      "wall": "back",
+      "x": 200,
+      "z": 30,
+      "rotation": 0
+    },
+    {
+      "id": "5edf061f-8ea4-493f-9d03-9ddd6390d031",
+      "moduleId": "wardrobe-sliding",
+      "width": 100,
+      "height": 230,
+      "depth": 60,
+      "level": "wardrobe",
+      "wall": "back",
+      "x": 290,
+      "z": 30,
+      "rotation": 0
+    }
+  ],
+  "style": {
+    "front": "cashmere",
+    "carcass": "oak",
+    "countertop": "oak",
+    "handle": "bar",
+    "backsplash": "none",
+    "plinth": "matching",
+    "led": true,
+    "profile": "flat"
+  },
+  "environment": {
+    "floor": "laminate",
+    "wallColor": "#e5e0d7",
+    "internalLed": true
+  },
+  "installation": true,
+  "vat": true,
+  "exact": true
+}

@@ -46,3 +46,14 @@ These are product-name references only. No proprietary supplier images were down
 ## Furniture-only cleanup — 11 October 2026
 
 Only assets used by furniture remain. Original-source JPG duplicates, unused illustrations, specialist scenes and product textures were deleted. Source/license references above describe the retained derived WebP maps. The laminate/tiles/concrete environment maps remain because Kitchen and Wardrobe use them.
+
+## Phase 2 original room kit — 14 October 2026
+
+15 generic models in two levels of detail were authored locally by `scripts/author-room-kit.mjs`: oven and fridge fronts, tap, stool, pendant, bench, countertop ceramics, three opaque hanging silhouettes, two folded textiles, a shoe pair and two storage boxes. No external asset was acquired or purchased. No garment rig, texture, logo, remote URI or decoder is required. The original source is retained outside public runtime assets; the manifest records per-model source/optimized SHA-256, physical bounds/dimensions, anchors, material slots, draw/triangle counts and zero decoded texture bytes. Coordinate convention is metres, +Y up, +Z front; garments spread along Z on an X rail.
+
+See `licenses/original-room-kit-v1.txt` for project-use and white-label/offline redistribution permission. These are illustrative generic objects, not quoted manufacturer products. 30 hashed GLBs total 980,308 bytes, below the 2.5 MB kit allocation; each is below 1 MB. Lower-detail assets reduce bevels/radial segments. Existing material rights and illustrative status remain unchanged. The original v1 room recipes retain inherited Phase 1 light metadata. Phase 3 uses separate v2 recipe files and original procedural room radiance; the old recipe bytes remain available. Existing public thumbnails remain historical captures pending owner approval.
+
+
+### Phase 3 lighting (14 October 2026)
+
+`rooms/kitchen-warm-v2.json` and `rooms/wardrobe-warm-v2.json` add bounded room lighting metadata. Environment radiance is authored in project code from the actual room/apertures, with a small room/decor-only runtime probe. No HDRI, texture, model, lightmap, external source or paid asset was acquired. Reflection targets are generated locally and disposed per renderer; old public recipe files are retained for cache/update compatibility. Existing material/model provenance and illustrative-product limitations still apply.

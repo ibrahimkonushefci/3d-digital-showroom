@@ -1,0 +1,162 @@
+- banner:
+  - link "Druri Design Digitaler Showroom":
+    - /url: /?brand=druri-design
+    - strong: Druri Design
+    - generic: Digitaler Showroom
+  - navigation "Start":
+    - link "Start":
+      - /url: /?brand=druri-design
+    - link "Küchen":
+      - /url: /designer/kitchen?brand=druri-design
+    - link "Kleiderschränke":
+      - /url: /designer/wardrobe?brand=druri-design
+  - generic "Offline bereit":
+    - generic: Offline bereit
+  - button "Shqip": SQ
+  - button "English": EN
+  - button "Deutsch" [active] [pressed]: DE
+  - link "Einstellungen":
+    - /url: /settings?brand=druri-design
+- main:
+  - link "Zurück zum Entwurf":
+    - /url: /designer/kitchen?brand=druri-design
+    - text: Zurück zum Entwurf
+  - generic: Druri Design
+  - heading "Ihr Angebot" [level=1]
+  - generic: Unverbindliches Angebot
+  - img "Interaktiver 3D-Showroom"
+  - heading "Materialien nach Bereich / Schrank" [level=2]
+  - paragraph:
+    - strong: Unterschränke · Positionen 1, 2, 3, 4, 5, 6, 7, 8 · 8 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Natureiche · Korpus: Weiß · Griffe: Grifflos / Push · Frontstil: Glatte Fronten · Sockel: Schwarz"
+  - paragraph:
+    - strong: Hochschränke · Positionen 9, 10 · 2 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Natureiche · Korpus: Weiß · Griffe: Grifflos / Push · Frontstil: Glatte Fronten · Sockel: Schwarz"
+  - paragraph:
+    - strong: Oberschränke · Positionen 11, 12, 13, 14, 15 · 5 Stk.
+    - text: "Frontmaterial: Spanplatte (Egger / Kronospan) · Natureiche · Korpus: Weiß · Griffe: Grifflos / Push · Frontstil: Glatte Fronten"
+  - paragraph:
+    - strong: Hauptarbeitsplatte · 5,1 m
+    - text: "Travertin · 12 mm · Rückwand: Keine"
+  - heading "Ihre Konfiguration" [level=2]
+  - table:
+    - rowgroup:
+      - row "Artikel Menge Betrag":
+        - columnheader "Artikel"
+        - columnheader "Menge"
+        - columnheader "Betrag"
+    - rowgroup:
+      - row "Eckkarussell · 90 × 90 × 72 cm 1 Stk. 369 €":
+        - cell "Eckkarussell · 90 × 90 × 72 cm":
+          - text: Eckkarussell
+          - generic: · 90 × 90 × 72 cm
+        - cell "1 Stk."
+        - cell "369 €"
+      - row "Eckkarussell 1 Stk. 135 €":
+        - cell "Eckkarussell"
+        - cell "1 Stk."
+        - cell "135 €"
+      - row "Spülenschrank · 60 × 60 × 72 cm 1 Stk. 176 €":
+        - cell "Spülenschrank · 60 × 60 × 72 cm":
+          - text: Spülenschrank
+          - generic: · 60 × 60 × 72 cm
+        - cell "1 Stk."
+        - cell "176 €"
+      - row "Geschirrspülerplatz · 60 × 60 × 72 cm 1 Stk. 101 €":
+        - cell "Geschirrspülerplatz · 60 × 60 × 72 cm":
+          - text: Geschirrspülerplatz
+          - generic: · 60 × 60 × 72 cm
+        - cell "1 Stk."
+        - cell "101 €"
+      - row "Drei Schubladen · 60 × 60 × 72 cm 3 Stk. 624 €":
+        - cell "Drei Schubladen · 60 × 60 × 72 cm":
+          - text: Drei Schubladen
+          - generic: · 60 × 60 × 72 cm
+        - cell "3 Stk."
+        - cell "624 €"
+      - row "Schubladeneinsatz 3 Stk. 105 €":
+        - cell "Schubladeneinsatz"
+        - cell "3 Stk."
+        - cell "105 €"
+      - row "Unterschrank · 60 × 60 × 72 cm 2 Stk. 296 €":
+        - cell "Unterschrank · 60 × 60 × 72 cm":
+          - text: Unterschrank
+          - generic: · 60 × 60 × 72 cm
+        - cell "2 Stk."
+        - cell "296 €"
+      - row "Backofenschrank · 60 × 60 × 210 cm 1 Stk. 271 €":
+        - cell "Backofenschrank · 60 × 60 × 210 cm":
+          - text: Backofenschrank
+          - generic: · 60 × 60 × 210 cm
+        - cell "1 Stk."
+        - cell "271 €"
+      - row "Kühlschrankplatz · 60 × 60 × 210 cm 1 Stk. 246 €":
+        - cell "Kühlschrankplatz · 60 × 60 × 210 cm":
+          - text: Kühlschrankplatz
+          - generic: · 60 × 60 × 210 cm
+        - cell "1 Stk."
+        - cell "246 €"
+      - row "Oberschrank · 60 × 35 × 72 cm 4 Stk. 529 €":
+        - cell "Oberschrank · 60 × 35 × 72 cm":
+          - text: Oberschrank
+          - generic: · 60 × 35 × 72 cm
+        - cell "4 Stk."
+        - cell "529 €"
+      - row "Integrierte Dunstabzugshaube · 60 × 35 × 72 cm 1 Stk. 113 €":
+        - cell "Integrierte Dunstabzugshaube · 60 × 35 × 72 cm":
+          - text: Integrierte Dunstabzugshaube
+          - generic: · 60 × 35 × 72 cm
+        - cell "1 Stk."
+        - cell "113 €"
+      - row "Arbeitsplatte – Kompakt 12 mm · Travertin 5,1 m 765 €":
+        - cell "Arbeitsplatte – Kompakt 12 mm · Travertin"
+        - cell "5,1 m"
+        - cell "765 €"
+      - row "Sockel 6,3 m 76 €":
+        - cell "Sockel"
+        - cell "6,3 m"
+        - cell "76 €"
+      - row "Unterbauleuchten 3 m 66 €":
+        - cell "Unterbauleuchten"
+        - cell "3 m"
+        - cell "66 €"
+    - rowgroup:
+      - row "Montage (8%) 310 €":
+        - cell "Montage (8%)"
+        - cell "310 €"
+      - row "MwSt. (18%) 753 €":
+        - cell "MwSt. (18%)"
+        - cell "753 €"
+      - row "Gesamtbetrag inkl. MwSt. 4.934 €":
+        - cell "Gesamtbetrag inkl. MwSt."
+        - cell "4.934 €"
+  - complementary:
+    - generic: Geschätzter Gesamtpreis
+    - heading "4.934 €" [level=2]
+    - paragraph: Richtpreis. Das endgültige Angebot wird nach Aufmaß und Materialauswahl bestätigt.
+    - generic "Kundendaten"
+    - generic: Montage · 8%
+    - checkbox "Montage · 8%" [checked]
+    - generic: MwSt. · 18%
+    - checkbox "MwSt. · 18%" [checked]
+    - generic: Einzelne Schätzung anzeigen
+    - checkbox "Einzelne Schätzung anzeigen" [checked]
+    - button "Angebot senden (PDF)":
+      - text: Angebot senden (PDF)
+    - button "PDF-Angebot herunterladen":
+      - text: PDF-Angebot herunterladen
+    - button "Entwurfslink kopieren":
+      - text: Entwurfslink kopieren
+    - button "An jemanden senden":
+      - text: An jemanden senden
+    - button "WhatsApp":
+      - text: WhatsApp
+    - strong: Druri Design
+    - generic: Prishtinë
+- contentinfo:
+  - strong: Druri Design
+  - generic: Prishtinë · Maße in cm
+  - generic: Fiktive Demomarke · Beispielpreise
+  - link "Materialien entdecken":
+    - /url: /material-switcher?brand=druri-design
+    - text: Materialien entdecken

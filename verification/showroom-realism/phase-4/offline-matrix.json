@@ -1,0 +1,26 @@
+[
+  {
+    "brand": "druri-design",
+    "kind": "wardrobe",
+    "rendered": true,
+    "sourceStopped": true
+  },
+  {
+    "brand": "druri-design",
+    "kind": "kitchen",
+    "rendered": true,
+    "sourceStopped": true
+  },
+  {
+    "brand": "default",
+    "kind": "kitchen",
+    "rendered": true,
+    "sourceStopped": true
+  },
+  {
+    "brand": "default",
+    "kind": "wardrobe",
+    "rendered": true,
+    "sourceStopped": true
+  }
+]

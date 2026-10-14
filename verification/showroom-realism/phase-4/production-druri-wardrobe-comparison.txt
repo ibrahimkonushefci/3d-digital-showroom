@@ -1,0 +1,49 @@
+- banner:
+  - link "Druri Design Digital Showroom":
+    - /url: /?brand=druri-design&kind=wardrobe
+    - strong: Druri Design
+    - generic: Digital Showroom
+  - navigation "Home":
+    - link "Home":
+      - /url: /?brand=druri-design&kind=wardrobe
+    - link "Kitchens":
+      - /url: /designer/kitchen?brand=druri-design&kind=wardrobe
+    - link "Wardrobes":
+      - /url: /designer/wardrobe?brand=druri-design&kind=wardrobe
+  - generic "Offline ready":
+    - generic: Offline ready
+  - button "Shqip": SQ
+  - button "English" [pressed]: EN
+  - button "Deutsch": DE
+  - link "Settings":
+    - /url: /settings?brand=druri-design&kind=wardrobe
+- main:
+  - heading "Compare A / B · Wardrobes" [level=1]
+  - paragraph: Two alternatives stored on this device. Estimates use the active catalog.
+  - article:
+    - heading "A · Druri wardrobe mixed A" [level=2]
+    - img "A · Druri wardrobe mixed A"
+    - paragraph: Straight · 360 × 300 × 270 cm
+    - list:
+      - strong: Wardrobe (1 pcs)
+      - text: ": Chipboard (Egger / Kronospan) · Walnut / Graphite"
+      - strong: Wardrobe (3 pcs)
+      - text: ": Chipboard (Egger / Kronospan) · Cashmere / Oak"
+    - generic "Materials by zone / cabinet"
+    - strong: 1,990 € · Indicative offer
+    - button "Choose and continue"
+    - button "Save A"
+    - link "Edit modules":
+      - /url: /designer/wardrobe?brand=druri-design
+  - article:
+    - heading "B · No alternative saved yet" [level=2]
+    - button "Save B"
+    - link "Edit modules":
+      - /url: /designer/wardrobe?brand=druri-design
+- contentinfo:
+  - strong: Druri Design
+  - generic: Prishtinë · Dimensions in cm
+  - generic: Fictional demo brand · sample prices
+  - link "Explore materials":
+    - /url: /material-switcher?brand=druri-design&kind=wardrobe
+    - text: Explore materials

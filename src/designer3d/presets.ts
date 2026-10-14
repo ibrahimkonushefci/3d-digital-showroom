@@ -1,3 +1,4 @@
+import { presetRoom } from "../scene/rooms/resolveRoom";
 import type { Catalog, DesignDocument } from "../catalog/types";
 import type { CameraView } from "./Scene";
 import {
@@ -46,7 +47,7 @@ export function presentationPresets(catalog: Catalog): ShowroomPreset[] {
       let d = generateLayout(
         {
           ...newDesign(p.kind, p.layout),
-          room: { ...p.room, openings: [] },
+          room: { ...p.room, openings: p.room.openings || [] },
           style: p.style,
         },
         catalog,
@@ -78,6 +79,8 @@ export function presentationPresets(catalog: Catalog): ShowroomPreset[] {
         };
         if (d.cabinets.length !== p.cabinets.length) return [];
       }
+      if (d && p.roomSceneId)
+        d = { ...d, room: presetRoom(d.room, d.kind, d.cabinets) };
       return d && validateDesign(d, catalog)
         ? [
             {
