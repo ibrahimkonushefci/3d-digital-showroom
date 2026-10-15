@@ -17,7 +17,7 @@ Environment reflections are generated locally from area-light geometry; no remot
 Downloaded through @Browser from ambientCG, CC0: https://docs.ambientcg.com/license/ . Kept only color, OpenGL normal and roughness maps, resized to 1024 × 1024 and compressed to WebP.
 
 - `veneer-*`: https://ambientcg.com/a/Wood051 — continuous wood grain, color adjusted to an illustrative light oak veneer. Species is illustrative.
-- `travertine-*`: https://ambientcg.com/a/Travertine009.
+- `travertine-*`: https://ambientcg.com/a/Travertine009. Colour and roughness made seamless on 15 October 2026 (Phase 1 follow-up, B5) by `python3 art/textures/seamless_stone.py <dir-with-previous-maps> public/shared/textures travertine`: minimum-error seam cuts across both wraps, shared by both maps, same 1024² size, scale and colour.
 - `marble-*`: https://ambientcg.com/a/Marble012.
 - `granite-*`: https://ambientcg.com/a/Granite002A .
 - `walnut-*`, `concrete-*`, `laminate-*`: the original Poly Haven sources above; OpenGL normal detail is derived from the source luminance, roughness derived locally. `laminate-color.webp` preserves the floor planks; furniture uses continuous veneer maps.
@@ -57,3 +57,12 @@ See `licenses/original-room-kit-v1.txt` for project-use and white-label/offline 
 ### Phase 3 lighting (14 October 2026)
 
 `rooms/kitchen-warm-v2.json` and `rooms/wardrobe-warm-v2.json` add bounded room lighting metadata. Environment radiance is authored in project code from the actual room/apertures, with a small room/decor-only runtime probe. No HDRI, texture, model, lightmap, external source or paid asset was acquired. Reflection targets are generated locally and disposed per renderer; old public recipe files are retained for cache/update compatibility. Existing material/model provenance and illustrative-product limitations still apply.
+
+## Phase 1 correction — 15 October 2026
+
+All new sources are CC0; provenance is also listed in `licenses/polyhaven-cc0.txt`.
+
+- `veneer-*` re-derived from ambientCG Wood051 (https://ambientcg.com/a/Wood051) with natural grain contrast; `laminate-*` floor replaced by the seamless ambientCG WoodFloor051 (https://ambientcg.com/a/WoodFloor051); `plaster-normal/roughness` from ambientCG Plaster001 (https://ambientcg.com/a/Plaster001), paint colour stays a parameter; `smooth-normal/roughness` regenerated as an original subtle orange-peel micro-texture (CC0 by this project). Reproduce with `python3 art/textures/derive_textures.py <ambientcg-download-dir> <out-dir>`. Stone normal maps are unchanged: the polished ambientCG sources carry essentially no relief.
+- `exterior-garden.webp`: perspective crop of the Poly Haven HDRI "Balcony" by Greg Zaal (https://polyhaven.com/a/balcony), shown behind windows from inside the room only.
+- Decor models (`cutting-board`, `fruit-bowl`, `plant-small`, `vase`, `wall-art`, `basket`): Poly Haven CC0 glTF 1K sources, prepared headless in Blender by `art/blender/prepare_decor.py` with `art/blender/decor.json` (decimated, WebP textures at 384/192 px, artist AO kept), then registered by `node scripts/register-decor.mjs <prepared-dir> <download-dir>`. Licence key `polyhaven-cc0`. Decorative and unpriced. `scripts/author-room-kit.mjs` now preserves these manifest entries when it regenerates the original kit.
+- Room recipes `rooms/*-warm-v3.json` add `environmentIntensity` and `interiorKeyIntensity`; v1/v2 files are unchanged.

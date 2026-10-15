@@ -1,5 +1,5 @@
-import kitchen from "../../../public/shared/rooms/kitchen-warm-v2.json";
-import wardrobe from "../../../public/shared/rooms/wardrobe-warm-v2.json";
+import kitchen from "../../../public/shared/rooms/kitchen-warm-v3.json";
+import wardrobe from "../../../public/shared/rooms/wardrobe-warm-v3.json";
 import type { DesignDocument, Room } from "../../catalog/types";
 import { RoomRecipeSchema } from "./types";
 import {

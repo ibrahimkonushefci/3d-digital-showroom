@@ -17,7 +17,7 @@ import {
   pointInPolygon,
   worktopRuns,
 } from "../src/scene/countertopGeometry";
-import { qualityForFrames } from "../src/scene/quality";
+import { aoScale, aoShouldPause, qualityForFrames } from "../src/scene/quality";
 import { calculatePrice } from "../src/pricing";
 const catalog = CatalogSchema.parse(
   JSON.parse(readFileSync("public/brands/default/catalog.json", "utf8")),
@@ -166,6 +166,20 @@ it("quality measurement ignores idle gaps and only moves between balanced and hi
   expect(qualityForFrames("lightweight", Array(120).fill(5))).toBe(
     "lightweight",
   );
+});
+it("runs AO at full resolution by default and pauses it, keeping shadows, only after sustained slow motion", () => {
+  expect(aoScale("balanced")).toBe(1);
+  expect(aoScale("high")).toBe(1);
+  expect(aoScale("lightweight")).toBe(0);
+  // ~33 fps or better keeps AO; idle gaps and short bursts never count.
+  expect(aoShouldPause("balanced", Array(120).fill(16.7))).toBe(false);
+  expect(aoShouldPause("balanced", Array(120).fill(28))).toBe(false);
+  expect(aoShouldPause("balanced", Array(120).fill(500))).toBe(false);
+  expect(aoShouldPause("balanced", Array(60).fill(45))).toBe(false);
+  expect(aoShouldPause("balanced", Array(120).fill(45))).toBe(true);
+  // High first steps down to balanced (quality controller), never straight off.
+  expect(aoShouldPause("high", Array(120).fill(45))).toBe(false);
+  expect(aoShouldPause("lightweight", Array(120).fill(45))).toBe(false);
 });
 it("quality and transient opening states cannot change prices", () => {
   const d = design(),

@@ -2,9 +2,10 @@ import { Box3, Vector3 } from "three";
 import type { Catalog, DesignDocument, Room } from "../../catalog/types";
 import { cabinetBounds, boundsCorners } from "../../designer3d/framing";
 import { resolveRoom } from "../rooms/resolveRoom";
+import { heroHeading } from "../../designer3d/cameraShots";
 import { roomQuality, type Quality } from "../quality";
 
-export const LIGHTING_REVISION = "room-lighting-v2";
+export const LIGHTING_REVISION = "room-lighting-v3";
 export const MAX_LED_FILLS = 3;
 export type WallSide = Room["openings"][number]["wall"];
 export type WallPiece = {
@@ -139,7 +140,41 @@ export function resolveLighting(
     .normalize();
   const up = new Vector3().crossVectors(direction, right);
   const corners = boundsCorners(bounds).map((p) => p.sub(target));
+  // Soft key inside the room, near the ceiling on the viewer's side: models
+  // the fronts and drops soft shadows behind the furniture, IKEA-style.
+  const furniture = cabinetBounds(design, catalog);
+  const keyTarget = furniture.getCenter(new Vector3()).setY(0.9);
+  const heading = heroHeading(design);
+  const halfW = roomSize.x / 2 - 0.35,
+    halfD = roomSize.z / 2 - 0.35;
+  const reach = Math.min(
+    2.6,
+    heading.x > 1e-6
+      ? (halfW - keyTarget.x) / heading.x
+      : heading.x < -1e-6
+        ? (-halfW - keyTarget.x) / heading.x
+        : Infinity,
+    heading.z > 1e-6
+      ? (halfD - keyTarget.z) / heading.z
+      : heading.z < -1e-6
+        ? (-halfD - keyTarget.z) / heading.z
+        : Infinity,
+  );
+  const side = new Vector3(-heading.z, 0, heading.x).multiplyScalar(1.1);
+  const keyPosition = keyTarget
+    .clone()
+    .addScaledVector(heading, Math.max(1.2, reach))
+    .add(side)
+    .setY(roomSize.y - 0.15);
+  keyPosition.x = Math.max(-halfW, Math.min(halfW, keyPosition.x));
+  keyPosition.z = Math.max(-halfD, Math.min(halfD, keyPosition.z));
   return {
+    interiorKey: {
+      position: keyPosition,
+      target: keyTarget,
+      intensity: recipe.lightRecipe.interiorKeyIntensity ?? 0,
+    },
+    environmentIntensity: recipe.lightRecipe.environmentIntensity ?? 1,
     window,
     aperture,
     direction,

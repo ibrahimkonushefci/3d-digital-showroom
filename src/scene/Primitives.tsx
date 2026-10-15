@@ -84,12 +84,16 @@ export function Box({
       return g;
     },
   );
+  // Fronts tell the AO pass their size so it can close the gaps between
+  // them (see aoFrontScale in pipeline/RenderPipeline.ts).
+  const front = panelRole === "front" || panelRole?.startsWith("interior-front");
   return (
     <mesh
       position={position}
       castShadow={castShadow}
       receiveShadow
       raycast={decorative ? () => {} : undefined}
+      userData={front ? { aoFront: size } : undefined}
     >
       {geometry ? (
         <primitive object={geometry} attach="geometry" />
@@ -148,10 +152,13 @@ export function Box({
           opacity={transparent ? 0.3 : 1}
         />
       )}{" "}
+      {/* A direct child, so drei outlines this panel's own geometry (inside a
+          group it found none and drew its 1 m placeholder segment). */}
       {selected && (
-        <group userData={{ exportHidden: true }}>
-          <Edges color="#c6ac77" />
-        </group>
+        <Edges
+          color="#c6ac77"
+          userData={{ exportHidden: true, aoExclude: true }}
+        />
       )}
     </mesh>
   );

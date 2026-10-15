@@ -1,0 +1,91 @@
+[
+  {
+    "id": "cutting-board",
+    "triangles": 2400,
+    "parts": [
+      {
+        "asset": "wooden_cutting_board"
+      }
+    ],
+    "texture": 384
+  },
+  {
+    "id": "fruit-bowl",
+    "triangles": 5200,
+    "parts": [
+      {
+        "asset": "wooden_bowl_01",
+        "triangles": 6000
+      },
+      {
+        "asset": "lemon",
+        "offset": [
+          0.045,
+          0.02,
+          0.035
+        ],
+        "yaw": 0.4
+      },
+      {
+        "asset": "lemon",
+        "offset": [
+          -0.05,
+          0.03,
+          0.035
+        ],
+        "yaw": 2.1
+      },
+      {
+        "asset": "lemon",
+        "offset": [
+          0.0,
+          -0.045,
+          0.04
+        ],
+        "yaw": 4.0
+      }
+    ],
+    "texture": 384
+  },
+  {
+    "id": "plant-small",
+    "triangles": 4200,
+    "parts": [
+      {
+        "asset": "potted_plant_04"
+      }
+    ],
+    "texture": 384
+  },
+  {
+    "id": "vase",
+    "triangles": 2000,
+    "parts": [
+      {
+        "asset": "ceramic_vase_01"
+      }
+    ],
+    "texture": 384
+  },
+  {
+    "id": "wall-art",
+    "origin": "back",
+    "triangles": 2400,
+    "parts": [
+      {
+        "asset": "hanging_picture_frame_02"
+      }
+    ],
+    "texture": 384
+  },
+  {
+    "id": "basket",
+    "triangles": 3600,
+    "parts": [
+      {
+        "asset": "wicker_basket_02"
+      }
+    ],
+    "texture": 384
+  }
+]

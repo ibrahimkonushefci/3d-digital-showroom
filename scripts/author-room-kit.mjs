@@ -4,7 +4,7 @@ import * as T from "three";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { GLTFExporter } from "three/addons/exporters/GLTFExporter.js";
-import { writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
 globalThis.FileReader = class {
   readAsArrayBuffer(blob) {
@@ -362,6 +362,16 @@ for (const asset of kit) {
     quotedProduct: false,
   });
 }
+// Keep assets registered by other pipelines (e.g. scripts/register-decor.mjs).
+const previous = JSON.parse(
+  await readFile(`${root}/asset-manifest.json`, "utf8").catch(() => "{}"),
+);
+manifest.assets.push(
+  ...(previous.assets ?? []).filter(
+    (a) => a.licenseKey !== "original-room-kit-v1",
+  ),
+);
+if (previous.revision) manifest.revision = previous.revision;
 await writeFile(
   `${root}/asset-manifest.json`,
   JSON.stringify(manifest, null, 2) + "\n",

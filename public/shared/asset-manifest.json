@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "revision": "room-kit-v1",
+  "revision": "room-kit-v2",
   "assets": [
     {
       "id": "oven",
@@ -1087,6 +1087,437 @@
       "licenseKey": "original-room-kit-v1",
       "source": "scripts/author-room-kit.mjs",
       "sourceSha256": "1c2e1a3f2817c0e41d89fa8ccb7858799e29b7e982f1a5667345da9eb3fae4bd",
+      "quotedProduct": false
+    },
+    {
+      "id": "cutting-board",
+      "revision": 1,
+      "path": "shared/models/cutting-board-balanced-91452a793b.glb",
+      "sha256": "91452a793be6e489ac931ae7781613c73668b915aed5e045422a3db81b9454a2",
+      "bytes": 94760,
+      "triangles": 2400,
+      "drawCalls": 1,
+      "geometryBytes": 69728,
+      "nativeDimensions": [
+        0.4499,
+        0.0413,
+        0.2467
+      ],
+      "bounds": {
+        "min": [
+          -0.22492878139019012,
+          0,
+          -0.12332408130168915
+        ],
+        "max": [
+          0.2249448001384735,
+          0.041253041476011276,
+          0.1233268678188324
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/cutting-board-lightweight-1b39690bd2.glb",
+        "sha256": "1b39690bd25e62dbf9e2ea6c881d200d6e705c9367d91e2f5b45f3bd513e08d1",
+        "bytes": 48936,
+        "triangles": 1200,
+        "drawCalls": 1,
+        "geometryBytes": 40128,
+        "nativeDimensions": [
+          0.4499,
+          0.0413,
+          0.2467
+        ],
+        "bounds": {
+          "min": [
+            -0.22496968507766724,
+            0,
+            -0.12329629063606262
+          ],
+          "max": [
+            0.2249448001384735,
+            0.041253041476011276,
+            0.12336369603872299
+          ]
+        }
+      },
+      "materialSlots": [
+        "wooden_cutting_board"
+      ],
+      "origin": "countertop",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 2353398,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/wooden_cutting_board",
+      "sourceSha256": "89fa89f6987c5087c0c7a8ac8ccbe451cfa8976ae46377d83a423e658cff9de4",
+      "quotedProduct": false
+    },
+    {
+      "id": "fruit-bowl",
+      "revision": 1,
+      "path": "shared/models/fruit-bowl-balanced-e5a05a1466.glb",
+      "sha256": "e5a05a1466dd3201f9dd7dea56a2a999acaf68355096a0d5dfad12e86cb5dfeb",
+      "bytes": 194952,
+      "triangles": 5200,
+      "drawCalls": 4,
+      "geometryBytes": 126324,
+      "nativeDimensions": [
+        0.3131,
+        0.1118,
+        0.3094
+      ],
+      "bounds": {
+        "min": [
+          -0.1566038429737091,
+          -0.00024002540158107877,
+          -0.15430788695812225
+        ],
+        "max": [
+          0.15647654235363007,
+          0.1115138977766037,
+          0.155106320977211
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/fruit-bowl-lightweight-346ca7dcb1.glb",
+        "sha256": "346ca7dcb199cbc2caa50807823780ac967280fc1f4d66d7153f896c8f9f2937",
+        "bytes": 92548,
+        "triangles": 2599,
+        "drawCalls": 4,
+        "geometryBytes": 67998,
+        "nativeDimensions": [
+          0.3132,
+          0.1123,
+          0.3097
+        ],
+        "bounds": {
+          "min": [
+            -0.1566038429737091,
+            -0.0004854181897826493,
+            -0.15461723506450653
+          ],
+          "max": [
+            0.1565612405538559,
+            0.11179424077272415,
+            0.155106320977211
+          ]
+        }
+      },
+      "materialSlots": [
+        "wooden_bowl_01",
+        "lemon",
+        "lemon.001",
+        "lemon.002"
+      ],
+      "origin": "countertop",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 4706796,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/wooden_bowl_01 https://polyhaven.com/a/lemon",
+      "sourceSha256": "cee7360913c87afd0ae313761c37fb60a7191bc75d0e25e79e58251e4836f407",
+      "quotedProduct": false
+    },
+    {
+      "id": "plant-small",
+      "revision": 1,
+      "path": "shared/models/plant-small-balanced-2e3442d197.glb",
+      "sha256": "2e3442d19792514b8f62fa27f15f91444cbbf65ce2c9dbcf5adb30d29235d79c",
+      "bytes": 186868,
+      "triangles": 4200,
+      "drawCalls": 1,
+      "geometryBytes": 134256,
+      "nativeDimensions": [
+        0.168,
+        0.2674,
+        0.1846
+      ],
+      "bounds": {
+        "min": [
+          -0.08398555219173431,
+          -0.00013835584104526788,
+          -0.09241810441017151
+        ],
+        "max": [
+          0.08398555219173431,
+          0.2672116756439209,
+          0.09217903763055801
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/plant-small-lightweight-629b3a0955.glb",
+        "sha256": "629b3a0955563555efde7fe9f9a61e3cac28abfe9daf494b666b3097f8b8a353",
+        "bytes": 93140,
+        "triangles": 2100,
+        "drawCalls": 1,
+        "geometryBytes": 75928,
+        "nativeDimensions": [
+          0.168,
+          0.2676,
+          0.1846
+        ],
+        "bounds": {
+          "min": [
+            -0.0839918851852417,
+            -0.0005444336566142738,
+            -0.0924244374036789
+          ],
+          "max": [
+            0.0839918851852417,
+            0.2670675814151764,
+            0.09214556217193604
+          ]
+        }
+      },
+      "materialSlots": [
+        "potted_plant_04"
+      ],
+      "origin": "countertop",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 2353398,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/potted_plant_04",
+      "sourceSha256": "b3a3bc3e97da75844999c4da07b7104b6c023f729a7c045979929b9504184339",
+      "quotedProduct": false
+    },
+    {
+      "id": "vase",
+      "revision": 1,
+      "path": "shared/models/vase-balanced-7f3696f9d5.glb",
+      "sha256": "7f3696f9d5656bb75b939adf51e703aba72cb5e7aeed53f9d6bd0a7d9277812a",
+      "bytes": 84904,
+      "triangles": 2000,
+      "drawCalls": 1,
+      "geometryBytes": 77152,
+      "nativeDimensions": [
+        0.2054,
+        0.4005,
+        0.2038
+      ],
+      "bounds": {
+        "min": [
+          -0.10261496901512146,
+          0.0001403193164151162,
+          -0.1010989248752594
+        ],
+        "max": [
+          0.10273538529872894,
+          0.4006871283054352,
+          0.10271316021680832
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/vase-lightweight-505f20226f.glb",
+        "sha256": "505f20226f6c4cdc3cb9910811cf7bd52cac10c0cb072066dbb41ec3bb70d034",
+        "bytes": 46588,
+        "triangles": 1000,
+        "drawCalls": 1,
+        "geometryBytes": 42352,
+        "nativeDimensions": [
+          0.2091,
+          0.4017,
+          0.2095
+        ],
+        "bounds": {
+          "min": [
+            -0.10261496901512146,
+            -0.0010107733542099595,
+            -0.10247232019901276
+          ],
+          "max": [
+            0.10651334375143051,
+            0.4006871283054352,
+            0.10701125115156174
+          ]
+        }
+      },
+      "materialSlots": [
+        "ceramic_vase_01"
+      ],
+      "origin": "countertop",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 2353398,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/ceramic_vase_01",
+      "sourceSha256": "4e2c69eb5bbccf86e9fbf92af438464669d804c1f0eae041ee28651a5b57d91e",
+      "quotedProduct": false
+    },
+    {
+      "id": "wall-art",
+      "revision": 1,
+      "path": "shared/models/wall-art-balanced-724d75d484.glb",
+      "sha256": "724d75d4848be99f2b0b987b3bf2b4826ff79119f899e440296552ced91eefd6",
+      "bytes": 120040,
+      "triangles": 2400,
+      "drawCalls": 3,
+      "geometryBytes": 90452,
+      "nativeDimensions": [
+        0.7518,
+        0.5,
+        0.0331
+      ],
+      "bounds": {
+        "min": [
+          -0.37590670585632324,
+          -0.2499999850988388,
+          0
+        ],
+        "max": [
+          0.37590670585632324,
+          0.2499999850988388,
+          0.03307514265179634
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/wall-art-lightweight-e77f790afb.glb",
+        "sha256": "e77f790afb8ca05b7d1e5a8231711e3f5a44dee5093cbd2cae603f53ff7fccc9",
+        "bytes": 73380,
+        "triangles": 1200,
+        "drawCalls": 3,
+        "geometryBytes": 59316,
+        "nativeDimensions": [
+          0.7518,
+          0.5,
+          0.0329
+        ],
+        "bounds": {
+          "min": [
+            -0.37590670585632324,
+            -0.2499999850988388,
+            0
+          ],
+          "max": [
+            0.37590670585632324,
+            0.2499999850988388,
+            0.032866910099983215
+          ]
+        }
+      },
+      "materialSlots": [
+        "hanging_picture_frame_02_artwork",
+        "hanging_picture_frame_02",
+        "hanging_picture_frame_02_glass"
+      ],
+      "origin": "wall",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 3922330,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/hanging_picture_frame_02",
+      "sourceSha256": "ea9a1d44e8d794e224a5342204669a328b57d64d5df629d1d5d86e60e27245e5",
+      "quotedProduct": false
+    },
+    {
+      "id": "basket",
+      "revision": 1,
+      "path": "shared/models/basket-balanced-e55b08721c.glb",
+      "sha256": "e55b08721cb6e3519e40824d3a12a819ad54ac52392d4ea266ce858a7a05e9ec",
+      "bytes": 171992,
+      "triangles": 3600,
+      "drawCalls": 1,
+      "geometryBytes": 102880,
+      "nativeDimensions": [
+        0.3467,
+        0.2004,
+        0.2544
+      ],
+      "bounds": {
+        "min": [
+          -0.17300815880298615,
+          0.00004139247539569624,
+          -0.1269732117652893
+        ],
+        "max": [
+          0.17365217208862305,
+          0.2004850059747696,
+          0.12745967507362366
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/basket-lightweight-acbdd6f249.glb",
+        "sha256": "acbdd6f24955c5ab9999fab0bf6a0f21595266ed0f6276cb4acbe6213ae2b8f8",
+        "bytes": 76388,
+        "triangles": 1800,
+        "drawCalls": 1,
+        "geometryBytes": 56112,
+        "nativeDimensions": [
+          0.3463,
+          0.2013,
+          0.2547
+        ],
+        "bounds": {
+          "min": [
+            -0.17290106415748596,
+            -0.0003937852452509105,
+            -0.12685632705688477
+          ],
+          "max": [
+            0.17341654002666473,
+            0.2008867710828781,
+            0.12785890698432922
+          ]
+        }
+      },
+      "materialSlots": [
+        "wicker_basket_02"
+      ],
+      "origin": "floor",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 2353398,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/wicker_basket_02",
+      "sourceSha256": "78c7a3bdd7025eb092b3ac744e9d83e9a75fbb242696b5dce87ec215af617768",
       "quotedProduct": false
     }
   ]

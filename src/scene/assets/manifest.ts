@@ -35,6 +35,7 @@ export const ModelManifestSchema = z.object({
         "ceiling",
         "rail",
         "shelf",
+        "wall",
       ]),
       up: z.literal("+Y"),
       forward: z.literal("+Z"),
@@ -60,8 +61,8 @@ export const modelRecord = (id: string) =>
 export const requiredSceneAssets = [
   ...new Set([
     "shared/asset-manifest.json",
-    "shared/rooms/kitchen-warm-v2.json",
-    "shared/rooms/wardrobe-warm-v2.json",
+    "shared/rooms/kitchen-warm-v3.json",
+    "shared/rooms/wardrobe-warm-v3.json",
     ...modelManifest.assets.flatMap((a) => [a.path, a.lowerDetail.path]),
   ]),
 ];

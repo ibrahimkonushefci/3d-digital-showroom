@@ -6,6 +6,8 @@ import { cabinetElevation } from "../scene/construction";
 export type CameraView = {
   position: [number, number, number];
   target: [number, number, number];
+  /** Vertical field of view in degrees; omitted means CABINET_FOV. */
+  fov?: number;
 };
 export type CameraPreset = "perspective" | "hero" | "overall" | "front" | "top";
 export const CABINET_FOV = 35;
@@ -75,6 +77,7 @@ export function cabinetCamera(
   aspect: number,
   authoredView?: CameraView,
   occupancy = 1 / 1.1,
+  fov = CABINET_FOV,
 ): CameraView {
   const target = bounds.getCenter(new Vector3());
   const heading =
@@ -87,7 +90,7 @@ export function cabinetCamera(
             .normalize()
         : new Vector3(0.48, 0, 1).normalize();
   if (heading.lengthSq() === 0) heading.set(0, 0, 1);
-  const tanY = Math.tan(MathUtils.degToRad(CABINET_FOV / 2)) * occupancy;
+  const tanY = Math.tan(MathUtils.degToRad(fov / 2)) * occupancy;
   const tanX = tanY * Math.max(aspect, 0.1);
   const eyeY = preset === "front" ? 1.4 : (authoredView?.position[1] ?? 2.4);
   let distance = 5;

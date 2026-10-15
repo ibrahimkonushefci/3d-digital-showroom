@@ -1,10 +1,32 @@
-import { useMemo } from "react";
+import { useMemo, useRef, type ReactNode } from "react";
+import { useFrame } from "@react-three/fiber";
+import type { Group } from "three";
+import { insideWall } from "./RoomShell";
 import type { Catalog, DesignDocument } from "../../catalog/types";
 import { resolveRoom } from "./resolveRoom";
 import { ModelAsset } from "../assets/ModelAsset";
 import { Box } from "../Primitives";
 import { countertopThickness } from "../furnitureMaterials";
 import { freePlacement } from "../assets/placement";
+import { floorBasket, wallArt, worktopDecor, type DecorItem } from "./decor";
+/** Decor hanging on a wall disappears with that wall when it is cut away
+ * (overview, or the hero stance behind it), instead of floating. */
+function OnWall({
+  room,
+  wall,
+  children,
+}: {
+  room: DesignDocument["room"];
+  wall?: DecorItem["wall"];
+  children: ReactNode;
+}) {
+  const group = useRef<Group>(null);
+  useFrame(({ camera }) => {
+    if (group.current && wall)
+      group.current.visible = insideWall(camera, room, wall);
+  });
+  return <group ref={group}>{children}</group>;
+}
 export function RoomProps({
   design,
   catalog,
@@ -32,8 +54,33 @@ export function RoomProps({
       },
       design,
     );
+  const decor = useMemo(() => {
+    if (!room.furnished) return [];
+    const items: DecorItem[] = worktopDecor(
+      design,
+      catalog,
+      counter ? [counter.id] : [],
+    );
+    const art = wallArt(design);
+    if (art) items.push(art);
+    const basket = floorBasket(
+      design,
+      bench?.volume,
+      room.props.map((p) => p.volume),
+    );
+    if (basket) items.push(basket);
+    return items;
+  }, [design, catalog, room, counter, bench]);
   return (
     <group userData={{ reflectionStatic: true }}>
+      {[...new Set(decor.map((d) => d.id))].map((id) => {
+        const items = decor.filter((d) => d.id === id);
+        return (
+          <OnWall key={"decor-" + id} room={design.room} wall={items[0].wall}>
+            <ModelAsset id={id} transforms={items} />
+          </OnWall>
+        );
+      })}
       {bench && rug && (
         <mesh
           position={[bench.position[0], 0.003, bench.position[2] + 0.06]}
@@ -51,6 +98,8 @@ export function RoomProps({
         <ModelAsset
           key={id}
           id={id}
+          castShadow={id !== "pendant"}
+          glow={id === "pendant" ? "ceramic" : undefined}
           transforms={room.props.filter((p) => p.id === id)}
           fallback={
             <group>

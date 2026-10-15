@@ -1,4 +1,4 @@
-import { Box3, Vector3 } from "three";
+import { Box3, MathUtils, PerspectiveCamera, Vector3 } from "three";
 import type { Catalog, DesignDocument } from "../catalog/types";
 import {
   cabinetBounds,
@@ -8,6 +8,15 @@ import {
   type CameraPreset,
   type CameraView,
 } from "./framing";
+import {
+  cutInView,
+  HERO_STANCE_MAX,
+  stanceWall,
+  WALL_SIDES,
+  type WallSide,
+} from "../scene/rooms/stance";
+import { resolveRoom } from "../scene/rooms/resolveRoom";
+export { HERO_STANCE_MAX, stanceWall };
 
 export const CAMERA_REVISION = "room-shots-v1";
 export const SHOT_DURATION_MS = 600;
@@ -64,6 +73,453 @@ export function cameraStructureKey(design: DesignDocument) {
   ]);
 }
 
+export const HERO_FOV = 50;
+export const HERO_MAX_FOV = 62;
+/** Gentle downward look; verticals stay close to vertical. */
+export const HERO_PITCH_DEG = 6;
+/** The eye-level shot may look down up to this much to centre the furniture. */
+export const HERO_PITCH_MAX_DEG = 8;
+/** Portrait phones keep the whole-furniture view. Desktop windows whose
+ * settings panel narrows the canvas still get the room view, from further
+ * back if needed. */
+export const HERO_MIN_ASPECT = 0.62;
+/** Below this share of fronts in view, an interior shot is not worth it. */
+export const HERO_MIN_COVERAGE = 0.6;
+/** Breathing room: the whole proposal stays inside this share of the frame. */
+export const HERO_OCCUPANCY = { x: 0.86, y: 0.92 };
+/** Furniture should span roughly this share of the frame width. */
+export const HERO_TARGET_FILL = 0.74;
+const HERO_WALL_MARGIN = 0.3;
+type Side = WallSide;
+const SIDES = WALL_SIDES;
+
+/** Direction from the furniture towards a viewer standing in the room. */
+export function heroHeading(design: DesignDocument) {
+  const runs = design.cabinets.filter((c) => c.wall !== "island");
+  if (!runs.length) return new Vector3(0, 0, 1);
+  let x = 0,
+    z = 0,
+    total = 0;
+  for (const c of runs) {
+    x += Math.sin(c.rotation) * c.width;
+    z += Math.cos(c.rotation) * c.width;
+    total += c.width;
+  }
+  if (Math.hypot(x, z) >= 0.35 * total) return new Vector3(x, 0, z).normalize();
+  // Runs facing each other (parallel, walk-in): look along the aisle.
+  const longest = runs.reduce((a, b) => (b.width > a.width ? b : a));
+  return new Vector3(
+    Math.cos(longest.rotation),
+    0,
+    -Math.sin(longest.rotation),
+  ).normalize();
+}
+
+/** Vertical FOV needed to keep every corner in frame from `eye`, looking at
+ * `target`; Infinity if a corner falls behind the camera. */
+export function requiredFov(
+  eye: Vector3,
+  target: Vector3,
+  corners: Vector3[],
+  aspect: number,
+  occupancy = 0.94,
+) {
+  const forward = target.clone().sub(eye).normalize();
+  const right = new Vector3()
+    .crossVectors(forward, new Vector3(0, 1, 0))
+    .normalize();
+  const up = new Vector3().crossVectors(right, forward);
+  let tan = 0;
+  for (const corner of corners) {
+    const delta = corner.clone().sub(eye);
+    const depth = delta.dot(forward);
+    if (depth < 0.2) return Infinity;
+    tan = Math.max(
+      tan,
+      Math.abs(delta.dot(up)) / depth,
+      Math.abs(delta.dot(right)) / depth / Math.max(aspect, 0.1),
+    );
+  }
+  return MathUtils.radToDeg(2 * Math.atan(tan / occupancy));
+}
+
+/** Points across every cabinet front (and the worktop line) in scene metres. */
+export function frontSamples(design: DesignDocument) {
+  const points: Vector3[] = [];
+  for (const c of design.cabinets) {
+    const bottom = c.level === "wall" ? 1.4 : c.level === "wardrobe" ? 0 : 0.1;
+    const top = bottom + c.height / 100;
+    for (const u of [-0.42, 0, 0.42])
+      for (const y of [bottom + 0.1, (bottom + top) / 2, top - 0.05]) {
+        const x = (u * c.width) / 100,
+          z = c.depth / 200 + 0.02;
+        points.push(
+          new Vector3(
+            c.x / 100 -
+              design.room.width / 200 +
+              x * Math.cos(c.rotation) +
+              z * Math.sin(c.rotation),
+            y,
+            c.z / 100 -
+              design.room.depth / 200 -
+              x * Math.sin(c.rotation) +
+              z * Math.cos(c.rotation),
+          ),
+        );
+      }
+  }
+  return points;
+}
+
+/** Horizontal share of the frame spanned by the visible furniture samples. */
+export function frameFill(
+  eye: Vector3,
+  target: Vector3,
+  points: Vector3[],
+  fov: number,
+  aspect: number,
+) {
+  const forward = target.clone().sub(eye).normalize();
+  const right = new Vector3()
+    .crossVectors(forward, new Vector3(0, 1, 0))
+    .normalize();
+  const tanX = Math.tan(MathUtils.degToRad(fov / 2)) * aspect;
+  let lo = Infinity,
+    hi = -Infinity;
+  for (const p of points) {
+    const delta = p.clone().sub(eye);
+    const depth = delta.dot(forward);
+    if (depth < 0.7) continue;
+    const x = MathUtils.clamp(delta.dot(right) / depth / tanX, -1, 1);
+    lo = Math.min(lo, x);
+    hi = Math.max(hi, x);
+  }
+  return hi > lo ? (hi - lo) / 2 : 0;
+}
+
+/** Fraction of `points` inside a symmetric frustum (and not uncomfortably near). */
+export function frustumCoverage(
+  eye: Vector3,
+  target: Vector3,
+  points: Vector3[],
+  fov: number,
+  aspect: number,
+) {
+  const forward = target.clone().sub(eye).normalize();
+  const right = new Vector3()
+    .crossVectors(forward, new Vector3(0, 1, 0))
+    .normalize();
+  const up = new Vector3().crossVectors(right, forward);
+  const tanY = Math.tan(MathUtils.degToRad(fov / 2)) * 0.97,
+    tanX = tanY * aspect;
+  let inside = 0;
+  for (const p of points) {
+    const delta = p.clone().sub(eye);
+    const depth = delta.dot(forward);
+    if (depth < 0.7) continue;
+    if (
+      Math.abs(delta.dot(right)) <= tanX * depth &&
+      Math.abs(delta.dot(up)) <= tanY * depth
+    )
+      inside++;
+  }
+  return points.length ? inside / points.length : 0;
+}
+
+/** Outer corners of every cabinet front, floor to top, in scene metres: the
+ * whole proposal, including the outer edges of the end units. */
+export function compositionPoints(design: DesignDocument) {
+  const points: Vector3[] = [];
+  for (const c of design.cabinets) {
+    const bottom = c.level === "wall" ? 1.4 : 0;
+    const top =
+      (c.level === "wall" ? 1.4 : c.level === "wardrobe" ? 0 : 0.1) +
+      c.height / 100;
+    for (const u of [-0.5, 0, 0.5])
+      for (const y of [bottom, (bottom + top) / 2, top]) {
+        const x = (u * c.width) / 100,
+          z = c.depth / 200 + 0.02;
+        points.push(
+          new Vector3(
+            c.x / 100 -
+              design.room.width / 200 +
+              x * Math.cos(c.rotation) +
+              z * Math.sin(c.rotation),
+            y,
+            c.z / 100 -
+              design.room.depth / 200 -
+              x * Math.sin(c.rotation) +
+              z * Math.cos(c.rotation),
+          ),
+        );
+      }
+  }
+  return points;
+}
+
+/** What the opening view must keep in frame: every cabinet body to its top
+ * and outer edges. Only the plinth line at the floor may run out at the
+ * bottom edge, as in an interior photograph; otherwise a near tall unit
+ * forces the camera far back and the kitchen ends up small in the frame. */
+export function heroFitPoints(design: DesignDocument) {
+  return compositionPoints(design).map((p) =>
+    p.y === 0 ? p.clone().setY(0.1) : p,
+  );
+}
+
+/** Horizontal frame positions (−1…1) of `points` for a level-ish view. */
+function horizontalSpan(eye: Vector3, target: Vector3, points: Vector3[]) {
+  const forward = target.clone().sub(eye).normalize();
+  const right = new Vector3()
+    .crossVectors(forward, new Vector3(0, 1, 0))
+    .normalize();
+  let lo = Infinity,
+    hi = -Infinity;
+  for (const p of points) {
+    const delta = p.clone().sub(eye);
+    const depth = delta.dot(forward);
+    if (depth < 0.2) return null;
+    const x = delta.dot(right) / depth;
+    lo = Math.min(lo, x);
+    hi = Math.max(hi, x);
+  }
+  return { lo, hi };
+}
+
+const heroCache = new Map<string, CameraView | null>();
+
+/**
+ * Eye-level shot from inside the room, like a photographer showing the whole
+ * proposal. Candidate spots are scored first on fitting every cabinet with
+ * breathing room, then on a natural lens, a furniture span near
+ * HERO_TARGET_FILL and a square view of the runs. The view is turned so the
+ * furniture sits centred, never leaving one side to an empty wall. In small
+ * rooms the camera may step back behind one empty wall (hidden, see
+ * HERO_STANCE_MAX); it never stands inside a cabinet.
+ */
+export function interiorHero(
+  design: DesignDocument,
+  catalog: Catalog,
+  aspect: number,
+  opened: readonly string[] = [],
+): CameraView | null {
+  const key = [
+    cameraStructureKey(design),
+    aspect.toFixed(3),
+    opened.join(","),
+  ].join("|");
+  if (heroCache.has(key)) return heroCache.get(key)!;
+  const view = searchInteriorHero(design, catalog, aspect, opened);
+  if (heroCache.size > 64) heroCache.clear();
+  heroCache.set(key, view);
+  return view;
+}
+
+function searchInteriorHero(
+  design: DesignDocument,
+  catalog: Catalog,
+  aspect: number,
+  opened: readonly string[],
+): CameraView | null {
+  const bounds = furnitureEnvelope(design, catalog, opened);
+  const centre = bounds.getCenter(new Vector3());
+  const points = frontSamples(design);
+  const outline = compositionPoints(design);
+  const fitOutline = heroFitPoints(design);
+  const tilt = Math.tan(MathUtils.degToRad(HERO_PITCH_DEG));
+  const heading = heroHeading(design);
+  const room = design.room;
+  const halfW = room.width / 200,
+    halfD = room.depth / 200,
+    h = room.height / 100;
+  const eye = Math.min(design.kind === "wardrobe" ? 1.5 : 1.55, h - 0.4);
+  const furniture = design.cabinets.map((c) =>
+    furnitureEnvelope({ ...design, cabinets: [c] }, catalog).expandByScalar(
+      0.3,
+    ),
+  );
+  // Only an empty wall may be stepped behind: furniture on it would stand
+  // between the camera and the room.
+  const empty = new Set(
+    SIDES.filter((side) => !design.cabinets.some((c) => c.wall === side)),
+  );
+  const extent = (side: Side) =>
+    empty.has(side) ? HERO_STANCE_MAX : -HERO_WALL_MARGIN;
+  const x0 = -halfW - extent("left"),
+    x1 = halfW + extent("right"),
+    z0 = -halfD - extent("back"),
+    z1 = halfD + extent("front");
+  const nx = Math.max(8, Math.round((x1 - x0) / 0.2)),
+    nz = Math.max(8, Math.round((z1 - z0) / 0.2));
+  const lens = new PerspectiveCamera(HERO_FOV, aspect, 0.05, 100);
+  // A window with its garden view helps the picture read as a real room.
+  const windows = room.openings
+    .filter((o) => o.type === "window")
+    .map((o) => {
+      const s = (o.offset + o.width / 2) / 100,
+        y = (o.sill + o.height / 2) / 100;
+      const centre =
+        o.wall === "back"
+          ? new Vector3(s - halfW, y, -halfD)
+          : o.wall === "front"
+            ? new Vector3(s - halfW, y, halfD)
+            : o.wall === "left"
+              ? new Vector3(-halfW, y, s - halfD)
+              : new Vector3(halfW, y, s - halfD);
+      return { wall: o.wall, centre };
+    });
+  // Staged floor props (bench, stools) are either wholly in the picture or
+  // out of it; a half-cropped bench at the bottom edge looks like a mistake.
+  const props = resolveRoom(design)
+    .props.filter((p) => p.id !== "pendant")
+    .map(({ volume }) => {
+      const corners: Vector3[] = [];
+      for (const x of [volume.min[0], volume.max[0]])
+        for (const y of [volume.min[1], volume.max[1]])
+          for (const z of [volume.min[2], volume.max[2]])
+            corners.push(new Vector3(x - halfW, y, z - halfD));
+      return corners;
+    });
+  type Candidate = {
+    score: number;
+    coverage: number;
+    position: Vector3;
+    fov: number;
+    target: Vector3;
+  };
+  const search = (height: number, level: boolean) => {
+    let best: Candidate | null = null;
+    for (let i = 0; i <= nx; i++)
+      for (let j = 0; j <= nz; j++) {
+        const position = new Vector3(
+          x0 + ((x1 - x0) * i) / nx,
+          height,
+          z0 + ((z1 - z0) * j) / nz,
+        );
+        const behind = stanceWall(position, room);
+        if (behind === "invalid") continue;
+        // Raised corner views stay inside the room.
+        if (behind && (!level || !empty.has(behind))) continue;
+        if (furniture.some((box) => box.containsPoint(position))) continue;
+        const toward = position.clone().sub(centre).setY(0);
+        const distance = toward.length();
+        if (distance < 1.2) continue;
+        const facing = toward.clone().normalize().dot(heading);
+        if (facing < 0.3) continue;
+        // Aim at the furniture centre, then turn so the whole proposal sits
+        // centred left-to-right instead of leaving one side to a bare wall.
+        const target = level
+          ? centre.clone().setY(height - distance * tilt)
+          : centre.clone();
+        for (let k = 0; k < 2; k++) {
+          const span = horizontalSpan(position, target, outline);
+          if (!span) break;
+          const yaw = -Math.atan((span.lo + span.hi) / 2);
+          const offset = target.clone().sub(position);
+          offset.applyAxisAngle(new Vector3(0, 1, 0), yaw);
+          target.copy(position).add(offset);
+        }
+        // Eye level: centre floor-to-top in the frame too, looking down by
+        // 0–HERO_PITCH_MAX_DEG so verticals stay vertical.
+        if (level) {
+          const flat = target.clone().sub(position).setY(0);
+          const reach = flat.length();
+          flat.normalize();
+          let lo = Infinity,
+            hi = -Infinity;
+          for (const p of outline) {
+            const delta = p.clone().sub(position);
+            const along = delta.dot(flat);
+            if (along < 0.2) continue;
+            const angle = Math.atan2(delta.y, along);
+            lo = Math.min(lo, angle);
+            hi = Math.max(hi, angle);
+          }
+          if (hi > lo) {
+            const pitch = MathUtils.clamp(
+              (lo + hi) / 2,
+              -MathUtils.degToRad(HERO_PITCH_MAX_DEG),
+              0,
+            );
+            target.y = height + Math.tan(pitch) * reach;
+          }
+        }
+        // Separate horizontal/vertical breathing room via the aspect.
+        const needed = requiredFov(
+          position,
+          target,
+          fitOutline,
+          (aspect * HERO_OCCUPANCY.x) / HERO_OCCUPANCY.y,
+          HERO_OCCUPANCY.y,
+        );
+        const fits = needed <= HERO_MAX_FOV;
+        const fov = fits ? Math.max(HERO_FOV, needed) : HERO_MAX_FOV;
+        if (behind) {
+          // The same test the room uses to show its ceiling: no cut edge of
+          // the hidden wall may enter the frame.
+          lens.fov = fov;
+          lens.aspect = aspect;
+          lens.updateProjectionMatrix();
+          lens.position.copy(position);
+          lens.lookAt(target);
+          if (cutInView(lens, room, behind)) continue;
+        }
+        const cropped = props.some((corners) => {
+          const inside = frustumCoverage(
+            position,
+            target,
+            corners,
+            fov,
+            aspect,
+          );
+          return inside > 0 && inside < 1;
+        });
+        const coverage = frustumCoverage(position, target, points, fov, aspect);
+        const fill = frameFill(position, target, outline, fov, aspect);
+        const stance = behind
+          ? Math.abs(
+              behind === "front" || behind === "back"
+                ? Math.abs(position.z) - halfD
+                : Math.abs(position.x) - halfW,
+            )
+          : 0;
+        // A window on the hidden wall is hidden with it.
+        const garden = windows.some(
+          ({ wall, centre }) =>
+            wall !== behind &&
+            frustumCoverage(position, target, [centre], fov, aspect) > 0,
+        );
+        const score =
+          (fits ? 200 : coverage * 100) +
+          (garden ? 6 : 0) -
+          (fov - HERO_FOV) * 1.2 -
+          Math.abs(fill - HERO_TARGET_FILL) * 60 +
+          facing * 10 -
+          stance * 4 -
+          (cropped ? 40 : 0);
+        if (!best || score > best.score)
+          best = { score, coverage, position, fov, target };
+      }
+    return best;
+  };
+  let best = search(eye, true);
+  // U-shapes, galleys and walk-ins: three facing runs cannot all be seen at
+  // eye height, so step up to a raised corner view, still inside the room.
+  for (const raised of [1.95, 2.2])
+    if ((!best || best.coverage < 0.75) && raised <= h - 0.3) {
+      const higher = search(raised, false);
+      if (higher && (!best || higher.coverage > best.coverage + 0.08))
+        best = higher;
+    }
+  // Too enclosed to photograph from inside: the caller keeps the overview.
+  if (!best || best.coverage < HERO_MIN_COVERAGE) return null;
+  return {
+    position: best.position.toArray(),
+    target: best.target.toArray(),
+    fov: best.fov,
+  };
+}
+
 export function roomShot(
   design: DesignDocument,
   catalog: Catalog,
@@ -76,6 +532,11 @@ export function roomShot(
   } = {},
 ) {
   const focused = design.cabinets.find((c) => c.id === options.focus);
+  const interior =
+    shot === "hero" && !focused && aspect >= HERO_MIN_ASPECT
+      ? interiorHero(design, catalog, aspect, options.opened)
+      : null;
+  if (interior) return interior;
   const subject = focused ? { ...design, cabinets: [focused] } : design;
   const bounds =
     shot === "top"

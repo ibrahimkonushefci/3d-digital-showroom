@@ -719,7 +719,10 @@ export default function Designer() {
   const [panel, setPanel] = useState<
     "styles" | "layout" | "cabinets" | "details"
   >("styles");
-  const [preset, setPreset] = useState<CameraPreset>("hero");
+  // Showroom opens standing in the room; editing needs the whole layout.
+  const [preset, setPreset] = useState<CameraPreset>(() =>
+    useDesigner.getState().interactionMode === "edit" ? "overall" : "hero",
+  );
   // Showroom presentation: canvas fills the screen, options in a sheet.
   const [immersive, setImmersive] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -844,7 +847,7 @@ export default function Designer() {
   };
   const resetConfigurationClick = () => {
     if (state.resetDesign(resetConfiguration(design, catalog), catalog)) {
-      setPreset("hero");
+      setPreset(state.interactionMode === "edit" ? "overall" : "hero");
       setReframe((n) => n + 1);
       setResetDone(true);
     }
@@ -929,6 +932,9 @@ export default function Designer() {
                   state.setInteractionMode(mode);
                   state.select(null);
                   state.setCameraView(null);
+                  state.focus(null);
+                  setPreset(mode === "edit" ? "overall" : "hero");
+                  setReframe((n) => n + 1);
                 }}
               >
                 {t(mode)}

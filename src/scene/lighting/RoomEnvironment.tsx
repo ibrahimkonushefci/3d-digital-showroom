@@ -116,7 +116,8 @@ export function RoomEnvironment({
       );
       resources.replace("authored", fallback);
       scene.environment = fallback.texture;
-      scene.environmentIntensity = 1;
+      scene.environmentIntensity =
+        resolveRoom(design).recipe.lightRecipe.environmentIntensity ?? 1;
     } finally {
       room.dispose();
     }

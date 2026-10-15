@@ -39,6 +39,10 @@ export const RoomRecipeSchema = z.object({
     fillIntensity: z.number().min(0).max(2),
     windowBrightness: z.number().min(0).max(8),
     wallBrightness: z.number().min(0.05).max(2),
+    /** v3: scales the room radiance, so direct light can model the furniture. */
+    environmentIntensity: z.number().min(0).max(2).optional(),
+    /** v3: soft ceiling-height key inside the room, in candela. */
+    interiorKeyIntensity: z.number().min(0).max(200).optional(),
   }),
   environmentReference: z.literal("authored-room-probe-v1"),
   cameraShots: z.array(z.string()),

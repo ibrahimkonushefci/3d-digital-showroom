@@ -2,6 +2,12 @@ import { expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { PerspectiveCamera, Vector3 } from "three";
 import { CatalogSchema } from "../src/catalog/types";
+import { presentationPresets } from "../src/designer3d/presets";
+import {
+  seesInterior,
+  cutInView,
+  type WallSide,
+} from "../src/scene/rooms/stance";
 import { generateLayout, newDesign } from "../src/designer3d/layout";
 import { bounds, validateDesign, wallPosition } from "../src/designer3d/layout";
 import { countertopThickness } from "../src/scene/furnitureMaterials";
@@ -314,7 +320,16 @@ import {
   cameraObstacles,
   cameraPath,
   cameraStructureKey,
+  frontSamples,
+  frustumCoverage,
   furnitureEnvelope,
+  HERO_FOV,
+  HERO_MAX_FOV,
+  HERO_MIN_COVERAGE,
+  HERO_OCCUPANCY,
+  heroFitPoints,
+  frameFill,
+  stanceWall,
   roomShot,
   sampleCameraPath,
   segmentHitsBox,
@@ -330,6 +345,9 @@ it("fits room shots including swept open fronts without framing decorative room 
         for (const shot of ["hero", "overall", "front"] as const) {
           const opened = design.cabinets.map((c) => c.id);
           const view = roomShot(design, catalog, shot, aspect, { opened });
+          // Wide canvases get the interior photograph when the room allows
+          // it; that contract is tested separately.
+          if (shot === "hero" && view.fov !== undefined) continue;
           const camera = new PerspectiveCamera(CABINET_FOV, aspect, 0.1, 100);
           camera.position.set(...view.position);
           camera.lookAt(new Vector3(...view.target));
@@ -435,4 +453,128 @@ it("camera composition ignores finish and component placement changes but tracks
       ),
     }),
   ).not.toBe(key);
+});
+
+function shotCamera(
+  view: import("../src/designer3d/framing").CameraView,
+  aspect: number,
+) {
+  const camera = new PerspectiveCamera(
+    view.fov ?? CABINET_FOV,
+    aspect,
+    0.05,
+    100,
+  );
+  camera.position.set(...view.position);
+  camera.lookAt(new Vector3(...view.target));
+  camera.updateMatrixWorld();
+  return camera;
+}
+it("stands inside the room, or just behind one empty hidden wall, at eye level for the interior hero", () => {
+  for (const [kind, layouts] of [
+    ["kitchen", ["straight", "l", "u", "parallel", "island"]],
+    ["wardrobe", ["straight", "corner", "walkin"]],
+  ] as const)
+    for (const layout of layouts) {
+      const design = generateLayout(newDesign(kind, layout), catalog)!;
+      for (const aspect of [0.88, 1.0, 1.4, 1.73, 2.4]) {
+        const view = roomShot(design, catalog, "hero", aspect);
+        // Enclosed layouts may keep the fitted overview (covered above).
+        if (view.fov === undefined) {
+          expect(["u", "parallel", "walkin"]).toContain(layout);
+          continue;
+        }
+        const [x, y, z] = view.position;
+        const behind = stanceWall({ x, z }, design.room);
+        expect(behind).not.toBe("invalid");
+        if (behind) {
+          // Only an empty wall is stepped behind, and its cut outline (slab
+          // edge, wall ends, ceiling edge) never enters the frame.
+          expect(design.cabinets.some((c) => c.wall === behind)).toBe(false);
+          expect(
+            cutInView(
+              shotCamera(view, aspect),
+              design.room,
+              behind as WallSide,
+            ),
+          ).toBe(false);
+        }
+        expect(seesInterior(shotCamera(view, aspect), design.room)).toBe(true);
+        expect(y).toBeGreaterThan(1.4);
+        expect(y).toBeLessThan(design.room.height / 100 - 0.25);
+        expect(view.fov).toBeGreaterThanOrEqual(HERO_FOV);
+        expect(view.fov).toBeLessThanOrEqual(HERO_MAX_FOV);
+        const eye = new Vector3(...view.position),
+          target = new Vector3(...view.target);
+        const pitch = Math.atan2(
+          eye.y - target.y,
+          Math.hypot(eye.x - target.x, eye.z - target.z),
+        );
+        // Eye-level shots stay nearly level; raised corner views look down.
+        if (y < 1.6)
+          expect((pitch * 180) / Math.PI).toBeLessThanOrEqual(8 + 1e-6);
+        for (const c of design.cabinets)
+          expect(
+            furnitureEnvelope(
+              { ...design, cabinets: [c] },
+              catalog,
+            ).containsPoint(eye),
+          ).toBe(false);
+        expect(
+          frustumCoverage(eye, target, frontSamples(design), view.fov!, aspect),
+        ).toBeGreaterThanOrEqual(HERO_MIN_COVERAGE);
+      }
+    }
+});
+
+it("shows each whole prepared proposal with breathing room, never a cropped end", () => {
+  for (const preset of presentationPresets(catalog))
+    // Laptop window, Full screen, and a desktop window whose settings panel
+    // narrows the canvas (1030×1025 → 645×733).
+    for (const aspect of [1048 / 608, 1440 / 760, 645 / 733]) {
+      const design = preset.design;
+      const view = roomShot(design, catalog, "hero", aspect);
+      expect(view.fov, preset.id).toBeDefined();
+      const eye = new Vector3(...view.position),
+        target = new Vector3(...view.target);
+      const outline = heroFitPoints(design);
+      expect(
+        frustumCoverage(eye, target, outline, view.fov!, aspect),
+        `${preset.id} @${aspect.toFixed(2)}`,
+        // Laptop/Full screen: the whole proposal. A window narrowed by the
+        // settings panel stays inside the room; long runs may lose a sliver.
+      ).toBeGreaterThanOrEqual(aspect > 1 ? 1 : 0.94);
+      const fill = frameFill(eye, target, outline, view.fov!, aspect);
+      expect(fill, preset.id).toBeGreaterThan(0.55);
+      if (aspect > 1)
+        expect(fill, preset.id).toBeLessThanOrEqual(HERO_OCCUPANCY.x + 0.01);
+    }
+});
+
+it("never shows the ceiling or garden view from the cut-away overview or top shots", () => {
+  // Top always looks down from above; the overview does at laptop, window and
+  // phone aspects. (An ultra-wide overview may come close enough to read as
+  // an interior; it then still shows no cut edge, by the same test.)
+  const check = (
+    design: import("../src/catalog/types").DesignDocument,
+    label: string,
+  ) => {
+    for (const aspect of [0.46, 0.88, 1.4, 1.73, 2.4])
+      for (const shot of ["overall", "top"] as const) {
+        if (shot === "overall" && aspect > 1.8) continue;
+        const view = roomShot(design, catalog, shot, aspect);
+        expect(
+          seesInterior(shotCamera(view, aspect), design.room),
+          `${label} ${shot} ${aspect}`,
+        ).toBe(false);
+      }
+  };
+  for (const [kind, layouts] of [
+    ["kitchen", ["straight", "l", "u", "parallel", "island"]],
+    ["wardrobe", ["straight", "corner", "walkin"]],
+  ] as const)
+    for (const layout of layouts)
+      check(generateLayout(newDesign(kind, layout), catalog)!, layout);
+  for (const preset of presentationPresets(catalog))
+    check(preset.design, preset.id);
 });

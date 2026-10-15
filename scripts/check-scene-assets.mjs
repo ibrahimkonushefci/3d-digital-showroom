@@ -45,10 +45,11 @@ for (const a of manifest.assets) {
       throw Error("Invalid GLB");
     const jsonLength = bytes.readUInt32LE(12),
       doc = JSON.parse(bytes.subarray(20, 20 + jsonLength).toString());
+    // Embedded WebP textures are allowed (CC0 decor); nothing external.
     if (
-      doc.images?.length ||
+      doc.images?.some((i) => i.uri || i.mimeType !== "image/webp") ||
       doc.buffers?.some((b) => b.uri) ||
-      doc.extensionsRequired?.length ||
+      doc.extensionsRequired?.some((e) => e !== "EXT_texture_webp") ||
       doc.cameras?.length ||
       doc.animations?.length
     )
@@ -68,7 +69,7 @@ for (const a of manifest.assets) {
   }
 }
 for (const id of ["kitchen", "wardrobe"])
-  await check(`shared/rooms/${id}-warm-v2.json`);
+  await check(`shared/rooms/${id}-warm-v3.json`);
 for (const slug of ["default", "druri-design"]) {
   const cat = JSON.parse(
     (await check(`brands/${slug}/catalog.json`)).toString(),

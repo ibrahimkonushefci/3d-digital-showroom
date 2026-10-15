@@ -10,7 +10,13 @@ import {
   type ReactNode,
 } from "react";
 import { GLTFLoader, type GLTF } from "three/addons/loaders/GLTFLoader.js";
-import { Matrix4, Mesh, Object3D, type InstancedMesh } from "three";
+import {
+  Matrix4,
+  Mesh,
+  Object3D,
+  type InstancedMesh,
+  type MeshStandardMaterial,
+} from "three";
 import { useThree } from "@react-three/fiber";
 import { DecodedCache } from "../resources";
 import { useQuality } from "../quality";
@@ -44,11 +50,15 @@ function LoadedModel({
   transforms,
   selectable,
   fallback,
+  castShadow,
+  glow,
 }: {
   path: string;
   transforms: Transform[];
   selectable: boolean;
   fallback: ReactNode;
+  castShadow: boolean;
+  glow?: string;
 }) {
   const [source, setSource] = useState<GLTF | null>(null);
   const { invalidate } = useThree();
@@ -103,12 +113,26 @@ function LoadedModel({
   const parts = useMemo(() => {
     if (!source) return [];
     source.scene.updateMatrixWorld(true);
-    const result: { mesh: Mesh; matrices: Matrix4[] }[] = [];
+    const result: {
+      mesh: Mesh;
+      material: Mesh["material"];
+      matrices: Matrix4[];
+    }[] = [];
     source.scene.traverse((o) => {
       if ((o as Mesh).isMesh) {
         const mesh = o as Mesh;
+        const shared = mesh.material as MeshStandardMaterial;
+        // A lit diffuser is an owned copy; the shared decoded material stays immutable.
+        let material: Mesh["material"] = mesh.material;
+        if (glow && !Array.isArray(shared) && shared.name === glow) {
+          const lit = shared.clone();
+          lit.emissive.set("#fff1d6");
+          lit.emissiveIntensity = 1.6;
+          material = lit;
+        }
         result.push({
           mesh,
+          material,
           matrices: transforms.map((t) => {
             const obj = new Object3D();
             obj.position.fromArray(t.position || [0, 0, 0]);
@@ -120,16 +144,27 @@ function LoadedModel({
       }
     });
     return result;
-  }, [source, transforms]);
+  }, [source, transforms, glow]);
+  useEffect(
+    () => () =>
+      parts.forEach(
+        (p) =>
+          p.material !== p.mesh.material &&
+          (p.material as MeshStandardMaterial).dispose(),
+      ),
+    [parts],
+  );
   if (!source) return fallback;
   return (
     <group dispose={null}>
-      {parts.map(({ mesh, matrices }) => (
+      {parts.map(({ mesh, material, matrices }) => (
         <ModelInstances
           key={mesh.uuid + ":" + matrices.length}
           mesh={mesh}
+          material={material}
           matrices={matrices}
           selectable={selectable}
+          castShadow={castShadow}
         />
       ))}
     </group>
@@ -137,12 +172,16 @@ function LoadedModel({
 }
 function ModelInstances({
   mesh,
+  material,
   matrices,
   selectable,
+  castShadow,
 }: {
   mesh: Mesh;
+  material: Mesh["material"];
   matrices: Matrix4[];
   selectable: boolean;
+  castShadow: boolean;
 }) {
   const ref = useRef<InstancedMesh>(null);
   useLayoutEffect(() => {
@@ -163,9 +202,9 @@ function ModelInstances({
   return (
     <instancedMesh
       ref={ref}
-      args={[mesh.geometry, mesh.material, matrices.length]}
+      args={[mesh.geometry, material, matrices.length]}
       dispose={null}
-      castShadow
+      castShadow={castShadow}
       receiveShadow
       raycast={selectable ? undefined : noHit}
     />
@@ -180,12 +219,18 @@ export function ModelAsset({
   rotation,
   selectable = false,
   disabled = false,
+  castShadow = true,
+  glow,
 }: {
   id: string;
   fallback?: ReactNode;
   transforms?: Transform[];
   selectable?: boolean;
   disabled?: boolean;
+  /** Ceiling fixtures stay out of the shadow maps. */
+  castShadow?: boolean;
+  /** Material slot name rendered as a lit diffuser. */
+  glow?: string;
 } & Transform) {
   const quality = useQuality(),
     record = modelRecord(id);
@@ -210,6 +255,8 @@ export function ModelAsset({
           transforms={instances}
           selectable={selectable}
           fallback={fallback}
+          castShadow={castShadow}
+          glow={glow}
         />
       )}
     </IsolatedModelBoundary>

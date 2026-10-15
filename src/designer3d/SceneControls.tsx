@@ -1,10 +1,18 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { CameraControls, CameraControlsImpl } from "@react-three/drei";
-import { MathUtils, Plane, Ray, Spherical, Vector3 } from "three";
+import {
+  MathUtils,
+  Plane,
+  Ray,
+  Spherical,
+  Vector3,
+  type PerspectiveCamera,
+} from "three";
 import type { Catalog, DesignDocument } from "../catalog/types";
 import { useDesigner } from "./store";
 import {
+  CABINET_FOV,
   cameraBounds,
   orbitLimits,
   recenterTarget,
@@ -62,7 +70,17 @@ export default function SceneControls({
   const limits = orbitLimits(design, view, focus, home.current.distance);
   const placed = useRef<string | null>(null);
   const userMoved = useRef(false);
-  const transition = useRef<{ path: CameraView[]; start: number } | null>(null);
+  const transition = useRef<{
+    path: CameraView[];
+    start: number;
+    fov: [number, number];
+  } | null>(null);
+  const applyFov = (fov: number) => {
+    const lens = camera as PerspectiveCamera;
+    if (!lens.isPerspectiveCamera || Math.abs(lens.fov - fov) < 1e-3) return;
+    lens.fov = fov;
+    lens.updateProjectionMatrix();
+  };
   const frameKey = [
     preset,
     focus ?? "",
@@ -89,7 +107,9 @@ export default function SceneControls({
       reduced.current = media.matches;
       if (media.matches && transition.current) {
         const end = transition.current.path.at(-1)!;
+        const fov = transition.current.fov[1];
         cancelTransition();
+        applyFov(fov);
         void ref.current?.setLookAt(...end.position, ...end.target, false);
         invalidate();
       }
@@ -131,10 +151,18 @@ export default function SceneControls({
           cameraObstacles(design, catalog),
           reduced.current,
         );
+    const fov = view.fov ?? CABINET_FOV;
     if (path.length) {
-      transition.current = { path, start: performance.now() };
+      transition.current = {
+        path,
+        start: performance.now(),
+        fov: [(camera as PerspectiveCamera).fov ?? fov, fov],
+      };
       setSceneMoving(scene, "shot", true);
-    } else void c.setLookAt(...view.position, ...view.target, false);
+    } else {
+      applyFov(fov);
+      void c.setLookAt(...view.position, ...view.target, false);
+    }
     placed.current = frameKey;
     userMoved.current = false;
     invalidate();
@@ -148,6 +176,8 @@ export default function SceneControls({
       (performance.now() - move.start) / SHOT_DURATION_MS,
     );
     const next = sampleCameraPath(move.path, progress);
+    const ease = progress * progress * (3 - 2 * progress);
+    applyFov(move.fov[0] + (move.fov[1] - move.fov[0]) * ease);
     void c.setLookAt(...next.position, ...next.target, false);
     if (progress >= 1) {
       transition.current = null;

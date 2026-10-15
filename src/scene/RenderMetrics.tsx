@@ -11,6 +11,7 @@ import type {
 } from "three";
 import { activityRevision, motionBoundary } from "./activity";
 import { currentRenderPass } from "./renderPass";
+import { pipelineSceneTargets } from "./pipeline/RenderPipeline";
 import { movingFrameMs } from "./quality";
 import { environmentPending } from "./lighting/RoomEnvironment";
 import { pendingModelLoads } from "./assets/ModelAsset";
@@ -81,7 +82,11 @@ export default function RenderMetrics({
         shadowTriangles += gl.info.render.triangles;
         reset.call(gl.info);
       };
-      const main = renderScene === scene && gl.getRenderTarget() === null;
+      const target = gl.getRenderTarget();
+      // The AO pipeline renders the scene into its own colour target first.
+      const main =
+        renderScene === scene &&
+        (target === null || pipelineSceneTargets.has(target));
       const start = performance.now();
       try {
         render.call(gl, renderScene, renderCamera);

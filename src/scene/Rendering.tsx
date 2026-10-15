@@ -3,16 +3,21 @@ import { environmentPending } from "./lighting/RoomEnvironment";
 import { useEffect, useRef, useState, memo } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows, useProgress } from "@react-three/drei";
+import { ACESFilmicToneMapping, SRGBColorSpace, Vector2 } from "three";
 import {
-  ACESFilmicToneMapping,
-  SRGBColorSpace,
-  PCFSoftShadowMap,
-  Vector2,
-} from "three";
-import { qualityForFrames, useQuality, useRenderQuality } from "./quality";
+  aoScale,
+  aoShouldPause,
+  qualityForFrames,
+  useQuality,
+  useRenderQuality,
+} from "./quality";
 import { activityRevision, motionBoundary } from "./activity";
 import { useContactTargetOwnership } from "./resources";
 import { pendingModelLoads } from "./assets/ModelAsset";
+import { RenderPipeline } from "./pipeline/RenderPipeline";
+import { installSmoothShadows } from "./pipeline/smoothShadows";
+// Before any material compiles: shadow edges without stair-stepped copies.
+installSmoothShadows();
 export type CaptureImage = () => Promise<string>;
 export type RegisterCapture = (capture: CaptureImage) => void;
 export const showroomGL = {
@@ -75,9 +80,13 @@ export const RefreshShadows = memo(
 export function Rendering({
   capture,
   lockQuality = false,
+  fullAO = false,
 }: {
   capture?: RegisterCapture;
   lockQuality?: boolean;
+  /** Presentation-only scenes (offer page, Home, Material Switcher) draw few
+   * frames, so they keep full-resolution AO; the designer uses the quality's. */
+  fullAO?: boolean;
 }) {
   const { gl, scene, camera, invalidate, setDpr, advance } = useThree();
   const quality = useQuality();
@@ -85,7 +94,6 @@ export function Rendering({
     exporting = useRef(false),
     motion = useRef({ signature: NaN, active: false, boundary: 0 });
   useEffect(() => {
-    gl.shadowMap.type = PCFSoftShadowMap;
     setDpr(
       quality === "lightweight"
         ? 1
@@ -93,7 +101,31 @@ export function Rendering({
     );
     invalidate();
   }, [quality, gl, setDpr, invalidate]);
-  const render = () => gl.render(scene, camera);
+  // Balanced/high share one AO pipeline with every capture; lightweight
+  // keeps the direct render.
+  const pipeline = useRef<RenderPipeline | null>(null);
+  const aoPaused = useRenderQuality((s) => s.aoPaused);
+  useEffect(() => {
+    if (quality === "lightweight") return;
+    const next = new RenderPipeline(
+      gl,
+      scene,
+      camera,
+      fullAO ? 1 : aoScale(quality),
+    );
+    pipeline.current = next;
+    invalidate();
+    return () => {
+      if (pipeline.current === next) pipeline.current = null;
+      next.dispose();
+    };
+  }, [gl, scene, camera, quality, invalidate, fullAO]);
+  useEffect(() => {
+    pipeline.current?.setAO(!aoPaused);
+    invalidate();
+  }, [aoPaused, quality, fullAO, invalidate]);
+  const render = () =>
+    pipeline.current ? pipeline.current.render() : gl.render(scene, camera);
   useFrame((_, dt) => {
     if (!exporting.current) {
       // Constant-size camera sample plus explicit furniture-animation activity.
@@ -125,6 +157,12 @@ export function Rendering({
       else if (!active) frames.current = [];
       motion.current = { signature, active, boundary };
       if (frames.current.length >= 120) {
+        if (
+          !lockQuality &&
+          aoShouldPause(quality, frames.current) &&
+          !useRenderQuality.getState().aoPaused
+        )
+          useRenderQuality.getState().pauseAO();
         const next = qualityForFrames(quality, frames.current);
         frames.current = [];
         if (!lockQuality && next !== quality)
@@ -141,6 +179,7 @@ export function Rendering({
       const endCapture = beginCapture();
       exporting.current = true;
       const hidden: Array<import("three").Object3D> = [];
+      let restoreAO = () => {};
       const oldSize = gl.getSize(new Vector2()),
         dpr = gl.getPixelRatio();
       try {
@@ -174,6 +213,16 @@ export function Rendering({
             o.visible = false;
           }
         });
+        // A still has no frame budget: full-resolution AO (and AO even if it
+        // was paused for live motion), so offer and A/B images stay clean.
+        const still = pipeline.current;
+        const liveScale = still?.aoScale;
+        still?.setAOScale(1);
+        still?.setAO(true);
+        restoreAO = () => {
+          if (liveScale !== undefined) still?.setAOScale(liveScale);
+          still?.setAO(!useRenderQuality.getState().aoPaused);
+        };
         const ratio = 1600 / Math.max(oldSize.x, oldSize.y);
         gl.setPixelRatio(1);
         gl.setSize(
@@ -187,6 +236,7 @@ export function Rendering({
         advance(performance.now());
         return gl.domElement.toDataURL("image/png");
       } finally {
+        restoreAO();
         hidden.forEach((o) => (o.visible = true));
         gl.setPixelRatio(dpr);
         gl.setSize(oldSize.x, oldSize.y, false);
