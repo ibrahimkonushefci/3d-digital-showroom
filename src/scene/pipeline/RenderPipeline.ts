@@ -162,6 +162,10 @@ export class RenderPipeline {
     this.composer.addPass(new OutputPass());
     this.composer.setSize(this.size.x, this.size.y);
   }
+  /** The off-screen target the scene pass draws into (shader warm-up). */
+  get sceneTarget() {
+    return this.composer.renderTarget1;
+  }
   /** AO resolution fraction; captures use full resolution for a clean still. */
   get aoScale() {
     return this.ao.scale;

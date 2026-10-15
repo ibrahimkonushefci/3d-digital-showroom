@@ -16,6 +16,7 @@ import { useContactTargetOwnership } from "./resources";
 import { pendingModelLoads } from "./assets/ModelAsset";
 import { RenderPipeline } from "./pipeline/RenderPipeline";
 import { installSmoothShadows } from "./pipeline/smoothShadows";
+import { prepareFrame, warmupPending } from "./pipeline/shaderWarmup";
 // Before any material compiles: shadow edges without stair-stepped copies.
 installSmoothShadows();
 export type CaptureImage = () => Promise<string>;
@@ -124,8 +125,17 @@ export function Rendering({
     pipeline.current?.setAO(!aoPaused);
     invalidate();
   }, [aoPaused, quality, fullAO, invalidate]);
-  const render = () =>
-    pipeline.current ? pipeline.current.render() : gl.render(scene, camera);
+  useEffect(() => {
+    // The info-log reads force every program to finish linking on the spot;
+    // production relies on the background warm-up instead.
+    gl.debug.checkShaderErrors = import.meta.env.DEV;
+  }, [gl]);
+  const render = () => {
+    const target = pipeline.current?.sceneTarget ?? null;
+    if (!prepareFrame(gl, scene, camera, invalidate, target)) return;
+    if (pipeline.current) pipeline.current.render();
+    else gl.render(scene, camera);
+  };
   useFrame((_, dt) => {
     if (!exporting.current) {
       // Constant-size camera sample plus explicit furniture-animation activity.
@@ -200,6 +210,7 @@ export function Rendering({
             !pendingModelLoads() &&
             !pendingContacts.has(scene) &&
             !environmentPending(scene) &&
+            !warmupPending(scene) &&
             key === previous
               ? stable + 1
               : 0;

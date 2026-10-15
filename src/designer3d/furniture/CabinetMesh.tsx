@@ -585,12 +585,12 @@ export function CabinetMesh({
               />
             ))
           )}
-          {(open || interior || m.type === "open") && (
-            <Fittings parts={fittingParts} />
-          )}
+          {/* Mounted while closed too (the group hides them), so clothes and
+              fittings are loaded and their shaders compiled with the design,
+              not in the middle of the door animation. */}
+          <Fittings parts={fittingParts} />
           {decoration &&
             design.kind === "wardrobe" &&
-            (open || interior || m.type === "open") &&
             design.cabinets.length < 24 && (
               <WardrobePopulation
                 cabinet={c}

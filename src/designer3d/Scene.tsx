@@ -9,6 +9,7 @@ import { ShadowShell } from "../scene/lighting/ShadowShell";
 import { RoomShell, insideWall } from "../scene/rooms/RoomShell";
 import { RoomProps } from "../scene/rooms/RoomProps";
 import { pendingModelLoads } from "../scene/assets/ModelAsset";
+import { warmupPending } from "../scene/pipeline/shaderWarmup";
 import { assembleRenderInput } from "../scene/renderInput";
 import { RunLights } from "../scene/RunLights";
 import { Worktops } from "../scene/Worktops";
@@ -96,11 +97,12 @@ function WallSupport({
 /** Rendered beside the furniture, so it only commits once nothing suspends. */
 function FirstFrame({ onFirstFrame }: { onFirstFrame: () => void }) {
   const done = useRef(false);
-  useFrame(() => {
-    if (done.current || pendingModelLoads()) return;
+  useFrame(({ scene }) => {
+    if (done.current || pendingModelLoads() || warmupPending(scene)) return;
     done.current = true;
     requestAnimationFrame(onFirstFrame);
-  });
+    // After Rendering (priority 1): only a frame that was really drawn counts.
+  }, 2);
   return null;
 }
 class SceneBoundary extends Component<

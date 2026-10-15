@@ -79,6 +79,9 @@ function darkShare(png) {
 
 const c = await connect();
 await c.send("Page.enable");
+// Always the build being served, never an older one from the offline cache.
+await c.send("Network.enable");
+await c.send("Network.setBypassServiceWorker", { bypass: true });
 await c.send("Emulation.setDeviceMetricsOverride", {
   width: 1440,
   height: 900,

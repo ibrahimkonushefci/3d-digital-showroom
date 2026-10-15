@@ -13,6 +13,9 @@ const BASE = process.argv[2] || "http://localhost:52760";
 fs.mkdirSync(OUT, { recursive: true });
 const c = await connect();
 await c.send("Page.enable");
+// Always the build being served, never an older one from the offline cache.
+await c.send("Network.enable");
+await c.send("Network.setBypassServiceWorker", { bypass: true });
 const [WIDTH, HEIGHT] = (process.env.CAPTURE_SIZE || "1440x900")
   .split("x")
   .map(Number);

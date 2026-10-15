@@ -109,8 +109,10 @@ export function RoomEnvironment({
     const room = authoredEnvironment(design);
     try {
       const fallback = withProbePass(gl, () =>
+        // Same size as the runtime probe that may replace it: a different
+        // size changes every PBR shader and recompiled them all mid-view.
         pmrem.fromScene(room.env, 0.025, 0.05, 50, {
-          size: 64,
+          size: probeResolution || 64,
           position: new Vector3(0, 1.2, 0),
         }),
       );
