@@ -17,6 +17,21 @@ import { Group, MathUtils } from "three";
 import type { Catalog, DesignDocument, Material } from "../../catalog/types";
 import { hobCabinet, wallOffset } from "../layout";
 import { Hob, Hood, Sink, Oven, Fridge } from "../../scene/Appliances";
+/** +1 when the room centre lies on this cabinet's local +X side: hanging
+ * garments then turn their fronts that way, towards where people stand. */
+const fanTowards = (
+  design: DesignDocument,
+  c: DesignDocument["cabinets"][number],
+) => {
+  const dx = design.room.width / 200 - c.x / 100,
+    dz = design.room.depth / 200 - c.z / 100;
+  return dx * Math.cos(c.rotation) - dz * Math.sin(c.rotation) >= 0 ? 1 : -1;
+};
+/** Dark fronts get the matt-black tap; light ones the chrome gooseneck. */
+const isDark = (hex: string) => {
+  const n = parseInt(hex.replace("#", "").slice(0, 6), 16);
+  return 0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255) < 90;
+};
 import { Box, PanelMapping } from "../../scene/Primitives";
 import {
   construction,
@@ -577,7 +592,12 @@ export function CabinetMesh({
             design.kind === "wardrobe" &&
             (open || interior || m.type === "open") &&
             design.cabinets.length < 24 && (
-              <WardrobePopulation cabinet={c} module={m} storage={storage} />
+              <WardrobePopulation
+                cabinet={c}
+                module={m}
+                storage={storage}
+                fan={fanTowards(design, c)}
+              />
             )}
           <StorageDetails kind={m.type} w={w} h={h} d={d} open={open} />
         </InspectionContents>
@@ -776,7 +796,7 @@ export function CabinetMesh({
           <>
             {m.type === "sink" && (
               <group position={[0, h + thickness + 0.005, 0.025]}>
-                <Sink width={w} />
+                <Sink width={w} dark={isDark(front.color)} />
               </group>
             )}
             {hobCabinet(design, catalog)?.id === c.id && (

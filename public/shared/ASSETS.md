@@ -66,3 +66,12 @@ All new sources are CC0; provenance is also listed in `licenses/polyhaven-cc0.tx
 - `exterior-garden.webp`: perspective crop of the Poly Haven HDRI "Balcony" by Greg Zaal (https://polyhaven.com/a/balcony), shown behind windows from inside the room only.
 - Decor models (`cutting-board`, `fruit-bowl`, `plant-small`, `vase`, `wall-art`, `basket`): Poly Haven CC0 glTF 1K sources, prepared headless in Blender by `art/blender/prepare_decor.py` with `art/blender/decor.json` (decimated, WebP textures at 384/192 px, artist AO kept), then registered by `node scripts/register-decor.mjs <prepared-dir> <download-dir>`. Licence key `polyhaven-cc0`. Decorative and unpriced. `scripts/author-room-kit.mjs` now preserves these manifest entries when it regenerates the original kit.
 - Room recipes `rooms/*-warm-v3.json` add `environmentIntensity` and `interiorKeyIntensity`; v1/v2 files are unchanged.
+
+## Phase 2 scripted kit — 15 October 2026
+
+20 original models, authored by `art/blender/phase2_kit.py` with `art/blender/kit_lib.py` (headless Blender 5.2; generic geometry built from code, ambient occlusion baked into vertex colours, no textures, no downloaded meshes), licence key `original-room-kit-v2` (`licenses/original-room-kit-v2.txt`):
+
+- Wardrobe: `shirt`, `tee`, `dress`, `coat`, `trousers` (each with a hanger; the `fabric` slot takes a per-instance colour at runtime), `fold`, `fold-ribbed`, `towels`, `shoes` (sneakers), `shoes-loafer`, `bag`.
+- Kitchen: `sink` (44 × 36 cm inset bowl; the worktop cutout follows `sinkBowl()`), `tap` (chrome gooseneck), `tap-black`, `hob` (56 × 48 cm glass), `oven`, `hood` (60 cm chimney), `fridge`, `stool`, `pendant` (`diffuser` slot glows).
+
+`node scripts/register-kit.mjs <out-dir>` optimises with glTF-Transform + meshoptimizer (dev dependencies only; `KHR_mesh_quantization` + `EXT_meshopt_compression`, decoded by the decoder bundled with three), names files by content hash and records Blender's bounds, triangles and material slots. Hard-surface pieces (hob, oven, hood, fridge, black tap, pendant) use one file for both detail levels because their bevels do not survive decimation. `--decor` re-encoded the Phase 1 CC0 decor geometry the same way (textures untouched). The superseded code-built models (oven, fridge, tap, stool, pendant, shirt, coat, trousers, fold, fold-ribbed, shoes) were removed; `bench`, `counter-set`, `box-linen` and `box-ink` remain from the original kit. Unique model bytes: 2.27 MB → 1.85 MB. Illustrative generic objects only; no brand or product is reproduced.

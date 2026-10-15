@@ -99,7 +99,7 @@ export function RoomProps({
           key={id}
           id={id}
           castShadow={id !== "pendant"}
-          glow={id === "pendant" ? "ceramic" : undefined}
+          glow={id === "pendant" ? "diffuser" : undefined}
           transforms={room.props.filter((p) => p.id === id)}
           fallback={
             <group>

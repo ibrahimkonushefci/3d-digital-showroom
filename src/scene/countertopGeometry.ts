@@ -63,9 +63,18 @@ export function worktopOutlines(cabinets: Cabinet[]): Point2[][] {
   }
   return loops;
 }
+/** Inner bowl of the sink in a cabinet `width` metres wide. 60 cm and wider
+ * cabinets take the fixed 44 × 36 cm inset sink model; narrower ones keep a
+ * proportional procedural bowl. Worktop cutout, model and fallback agree. */
+export function sinkBowl(width: number) {
+  return width >= 0.598
+    ? { w: 0.44, d: 0.36, model: true }
+    : { w: width * 0.61, d: 0.31, model: false };
+}
 export function sinkCutout(c: Cabinet): Point2[] {
-  const w = (c.width / 100) * 0.61 + 0.008,
-    d = 0.318;
+  const bowl = sinkBowl(c.width / 100),
+    w = bowl.w + 0.008,
+    d = bowl.d + 0.008;
   return [
     [-w / 2, -d / 2],
     [w / 2, -d / 2],

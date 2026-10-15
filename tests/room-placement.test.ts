@@ -17,6 +17,7 @@ import {
   applianceFits,
   ovenSlot,
   overlaps,
+  transformedVolume,
 } from "../src/scene/assets/placement";
 import { storagePopulation } from "../src/scene/rooms/WardrobePopulation";
 import { storageMeasurements } from "../src/designer3d/storage";
@@ -126,42 +127,25 @@ it("fits rail/shelf populations at varied sizes and leaves unsupported narrow/sh
             items = storagePopulation(c, m, s);
           for (const p of items) {
             const b = modelRecord(p.id)!.bounds;
-            expect(p.position[0] + b.min[0]).toBeGreaterThanOrEqual(
-              -s.width / 2 + 0.018,
+            // Hanging garments turn on the rail; check their rotated footprint.
+            const volume = transformedVolume(
+              b.min,
+              b.max,
+              p.position,
+              p.rotation[1],
             );
-            expect(p.position[0] + b.max[0]).toBeLessThanOrEqual(
-              s.width / 2 - 0.018,
-            );
-            expect(p.position[2] + b.min[2]).toBeGreaterThanOrEqual(
-              -s.depth / 2 + 0.015,
-            );
-            expect(p.position[2] + b.max[2]).toBeLessThanOrEqual(
-              s.depth / 2 - 0.015,
-            );
-            expect(p.position[1] + b.min[1]).toBeGreaterThanOrEqual(0.018);
-            for (const y of s.shelves) {
-              const volume = {
-                min: [
-                  p.position[0] + b.min[0],
-                  p.position[1] + b.min[1],
-                  p.position[2] + b.min[2],
-                ],
-                max: [
-                  p.position[0] + b.max[0],
-                  p.position[1] + b.max[1],
-                  p.position[2] + b.max[2],
-                ],
-              } as {
-                min: [number, number, number];
-                max: [number, number, number];
-              };
+            expect(volume.min[0]).toBeGreaterThanOrEqual(-s.width / 2 + 0.018);
+            expect(volume.max[0]).toBeLessThanOrEqual(s.width / 2 - 0.018);
+            expect(volume.min[2]).toBeGreaterThanOrEqual(-s.depth / 2 + 0.015);
+            expect(volume.max[2]).toBeLessThanOrEqual(s.depth / 2 - 0.015);
+            expect(volume.min[1]).toBeGreaterThanOrEqual(0.018);
+            for (const y of s.shelves)
               expect(
                 overlaps(volume, {
                   min: [-s.width / 2, y - 0.009, -s.depth / 2],
                   max: [s.width / 2, y + 0.009, s.depth / 2],
                 }),
               ).toBe(false);
-            }
           }
         }
 });
@@ -186,4 +170,39 @@ it("keeps the upper tower front above the fixed oven fascia at edited heights", 
       6,
     );
   }
+});
+
+it("stages the island with stools and pendants using the Phase 2 kit bounds", () => {
+  const island = presentationPresets(catalog).find((p) =>
+    p.design.cabinets.some((c) => c.wall === "island"),
+  )!.design;
+  const ids = resolveRoom(island).props.map((p) => p.id);
+  // A footprint a few millimetres too big once dropped both stools silently.
+  expect(ids.filter((id) => id === "stool")).toHaveLength(2);
+  expect(ids.filter((id) => id === "pendant")).toHaveLength(2);
+  expect(modelRecord("stool")!.bounds.min[1]).toBeGreaterThanOrEqual(0);
+});
+
+it("hangs varied, tinted garments that fan towards the room", () => {
+  const d = presentationPresets(catalog).find(
+    (p) => p.id === "wardrobe-straight",
+  )!.design;
+  const hanging = new Set(["shirt", "tee", "dress", "coat", "trousers"]);
+  const items = d.cabinets.flatMap((c) => {
+    const m = catalog.modules.find((m) => m.id === c.moduleId)!;
+    return [1, -1].flatMap((fan) =>
+      storagePopulation(c, m, storageMeasurements(c, m), fan).map((p) => ({
+        ...p,
+        fan,
+      })),
+    );
+  });
+  const clothes = items.filter((p) => hanging.has(p.id));
+  expect(new Set(clothes.map((p) => p.id)).size).toBeGreaterThanOrEqual(3);
+  for (const p of clothes) {
+    expect(p.tint).toMatch(/^#[0-9a-f]{6}$/);
+    expect(Math.sign(p.rotation[1])).toBe(p.fan);
+    expect(modelRecord(p.id)!.materialSlots).toContain("fabric");
+  }
+  expect(items.some((p) => p.id === "shoes")).toBe(true);
 });

@@ -7,6 +7,7 @@ import {
 } from "../src/scene/assets/manifest";
 it("records local, original, hash-verified metre models and reduced-cost LODs under the kit allocation", () => {
   let bytes = 0;
+  const counted = new Set<string>();
   for (const a of modelManifest.assets) {
     expect(
       readFileSync(`public/shared/licenses/${a.licenseKey}.txt`, "utf8"),
@@ -16,7 +17,9 @@ it("records local, original, hash-verified metre models and reduced-cost LODs un
     expect(a.lowerDetail.drawCalls).toBeLessThanOrEqual(a.drawCalls);
     for (const v of [a, a.lowerDetail]) {
       const file = readFileSync(`public/${v.path}`);
-      bytes += file.length;
+      // Hard-surface pieces may share one file for both levels; count it once.
+      if (!counted.has(v.path)) bytes += file.length;
+      counted.add(v.path);
       expect(file.length).toBe(v.bytes);
       expect(file.length).toBeLessThan(1_000_000);
       expect(createHash("sha256").update(file).digest("hex")).toBe(v.sha256);
@@ -24,8 +27,8 @@ it("records local, original, hash-verified metre models and reduced-cost LODs un
       const doc = JSON.parse(
         file.subarray(20, 20 + file.readUInt32LE(12)).toString(),
       );
-      // Original kit: untextured. CC0 decor: embedded WebP only, no URIs.
-      if (a.licenseKey === "original-room-kit-v1")
+      // Original kits: untextured. CC0 decor: embedded WebP only, no URIs.
+      if (a.licenseKey.startsWith("original-room-kit"))
         expect(doc.images).toBeUndefined();
       else
         for (const image of doc.images ?? []) {
@@ -33,25 +36,48 @@ it("records local, original, hash-verified metre models and reduced-cost LODs un
           expect(image.mimeType).toBe("image/webp");
         }
       expect(
-        (doc.extensionsRequired ?? []).every(
-          (e: string) => e === "EXT_texture_webp",
+        (doc.extensionsRequired ?? []).every((e: string) =>
+          [
+            "EXT_texture_webp",
+            "KHR_mesh_quantization",
+            "EXT_meshopt_compression",
+          ].includes(e),
         ),
       ).toBe(true);
       expect(doc.cameras).toBeUndefined();
       expect(doc.animations).toBeUndefined();
       expect(doc.buffers.every((b: { uri?: string }) => !b.uri)).toBe(true);
-      const positions = doc.meshes.flatMap(
-        (m: { primitives: { attributes: { POSITION: number } }[] }) =>
-          m.primitives.map((p) => doc.accessors[p.attributes.POSITION]),
-      );
-      for (let axis = 0; axis < 3; axis++) {
-        const min = Math.min(
-            ...positions.map((p: { min: number[] }) => p.min[axis]),
+      // Quantised meshes keep integer accessor bounds and carry their
+      // dequantising scale/offset on the node; apply it (no rotation is used).
+      type Node = { mesh?: number; scale?: number[]; translation?: number[] };
+      const positions = (doc.nodes as Node[])
+        .filter((n) => n.mesh !== undefined)
+        .flatMap((n) =>
+          doc.meshes[n.mesh!].primitives.map(
+            (p: { attributes: { POSITION: number } }) => {
+              const acc = doc.accessors[p.attributes.POSITION];
+              const k = acc.normalized
+                ? acc.componentType === 5122
+                  ? 1 / 32767
+                  : acc.componentType === 5123
+                    ? 1 / 65535
+                    : acc.componentType === 5120
+                      ? 1 / 127
+                      : 1 / 255
+                : 1;
+              const at = (q: number[], i: number) =>
+                q[i] * k * (n.scale?.[i] ?? 1) + (n.translation?.[i] ?? 0);
+              return {
+                min: [0, 1, 2].map((i) => at(acc.min, i)),
+                max: [0, 1, 2].map((i) => at(acc.max, i)),
+              };
+            },
           ),
-          max = Math.max(
-            ...positions.map((p: { max: number[] }) => p.max[axis]),
-          );
-        expect(max - min).toBeCloseTo(v.nativeDimensions[axis], 4);
+        );
+      for (let axis = 0; axis < 3; axis++) {
+        const min = Math.min(...positions.map((p) => p.min[axis])),
+          max = Math.max(...positions.map((p) => p.max[axis]));
+        expect(max - min).toBeCloseTo(v.nativeDimensions[axis], 3);
       }
     }
   }

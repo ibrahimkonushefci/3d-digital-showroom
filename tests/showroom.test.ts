@@ -14,11 +14,13 @@ import { presentationPresets } from "../src/designer3d/presets";
 import {
   worktopOutlines,
   sinkCutout,
+  sinkBowl,
   pointInPolygon,
   worktopRuns,
 } from "../src/scene/countertopGeometry";
 import { aoScale, aoShouldPause, qualityForFrames } from "../src/scene/quality";
 import { calculatePrice } from "../src/pricing";
+import { modelRecord } from "../src/scene/assets/manifest";
 const catalog = CatalogSchema.parse(
   JSON.parse(readFileSync("public/brands/default/catalog.json", "utf8")),
 );
@@ -256,4 +258,28 @@ it("clears furniture inspection and drag state when switching brand context with
   expect(next.opened).toEqual([]);
   expect(next.dragPreview).toBeNull();
   expect(next.interior).toBe(false);
+});
+
+it("cuts the worktop between the sink model's bowl and its flange", () => {
+  const sink = modelRecord("sink")!;
+  const bowl = sinkBowl(0.6);
+  expect(bowl.model).toBe(true);
+  const hole = sinkCutout({
+    ...design().cabinets[0],
+    x: 0,
+    z: 0,
+    rotation: 0,
+    width: 60,
+  });
+  const xs = hole.map((p) => p[0]),
+    zs = hole.map((p) => p[1]);
+  const w = Math.max(...xs) - Math.min(...xs),
+    d = Math.max(...zs) - Math.min(...zs);
+  // wider than the bowl walls, narrower than the flange that covers the edge
+  expect(w).toBeGreaterThan(bowl.w + 0.0024);
+  expect(d).toBeGreaterThan(bowl.d + 0.0024);
+  expect(w).toBeLessThan(sink.nativeDimensions[0] - 0.01);
+  expect(d).toBeLessThan(sink.nativeDimensions[2] - 0.01);
+  // narrow sink cabinets keep a proportional procedural bowl
+  expect(sinkBowl(0.45).model).toBe(false);
 });

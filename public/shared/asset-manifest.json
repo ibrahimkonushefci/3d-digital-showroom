@@ -1,20 +1,20 @@
 {
   "version": 1,
-  "revision": "room-kit-v2",
+  "revision": "room-kit-v3",
   "assets": [
     {
       "id": "oven",
-      "revision": 1,
-      "path": "shared/models/oven-balanced-1be30d4f4a.glb",
-      "sha256": "1be30d4f4adfa49e04681473f1c54c624629cd455602bb4c81438a5fcb1337e9",
-      "bytes": 46052,
-      "triangles": 596,
-      "drawCalls": 4,
-      "geometryBytes": 42912,
+      "revision": 6,
+      "path": "shared/models/oven-balanced-ad8e5d218e.glb",
+      "sha256": "ad8e5d218eb2b811eca779915d2583b1418a0862df1bfb0bfe2693ca0fa87e72",
+      "bytes": 38148,
+      "triangles": 2884,
+      "drawCalls": 8,
+      "geometryBytes": 57056,
       "nativeDimensions": [
-        0.5799999833106995,
-        0.5899999737739563,
-        0.0970000009983778
+        0.58,
+        0.59,
+        0.1025
       ],
       "bounds": {
         "min": [
@@ -25,20 +25,20 @@
         "max": [
           0.28999999165534973,
           0.29499998688697815,
-          0.07400000095367432
+          0.0794999971985817
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/oven-lightweight-9d666741bd.glb",
-        "sha256": "9d666741bd23715847cb92202ed8a80973ca7e0203b986a320ef37cc9bc2877c",
-        "bytes": 20692,
-        "triangles": 244,
-        "drawCalls": 4,
-        "geometryBytes": 17568,
+        "path": "shared/models/oven-balanced-ad8e5d218e.glb",
+        "sha256": "ad8e5d218eb2b811eca779915d2583b1418a0862df1bfb0bfe2693ca0fa87e72",
+        "bytes": 38148,
+        "triangles": 2884,
+        "drawCalls": 8,
+        "geometryBytes": 57056,
         "nativeDimensions": [
-          0.5799999833106995,
-          0.5899999737739563,
-          0.0970000009983778
+          0.58,
+          0.59,
+          0.1025
         ],
         "bounds": {
           "min": [
@@ -49,15 +49,19 @@
           "max": [
             0.28999999165534973,
             0.29499998688697815,
-            0.07400000095367432
+            0.0794999971985817
           ]
         }
       },
       "materialSlots": [
-        "dark",
-        "glass",
+        "panel",
+        "black-glass",
+        "glass-panel",
         "steel",
-        "ceramic"
+        "steel-dark",
+        "display",
+        "digits",
+        "print"
       ],
       "origin": "center",
       "up": "+Y",
@@ -71,66 +75,70 @@
       },
       "quality": "balanced",
       "decodedTextureBytes": 0,
-      "licenseKey": "original-room-kit-v1",
-      "source": "scripts/author-room-kit.mjs",
-      "sourceSha256": "42d2ef362c2569c2fedce7baee9fb224b4dc64dbb7354f5d4c61a8a1399a4dc2",
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
       "quotedProduct": false
     },
     {
       "id": "fridge",
-      "revision": 1,
-      "path": "shared/models/fridge-balanced-7a29332a60.glb",
-      "sha256": "7a29332a605977a0158f9f1ce85ec076d08ddea540b0024842e54c978ed0a407",
-      "bytes": 44720,
-      "triangles": 588,
-      "drawCalls": 3,
-      "geometryBytes": 42336,
+      "revision": 4,
+      "path": "shared/models/fridge-balanced-850546f7eb.glb",
+      "sha256": "850546f7eb232cc0776edff596c5986e668215cca9ce7865accfc7f54b0e451e",
+      "bytes": 24004,
+      "triangles": 1452,
+      "drawCalls": 7,
+      "geometryBytes": 27912,
       "nativeDimensions": [
-        0.574999988079071,
-        1.879999978467822,
-        0.0729999989271164
+        0.575,
+        1.875,
+        0.095
       ],
       "bounds": {
         "min": [
           -0.2874999940395355,
-          0.015000002458691597,
-          -0.010999999940395355
+          0.014999998733401299,
+          -0.01600000075995922
         ],
         "max": [
           0.2874999940395355,
-          1.8949999809265137,
-          0.06199999898672104
+          1.8899999856948853,
+          0.07899999618530273
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/fridge-lightweight-43d19af03a.glb",
-        "sha256": "43d19af03ad046cfdfccfb4178c600cb3673a10601916ef2c93f114d2fef2817",
-        "bytes": 10148,
-        "triangles": 108,
-        "drawCalls": 3,
-        "geometryBytes": 7776,
+        "path": "shared/models/fridge-balanced-850546f7eb.glb",
+        "sha256": "850546f7eb232cc0776edff596c5986e668215cca9ce7865accfc7f54b0e451e",
+        "bytes": 24004,
+        "triangles": 1452,
+        "drawCalls": 7,
+        "geometryBytes": 27912,
         "nativeDimensions": [
-          0.574999988079071,
-          1.879999978467822,
-          0.0729999989271164
+          0.575,
+          1.875,
+          0.095
         ],
         "bounds": {
           "min": [
             -0.2874999940395355,
-            0.015000002458691597,
-            -0.010999999940395355
+            0.014999998733401299,
+            -0.01600000075995922
           ],
           "max": [
             0.2874999940395355,
-            1.8949999809265137,
-            0.06199999898672104
+            1.8899999856948853,
+            0.07899999618530273
           ]
         }
       },
       "materialSlots": [
         "steel",
-        "dark",
-        "glass"
+        "gasket",
+        "steel-dark",
+        "black-glass",
+        "led",
+        "black-matte",
+        "rubber"
       ],
       "origin": "floor-front",
       "up": "+Y",
@@ -144,65 +152,65 @@
       },
       "quality": "balanced",
       "decodedTextureBytes": 0,
-      "licenseKey": "original-room-kit-v1",
-      "source": "scripts/author-room-kit.mjs",
-      "sourceSha256": "3f13c5a2938ab312296b05cacd49296e19e49c24bcbcc97b38723e64a26acaa8",
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
       "quotedProduct": false
     },
     {
       "id": "tap",
-      "revision": 1,
-      "path": "shared/models/tap-balanced-669b8f0940.glb",
-      "sha256": "669b8f09408bccd9ba09b7276145087d3ad039e8f841abb4968e28d920df02a9",
-      "bytes": 50952,
-      "triangles": 684,
+      "revision": 5,
+      "path": "shared/models/tap-balanced-94d2c1a8fd.glb",
+      "sha256": "94d2c1a8fdcda246fde0930cb844b190fb4911d70f4a6a93990944982bc30e9b",
+      "bytes": 31180,
+      "triangles": 3600,
       "drawCalls": 2,
-      "geometryBytes": 49248,
+      "geometryBytes": 56096,
       "nativeDimensions": [
-        0.08700000122189522,
-        0.3496699629537761,
-        0.1900000013411045
+        0.096838,
+        0.365279,
+        0.2005
       ],
       "bounds": {
         "min": [
-          -0.05900000035762787,
-          1.6763807009212428e-10,
+          -0.02800000086426735,
+          -2.710505431213761e-19,
           -0.02800000086426735
         ],
         "max": [
-          0.02800000086426735,
-          0.3496699631214142,
-          0.16200000047683716
+          0.06883750855922699,
+          0.365278959274292,
+          0.17249999940395355
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/tap-lightweight-c13bf181f8.glb",
-        "sha256": "c13bf181f8c3dc281611e4e7332f8d9c53fa2e927a402bca972a278d29c050bd",
-        "bytes": 18112,
-        "triangles": 228,
+        "path": "shared/models/tap-lightweight-281444c08c.glb",
+        "sha256": "281444c08cd19c8928123ff7ec5f029e7202e823ff3c28472ab9207f53e29f02",
+        "bytes": 16572,
+        "triangles": 1440,
         "drawCalls": 2,
-        "geometryBytes": 16416,
+        "geometryBytes": 24528,
         "nativeDimensions": [
-          0.08700000122189522,
-          0.3490826485864818,
-          0.1900000013411045
+          0.096831,
+          0.3653,
+          0.200435
         ],
         "bounds": {
           "min": [
-            -0.05900000035762787,
-            1.6763807009212428e-10,
-            -0.02800000086426735
+            -0.027993254363536835,
+            -4.161440756433876e-7,
+            -0.027993254363536835
           ],
           "max": [
-            0.02800000086426735,
-            0.3490826487541199,
-            0.16200000047683716
+            0.06883750855922699,
+            0.36529991030693054,
+            0.1724417358636856
           ]
         }
       },
       "materialSlots": [
-        "steel",
-        "dark"
+        "chrome",
+        "rubber"
       ],
       "origin": "countertop",
       "up": "+Y",
@@ -216,66 +224,67 @@
       },
       "quality": "balanced",
       "decodedTextureBytes": 0,
-      "licenseKey": "original-room-kit-v1",
-      "source": "scripts/author-room-kit.mjs",
-      "sourceSha256": "5f6a7b939de5ca2f4a44ca314eacb9d64bab6b90f296382312d76c70dc1a6795",
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
       "quotedProduct": false
     },
     {
       "id": "stool",
-      "revision": 1,
-      "path": "shared/models/stool-balanced-681df2f95b.glb",
-      "sha256": "681df2f95bece3c1229cf65d6185ea3fe1599c6e9b4b415db167e2bcef3e399c",
-      "bytes": 41912,
-      "triangles": 548,
-      "drawCalls": 3,
-      "geometryBytes": 39456,
+      "revision": 7,
+      "path": "shared/models/stool-balanced-c715789f30.glb",
+      "sha256": "c715789f30d7846005c61adca5229717b861be53830ee7b0424e0918d27d90ee",
+      "bytes": 45024,
+      "triangles": 4800,
+      "drawCalls": 4,
+      "geometryBytes": 73088,
       "nativeDimensions": [
-        0.41999998688697815,
-        0.8049460798501968,
-        0.3799999952316284
+        0.36,
+        0.891002,
+        0.360186
       ],
       "bounds": {
         "min": [
-          -0.20999999344348907,
+          -0.18000000715255737,
           0,
-          -0.1899999976158142
+          -0.1801862120628357
         ],
         "max": [
-          0.20999999344348907,
-          0.8049460798501968,
-          0.1899999976158142
+          0.18000000715255737,
+          0.8910024762153625,
+          0.18000000715255737
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/stool-lightweight-87159e40ac.glb",
-        "sha256": "87159e40acf21b3fe7ba20f80a06a6e1191e32012727d3196c7308ac7882dccf",
-        "bytes": 15132,
-        "triangles": 176,
-        "drawCalls": 3,
-        "geometryBytes": 12672,
+        "path": "shared/models/stool-lightweight-4aa9133cc8.glb",
+        "sha256": "4aa9133cc8099a01ca806e7bc4ba3a84fd9da885341214334568880a410eb21a",
+        "bytes": 23752,
+        "triangles": 1920,
+        "drawCalls": 4,
+        "geometryBytes": 29808,
         "nativeDimensions": [
-          0.41999998688697815,
-          0.8049344271421432,
-          0.3799999952316284
+          0.359859,
+          0.891004,
+          0.360045
         ],
         "bounds": {
           "min": [
-            -0.20999999344348907,
+            -0.17989349365234375,
             0,
-            -0.1899999976158142
+            -0.18019604682922363
           ],
           "max": [
-            0.20999999344348907,
-            0.8049344271421432,
-            0.1899999976158142
+            0.17996543645858765,
+            0.8910038471221924,
+            0.17984892427921295
           ]
         }
       },
       "materialSlots": [
+        "upholstery",
         "oak",
-        "textile",
-        "dark"
+        "black-matte",
+        "rubber"
       ],
       "origin": "floor",
       "up": "+Y",
@@ -289,65 +298,68 @@
       },
       "quality": "balanced",
       "decodedTextureBytes": 0,
-      "licenseKey": "original-room-kit-v1",
-      "source": "scripts/author-room-kit.mjs",
-      "sourceSha256": "5c8fc691e07fd8e7741cd6694adb8e603f55a85607fe96a1c0b056f2c2edb733",
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
       "quotedProduct": false
     },
     {
       "id": "pendant",
-      "revision": 1,
-      "path": "shared/models/pendant-balanced-8c688eb0e6.glb",
-      "sha256": "8c688eb0e6f7716374f58f91b3c2ec7e7c333913bccae9dbd4f38d4c7378bf5b",
-      "bytes": 20128,
-      "triangles": 256,
-      "drawCalls": 2,
-      "geometryBytes": 18432,
+      "revision": 6,
+      "path": "shared/models/pendant-balanced-37e50fbf94.glb",
+      "sha256": "37e50fbf945980220fdd7470f772f4a991adc33149d72cfa420fe0116815e24a",
+      "bytes": 24576,
+      "triangles": 2308,
+      "drawCalls": 5,
+      "geometryBytes": 38584,
       "nativeDimensions": [
-        0.3400000035762787,
-        0.6690000297501684,
-        0.3400000035762787
+        0.34,
+        0.67,
+        0.34
       ],
       "bounds": {
         "min": [
           -0.17000000178813934,
-          -0.6690000295639038,
+          -0.6700000166893005,
           -0.17000000178813934
         ],
         "max": [
           0.17000000178813934,
-          1.8626451769865326e-10,
+          0,
           0.17000000178813934
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/pendant-lightweight-833971e007.glb",
-        "sha256": "833971e007ac939ef8f9680d72d8c1d77b081dc5a1d01626cd0a0791dc5b4d0b",
-        "bytes": 10908,
-        "triangles": 128,
-        "drawCalls": 2,
-        "geometryBytes": 9216,
+        "path": "shared/models/pendant-balanced-37e50fbf94.glb",
+        "sha256": "37e50fbf945980220fdd7470f772f4a991adc33149d72cfa420fe0116815e24a",
+        "bytes": 24576,
+        "triangles": 2308,
+        "drawCalls": 5,
+        "geometryBytes": 38584,
         "nativeDimensions": [
-          0.3400000035762787,
-          0.6690000297501684,
-          0.3400000035762787
+          0.34,
+          0.67,
+          0.34
         ],
         "bounds": {
           "min": [
             -0.17000000178813934,
-            -0.6690000295639038,
+            -0.6700000166893005,
             -0.17000000178813934
           ],
           "max": [
             0.17000000178813934,
-            1.8626451769865326e-10,
+            0,
             0.17000000178813934
           ]
         }
       },
       "materialSlots": [
-        "dark",
-        "ceramic"
+        "shade-outer",
+        "black-matte",
+        "shade-inner",
+        "brass",
+        "diffuser"
       ],
       "origin": "ceiling",
       "up": "+Y",
@@ -361,9 +373,9 @@
       },
       "quality": "balanced",
       "decodedTextureBytes": 0,
-      "licenseKey": "original-room-kit-v1",
-      "source": "scripts/author-room-kit.mjs",
-      "sourceSha256": "158f31bb7cd4772d60654d975ebeda2e245902f3f2ebe56070d691015d71a3b9",
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
       "quotedProduct": false
     },
     {
@@ -512,58 +524,60 @@
     },
     {
       "id": "shirt",
-      "revision": 1,
-      "path": "shared/models/shirt-balanced-285e276d04.glb",
-      "sha256": "285e276d04a54c54f238e242ccf8e060dceb0510095fd3dbd611e51b314eb1d6",
-      "bytes": 93888,
-      "triangles": 1280,
-      "drawCalls": 2,
-      "geometryBytes": 92160,
+      "revision": 5,
+      "path": "shared/models/shirt-balanced-5ba0f57dc7.glb",
+      "sha256": "5ba0f57dc72995cce13f8d2c232ed617705e5c93889cae698537513771f326a7",
+      "bytes": 40156,
+      "triangles": 4199,
+      "drawCalls": 4,
+      "geometryBytes": 60314,
       "nativeDimensions": [
-        0.07999999821186066,
-        0.6199790686368942,
-        0.48761141300201416
+        0.442911,
+        0.813393,
+        0.066866
       ],
       "bounds": {
         "min": [
-          -0.03999999910593033,
-          -0.5849999785423279,
-          -0.24380570650100708
+          -0.22147180140018463,
+          -0.7944015264511108,
+          -0.03155982121825218
         ],
         "max": [
-          0.03999999910593033,
-          0.034979090094566345,
-          0.24380570650100708
+          0.22143957018852234,
+          0.018991263583302498,
+          0.03530573472380638
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/shirt-lightweight-408142c1c1.glb",
-        "sha256": "408142c1c17b9b2bcec24b2dd576458f3cddcfcc871dd15c15f3766372c36e71",
-        "bytes": 31416,
-        "triangles": 412,
-        "drawCalls": 2,
-        "geometryBytes": 29664,
+        "path": "shared/models/shirt-lightweight-27a23e29ee.glb",
+        "sha256": "27a23e29ee880a4a4ff24d499e0e2f726de47aa66a6f99912a8b2e8adf33a6f4",
+        "bytes": 21088,
+        "triangles": 1680,
+        "drawCalls": 4,
+        "geometryBytes": 24704,
         "nativeDimensions": [
-          0.07608452439308167,
-          0.614104388281703,
-          0.4802001863718033
+          0.442069,
+          0.812883,
+          0.066573
         ],
         "bounds": {
           "min": [
-            -0.03804226219654083,
-            -0.5849999785423279,
-            -0.24380570650100708
+            -0.22096873819828033,
+            -0.7940526604652405,
+            -0.031785331666469574
           ],
           "max": [
-            0.03804226219654083,
-            0.029104409739375114,
-            0.2363944798707962
+            0.22110067307949066,
+            0.018830735236406326,
+            0.0347876101732254
           ]
         }
       },
       "materialSlots": [
-        "oak",
-        "textile"
+        "fabric",
+        "button",
+        "hanger",
+        "chrome"
       ],
       "origin": "rail",
       "up": "+Y",
@@ -577,65 +591,67 @@
       },
       "quality": "balanced",
       "decodedTextureBytes": 0,
-      "licenseKey": "original-room-kit-v1",
-      "source": "scripts/author-room-kit.mjs",
-      "sourceSha256": "d58500b8b263a53b5bddd1a795e053d84e5881bfd005a16a453de8f445305806",
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
       "quotedProduct": false
     },
     {
       "id": "coat",
-      "revision": 1,
-      "path": "shared/models/coat-balanced-18d00e6767.glb",
-      "sha256": "18d00e676716691991c11fc89cd31d4e32d778f4740be8c5446a027b2be3607d",
-      "bytes": 93888,
-      "triangles": 1280,
-      "drawCalls": 2,
-      "geometryBytes": 92160,
+      "revision": 5,
+      "path": "shared/models/coat-balanced-08e67a0c6b.glb",
+      "sha256": "08e67a0c6b4e4a0fc7d69578f91b05f292efbb216b55b6ef9862ccb3bfebff5d",
+      "bytes": 42356,
+      "triangles": 4600,
+      "drawCalls": 4,
+      "geometryBytes": 65632,
       "nativeDimensions": [
-        0.07999999821186066,
-        0.8799791187047958,
-        0.4893052875995636
+        0.523639,
+        0.988969,
+        0.080558
       ],
       "bounds": {
         "min": [
-          -0.03999999910593033,
-          -0.8450000286102295,
-          -0.2446526437997818
+          -0.26186349987983704,
+          -0.9699780941009521,
+          -0.038488660007715225
         ],
         "max": [
-          0.03999999910593033,
-          0.034979090094566345,
-          0.2446526437997818
+          0.26177576184272766,
+          0.018991263583302498,
+          0.042068883776664734
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/coat-lightweight-2fd8ac0e80.glb",
-        "sha256": "2fd8ac0e8097be4ff789b26191360b067fcd88889fe17a8404c569fce0975511",
-        "bytes": 31380,
-        "triangles": 412,
-        "drawCalls": 2,
-        "geometryBytes": 29664,
+        "path": "shared/models/coat-lightweight-35156667d7.glb",
+        "sha256": "35156667d77a32e9ea6890e9d20259f673a45c2395b11d2ab4aad49c5dd723ab",
+        "bytes": 21764,
+        "triangles": 1840,
+        "drawCalls": 4,
+        "geometryBytes": 26608,
         "nativeDimensions": [
-          0.07608452439308167,
-          0.8741044383496046,
-          0.4817323088645935
+          0.523576,
+          0.988927,
+          0.08072
         ],
         "bounds": {
           "min": [
-            -0.03804226219654083,
-            -0.8450000286102295,
-            -0.2446526437997818
+            -0.26182040572166443,
+            -0.9700960516929626,
+            -0.03863402456045151
           ],
           "max": [
-            0.03804226219654083,
-            0.029104409739375114,
-            0.2370796650648117
+            0.2617555558681488,
+            0.018830735236406326,
+            0.04208558052778244
           ]
         }
       },
       "materialSlots": [
-        "oak",
-        "sage"
+        "fabric",
+        "button",
+        "hanger",
+        "chrome"
       ],
       "origin": "rail",
       "up": "+Y",
@@ -649,66 +665,66 @@
       },
       "quality": "balanced",
       "decodedTextureBytes": 0,
-      "licenseKey": "original-room-kit-v1",
-      "source": "scripts/author-room-kit.mjs",
-      "sourceSha256": "d58500b8b263a53b5bddd1a795e053d84e5881bfd005a16a453de8f445305806",
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
       "quotedProduct": false
     },
     {
       "id": "trousers",
-      "revision": 1,
-      "path": "shared/models/trousers-balanced-36e7302e15.glb",
-      "sha256": "36e7302e150464ad18124fdf8b02d05826c761dee5b9909a2aa45a39fa642679",
-      "bytes": 55760,
-      "triangles": 740,
+      "revision": 5,
+      "path": "shared/models/trousers-balanced-77638bc64e.glb",
+      "sha256": "77638bc64e6006f1323eaefea5f35df7c1d1064e344736e65c1a548575ec49e6",
+      "bytes": 26648,
+      "triangles": 2800,
       "drawCalls": 3,
-      "geometryBytes": 53280,
+      "geometryBytes": 41488,
       "nativeDimensions": [
-        0.04900000058114529,
-        0.7949790805578232,
-        0.3810698091983795
+        0.413982,
+        0.718715,
+        0.048191
       ],
       "bounds": {
         "min": [
-          -0.02250000089406967,
-          -0.7599999904632568,
-          -0.19246628880500793
+          -0.20699124038219452,
+          -0.6997233629226685,
+          -0.027232397347688675
         ],
         "max": [
-          0.026499999687075615,
-          0.034979090094566345,
-          0.18860352039337158
+          0.20699124038219452,
+          0.018991263583302498,
+          0.020958544686436653
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/trousers-lightweight-49e603230c.glb",
-        "sha256": "49e603230c978d3566b24d798f3f490f9ab027c138aa5dbdae7c42d318c42b05",
-        "bytes": 15200,
-        "triangles": 176,
+        "path": "shared/models/trousers-lightweight-b6b6744ce2.glb",
+        "sha256": "b6b6744ce2e3f4b1f1e677aea294b2ad7fe6f2b1fa05c28f2ba796e5821cd1a5",
+        "bytes": 14236,
+        "triangles": 1119,
         "drawCalls": 3,
-        "geometryBytes": 12672,
+        "geometryBytes": 16618,
         "nativeDimensions": [
-          0.0489265862852335,
-          0.789104400202632,
-          0.3677564114332199
+          0.413982,
+          0.718609,
+          0.048561
         ],
         "bounds": {
           "min": [
-            -0.02250000089406967,
-            -0.7599999904632568,
-            -0.18157397210597992
+            -0.20699124038219452,
+            -0.6996172666549683,
+            -0.027270380407571793
           ],
           "max": [
-            0.026426585391163826,
-            0.029104409739375114,
-            0.18618243932724
+            0.20699124038219452,
+            0.018991263583302498,
+            0.021290427073836327
           ]
         }
       },
       "materialSlots": [
-        "oak",
-        "ink",
-        "sole"
+        "fabric",
+        "hanger",
+        "chrome"
       ],
       "origin": "rail",
       "up": "+Y",
@@ -722,65 +738,64 @@
       },
       "quality": "balanced",
       "decodedTextureBytes": 0,
-      "licenseKey": "original-room-kit-v1",
-      "source": "scripts/author-room-kit.mjs",
-      "sourceSha256": "d58500b8b263a53b5bddd1a795e053d84e5881bfd005a16a453de8f445305806",
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
       "quotedProduct": false
     },
     {
       "id": "fold",
-      "revision": 1,
-      "path": "shared/models/fold-balanced-a778bfbfab.glb",
-      "sha256": "a778bfbfab8d73ed34f6483d7b668a241e6edf89d9b9f0e69295849af6fb5198",
-      "bytes": 21848,
-      "triangles": 280,
-      "drawCalls": 2,
-      "geometryBytes": 20160,
+      "revision": 2,
+      "path": "shared/models/fold-balanced-b6de2df97a.glb",
+      "sha256": "b6de2df97afa0917cabaf1754ce09d7acb640db9f60ff6498363e2ba9dd088a3",
+      "bytes": 29116,
+      "triangles": 3598,
+      "drawCalls": 1,
+      "geometryBytes": 50500,
       "nativeDimensions": [
-        0.28999999165534973,
-        0.06499999850988386,
-        0.23000000417232513
+        0.304621,
+        0.1444,
+        0.242566
       ],
       "bounds": {
         "min": [
-          -0.14499999582767487,
-          -8.940696516468449e-10,
-          -0.11500000208616257
+          -0.15418493747711182,
+          2.4203599124916764e-9,
+          -0.12083427608013153
         ],
         "max": [
-          0.14499999582767487,
-          0.06499999761581421,
-          0.11500000208616257
+          0.15043561160564423,
+          0.14440041780471802,
+          0.12173166871070862
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/fold-lightweight-54306ba8ee.glb",
-        "sha256": "54306ba8ee51b51b622f4d7aec286b4b9e4e51f5f7ff85ae97a4aa9d6f9cb98e",
-        "bytes": 6336,
-        "triangles": 64,
-        "drawCalls": 2,
-        "geometryBytes": 4608,
+        "path": "shared/models/fold-lightweight-700eb47845.glb",
+        "sha256": "700eb478454fca07b983b876bdc4434235021c4d8b4468b94296c81ab10b37a0",
+        "bytes": 13620,
+        "triangles": 1440,
+        "drawCalls": 1,
+        "geometryBytes": 20288,
         "nativeDimensions": [
-          0.28999999165534973,
-          0.06480901777744291,
-          0.23000000417232513
+          0.304703,
+          0.144531,
+          0.242722
         ],
         "bounds": {
           "min": [
-            -0.14499999582767487,
-            -8.940696516468449e-10,
-            -0.11500000208616257
+            -0.15423354506492615,
+            0.000001013551582218497,
+            -0.12083427608013153
           ],
           "max": [
-            0.14499999582767487,
-            0.06480901688337326,
-            0.11500000208616257
+            0.15046977996826172,
+            0.14453187584877014,
+            0.12188735604286194
           ]
         }
       },
       "materialSlots": [
-        "textile",
-        "sole"
+        "fabric-fixed"
       ],
       "origin": "shelf",
       "up": "+Y",
@@ -794,65 +809,64 @@
       },
       "quality": "balanced",
       "decodedTextureBytes": 0,
-      "licenseKey": "original-room-kit-v1",
-      "source": "scripts/author-room-kit.mjs",
-      "sourceSha256": "888ceb336d350aa9a00fe9ddd7af873456fa96aebf8cd1cfab1c2d1669aee9ad",
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
       "quotedProduct": false
     },
     {
       "id": "fold-ribbed",
-      "revision": 1,
-      "path": "shared/models/fold-ribbed-balanced-bee2708d74.glb",
-      "sha256": "bee2708d7454b9a3e47cb8883209301945bb5f9450845066d6f83e8df2b790c8",
-      "bytes": 33368,
-      "triangles": 440,
-      "drawCalls": 2,
-      "geometryBytes": 31680,
+      "revision": 2,
+      "path": "shared/models/fold-ribbed-balanced-49edf36254.glb",
+      "sha256": "49edf36254e9fbedc7a6c87766f7a68b9ef71e5f570f50096098fc5467f818ef",
+      "bytes": 32536,
+      "triangles": 4200,
+      "drawCalls": 1,
+      "geometryBytes": 58896,
       "nativeDimensions": [
-        0.28999999165534973,
-        0.06499999850988386,
-        0.23000000417232513
+        0.314871,
+        0.156991,
+        0.24942
       ],
       "bounds": {
         "min": [
-          -0.14499999582767487,
-          -8.940696516468449e-10,
-          -0.11500000208616257
+          -0.15792471170425415,
+          -0.0007235555094666779,
+          -0.12269597500562668
         ],
         "max": [
-          0.14499999582767487,
-          0.06499999761581421,
-          0.11500000208616257
+          0.15694674849510193,
+          0.15626747906208038,
+          0.12672430276870728
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/fold-ribbed-lightweight-a30847f18e.glb",
-        "sha256": "a30847f18e2eb91ed21dfabfb67be9cbcf34b5895feb1de37e8478c70009e353",
-        "bytes": 13536,
-        "triangles": 164,
-        "drawCalls": 2,
-        "geometryBytes": 11808,
+        "path": "shared/models/fold-ribbed-lightweight-e099ffca6d.glb",
+        "sha256": "e099ffca6d358ad98fcaedbaa374e0c0c47b3bb8f5921a6aa2ad994516fe0590",
+        "bytes": 15316,
+        "triangles": 1680,
+        "drawCalls": 1,
+        "geometryBytes": 23616,
         "nativeDimensions": [
-          0.28999999165534973,
-          0.06480901777744291,
-          0.23000000417232513
+          0.3148,
+          0.156774,
+          0.249127
         ],
         "bounds": {
           "min": [
-            -0.14499999582767487,
-            -8.940696516468449e-10,
-            -0.11500000208616257
+            -0.15787629783153534,
+            -0.0007120569935068488,
+            -0.12266882508993149
           ],
           "max": [
-            0.14499999582767487,
-            0.06480901688337326,
-            0.11500000208616257
+            0.15692360699176788,
+            0.15606196224689484,
+            0.12645864486694336
           ]
         }
       },
       "materialSlots": [
-        "sage",
-        "sole"
+        "fabric-fixed"
       ],
       "origin": "shelf",
       "up": "+Y",
@@ -866,65 +880,67 @@
       },
       "quality": "balanced",
       "decodedTextureBytes": 0,
-      "licenseKey": "original-room-kit-v1",
-      "source": "scripts/author-room-kit.mjs",
-      "sourceSha256": "888ceb336d350aa9a00fe9ddd7af873456fa96aebf8cd1cfab1c2d1669aee9ad",
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
       "quotedProduct": false
     },
     {
       "id": "shoes",
-      "revision": 1,
-      "path": "shared/models/shoes-balanced-ec1d1d6c5c.glb",
-      "sha256": "ec1d1d6c5c880b43da02b07f5ae355c994b70006d2eee6665edda2832a88337b",
-      "bytes": 83468,
-      "triangles": 1136,
-      "drawCalls": 2,
-      "geometryBytes": 81792,
+      "revision": 5,
+      "path": "shared/models/shoes-balanced-14fb247dc1.glb",
+      "sha256": "14fb247dc139bcd2893418c77dee292508382b8d68d3471684f3f6923cbcde8c",
+      "bytes": 44724,
+      "triangles": 4398,
+      "drawCalls": 4,
+      "geometryBytes": 65668,
       "nativeDimensions": [
-        0.21700000762939453,
-        0.09699999663280323,
-        0.26499998569488525
+        0.219154,
+        0.09871,
+        0.277227
       ],
       "bounds": {
         "min": [
-          -0.10850000381469727,
-          0.000499999790918082,
-          -0.13249999284744263
+          -0.1095770001411438,
+          -0.00000459725879409234,
+          -0.13859084248542786
         ],
         "max": [
-          0.10850000381469727,
-          0.09749999642372131,
-          0.13249999284744263
+          0.1095770075917244,
+          0.0987050011754036,
+          0.1386362612247467
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/shoes-lightweight-8b410baa98.glb",
-        "sha256": "8b410baa9885aff48ff8a2d332ac5bc95871d75f8a2c01abb811f13a0166db8e",
-        "bytes": 23552,
-        "triangles": 304,
-        "drawCalls": 2,
-        "geometryBytes": 21888,
+        "path": "shared/models/shoes-lightweight-c36d6f1337.glb",
+        "sha256": "c36d6f1337095b3c2eadeb82bb38deffe51e1b41e565e71e0db17545cc493d07",
+        "bytes": 23316,
+        "triangles": 1758,
+        "drawCalls": 4,
+        "geometryBytes": 27636,
         "nativeDimensions": [
-          0.21700000762939453,
-          0.09699999663280323,
-          0.26499998569488525
+          0.218609,
+          0.098675,
+          0.277328
         ],
         "bounds": {
           "min": [
-            -0.10850000381469727,
-            0.000499999790918082,
-            -0.13249999284744263
+            -0.10930439829826355,
+            0.00008307863026857376,
+            -0.13859084248542786
           ],
           "max": [
-            0.10850000381469727,
-            0.09749999642372131,
-            0.13249999284744263
+            0.10930439829826355,
+            0.09875787794589996,
+            0.13873735070228577
           ]
         }
       },
       "materialSlots": [
-        "sole",
-        "dark"
+        "sole-white",
+        "canvas-white",
+        "leather-dark",
+        "leather-tan"
       ],
       "origin": "shelf",
       "up": "+Y",
@@ -938,9 +954,9 @@
       },
       "quality": "balanced",
       "decodedTextureBytes": 0,
-      "licenseKey": "original-room-kit-v1",
-      "source": "scripts/author-room-kit.mjs",
-      "sourceSha256": "3d96aa78686489ef2fa139ae83815f4f3c387edd103174e7bab3e34c639d34a4",
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
       "quotedProduct": false
     },
     {
@@ -1092,9 +1108,9 @@
     {
       "id": "cutting-board",
       "revision": 1,
-      "path": "shared/models/cutting-board-balanced-91452a793b.glb",
-      "sha256": "91452a793be6e489ac931ae7781613c73668b915aed5e045422a3db81b9454a2",
-      "bytes": 94760,
+      "path": "shared/models/cutting-board-balanced-a617c7d76d.glb",
+      "sha256": "a617c7d76d86c1d15979381240ba7a4910de60f8e9439fcbfafef5646a3feba8",
+      "bytes": 51964,
       "triangles": 2400,
       "drawCalls": 1,
       "geometryBytes": 69728,
@@ -1116,9 +1132,9 @@
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/cutting-board-lightweight-1b39690bd2.glb",
-        "sha256": "1b39690bd25e62dbf9e2ea6c881d200d6e705c9367d91e2f5b45f3bd513e08d1",
-        "bytes": 48936,
+        "path": "shared/models/cutting-board-lightweight-471f17365f.glb",
+        "sha256": "471f17365f23ab05c7658a9ee3c60a53db6759b261ee75a46119fdd829b90c79",
+        "bytes": 25488,
         "triangles": 1200,
         "drawCalls": 1,
         "geometryBytes": 40128,
@@ -1163,9 +1179,9 @@
     {
       "id": "fruit-bowl",
       "revision": 1,
-      "path": "shared/models/fruit-bowl-balanced-e5a05a1466.glb",
-      "sha256": "e5a05a1466dd3201f9dd7dea56a2a999acaf68355096a0d5dfad12e86cb5dfeb",
-      "bytes": 194952,
+      "path": "shared/models/fruit-bowl-balanced-9d8652dca2.glb",
+      "sha256": "9d8652dca241cedb81edda663e564fc4265dc42a366a5e516b9a96074ee6ad4b",
+      "bytes": 111748,
       "triangles": 5200,
       "drawCalls": 4,
       "geometryBytes": 126324,
@@ -1187,9 +1203,9 @@
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/fruit-bowl-lightweight-346ca7dcb1.glb",
-        "sha256": "346ca7dcb199cbc2caa50807823780ac967280fc1f4d66d7153f896c8f9f2937",
-        "bytes": 92548,
+        "path": "shared/models/fruit-bowl-lightweight-1526d80162.glb",
+        "sha256": "1526d80162426b12ab22e6630c9b26c517c6a6a3e46b72d0a883892e90c8b5c4",
+        "bytes": 49004,
         "triangles": 2599,
         "drawCalls": 4,
         "geometryBytes": 67998,
@@ -1237,9 +1253,9 @@
     {
       "id": "plant-small",
       "revision": 1,
-      "path": "shared/models/plant-small-balanced-2e3442d197.glb",
-      "sha256": "2e3442d19792514b8f62fa27f15f91444cbbf65ce2c9dbcf5adb30d29235d79c",
-      "bytes": 186868,
+      "path": "shared/models/plant-small-balanced-2ae47e651b.glb",
+      "sha256": "2ae47e651b6f290c86e2fb3b47f377ef7749c42a0ef6868fc853b7a4f7e3bbc3",
+      "bytes": 106516,
       "triangles": 4200,
       "drawCalls": 1,
       "geometryBytes": 134256,
@@ -1261,9 +1277,9 @@
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/plant-small-lightweight-629b3a0955.glb",
-        "sha256": "629b3a0955563555efde7fe9f9a61e3cac28abfe9daf494b666b3097f8b8a353",
-        "bytes": 93140,
+        "path": "shared/models/plant-small-lightweight-701c7ad994.glb",
+        "sha256": "701c7ad994d11a2d3f84ffab7136a168a4b3ed19a3d64458bef3afcf2b36ec1d",
+        "bytes": 49084,
         "triangles": 2100,
         "drawCalls": 1,
         "geometryBytes": 75928,
@@ -1308,9 +1324,9 @@
     {
       "id": "vase",
       "revision": 1,
-      "path": "shared/models/vase-balanced-7f3696f9d5.glb",
-      "sha256": "7f3696f9d5656bb75b939adf51e703aba72cb5e7aeed53f9d6bd0a7d9277812a",
-      "bytes": 84904,
+      "path": "shared/models/vase-balanced-3f153eb1b7.glb",
+      "sha256": "3f153eb1b7116bfbf9a0dd728ad0289cd376482604c4ba894a0f27c269292fb0",
+      "bytes": 40148,
       "triangles": 2000,
       "drawCalls": 1,
       "geometryBytes": 77152,
@@ -1332,9 +1348,9 @@
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/vase-lightweight-505f20226f.glb",
-        "sha256": "505f20226f6c4cdc3cb9910811cf7bd52cac10c0cb072066dbb41ec3bb70d034",
-        "bytes": 46588,
+        "path": "shared/models/vase-lightweight-3c737f6c46.glb",
+        "sha256": "3c737f6c46d3daf2b5e74a4799b4d86260e3831ec681a24f7cf27538c339df66",
+        "bytes": 23468,
         "triangles": 1000,
         "drawCalls": 1,
         "geometryBytes": 42352,
@@ -1379,9 +1395,9 @@
     {
       "id": "wall-art",
       "revision": 1,
-      "path": "shared/models/wall-art-balanced-724d75d484.glb",
-      "sha256": "724d75d4848be99f2b0b987b3bf2b4826ff79119f899e440296552ced91eefd6",
-      "bytes": 120040,
+      "path": "shared/models/wall-art-balanced-5b5f0336e9.glb",
+      "sha256": "5b5f0336e93fa20497ac2a8e5430bf24e73362b2c326beec4dcdb133058d81ee",
+      "bytes": 61704,
       "triangles": 2400,
       "drawCalls": 3,
       "geometryBytes": 90452,
@@ -1403,9 +1419,9 @@
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/wall-art-lightweight-e77f790afb.glb",
-        "sha256": "e77f790afb8ca05b7d1e5a8231711e3f5a44dee5093cbd2cae603f53ff7fccc9",
-        "bytes": 73380,
+        "path": "shared/models/wall-art-lightweight-b4f27eeaa8.glb",
+        "sha256": "b4f27eeaa87c0b64c78c7b6b11e7391998e692d1e29d4a247e05a73b9f27946c",
+        "bytes": 36504,
         "triangles": 1200,
         "drawCalls": 3,
         "geometryBytes": 59316,
@@ -1452,9 +1468,9 @@
     {
       "id": "basket",
       "revision": 1,
-      "path": "shared/models/basket-balanced-e55b08721c.glb",
-      "sha256": "e55b08721cb6e3519e40824d3a12a819ad54ac52392d4ea266ce858a7a05e9ec",
-      "bytes": 171992,
+      "path": "shared/models/basket-balanced-9ff1fbed64.glb",
+      "sha256": "9ff1fbed643c084aba55f007579ec379bbcc04b22eac076f0ee81fc17944d4b9",
+      "bytes": 111860,
       "triangles": 3600,
       "drawCalls": 1,
       "geometryBytes": 102880,
@@ -1476,9 +1492,9 @@
         ]
       },
       "lowerDetail": {
-        "path": "shared/models/basket-lightweight-acbdd6f249.glb",
-        "sha256": "acbdd6f24955c5ab9999fab0bf6a0f21595266ed0f6276cb4acbe6213ae2b8f8",
-        "bytes": 76388,
+        "path": "shared/models/basket-lightweight-151ab8b7d7.glb",
+        "sha256": "151ab8b7d7e57f513da5a20b62940e408b149ac17d2a561839dfbf2b57b19206",
+        "bytes": 45112,
         "triangles": 1800,
         "drawCalls": 1,
         "geometryBytes": 56112,
@@ -1518,6 +1534,661 @@
       "licenseKey": "polyhaven-cc0",
       "source": "https://polyhaven.com/a/wicker_basket_02",
       "sourceSha256": "78c7a3bdd7025eb092b3ac744e9d83e9a75fbb242696b5dce87ec215af617768",
+      "quotedProduct": false
+    },
+    {
+      "id": "bag",
+      "revision": 1,
+      "path": "shared/models/bag-balanced-cd93337105.glb",
+      "sha256": "cd93337105cf3c689815802499e06c57b3665d1803f560305f56e262524999b4",
+      "bytes": 32308,
+      "triangles": 3600,
+      "drawCalls": 3,
+      "geometryBytes": 50848,
+      "nativeDimensions": [
+        0.269988,
+        0.246722,
+        0.12
+      ],
+      "bounds": {
+        "min": [
+          -0.13499394059181213,
+          0.005000151693820953,
+          -0.05499986931681633
+        ],
+        "max": [
+          0.13499392569065094,
+          0.2517218589782715,
+          0.06499999761581421
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/bag-lightweight-b5c9de50b8.glb",
+        "sha256": "b5c9de50b8d23f3617fe9069bec90723baf74a38bc261c449bb4dc7474865e88",
+        "bytes": 17036,
+        "triangles": 1440,
+        "drawCalls": 3,
+        "geometryBytes": 20608,
+        "nativeDimensions": [
+          0.269973,
+          0.246886,
+          0.119824
+        ],
+        "bounds": {
+          "min": [
+            -0.13498219847679138,
+            0.005000151693820953,
+            -0.05499986931681633
+          ],
+          "max": [
+            0.13499057292938232,
+            0.2518860399723053,
+            0.06482432037591934
+          ]
+        }
+      },
+      "materialSlots": [
+        "leather-tan",
+        "leather-dark",
+        "brass"
+      ],
+      "origin": "shelf",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
+      "quotedProduct": false
+    },
+    {
+      "id": "dress",
+      "revision": 1,
+      "path": "shared/models/dress-balanced-b364141674.glb",
+      "sha256": "b364141674e09cb6b49ca34959de1bfb115095c52e8eecfaafbe7e4833eaa78a",
+      "bytes": 37208,
+      "triangles": 4199,
+      "drawCalls": 3,
+      "geometryBytes": 59770,
+      "nativeDimensions": [
+        0.534584,
+        1.043765,
+        0.07478
+      ],
+      "bounds": {
+        "min": [
+          -0.26733970642089844,
+          -1.0247737169265747,
+          -0.045649923384189606
+        ],
+        "max": [
+          0.2672438323497772,
+          0.018991263583302498,
+          0.0291296299546957
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/dress-lightweight-1c8d639961.glb",
+        "sha256": "1c8d639961a9c97250e8fc43135e639a70654a172db41c8e43febd5c8f16ab05",
+        "bytes": 18720,
+        "triangles": 1680,
+        "drawCalls": 3,
+        "geometryBytes": 24176,
+        "nativeDimensions": [
+          0.53415,
+          1.043531,
+          0.074839
+        ],
+        "bounds": {
+          "min": [
+            -0.2672613561153412,
+            -1.0246998071670532,
+            -0.045649923384189606
+          ],
+          "max": [
+            0.26688891649246216,
+            0.018830735236406326,
+            0.029188932850956917
+          ]
+        }
+      },
+      "materialSlots": [
+        "fabric",
+        "hanger",
+        "chrome"
+      ],
+      "origin": "rail",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
+      "quotedProduct": false
+    },
+    {
+      "id": "hob",
+      "revision": 5,
+      "path": "shared/models/hob-balanced-33a8f39093.glb",
+      "sha256": "33a8f39093d8be9722fae7710e42300ce3dae3c76d86a41ec734f1d648d78974",
+      "bytes": 50988,
+      "triangles": 3852,
+      "drawCalls": 3,
+      "geometryBytes": 115272,
+      "nativeDimensions": [
+        0.56,
+        0.0064,
+        0.48
+      ],
+      "bounds": {
+        "min": [
+          -0.2800000011920929,
+          0,
+          -0.23999999463558197
+        ],
+        "max": [
+          0.2800000011920929,
+          0.006400000303983688,
+          0.23999999463558197
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/hob-balanced-33a8f39093.glb",
+        "sha256": "33a8f39093d8be9722fae7710e42300ce3dae3c76d86a41ec734f1d648d78974",
+        "bytes": 50988,
+        "triangles": 3852,
+        "drawCalls": 3,
+        "geometryBytes": 115272,
+        "nativeDimensions": [
+          0.56,
+          0.0064,
+          0.48
+        ],
+        "bounds": {
+          "min": [
+            -0.2800000011920929,
+            0,
+            -0.23999999463558197
+          ],
+          "max": [
+            0.2800000011920929,
+            0.006400000303983688,
+            0.23999999463558197
+          ]
+        }
+      },
+      "materialSlots": [
+        "black-glass",
+        "print",
+        "digits"
+      ],
+      "origin": "countertop",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
+      "quotedProduct": false
+    },
+    {
+      "id": "hood",
+      "revision": 3,
+      "path": "shared/models/hood-balanced-7f02c0db21.glb",
+      "sha256": "7f02c0db21226404dfa4dfd6401fa75a2b05694d3bb0f420022642caa083d3ae",
+      "bytes": 25912,
+      "triangles": 2064,
+      "drawCalls": 4,
+      "geometryBytes": 40672,
+      "nativeDimensions": [
+        0.6,
+        0.632,
+        0.4485
+      ],
+      "bounds": {
+        "min": [
+          -0.30000001192092896,
+          -0.06199999898672104,
+          -0.19499999284744263
+        ],
+        "max": [
+          0.30000001192092896,
+          0.5699999928474426,
+          0.2535000145435333
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/hood-balanced-7f02c0db21.glb",
+        "sha256": "7f02c0db21226404dfa4dfd6401fa75a2b05694d3bb0f420022642caa083d3ae",
+        "bytes": 25912,
+        "triangles": 2064,
+        "drawCalls": 4,
+        "geometryBytes": 40672,
+        "nativeDimensions": [
+          0.6,
+          0.632,
+          0.4485
+        ],
+        "bounds": {
+          "min": [
+            -0.30000001192092896,
+            -0.06199999898672104,
+            -0.19499999284744263
+          ],
+          "max": [
+            0.30000001192092896,
+            0.5699999928474426,
+            0.2535000145435333
+          ]
+        }
+      },
+      "materialSlots": [
+        "steel",
+        "black-glass",
+        "steel-dark",
+        "led"
+      ],
+      "origin": "center",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
+      "quotedProduct": false
+    },
+    {
+      "id": "shoes-loafer",
+      "revision": 4,
+      "path": "shared/models/shoes-loafer-balanced-6fcf82e21b.glb",
+      "sha256": "6fcf82e21b1814088ce5b2493d153333fc6ebda29ab56b9bb3058f707983a4e1",
+      "bytes": 38564,
+      "triangles": 3998,
+      "drawCalls": 3,
+      "geometryBytes": 58868,
+      "nativeDimensions": [
+        0.211564,
+        0.059435,
+        0.272442
+      ],
+      "bounds": {
+        "min": [
+          -0.10578176379203796,
+          -0.000019354787582415156,
+          -0.13620540499687195
+        ],
+        "max": [
+          0.10578175634145737,
+          0.05941611900925636,
+          0.13623689115047455
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/shoes-loafer-lightweight-a7abde6e2a.glb",
+        "sha256": "a7abde6e2a4a8249788e8e8c4dc9772f808972218902b47c65e1b57a6dfe059b",
+        "bytes": 19812,
+        "triangles": 1598,
+        "drawCalls": 3,
+        "geometryBytes": 24068,
+        "nativeDimensions": [
+          0.211127,
+          0.059269,
+          0.272332
+        ],
+        "bounds": {
+          "min": [
+            -0.10556336492300034,
+            0.00008418162178713828,
+            -0.13609646260738373
+          ],
+          "max": [
+            0.10556336492300034,
+            0.05935298651456833,
+            0.13623523712158203
+          ]
+        }
+      },
+      "materialSlots": [
+        "rubber",
+        "leather-tan",
+        "leather-dark"
+      ],
+      "origin": "shelf",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
+      "quotedProduct": false
+    },
+    {
+      "id": "sink",
+      "revision": 4,
+      "path": "shared/models/sink-balanced-65bfeed53c.glb",
+      "sha256": "65bfeed53cd70cf2e9e5928700fa2111fefd1f47dd0bf192dc5a50b4ab334fe0",
+      "bytes": 47148,
+      "triangles": 5200,
+      "drawCalls": 3,
+      "geometryBytes": 92528,
+      "nativeDimensions": [
+        0.473663,
+        0.202255,
+        0.393663
+      ],
+      "bounds": {
+        "min": [
+          -0.23683172464370728,
+          -0.1949937343597412,
+          -0.19683168828487396
+        ],
+        "max": [
+          0.23683172464370728,
+          0.007260824553668499,
+          0.19683168828487396
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/sink-lightweight-1903e2d0de.glb",
+        "sha256": "1903e2d0de1d57a0547ee44fe847773fe7f66fb9d1d9e64d385c8a0dffbdb898",
+        "bytes": 27756,
+        "triangles": 2080,
+        "drawCalls": 3,
+        "geometryBytes": 44432,
+        "nativeDimensions": [
+          0.473651,
+          0.202244,
+          0.393651
+        ],
+        "bounds": {
+          "min": [
+            -0.23682548105716705,
+            -0.19498075544834137,
+            -0.19682526588439941
+          ],
+          "max": [
+            0.23682548105716705,
+            0.007263016887009144,
+            0.19682526588439941
+          ]
+        }
+      },
+      "materialSlots": [
+        "steel",
+        "rubber",
+        "chrome"
+      ],
+      "origin": "countertop",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
+      "quotedProduct": false
+    },
+    {
+      "id": "tap-black",
+      "revision": 1,
+      "path": "shared/models/tap-black-balanced-a866847621.glb",
+      "sha256": "a8668476216da242d26c86ac4f55f657b778128f2fba696599f96279f8c70308",
+      "bytes": 16628,
+      "triangles": 1640,
+      "drawCalls": 2,
+      "geometryBytes": 24944,
+      "nativeDimensions": [
+        0.062,
+        0.32,
+        0.205
+      ],
+      "bounds": {
+        "min": [
+          -0.029999999329447746,
+          0,
+          -0.029999999329447746
+        ],
+        "max": [
+          0.03199999779462814,
+          0.320000022649765,
+          0.17500001192092896
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/tap-black-balanced-a866847621.glb",
+        "sha256": "a8668476216da242d26c86ac4f55f657b778128f2fba696599f96279f8c70308",
+        "bytes": 16628,
+        "triangles": 1640,
+        "drawCalls": 2,
+        "geometryBytes": 24944,
+        "nativeDimensions": [
+          0.062,
+          0.32,
+          0.205
+        ],
+        "bounds": {
+          "min": [
+            -0.029999999329447746,
+            0,
+            -0.029999999329447746
+          ],
+          "max": [
+            0.03199999779462814,
+            0.320000022649765,
+            0.17500001192092896
+          ]
+        }
+      },
+      "materialSlots": [
+        "black-matte",
+        "rubber"
+      ],
+      "origin": "countertop",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
+      "quotedProduct": false
+    },
+    {
+      "id": "tee",
+      "revision": 1,
+      "path": "shared/models/tee-balanced-707e9f2ae4.glb",
+      "sha256": "707e9f2ae404385103145bb3ebf98f42f03750412c320cfad7b6551a4d44aa13",
+      "bytes": 29192,
+      "triangles": 3199,
+      "drawCalls": 3,
+      "geometryBytes": 45466,
+      "nativeDimensions": [
+        0.549178,
+        0.708506,
+        0.050125
+      ],
+      "bounds": {
+        "min": [
+          -0.27469781041145325,
+          -0.6895149350166321,
+          -0.026814017444849014
+        ],
+        "max": [
+          0.2744806408882141,
+          0.018991263583302498,
+          0.02331060916185379
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/tee-lightweight-f470f763ba.glb",
+        "sha256": "f470f763ba24f6e18bb33a585745ad6e95981ea59085c7627d20536be99e81f4",
+        "bytes": 15416,
+        "triangles": 1280,
+        "drawCalls": 3,
+        "geometryBytes": 18480,
+        "nativeDimensions": [
+          0.549314,
+          0.708808,
+          0.050149
+        ],
+        "bounds": {
+          "min": [
+            -0.27466708421707153,
+            -0.6899774670600891,
+            -0.026838460937142372
+          ],
+          "max": [
+            0.27464649081230164,
+            0.018830735236406326,
+            0.02331060916185379
+          ]
+        }
+      },
+      "materialSlots": [
+        "fabric",
+        "hanger",
+        "chrome"
+      ],
+      "origin": "rail",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
+      "quotedProduct": false
+    },
+    {
+      "id": "towels",
+      "revision": 1,
+      "path": "shared/models/towels-balanced-f4501b9df2.glb",
+      "sha256": "f4501b9df29954c870f6228d5c6a977e4b68c8304289749740d798a08ec67a0e",
+      "bytes": 24920,
+      "triangles": 3000,
+      "drawCalls": 1,
+      "geometryBytes": 42096,
+      "nativeDimensions": [
+        0.335753,
+        0.173801,
+        0.259468
+      ],
+      "bounds": {
+        "min": [
+          -0.16658265888690948,
+          -1.5862962499113564e-8,
+          -0.1289770007133484
+        ],
+        "max": [
+          0.16917017102241516,
+          0.17380133271217346,
+          0.1304907202720642
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/towels-lightweight-ebb5b2874f.glb",
+        "sha256": "ebb5b2874f7dc6b12f3cb221688c8462f512c248d8c1e9d15c4c8fe3d26cee3c",
+        "bytes": 11780,
+        "triangles": 1200,
+        "drawCalls": 1,
+        "geometryBytes": 16896,
+        "nativeDimensions": [
+          0.335802,
+          0.173968,
+          0.259616
+        ],
+        "bounds": {
+          "min": [
+            -0.16658265888690948,
+            0.0000010039540256912005,
+            -0.12904156744480133
+          ],
+          "max": [
+            0.1692192405462265,
+            0.17396940290927887,
+            0.1305747926235199
+          ]
+        }
+      },
+      "materialSlots": [
+        "fabric-fixed"
+      ],
+      "origin": "shelf",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 0,
+      "licenseKey": "original-room-kit-v2",
+      "source": "art/blender/phase2_kit.py",
+      "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
       "quotedProduct": false
     }
   ]

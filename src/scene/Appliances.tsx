@@ -1,9 +1,24 @@
 import { ModelAsset } from "./assets/ModelAsset";
 import { applianceFits } from "./assets/placement";
+import { sinkBowl } from "./countertopGeometry";
 import { useMemo } from "react";
 import { Shape, CatmullRomCurve3, Vector3, DoubleSide } from "three";
 import { Box } from "./Primitives";
+/** Glass induction hob; the 56 × 48 cm model sits on 60 cm and wider tops. */
 export function Hob({ width = 0.6 }: { width?: number }) {
+  return (
+    <ModelAsset
+      id="hob"
+      selectable
+      // 6 mm glass with printed rings: self-shadowing only adds acne.
+      castShadow={false}
+      position={[0, -0.0042, 0]}
+      disabled={width < 0.598}
+      fallback={<ProceduralHob width={width} />}
+    />
+  );
+}
+function ProceduralHob({ width = 0.6 }: { width?: number }) {
   const w = Math.min(0.56, width - 0.04);
   return (
     <group>
@@ -49,8 +64,46 @@ export function Hob({ width = 0.6 }: { width?: number }) {
     </group>
   );
 }
-export function Sink({ width = 0.6 }: { width?: number }) {
-  const w = width * 0.61;
+/** Inset sink and tap. `dark` picks the black tap for dark fronts. */
+export function Sink({
+  width = 0.6,
+  dark = false,
+}: {
+  width?: number;
+  dark?: boolean;
+}) {
+  const bowl = sinkBowl(width);
+  // Group origin is 5 mm above the worktop; models sit on the worktop.
+  const tap = (
+    <ModelAsset
+      id={dark ? "tap-black" : "tap"}
+      selectable
+      position={[0, -0.005, -(bowl.d / 2 + 0.046)]}
+    />
+  );
+  return bowl.model ? (
+    <group>
+      <ModelAsset
+        id="sink"
+        selectable
+        position={[0, -0.005, 0]}
+        fallback={<ProceduralSink width={width} tap={false} />}
+      />
+      {tap}
+    </group>
+  ) : (
+    <ProceduralSink width={width} />
+  );
+}
+function ProceduralSink({
+  width = 0.6,
+  tap = true,
+}: {
+  width?: number;
+  tap?: boolean;
+}) {
+  const bowl = sinkBowl(width);
+  const w = bowl.w;
   const curve = useMemo(
     () =>
       new CatmullRomCurve3([
@@ -65,7 +118,7 @@ export function Sink({ width = 0.6 }: { width?: number }) {
   return (
     <group>
       <Box
-        size={[w, 0.014, 0.3]}
+        size={[w, 0.014, bowl.d - 0.01]}
         position={[0, -0.16, 0]}
         bevel={0.006}
         color="#5d6567"
@@ -75,7 +128,7 @@ export function Sink({ width = 0.6 }: { width?: number }) {
       {[-1, 1].map((n) => (
         <group key={n}>
           <Box
-            size={[0.014, 0.15, 0.31]}
+            size={[0.014, 0.15, bowl.d]}
             position={[(n * w) / 2, -0.08, 0]}
             bevel={0.005}
             color="#8e9799"
@@ -84,7 +137,7 @@ export function Sink({ width = 0.6 }: { width?: number }) {
           />
           <Box
             size={[w + 0.014, 0.15, 0.014]}
-            position={[0, -0.08, n * 0.15]}
+            position={[0, -0.08, (n * bowl.d) / 2 - n * 0.005]}
             bevel={0.005}
             color="#8e9799"
             metal={0.8}
@@ -92,14 +145,14 @@ export function Sink({ width = 0.6 }: { width?: number }) {
           />
           <Box
             size={[w + 0.042, 0.006, 0.016]}
-            position={[0, -0.002, n * 0.162]}
+            position={[0, -0.002, n * (bowl.d / 2 + 0.007)]}
             bevel={0.002}
             color="#b6bcbd"
             metal={0.8}
             roughness={0.22}
           />
           <Box
-            size={[0.016, 0.006, 0.31]}
+            size={[0.016, 0.006, bowl.d]}
             position={[n * (w / 2 + 0.013), -0.002, 0]}
             bevel={0.002}
             color="#b6bcbd"
@@ -112,42 +165,60 @@ export function Sink({ width = 0.6 }: { width?: number }) {
         <ringGeometry args={[0.016, 0.023, 24]} />
         <meshStandardMaterial color="#bac2c4" metalness={0.9} roughness={0.2} />
       </mesh>
-      <ModelAsset
-        id="tap"
-        selectable
-        position={[-0.105, 0, -0.21]}
-        fallback={
-          <group>
-            {" "}
-            <mesh>
-              <tubeGeometry args={[curve, 32, 0.012, 10, false]} />
-              <meshStandardMaterial
-                color="#c3c9ca"
-                metalness={0.94}
-                roughness={0.21}
+      {tap && (
+        <ModelAsset
+          id="tap"
+          selectable
+          position={[-0.105, 0, -0.21]}
+          fallback={
+            <group>
+              {" "}
+              <mesh>
+                <tubeGeometry args={[curve, 32, 0.012, 10, false]} />
+                <meshStandardMaterial
+                  color="#c3c9ca"
+                  metalness={0.94}
+                  roughness={0.21}
+                />
+              </mesh>
+              <Box
+                size={[0.038, 0.035, 0.038]}
+                position={[-0.105, 0.01, -0.21]}
+                bevel={0.008}
+                color="#899497"
+                metal={0.9}
               />
-            </mesh>
-            <Box
-              size={[0.038, 0.035, 0.038]}
-              position={[-0.105, 0.01, -0.21]}
-              bevel={0.008}
-              color="#899497"
-              metal={0.9}
-            />
-            <Box
-              size={[0.05, 0.012, 0.016]}
-              position={[-0.145, 0.047, -0.21]}
-              bevel={0.004}
-              color="#c3c9ca"
-              metal={0.9}
-            />
-          </group>
-        }
-      />
+              <Box
+                size={[0.05, 0.012, 0.016]}
+                position={[-0.145, 0.047, -0.21]}
+                bevel={0.004}
+                color="#c3c9ca"
+                metal={0.9}
+              />
+            </group>
+          }
+        />
+      )}
     </group>
   );
 }
 export function Hood({
+  width = 0.6,
+  builtIn = false,
+}: {
+  width?: number;
+  builtIn?: boolean;
+}) {
+  return (
+    <ModelAsset
+      id="hood"
+      selectable
+      disabled={builtIn || width < 0.598 || width > 0.62}
+      fallback={<ProceduralHood width={width} builtIn={builtIn} />}
+    />
+  );
+}
+function ProceduralHood({
   width = 0.6,
   builtIn = false,
 }: {

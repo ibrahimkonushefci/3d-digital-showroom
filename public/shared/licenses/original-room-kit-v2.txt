@@ -1,0 +1,17 @@
+Original room kit v2 — authored in this project on 15 October 2026.
+
+Source: art/blender/phase2_kit.py with art/blender/kit_lib.py (original
+scripts run headless in Blender 5.2; generic geometry built from code).
+Authoring: Claude for the owner of this project. No downloaded meshes, scans,
+supplier logos, product files, textile images or third-party textures are used.
+Runtime files: hashed shared/models/*.glb listed in asset-manifest.json,
+optimised with glTF-Transform and meshoptimizer (MIT) by
+scripts/register-kit.mjs.
+
+These original project assets may be used, modified, optimized, commercially
+distributed, self-hosted, bundled offline and included in white-label clients
+with this application. No purchased or third-party asset license is required.
+This permission describes project use, not supplier-product authenticity or a
+claim that generated generic models reproduce any manufacturer's product.
+Blender (GPL) is an authoring tool only; its licence does not extend to the
+models it exports.

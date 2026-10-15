@@ -214,7 +214,18 @@ const kit = [
   ),
 ];
 await mkdir(`${root}/models`, { recursive: true });
-for (const asset of kit) {
+// Models now authored by the Blender kit (art/blender/phase2_kit.py,
+// registered by scripts/register-kit.mjs) are not regenerated here.
+const superseded = new Set(
+  (
+    JSON.parse(
+      await readFile(`${root}/asset-manifest.json`, "utf8").catch(() => "{}"),
+    ).assets ?? []
+  )
+    .filter((a) => a.licenseKey !== "original-room-kit-v1")
+    .map((a) => a.id),
+);
+for (const asset of kit.filter((a) => !superseded.has(a.id))) {
   const paths = [];
   let highStats;
   for (const lod of ["balanced", "lightweight"]) {
@@ -377,5 +388,5 @@ await writeFile(
   JSON.stringify(manifest, null, 2) + "\n",
 );
 console.log(
-  `Authored ${kit.length} models, two LODs, ${manifest.assets.reduce((n, a) => n + a.bytes + a.lowerDetail.bytes, 0)} bytes`,
+  `Authored ${kit.filter((a) => !superseded.has(a.id)).length} models, two LODs, ${manifest.assets.reduce((n, a) => n + a.bytes + a.lowerDetail.bytes, 0)} bytes`,
 );

@@ -1,6 +1,11 @@
 import { readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
+const ALLOWED_EXTENSIONS = [
+  "EXT_texture_webp",
+  "KHR_mesh_quantization",
+  "EXT_meshopt_compression",
+];
 const root = process.argv[2] || "dist";
 const manifest = JSON.parse(
   await readFile(join(root, "shared/asset-manifest.json"), "utf8"),
@@ -46,10 +51,11 @@ for (const a of manifest.assets) {
     const jsonLength = bytes.readUInt32LE(12),
       doc = JSON.parse(bytes.subarray(20, 20 + jsonLength).toString());
     // Embedded WebP textures are allowed (CC0 decor); nothing external.
+    // Quantised, meshopt-compressed geometry decodes with three's bundled decoder.
     if (
       doc.images?.some((i) => i.uri || i.mimeType !== "image/webp") ||
       doc.buffers?.some((b) => b.uri) ||
-      doc.extensionsRequired?.some((e) => e !== "EXT_texture_webp") ||
+      doc.extensionsRequired?.some((e) => !ALLOWED_EXTENSIONS.includes(e)) ||
       doc.cameras?.length ||
       doc.animations?.length
     )

@@ -10,7 +10,9 @@ import {
   type ReactNode,
 } from "react";
 import { GLTFLoader, type GLTF } from "three/addons/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 import {
+  Color,
   Matrix4,
   Mesh,
   Object3D,
@@ -32,7 +34,11 @@ export const pendingModelLoads = () => pending;
 type Transform = {
   position?: [number, number, number];
   rotation?: [number, number, number];
+  /** Fabric colour for this instance (materials named "fabric" only). */
+  tint?: string;
 };
+/** Material slots that take a per-instance colour; others keep their own. */
+const TINTED = new Set(["fabric"]);
 class IsolatedModelBoundary extends Component<
   { fallback: ReactNode; children: ReactNode },
   { failed: boolean }
@@ -68,7 +74,11 @@ function LoadedModel({
       pending++;
       let gltf: GLTF;
       try {
-        gltf = await new GLTFLoader().loadAsync("/" + path);
+        // Phase 2 kit geometry is quantised + meshopt-compressed; the decoder
+        // ships inside three (wasm embedded), so this stays offline-safe.
+        gltf = await new GLTFLoader()
+          .setMeshoptDecoder(MeshoptDecoder)
+          .loadAsync("/" + path);
       } finally {
         pending--;
       }
@@ -117,6 +127,7 @@ function LoadedModel({
       mesh: Mesh;
       material: Mesh["material"];
       matrices: Matrix4[];
+      colours?: Color[];
     }[] = [];
     source.scene.traverse((o) => {
       if ((o as Mesh).isMesh) {
@@ -140,6 +151,12 @@ function LoadedModel({
             obj.updateMatrix();
             return obj.matrix.multiply(mesh.matrixWorld);
           }),
+          colours:
+            !Array.isArray(shared) &&
+            TINTED.has(shared.name) &&
+            transforms.some((t) => t.tint)
+              ? transforms.map((t) => new Color(t.tint || "#ffffff"))
+              : undefined,
         });
       }
     });
@@ -157,12 +174,13 @@ function LoadedModel({
   if (!source) return fallback;
   return (
     <group dispose={null}>
-      {parts.map(({ mesh, material, matrices }) => (
+      {parts.map(({ mesh, material, matrices, colours }) => (
         <ModelInstances
-          key={mesh.uuid + ":" + matrices.length}
+          key={mesh.uuid + ":" + matrices.length + (colours ? ":c" : "")}
           mesh={mesh}
           material={material}
           matrices={matrices}
+          colours={colours}
           selectable={selectable}
           castShadow={castShadow}
         />
@@ -174,12 +192,14 @@ function ModelInstances({
   mesh,
   material,
   matrices,
+  colours,
   selectable,
   castShadow,
 }: {
   mesh: Mesh;
   material: Mesh["material"];
   matrices: Matrix4[];
+  colours?: Color[];
   selectable: boolean;
   castShadow: boolean;
 }) {
@@ -189,9 +209,13 @@ function ModelInstances({
     if (o) {
       matrices.forEach((m, i) => o.setMatrixAt(i, m));
       o.instanceMatrix.needsUpdate = true;
+      if (colours) {
+        colours.forEach((c, i) => o.setColorAt(i, c));
+        o.instanceColor!.needsUpdate = true;
+      }
       o.computeBoundingSphere();
     }
-  }, [matrices]);
+  }, [matrices, colours]);
   // Source geometry/material leases are shared; instance buffers belong to this wrapper.
   useLayoutEffect(() => {
     const o = ref.current;
