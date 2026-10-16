@@ -2190,8 +2190,8 @@
       "style": {
         "front": "cashmere",
         "carcass": "white",
-        "countertop": "travertine",
-        "handle": "none",
+        "countertop": "egger-f206",
+        "handle": "profile",
         "backsplash": "none",
         "plinth": "black",
         "led": true,
@@ -2302,7 +2302,11 @@
         }
       ],
       "roomSceneId": "kitchen-warm-v1",
-      "sceneRevision": 1
+      "sceneRevision": 1,
+      "environment": {
+        "floor": "laminate",
+        "wallColor": "#f1eee8"
+      }
     },
     {
       "id": "modern",
@@ -2427,7 +2431,11 @@
         }
       ],
       "roomSceneId": "kitchen-warm-v1",
-      "sceneRevision": 1
+      "sceneRevision": 1,
+      "environment": {
+        "floor": "concrete",
+        "wallColor": "#d6d1c8"
+      }
     },
     {
       "id": "classic",
@@ -2459,7 +2467,7 @@
         "front": "anthracite",
         "carcass": "white",
         "countertop": "quartz",
-        "handle": "bar",
+        "handle": "profile",
         "backsplash": "none",
         "plinth": "black",
         "led": true,
@@ -2588,7 +2596,16 @@
         }
       ],
       "roomSceneId": "kitchen-warm-v1",
-      "sceneRevision": 1
+      "sceneRevision": 1,
+      "environment": {
+        "floor": "laminate",
+        "wallColor": "#f1eee8"
+      },
+      "finishZones": {
+        "island": {
+          "front": "oak"
+        }
+      }
     },
     {
       "id": "wardrobe-straight",
@@ -2617,7 +2634,7 @@
         ]
       },
       "style": {
-        "front": "cashmere",
+        "front": "white",
         "carcass": "oak",
         "countertop": "oak",
         "handle": "bar",
@@ -2665,7 +2682,11 @@
         }
       ],
       "roomSceneId": "wardrobe-warm-v1",
-      "sceneRevision": 1
+      "sceneRevision": 1,
+      "environment": {
+        "floor": "laminate",
+        "wallColor": "#c9cfc2"
+      }
     },
     {
       "id": "wardrobe",
@@ -2684,10 +2705,10 @@
         "openings": []
       },
       "style": {
-        "front": "cashmere",
-        "carcass": "oak",
+        "front": "walnut",
+        "carcass": "white",
         "countertop": "oak",
-        "handle": "bar",
+        "handle": "none",
         "backsplash": "none",
         "plinth": "matching",
         "led": true,
@@ -2744,7 +2765,11 @@
         }
       ],
       "roomSceneId": "wardrobe-warm-v1",
-      "sceneRevision": 1
+      "sceneRevision": 1,
+      "environment": {
+        "floor": "tiles",
+        "wallColor": "#f1eee8"
+      }
     }
   ],
   "interiorItems": [

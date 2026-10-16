@@ -35,11 +35,13 @@ export const EnvironmentPolicy = createContext<"auto" | "authored">("auto");
 export function authoredEnvironment(design: DesignDocument) {
   const env = new Scene(),
     owned: Array<{ dispose(): void }> = [];
-  const { recipe } = resolveRoom(design),
-    room = design.room;
+  const { recipe, envelope } = resolveRoom(design),
+    room = envelope.room;
   const w = room.width / 100,
     d = room.depth / 100,
-    h = room.height / 100;
+    h = room.height / 100,
+    cx = room.cx,
+    cz = room.cz;
   env.background = new Color("#948979");
   const add = (
     size: [number, number, number],
@@ -63,17 +65,17 @@ export function authoredEnvironment(design: DesignDocument) {
     for (const p of wallPieces(room, side))
       add(
         p.size,
-        [p.position[0] - w / 2, p.position[1], p.position[2] - d / 2],
+        [p.position[0] - w / 2 + cx, p.position[1], p.position[2] - d / 2 + cz],
         recipe.finishes.wall,
         recipe.lightRecipe.wallBrightness,
         p.rotation[1],
       );
-  add([w, 0.04, d], [0, -0.02, 0], "#b2a389", 0.42);
-  add([w, 0.04, d], [0, h + 0.02, 0], "#fff4e4", 0.8);
+  add([w, 0.04, d], [cx, -0.02, cz], "#b2a389", 0.42);
+  add([w, 0.04, d], [cx, h + 0.02, cz], "#fff4e4", 0.8);
   if (!room.openings.some((o) => o.type === "window"))
-    add([w * 0.4, 0.02, d * 0.35], [0, h - 0.02, 0], "#fff1d8", 2.1);
+    add([w * 0.4, 0.02, d * 0.35], [cx, h - 0.02, cz], "#fff1d8", 2.1);
   for (const o of room.openings.filter((o) => o.type === "window")) {
-    const p = openingPosition(room, o);
+    const p = openingPosition(room, o).add(new Vector3(cx, 0, cz));
     add(
       [o.width / 100, o.height / 100, 0.02],
       p.toArray(),

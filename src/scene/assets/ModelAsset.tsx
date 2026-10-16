@@ -34,6 +34,8 @@ export const pendingModelLoads = () => pending;
 type Transform = {
   position?: [number, number, number];
   rotation?: [number, number, number];
+  /** Uniform scale (staged plants come in one size, shown a little larger). */
+  scale?: number;
   /** Fabric colour for this instance (materials named "fabric" only). */
   tint?: string;
 };
@@ -148,6 +150,7 @@ function LoadedModel({
             const obj = new Object3D();
             obj.position.fromArray(t.position || [0, 0, 0]);
             obj.rotation.set(...(t.rotation || [0, 0, 0]));
+            obj.scale.setScalar(t.scale ?? 1);
             obj.updateMatrix();
             return obj.matrix.multiply(mesh.matrixWorld);
           }),

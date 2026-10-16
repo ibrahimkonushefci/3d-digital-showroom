@@ -169,17 +169,29 @@ export async function exportBakeScene(
     shell[surface] = flatMaterial(m, means).color.toArray();
   });
 
-  const room = design.room,
+  // The shell is the presentation room; its corner sits at the envelope
+  // origin (design-room corner frame) of the room group at (-w/2, 0, -d/2).
+  const { envelope } = resolveRoom(design);
+  const room = envelope.room,
     w = room.width / 100,
     d = room.depth / 100,
-    origin = [-w / 2, 0, -d / 2];
+    origin = [
+      envelope.origin[0] - design.room.width / 200,
+      0,
+      envelope.origin[1] - design.room.depth / 200,
+    ];
   const light = resolveLighting(design, catalog, "balanced");
   const wardrobe = design.kind === "wardrobe";
   const leds = ledRuns(design).map(({ wall, a, b, depth, height }) => {
-    const p = wallPosition(wall, a, b - a, depth, room);
+    const p = wallPosition(wall, a, b - a, depth, design.room);
     return {
       // RunLights' group frame: centre, yaw, emitter offset and tilt.
-      centre: [p.x / 100, wardrobe ? height / 100 - 0.045 : 1.385, p.z / 100],
+      // Run frame (design-room corner) → envelope corner frame.
+      centre: [
+        p.x / 100 - envelope.origin[0],
+        wardrobe ? height / 100 - 0.045 : 1.385,
+        p.z / 100 - envelope.origin[1],
+      ],
       yaw: p.rotation,
       offset: [0, 0, wardrobe ? depth / 200 - 0.045 : 0.1],
       tilt: wardrobe ? -Math.PI / 4 : -Math.PI / 2,
@@ -190,8 +202,8 @@ export async function exportBakeScene(
     };
   });
   const json = {
-    signature: bakeSignature(design),
-    key: bakeKey(design),
+    signature: bakeSignature(design, catalog),
+    key: bakeKey(design, catalog),
     kind: design.kind,
     recipe: resolveRoom(design).recipe.id,
     room: {

@@ -247,6 +247,23 @@ export const CatalogSchema = z
               }),
             )
             .optional(),
+          /** Floor and wall colour the prepared design opens with. */
+          environment: z
+            .object({
+              floor: z.enum(["laminate", "tiles", "concrete"]),
+              wallColor: color,
+            })
+            .optional(),
+          /** Finish of one part of the furniture (e.g. oak island fronts). */
+          finishZones: z
+            .object({
+              island: z
+                .object({ front: z.string().optional(), handle: z.string().optional() })
+                .strict()
+                .optional(),
+            })
+            .strict()
+            .optional(),
           camera: z.object({
             position: z.tuple([z.number(), z.number(), z.number()]),
             target: z.tuple([z.number(), z.number(), z.number()]),

@@ -28,6 +28,11 @@ for (const slug of ["default", "druri-design"]) {
           // Phase 2 adds only an explicit preset window; frozen customer designs
           // keep their exact original openings. All furniture/state stays equal.
           room: { ...live.design.room, openings: design.room.openings },
+          // Phase 2 (second round) gives the prepared designs new default
+          // finishes, floor and wall colour; furniture and layout stay frozen.
+          style: design.style,
+          environment: design.environment,
+          finishZones: design.finishZones,
           id: design.id,
           cabinets: live.design.cabinets.map((c, i) => ({
             ...c,
@@ -40,9 +45,13 @@ for (const slug of ["default", "druri-design"]) {
           expect(calculatePrice(design, catalog, lang)).toEqual(
             preset.prices[lang],
           );
-          expect(calculatePrice(live.design, catalog, lang)).toEqual(
-            preset.prices[lang],
-          );
+          expect(
+            calculatePrice(
+              { ...live.design, style: design.style, finishZones: design.finishZones },
+              catalog,
+              lang,
+            ),
+          ).toEqual(preset.prices[lang]);
           const input = assembleRenderInput(design, catalog);
           expect(
             calculatePrice(

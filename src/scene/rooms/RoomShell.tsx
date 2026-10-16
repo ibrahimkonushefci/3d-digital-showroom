@@ -1,19 +1,30 @@
 import { wallPieces, windowFittings } from "../lighting/lightingRecipe";
 import { Fittings } from "../Fittings";
 import { WindowBlind } from "./WindowBlind";
-import { Suspense, useContext, useEffect, useRef, useMemo } from "react";
+import {
+  Suspense,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useMemo,
+} from "react";
 import { applyShellBake, ShellBake, SHELL_BAKE_KEY } from "../bake/shellBake";
 import { useFrame, useLoader } from "@react-three/fiber";
 import {
   AlwaysStencilFunc,
   BackSide,
-  ClampToEdgeWrapping,
-  CylinderGeometry,
+  BoxGeometry,
+  Color,
+  InstancedMesh,
+  MeshStandardMaterial,
+  Object3D,
+  MathUtils,
+  SphereGeometry,
   EqualStencilFunc,
   Group,
   DoubleSide,
   KeepStencilOp,
-  MirroredRepeatWrapping,
   ReplaceStencilOp,
   SRGBColorSpace,
   TextureLoader,
@@ -23,11 +34,13 @@ import {
 import type { Room, DesignDocument, Material } from "../../catalog/types";
 import { Box } from "../Primitives";
 import { resolveRoom } from "./resolveRoom";
+import type { Envelope, EnvelopeRoom } from "./envelope";
 import {
   seesInterior,
   stanceWall,
   STANCE_EXTENSION,
   STANCE_MAX_HEIGHT,
+  type RoomBox,
 } from "./stance";
 export type WallSide = "back" | "left" | "right" | "front";
 /** Painted plaster: the paint colour stays a parameter (customer wall
@@ -57,19 +70,20 @@ export function wallMaterial(color: string): Material {
     },
   };
 }
-const EXTERIOR_VIEW = "/shared/textures/exterior-garden.webp";
+const EXTERIOR_VIEW = "/shared/textures/exterior-garden-pano.webp";
 /** True when the camera stands on the room side of a wall's plane. Walls are
  * hidden only when the camera is beyond them, so an interior view keeps the
  * whole room while the overview still cuts away the walls facing it. */
 export function insideWall(
   camera: { position: { x: number; z: number } },
-  room: Room,
+  room: RoomBox,
   side: WallSide,
   margin = 0.02,
 ) {
   const halfW = room.width / 200,
     halfD = room.depth / 200,
-    { x, z } = camera.position;
+    x = camera.position.x - (room.cx ?? 0),
+    z = camera.position.z - (room.cz ?? 0);
   return side === "back"
     ? z > -halfD + margin
     : side === "front"
@@ -78,7 +92,7 @@ export function insideWall(
         ? x > -halfW + margin
         : x < halfW - margin;
 }
-export function insideRoom(camera: Camera, room: Room) {
+export function insideRoom(camera: Camera, room: RoomBox) {
   return (
     (["back", "front", "left", "right"] as const).every((side) =>
       insideWall(camera, room, side, 0.05),
@@ -87,70 +101,76 @@ export function insideRoom(camera: Camera, room: Room) {
 }
 /** Stencil value the window openings write; the garden draws only there. */
 const WINDOW_STENCIL = 1;
-/** Garden backdrop: a curved section around each window, drawn only through
- * the window's opening (stencil), so every camera that sees a window sees
- * the garden, and no camera ever sees the backdrop itself beside a cut-away
- * room. The curve covers grazing angles; the photo repeats mirrored to the
- * sides so it keeps its natural proportions, and its top and bottom rows
- * extend into sky and lawn for steep views. */
-const GARDEN_RADIUS = 7;
-const GARDEN_ARC = (220 * Math.PI) / 180;
-/** Angle one copy of the 16:9 photo covers: keeps its proportions. */
-const GARDEN_COPY = Math.PI / 2;
-function ExteriorView({
+/** Garden backdrop: one panorama sphere around the whole home (a CC0
+ * Poly Haven garden, latitude band +38° to -48°), drawn only through the
+ * window openings (stencil). Every camera that sees a window sees the
+ * garden in the right direction, at any angle, and no camera ever sees the
+ * backdrop itself beside a cut-away room. Centred at standing eye height so
+ * the photo's horizon meets the room's. */
+const GARDEN_RADIUS = 30;
+/** Latitude band of the photo (degrees); the sphere reaches further and
+ * repeats the photo's top and bottom rows there (sky, lawn). */
+const GARDEN_TOP = 38,
+  GARDEN_BOTTOM = -48,
+  SPHERE_TOP = 70,
+  SPHERE_BOTTOM = -75;
+/** Daylight outside reads brighter than the room (linear multiplier). */
+const GARDEN_EXPOSURE = new Color(1.05, 1.05, 1.05);
+/** Turns the panorama so the lawn and hedge face the main windows. */
+const GARDEN_YAW = 0;
+export function ExteriorView({
   centre,
 }: {
-  /** Window centre height above the floor, metres. */
-  centre: number;
+  /** Panorama centre (design-centred frame, metres). */
+  centre: [number, number, number];
 }) {
   const texture = useLoader(TextureLoader, EXTERIOR_VIEW);
   texture.colorSpace = SRGBColorSpace;
-  if (texture.wrapS !== MirroredRepeatWrapping) {
-    texture.wrapS = MirroredRepeatWrapping;
-    texture.wrapT = ClampToEdgeWrapping;
-    texture.needsUpdate = true;
-  }
   const geometry = useMemo(() => {
-    const photoHeight = GARDEN_RADIUS * GARDEN_COPY * (9 / 16),
-      height = 24;
-    // The photo's horizon sits 68% of its half-height below its centre; put
-    // it at standing eye height so the view lines up with the room.
-    const photoCentre = 1.5 - centre + 0.68 * (photoHeight / 2);
-    const g = new CylinderGeometry(
+    const top = MathUtils.degToRad(GARDEN_TOP),
+      bottom = MathUtils.degToRad(GARDEN_BOTTOM),
+      sphereTop = MathUtils.degToRad(SPHERE_TOP),
+      sphereBottom = MathUtils.degToRad(SPHERE_BOTTOM);
+    // Sphere band; theta from the +Y pole.
+    const g = new SphereGeometry(
       GARDEN_RADIUS,
-      GARDEN_RADIUS,
-      height,
       96,
-      1,
-      true,
-      // three measures theta from +Z; the window looks out along -Z.
-      Math.PI - GARDEN_ARC / 2,
-      GARDEN_ARC,
+      40,
+      0,
+      Math.PI * 2,
+      Math.PI / 2 - sphereTop,
+      sphereTop - sphereBottom,
     );
     const uv = g.getAttribute("uv"),
       position = g.getAttribute("position");
     for (let i = 0; i < uv.count; i++) {
-      // Seen from inside the curve, theta runs right to left: flip, centre
-      // one copy on the window, mirror copies to the sides.
-      const u = 0.5 + ((0.5 - uv.getX(i)) * GARDEN_ARC) / GARDEN_COPY;
-      const v = 0.5 + (position.getY(i) - photoCentre) / photoHeight;
-      uv.setXY(i, u, v);
+      const y = position.getY(i) / GARDEN_RADIUS;
+      const lat = Math.asin(MathUtils.clamp(y, -1, 1));
+      // Seen from inside: flip u so the panorama is not mirrored.
+      uv.setXY(
+        i,
+        1 - uv.getX(i),
+        MathUtils.clamp((lat - bottom) / (top - bottom), 0.002, 0.998),
+      );
     }
     return g;
-  }, [centre]);
+  }, []);
   useEffect(() => () => geometry.dispose(), [geometry]);
   return (
     <mesh
       geometry={geometry}
+      position={centre}
+      rotation={[0, GARDEN_YAW, 0]}
       renderOrder={2}
       raycast={() => {}}
       userData={{ bakeSkip: true, aoExclude: true }}
     >
       <meshBasicMaterial
         map={texture}
-        color="#c9c9c9"
+        color={GARDEN_EXPOSURE}
         side={BackSide}
         fog={false}
+        depthWrite={false}
         stencilWrite
         stencilRef={WINDOW_STENCIL}
         stencilFunc={EqualStencilFunc}
@@ -187,11 +207,11 @@ function WindowPortal({ w, h }: { w: number; h: number }) {
 function StudioWindow({
   w,
   h,
-  centre,
+  blind = true,
 }: {
   w: number;
   h: number;
-  centre: number;
+  blind?: boolean;
 }) {
   const sets = useMemo(() => {
     return windowFittings(w, h);
@@ -216,8 +236,8 @@ function StudioWindow({
       />
       <Fittings
         parts={sets.frame}
-        color="#f4f6f9"
-        roughness={0.5}
+        color={FRAME_COLOR}
+        roughness={0.45}
         metalness={0}
         decorative
         castShadow={false}
@@ -233,13 +253,228 @@ function StudioWindow({
           side={DoubleSide}
         />
       </mesh>
-      <WindowBlind w={w} h={h} />
+      {blind && <WindowBlind w={w} h={h} />}
       <WindowPortal w={w} h={h} />
-      <Suspense fallback={null}>
-        <ExteriorView centre={centre} />
-      </Suspense>
     </group>
   );
+}
+
+/** Anthracite powder-coated frames (Schmidt's black-framed glazing). */
+const FRAME_COLOR = "#2b2d2f";
+/** Floor-to-ceiling glazed garden door with slim dark frames, a fixed side
+ * light and a transom: the room's daylight and its view of the garden. */
+function GardenDoor({ w, h }: { w: number; h: number }) {
+  const parts = useMemo(() => {
+    const fr = 0.05,
+      dep = 0.07,
+      bar = 0.035;
+    const out: { size: [number, number, number]; position: [number, number, number] }[] = [
+      { size: [w + 2 * fr, fr, dep], position: [0, h / 2 + fr / 2, 0.01] },
+      { size: [w + 2 * fr, 0.03, dep + 0.03], position: [0, -h / 2 + 0.015, 0.02] },
+      { size: [fr, h + 2 * fr, dep], position: [-w / 2 - fr / 2, 0, 0.01] },
+      { size: [fr, h + 2 * fr, dep], position: [w / 2 + fr / 2, 0, 0.01] },
+      // Transom at door height.
+      { size: [w, bar, dep], position: [0, h / 2 - 0.38, 0.01] },
+    ];
+    const panes = Math.max(2, Math.round(w / 0.75));
+    for (let i = 1; i < panes; i++)
+      out.push({
+        size: [bar, h, dep],
+        position: [-w / 2 + (w * i) / panes, 0, 0.01],
+      });
+    return out;
+  }, [w, h]);
+  const reveal = useMemo(() => windowFittings(w, h).reveal, [w, h]);
+  return (
+    <group userData={{ bakeKeep: true }}>
+      <Fittings
+        parts={reveal}
+        color="#d9d4ca"
+        roughness={0.85}
+        metalness={0}
+        decorative
+        castShadow={false}
+      />
+      <Fittings
+        parts={parts}
+        color={FRAME_COLOR}
+        roughness={0.45}
+        metalness={0.2}
+        decorative
+        castShadow={false}
+      />
+      <mesh position={[0, 0, -0.03]} raycast={() => {}}>
+        <planeGeometry args={[w, h]} />
+        <meshStandardMaterial
+          color="#dfe8ea"
+          transparent
+          opacity={0.08}
+          roughness={0.05}
+          depthWrite={false}
+          side={DoubleSide}
+        />
+      </mesh>
+      <WindowPortal w={w} h={h} />
+    </group>
+  );
+}
+/** Depth of the next room seen through the doorway, metres. */
+const ANNEX_DEPTH = 2.2;
+/** A doorway without a leaf, trimmed with an architrave, and a short lit
+ * hallway behind it: the glimpse that the room belongs to a home. It only
+ * shows from inside the room (never as a box beside a cut-away overview).
+ * Local frame: the opening's centre, +Z into the room. */
+function Passage({
+  w,
+  h,
+  room,
+  color,
+  floor,
+}: {
+  w: number;
+  h: number;
+  room: EnvelopeRoom;
+  color: string;
+  floor: Material;
+}) {
+  const group = useRef<Group>(null);
+  useFrame(({ camera }) => {
+    if (group.current) group.current.visible = seesInterior(camera, room);
+  });
+  const H = room.height / 100;
+  const y0 = -h / 2;
+  const width = w + 1.6;
+  const hallColor = shade(color, 0.96);
+  const frame = 0.07;
+  return (
+    <group>
+      {/* Architrave on the room side. */}
+      {[-1, 1].map((n) => (
+        <Box
+          key={n}
+          castShadow={false}
+          size={[frame, h + frame, 0.02]}
+          position={[n * (w / 2 + frame / 2), frame / 2, 0.05]}
+          color="#efece6"
+          roughness={0.55}
+        />
+      ))}
+      <Box
+        castShadow={false}
+        size={[w + 2 * frame, frame, 0.02]}
+        position={[0, h / 2 + frame / 2, 0.05]}
+        color="#efece6"
+        roughness={0.55}
+      />
+      {/* Jambs through the wall thickness. */}
+      {[-1, 1].map((n) => (
+        <Box
+          key={"j" + n}
+          castShadow={false}
+          size={[0.02, h, 0.1]}
+          position={[n * (w / 2 - 0.01), 0, 0]}
+          color="#e9e5de"
+          roughness={0.6}
+        />
+      ))}
+      <group ref={group} userData={{ bakeSkip: true }}>
+        {/* The hallway gets no room light: its surfaces carry their own
+            soft glow, so it reads as a lit corridor, never a dark hole. */}
+        <group position={[0, y0, -0.04 - ANNEX_DEPTH / 2]}>
+          <mesh position={[0, -0.03, 0]} raycast={() => {}}>
+            <boxGeometry args={[width, 0.06, ANNEX_DEPTH]} />
+            <meshStandardMaterial
+              color="#a99a84"
+              roughness={0.7}
+              emissive="#a99a84"
+              emissiveIntensity={0.55}
+            />
+          </mesh>
+          <mesh position={[0, H + 0.02, 0]} raycast={() => {}}>
+            <boxGeometry args={[width, 0.04, ANNEX_DEPTH]} />
+            <meshStandardMaterial
+              color="#f1eee8"
+              roughness={0.95}
+              emissive="#f1eee8"
+              emissiveIntensity={0.75}
+            />
+          </mesh>
+          {/* Far wall and side walls in the hallway's paint. */}
+          {(
+            [
+              [[width, H, 0.06], [0, H / 2, -ANNEX_DEPTH / 2 - 0.03], 0.82],
+              [[0.06, H, ANNEX_DEPTH], [-(width / 2 + 0.03), H / 2, 0], 0.7],
+              [[0.06, H, ANNEX_DEPTH], [width / 2 + 0.03, H / 2, 0], 0.7],
+            ] as const
+          ).map(([size, position, glow], i) => (
+            <mesh key={i} position={[...position]} raycast={() => {}}>
+              <boxGeometry args={[...size]} />
+              <meshStandardMaterial
+                color={hallColor}
+                roughness={0.9}
+                emissive={hallColor}
+                emissiveIntensity={glow}
+              />
+            </mesh>
+          ))}
+          {/* A framed print and a slim oak console on the far wall. */}
+          <Box
+            castShadow={false}
+            size={[0.62, 0.82, 0.025]}
+            position={[0.15, 1.5, -ANNEX_DEPTH / 2 + 0.015]}
+            color="#2f2e2c"
+            roughness={0.5}
+          />
+          <mesh position={[0.15, 1.5, -ANNEX_DEPTH / 2 + 0.03]} raycast={() => {}}>
+            <boxGeometry args={[0.52, 0.72, 0.01]} />
+            <meshStandardMaterial
+              color="#c4ad8c"
+              roughness={0.9}
+              emissive="#c4ad8c"
+              emissiveIntensity={0.5}
+            />
+          </mesh>
+          <mesh position={[0.15, 0.82, -ANNEX_DEPTH / 2 + 0.16]} raycast={() => {}}>
+            <boxGeometry args={[1.1, 0.04, 0.32]} />
+            <meshStandardMaterial
+              color="#9a7653"
+              roughness={0.5}
+              emissive="#9a7653"
+              emissiveIntensity={0.35}
+            />
+          </mesh>
+          {[-1, 1].map((n) => (
+            <Box
+              key={"l" + n}
+              castShadow={false}
+              size={[0.025, 0.8, 0.025]}
+              position={[0.15 + n * 0.5, 0.4, -ANNEX_DEPTH / 2 + 0.16]}
+              color="#2b2d2f"
+              roughness={0.5}
+            />
+          ))}
+          {/* Ceiling light of the hallway. */}
+          <mesh position={[0, H - 0.01, 0]} rotation={[Math.PI / 2, 0, 0]} raycast={() => {}}>
+            <circleGeometry args={[0.14, 24]} />
+            <meshStandardMaterial
+              color="#fff6e8"
+              emissive="#fff1dc"
+              emissiveIntensity={1.6}
+              side={DoubleSide}
+            />
+          </mesh>
+        </group>
+      </group>
+    </group>
+  );
+}
+/** Multiply a hex colour's channels (slightly darker hallway paint). */
+function shade(hex: string, k: number) {
+  const n = parseInt(hex.slice(1), 16);
+  const c = [n >> 16, (n >> 8) & 255, n & 255].map((v) =>
+    Math.round(Math.min(255, v * k)),
+  );
+  return "#" + c.map((v) => v.toString(16).padStart(2, "0")).join("");
 }
 
 function StudioDoor({ w, h }: { w: number; h: number }) {
@@ -298,10 +533,12 @@ function WallMesh({
   room,
   side,
   color,
+  floor,
 }: {
   color: string;
-  room: Room;
+  room: EnvelopeRoom;
   side: "back" | "left" | "right" | "front";
+  floor: Material;
 }) {
   const group = useRef<Group>(null);
   const length =
@@ -379,6 +616,18 @@ function WallMesh({
           />
         );
       })}
+      {/* Shadow gap where the wall meets the ceiling. */}
+      <Box
+        size={[length, 0.016, 0.014]}
+        position={[
+          0,
+          h - 0.008,
+          side === "front" || side === "left" ? -0.047 : 0.047,
+        ]}
+        color="#77736c"
+        roughness={0.9}
+        castShadow={false}
+      />
       {openings.map((o) => (
         <group
           key={o.id}
@@ -389,11 +638,21 @@ function WallMesh({
             0,
           ]}
         >
-          {o.type === "window" ? (
+          {o.style === "garden-door" ? (
+            <GardenDoor w={o.width / 100} h={o.height / 100} />
+          ) : o.style === "passage" ? (
+            <Passage
+              w={o.width / 100}
+              h={o.height / 100}
+              room={room}
+              color={color}
+              floor={floor}
+            />
+          ) : o.type === "window" ? (
             <StudioWindow
               w={o.width / 100}
               h={o.height / 100}
-              centre={(o.sill + o.height / 2) / 100}
+              blind={!o.id.startsWith("envelope")}
             />
           ) : (
             <StudioDoor w={o.width / 100} h={o.height / 100} />
@@ -404,72 +663,257 @@ function WallMesh({
   );
 }
 export function RoomShell({ design }: { design: DesignDocument }) {
-  const { recipe, room } = resolveRoom(design);
+  const { recipe, envelope } = resolveRoom(design);
+  const room = envelope.room;
+  const [ox, oz] = envelope.origin;
   const w = room.width / 100,
     d = room.depth / 100;
+  const color = design.environment?.wallColor || recipe.finishes.wall;
+  const floorKind = design.environment?.floor ?? "laminate";
+  const floor = useMemo<Material>(
+    () => ({
+      id: "floor",
+      name: { sq: "", en: "", de: "" },
+      color: "#b0a288",
+      roughness: 0.42,
+      mapping: {
+        tileSizeCm:
+          floorKind === "tiles"
+            ? [60, 60]
+            : floorKind === "laminate"
+              ? [180, 180]
+              : [120, 120],
+        grain: "none",
+        variation: "none",
+        scaleBasis: "authored-illustrative",
+      },
+      response: {
+        roughness: floorKind === "laminate" ? 1 : 0.72,
+        normalStrength: 0.12,
+        clearcoat: 0.015,
+        clearcoatRoughness: 0.6,
+        envMapIntensity: 0.6,
+      },
+      multiplier: 1,
+      perMeter: 0,
+      texture: `shared/textures/${floorKind}-color.webp`,
+      normalMap: `shared/textures/${floorKind}-normal.webp`,
+      roughnessMap: `shared/textures/${floorKind}-roughness.webp`,
+    }),
+    [floorKind],
+  );
+  const plaster = useMemo(() => wallMaterial(color), [color]);
   return (
     <group userData={{ bakeShell: true }}>
-      <group userData={{ bakeSurface: "floor" }}>
-        <Box
-          baked
-          size={[w + 0.2, 0.06, d + 0.2]}
-          position={[w / 2, -0.03, d / 2]}
-          material={{
-            id: "floor",
-            name: { sq: "", en: "", de: "" },
-            color: "#b0a288",
-            roughness: 0.42,
-            mapping: {
-              tileSizeCm:
-                design.environment?.floor === "tiles"
-                  ? [60, 60]
-                  : (design.environment?.floor ?? "laminate") === "laminate"
-                    ? [180, 180]
-                    : [120, 120],
-              grain: "none",
-              variation: "none",
-              scaleBasis: "authored-illustrative",
-            },
-            response: {
-              roughness:
-                (design.environment?.floor ?? "laminate") === "laminate"
-                  ? 1
-                  : 0.72,
-              normalStrength: 0.12,
-              clearcoat: 0.015,
-              clearcoatRoughness: 0.6,
-              envMapIntensity: 0.6,
-            },
-            multiplier: 1,
-            perMeter: 0,
-            texture: `shared/textures/${design.environment?.floor || "laminate"}-color.webp`,
-            normalMap: `shared/textures/${design.environment?.floor || "laminate"}-normal.webp`,
-            roughnessMap: `shared/textures/${design.environment?.floor || "laminate"}-roughness.webp`,
-          }}
-        />
+      <group position={[ox, 0, oz]}>
+        <group userData={{ bakeSurface: "floor" }}>
+          <Box
+            baked
+            size={[w + 0.2, 0.06, d + 0.2]}
+            position={[w / 2, -0.03, d / 2]}
+            material={floor}
+          />
+        </group>
+        <Ceiling room={room} />
+        <StanceWalls room={room} color={color} />
+        {(["back", "left", "right", "front"] as const).map((side) => (
+          <WallMesh
+            key={side}
+            room={room}
+            side={side}
+            color={color}
+            floor={floor}
+          />
+        ))}
       </group>
-
-      <Ceiling room={room} />
-      <StanceWalls
-        room={room}
-        color={design.environment?.wallColor || recipe.finishes.wall}
-      />
-      {(["back", "left", "right", "front"] as const).map((side) => (
-        <WallMesh
-          key={side}
-          room={room}
-          side={side}
-          color={design.environment?.wallColor || recipe.finishes.wall}
+      <Suspense fallback={null}>
+        <ExteriorView
+          centre={[
+            room.cx + design.room.width / 200,
+            1.6,
+            room.cz + design.room.depth / 200,
+          ]}
         />
+      </Suspense>
+      {envelope.bulkhead && (
+        <Bulkhead bulkhead={envelope.bulkhead} room={room} />
+      )}
+      {envelope.slats && (
+        <Slats
+          slats={envelope.slats}
+          room={room}
+          origin={envelope.origin}
+        />
+      )}
+      {/* Return walls beside tall units whose side wall moved out. */}
+      {envelope.returns.map((r) => (
+        <ReturnWall key={r.side} wall={r} plaster={plaster} />
       ))}
     </group>
+  );
+}
+/** Lowered ceiling over the kitchen run with its own downlights (corner
+ * frame of the design room). Shown with the ceiling. */
+function Bulkhead({
+  bulkhead: b,
+  room,
+}: {
+  bulkhead: NonNullable<Envelope["bulkhead"]>;
+  room: EnvelopeRoom;
+}) {
+  const group = useRef<Group>(null);
+  useFrame(({ camera }) => {
+    if (group.current) group.current.visible = seesInterior(camera, room);
+  });
+  const h = room.height / 100;
+  const length = b.x1 - b.x0;
+  const lights = Math.max(2, Math.round(length / 0.9));
+  return (
+    <group ref={group} userData={{ bakeKeep: true, bakeIgnoreVisibility: true }}>
+      {/* Same fake bounce glow as the ceiling, so its underside never
+          reads as a dark slab. */}
+      <mesh
+        position={[(b.x0 + b.x1) / 2, h - b.drop / 2 + 0.01, b.depth / 2]}
+        raycast={() => {}}
+        receiveShadow
+      >
+        <boxGeometry args={[length, b.drop, b.depth]} />
+        <meshStandardMaterial
+          color="#f3f1ec"
+          roughness={0.95}
+          emissive="#efe9df"
+          emissiveIntensity={0.42}
+        />
+      </mesh>
+      {/* Shadow gap along its front edge. */}
+      <Box
+        size={[length, 0.014, 0.02]}
+        position={[(b.x0 + b.x1) / 2, h - b.drop + 0.007, b.depth + 0.005]}
+        color="#8a867f"
+        roughness={0.9}
+        castShadow={false}
+      />
+      {Array.from({ length: lights }, (_, i) => (
+        <mesh
+          key={i}
+          position={[
+            b.x0 + ((i + 0.5) * length) / lights,
+            h - b.drop - 0.002 + 0.01,
+            b.depth * 0.5,
+          ]}
+          rotation={[Math.PI / 2, 0, 0]}
+          raycast={() => {}}
+        >
+          <circleGeometry args={[0.04, 24]} />
+          <meshStandardMaterial
+            color="#fff6e8"
+            emissive="#fff1dc"
+            emissiveIntensity={2.2}
+            side={DoubleSide}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+const SLAT = { width: 0.042, gap: 0.022, depth: 0.026 };
+const slatBox = new BoxGeometry(1, 1, 1);
+const slatOak = new MeshStandardMaterial({ color: "#b98c5c", roughness: 0.55 });
+/** Vertical oak slats on a dark backing: the feature wall by the dining
+ * group. One instanced draw; hidden with its wall. */
+function Slats({
+  slats,
+  room,
+  origin,
+}: {
+  slats: NonNullable<Envelope["slats"]>;
+  room: EnvelopeRoom;
+  origin: [number, number];
+}) {
+  const group = useRef<Group>(null);
+  const mesh = useRef<InstancedMesh>(null);
+  const h = room.height / 100 - 0.02;
+  const W = room.width / 100,
+    D = room.depth / 100;
+  const count = Math.floor((slats.b - slats.a) / (SLAT.width + SLAT.gap));
+  useFrame(({ camera }) => {
+    if (group.current)
+      group.current.visible = insideWall(camera, room, slats.wall);
+  });
+  // Wall frame: local x runs along the wall (sign × along), local z points
+  // into the room.
+  const frame = useMemo(() => {
+    const [ox, oz] = origin;
+    return slats.wall === "back"
+      ? { yaw: 0, start: [ox, 0, oz] as const, sign: 1 }
+      : slats.wall === "right"
+        ? { yaw: -Math.PI / 2, start: [ox + W, 0, oz] as const, sign: 1 }
+        : slats.wall === "left"
+          ? { yaw: Math.PI / 2, start: [ox, 0, oz] as const, sign: -1 }
+          : { yaw: Math.PI, start: [ox, 0, oz + D] as const, sign: -1 };
+  }, [slats.wall, origin, W, D]);
+  useLayoutEffect(() => {
+    const m = mesh.current;
+    if (!m) return;
+    const o = new Object3D();
+    const span = slats.b - slats.a;
+    const used = count * (SLAT.width + SLAT.gap) - SLAT.gap;
+    const first = slats.a + (span - used) / 2 + SLAT.width / 2;
+    for (let i = 0; i < count; i++) {
+      const along = first + i * (SLAT.width + SLAT.gap);
+      o.position.set(frame.sign * along, h / 2, 0.012 + SLAT.depth / 2);
+      o.scale.set(SLAT.width, h, SLAT.depth);
+      o.updateMatrix();
+      m.setMatrixAt(i, o.matrix);
+    }
+    m.instanceMatrix.needsUpdate = true;
+    m.computeBoundingSphere();
+  }, [count, slats, h, frame]);
+  const span = slats.b - slats.a;
+  const mid = (slats.a + slats.b) / 2;
+  return (
+    <group ref={group}>
+      <group position={[...frame.start]} rotation={[0, frame.yaw, 0]}>
+        <Box
+          size={[span, h, 0.012]}
+          position={[frame.sign * mid, h / 2, 0.006]}
+          color="#2e2b27"
+          roughness={0.85}
+          castShadow={false}
+        />
+        <instancedMesh
+          key={count}
+          ref={mesh}
+          args={[slatBox, slatOak, count]}
+          receiveShadow
+          castShadow
+          raycast={() => {}}
+        />
+      </group>
+    </group>
+  );
+}
+function ReturnWall({
+  wall,
+  plaster,
+}: {
+  wall: Envelope["returns"][number];
+  plaster: Material;
+}) {
+  return (
+    <Box
+      size={wall.size}
+      position={wall.position}
+      material={plaster}
+      castShadow={false}
+    />
   );
 }
 
 /** Standing behind a hidden wall for the opening view, the two adjoining walls
  * continue a little behind the camera, as from a doorway, so the frame never
  * shows their cut ends. Only present in that stance; overviews never see it. */
-function StanceWalls({ room, color }: { room: Room; color: string }) {
+function StanceWalls({ room, color }: { room: EnvelopeRoom; color: string }) {
   const groups = useRef<Record<string, Group | null>>({});
   const w = room.width / 100,
     d = room.depth / 100,
@@ -606,7 +1050,7 @@ export function downlights(room: Room): Array<[number, number]> {
 }
 /** Seen only from inside the room (or the hero stance behind one hidden
  * wall); the overview looks in from above. */
-function Ceiling({ room }: { room: Room }) {
+function Ceiling({ room }: { room: EnvelopeRoom }) {
   const group = useRef<Group>(null);
   const bake = useContext(ShellBake);
   const bakeHooks = useMemo(

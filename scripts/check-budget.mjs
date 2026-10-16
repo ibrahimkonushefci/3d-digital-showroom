@@ -28,8 +28,9 @@ const result = {
   shippedBytes: shipped,
   uniquePrecacheBytes: cached,
   precacheUrls: urls.length,
-  workingTargetBytes: 9_000_000,
-  strictCeilingBytes: 10_000_000,
+  // Raised for the Phase 2 rooms by the owner (16 October 2026): about 11 MB.
+  workingTargetBytes: 11_000_000,
+  strictCeilingBytes: 12_000_000,
   largestFiles: (
     await Promise.all(
       files.map(async (f) => ({
@@ -51,7 +52,7 @@ if (jsonIndex !== -1) {
 console.log(
   `Asset budget: shipped ${shipped.toLocaleString()} bytes; unique precache ${cached.toLocaleString()} bytes (${urls.length} URLs).`,
 );
-if (Math.max(shipped, cached) >= 10_000_000)
-  throw Error("10 MB asset budget exceeded");
-if (Math.max(shipped, cached) > 9_000_000)
-  console.warn("Working budget exceeds 9 MB; optimize before adding assets.");
+if (Math.max(shipped, cached) >= 12_000_000)
+  throw Error("12 MB asset budget exceeded");
+if (Math.max(shipped, cached) > 11_000_000)
+  console.warn("Working budget exceeds 11 MB; optimize before adding assets.");

@@ -17,6 +17,7 @@ import {
   type WallSide,
 } from "../scene/rooms/stance";
 import { resolveRoom } from "../scene/rooms/resolveRoom";
+import { roomStaging, stagedGroup } from "../scene/rooms/staging";
 export { HERO_STANCE_MAX, stanceWall };
 
 export const CAMERA_REVISION = "room-shots-v1";
@@ -89,7 +90,9 @@ export const HERO_MIN_COVERAGE = 0.6;
 /** Breathing room: the whole proposal stays inside this share of the frame. */
 export const HERO_OCCUPANCY = { x: 0.86, y: 0.92 };
 /** Furniture should span roughly this share of the frame width. */
-export const HERO_TARGET_FILL = 0.74;
+export const HERO_TARGET_FILL = 0.62;
+/** Beside a garden door and group the furniture leaves them room. */
+export const HERO_CONTEXT_FILL = 0.66;
 const HERO_WALL_MARGIN = 0.3;
 type Side = WallSide;
 const SIDES = WALL_SIDES;
@@ -255,6 +258,61 @@ export function compositionPoints(design: DesignDocument) {
  * and outer edges. Only the plinth line at the floor may run out at the
  * bottom edge, as in an interior photograph; otherwise a near tall unit
  * forces the camera far back and the kitchen ends up small in the frame. */
+/** The part of the home the main view shows beside the furniture: the
+ * garden door (or window) the envelope adds and the floor in front of it,
+ * where the dining or lounge group stands (centred scene frame). */
+export function heroContext(design: DesignDocument, catalog: Catalog) {
+  const room = resolveRoom(design).envelope.room;
+  const points: Vector3[] = [];
+  const o = room.openings.find((o) => o.id === "envelope-garden");
+  if (o) {
+    const halfW = room.width / 200,
+      halfD = room.depth / 200;
+    const along = (s: number, y: number) =>
+      o.wall === "back"
+        ? new Vector3(room.cx - halfW + s, y, room.cz - halfD)
+        : o.wall === "front"
+          ? new Vector3(room.cx - halfW + s, y, room.cz + halfD)
+          : o.wall === "left"
+            ? new Vector3(room.cx - halfW, y, room.cz - halfD + s)
+            : new Vector3(room.cx + halfW, y, room.cz - halfD + s);
+    const a = o.offset / 100,
+      b = (o.offset + o.width) / 100,
+      top = Math.min((o.sill + o.height) / 100, 2.0);
+    points.push(along(a, 0.1), along(b, 0.1), along(a, top), along(b, top));
+  }
+  // The dining or reading group in front of it, whole.
+  const group = stagedGroup(design, catalog);
+  if (group)
+    for (const v of group.parts)
+      for (const x of [v.min[0], v.max[0]])
+        for (const z of [v.min[2], v.max[2]])
+          for (const y of [0.05, v.max[1]])
+            points.push(
+              new Vector3(
+                x - design.room.width / 200,
+                y,
+                z - design.room.depth / 200,
+              ),
+            );
+  return points;
+}
+
+/** Staged group volumes (centred scene frame) the main view must not look
+ * through to reach the fronts. */
+function groupBoxes(design: DesignDocument, catalog: Catalog) {
+  const group = stagedGroup(design, catalog);
+  if (!group) return [];
+  const shift = new Vector3(design.room.width / 200, 0, design.room.depth / 200);
+  return group.parts.map(
+    (v) =>
+      new Box3(
+        new Vector3(...v.min).sub(shift),
+        new Vector3(...v.max).sub(shift),
+      ),
+  );
+}
+
 export function heroFitPoints(design: DesignDocument) {
   return compositionPoints(design).map((p) =>
     p.y === 0 ? p.clone().setY(0.1) : p,
@@ -318,13 +376,55 @@ function searchInteriorHero(
   const bounds = furnitureEnvelope(design, catalog, opened);
   const centre = bounds.getCenter(new Vector3());
   const points = frontSamples(design);
+  // The furniture plus the garden door beside it: the view shows the
+  // furniture in its room, not the furniture alone.
+  // The furniture must fit; the context (garden door, the group in front
+  // of it) is shown as fully as the room allows.
+  const context = heroContext(design, catalog);
   const outline = compositionPoints(design);
   const fitOutline = heroFitPoints(design);
+  const targetFill = context.length ? HERO_CONTEXT_FILL : HERO_TARGET_FILL;
+  const blockers = groupBoxes(design, catalog);
+  // The picture is centred on the furniture together with its group.
+  const groupPoints = blockers.flatMap((b) => {
+    const out: Vector3[] = [];
+    for (const x of [b.min.x, b.max.x])
+      for (const y of [0.05, b.max.y])
+        for (const z of [b.min.z, b.max.z]) out.push(new Vector3(x, y, z));
+    return out;
+  });
+  const centring = [...outline, ...groupPoints];
+  const faces = design.cabinets
+    .filter((c) => c.wall !== "island")
+    .map((c) => ({
+      p: new Vector3(
+        c.x / 100 - design.room.width / 200 + Math.sin(c.rotation) * (c.depth / 200),
+        0,
+        c.z / 100 - design.room.depth / 200 + Math.cos(c.rotation) * (c.depth / 200),
+      ),
+      n: new Vector3(Math.sin(c.rotation), 0, Math.cos(c.rotation)),
+      w: c.width,
+    }));
+  const facesWidth = Math.max(
+    1,
+    faces.reduce((sum, f) => sum + f.w, 0),
+  );
+  const groupCentre = blockers.length
+    ? blockers
+        .reduce((sum, b) => sum.add(b.getCenter(new Vector3())), new Vector3())
+        .divideScalar(blockers.length)
+    : null;
+  const bodies = design.cabinets.map((c) =>
+    cabinetBounds({ ...design, cabinets: [c] }, catalog).expandByScalar(-0.03),
+  );
   const tilt = Math.tan(MathUtils.degToRad(HERO_PITCH_DEG));
   const heading = heroHeading(design);
-  const room = design.room;
+  // The camera stands in the presentation room around the furniture.
+  const room = resolveRoom(design).envelope.room;
   const halfW = room.width / 200,
     halfD = room.depth / 200,
+    cx = room.cx,
+    cz = room.cz,
     h = room.height / 100;
   const eye = Math.min(design.kind === "wardrobe" ? 1.5 : 1.55, h - 0.4);
   const furniture = design.cabinets.map((c) =>
@@ -337,12 +437,20 @@ function searchInteriorHero(
   const empty = new Set(
     SIDES.filter((side) => !design.cabinets.some((c) => c.wall === side)),
   );
+  // Inside the presentation room the camera has space of its own; it steps
+  // behind a wall only where the envelope adds none.
+  const moved = resolveRoom(design).envelope.moved;
+  // A larger room keeps the stance (behind its front wall only) as a last
+  // resort for a narrow canvas that cannot fit the furniture from inside.
+  const roomy = Object.values(moved).some((m) => m > 0);
   const extent = (side: Side) =>
-    empty.has(side) ? HERO_STANCE_MAX : -HERO_WALL_MARGIN;
-  const x0 = -halfW - extent("left"),
-    x1 = halfW + extent("right"),
-    z0 = -halfD - extent("back"),
-    z1 = halfD + extent("front");
+    empty.has(side) && (!roomy || side === "front")
+      ? HERO_STANCE_MAX
+      : -HERO_WALL_MARGIN;
+  const x0 = cx - halfW - extent("left"),
+    x1 = cx + halfW + extent("right"),
+    z0 = cz - halfD - extent("back"),
+    z1 = cz + halfD + extent("front");
   const nx = Math.max(8, Math.round((x1 - x0) / 0.2)),
     nz = Math.max(8, Math.round((z1 - z0) / 0.2));
   const lens = new PerspectiveCamera(HERO_FOV, aspect, 0.05, 100);
@@ -352,14 +460,15 @@ function searchInteriorHero(
     .map((o) => {
       const s = (o.offset + o.width / 2) / 100,
         y = (o.sill + o.height / 2) / 100;
-      const centre =
+      const centre = (
         o.wall === "back"
           ? new Vector3(s - halfW, y, -halfD)
           : o.wall === "front"
             ? new Vector3(s - halfW, y, halfD)
             : o.wall === "left"
               ? new Vector3(-halfW, y, s - halfD)
-              : new Vector3(halfW, y, s - halfD);
+              : new Vector3(halfW, y, s - halfD)
+      ).add(new Vector3(cx, 0, cz));
       return { wall: o.wall, centre };
     });
   // Staged floor props (stools) are either wholly in the picture or out of
@@ -371,7 +480,13 @@ function searchInteriorHero(
       for (const x of [volume.min[0], volume.max[0]])
         for (const y of [volume.min[1], volume.max[1]])
           for (const z of [volume.min[2], volume.max[2]])
-            corners.push(new Vector3(x - halfW, y, z - halfD));
+            corners.push(
+              new Vector3(
+                x - design.room.width / 200,
+                y,
+                z - design.room.depth / 200,
+              ),
+            );
       return corners;
     });
   type Candidate = {
@@ -395,6 +510,11 @@ function searchInteriorHero(
         // Raised corner views stay inside the room.
         if (behind && (!level || !empty.has(behind))) continue;
         if (furniture.some((box) => box.containsPoint(position))) continue;
+        // Furniture right beside the lens looms over the picture.
+        const nearest = Math.min(
+          ...furniture.map((box) => box.distanceToPoint(position)),
+        );
+        if (nearest < 0.9) continue;
         const toward = position.clone().sub(centre).setY(0);
         const distance = toward.length();
         if (distance < 1.2) continue;
@@ -406,7 +526,7 @@ function searchInteriorHero(
           ? centre.clone().setY(height - distance * tilt)
           : centre.clone();
         for (let k = 0; k < 2; k++) {
-          const span = horizontalSpan(position, target, outline);
+          const span = horizontalSpan(position, target, centring);
           if (!span) break;
           const yaw = -Math.atan((span.lo + span.hi) / 2);
           const offset = target.clone().sub(position);
@@ -469,12 +589,63 @@ function searchInteriorHero(
           return inside > 0 && inside < 1;
         });
         const coverage = frustumCoverage(position, target, points, fov, aspect);
+        // The group stands beside the furniture, never in front of it.
+        const blocked = blockers.length
+          ? points.filter((p) =>
+              blockers.some((b) => segmentHitsBox(position, p, b)),
+            ).length / points.length
+          : 0;
+        if (blocked > 0.02) continue;
+        // Fronts seen past the other furniture (a run seen edge-on hides
+        // most of itself).
+        const unseen =
+          points.filter((p) =>
+            bodies.some(
+              (b) =>
+                b.distanceToPoint(p) > 0.1 && segmentHitsBox(position, p, b),
+            ),
+          ).length / points.length;
+        // Fronts seen nearly edge-on read as side panels, not furniture.
+        let grazing = 0;
+        for (const f of faces) {
+          const toEye = position.clone().sub(f.p).setY(0).normalize();
+          if (toEye.dot(f.n) < 0.3) grazing += f.w;
+        }
+        grazing /= facesWidth;
+        const shown = context.length
+          ? frustumCoverage(position, target, context, fov, aspect)
+          : 1;
+        // The group is either whole in the picture or out of it; a chair
+        // cut by the frame edge looks like a mistake.
+        const groupShown = groupPoints.length
+          ? frustumCoverage(position, target, groupPoints, fov * 0.96, aspect)
+          : 0;
+        const groupCut = groupShown > 0.02 && groupShown < 0.98;
+        // A tall unit or run end right beside the lens fills the picture.
+        const clutter = foregroundClutter(
+          { position: position.toArray(), target: target.toArray(), fov },
+          aspect,
+          bodies,
+        );
+        // Beside the furniture, not in the foreground of the picture.
+        let groupOverlap = 0;
+        if (
+          groupCentre &&
+          position.distanceTo(groupCentre) < position.distanceTo(centre)
+        ) {
+          const a = horizontalSpan(position, target, outline),
+            b = horizontalSpan(position, target, groupPoints);
+          if (a && b)
+            groupOverlap =
+              Math.max(0, Math.min(a.hi, b.hi) - Math.max(a.lo, b.lo)) /
+              Math.max(0.01, a.hi - a.lo);
+        }
         const fill = frameFill(position, target, outline, fov, aspect);
         const stance = behind
           ? Math.abs(
               behind === "front" || behind === "back"
-                ? Math.abs(position.z) - halfD
-                : Math.abs(position.x) - halfW,
+                ? Math.abs(position.z - cz) - halfD
+                : Math.abs(position.x - cx) - halfW,
             )
           : 0;
         // A window on the hidden wall is hidden with it.
@@ -487,9 +658,17 @@ function searchInteriorHero(
           (fits ? 200 : coverage * 100) +
           (garden ? 6 : 0) -
           (fov - HERO_FOV) * 1.2 -
-          Math.abs(fill - HERO_TARGET_FILL) * 60 +
+          Math.abs(fill - targetFill) * 60 +
           facing * 10 -
-          stance * 4 -
+          unseen * 200 +
+          shown * 45 -
+          (groupCut ? 70 : 0) +
+          (groupShown >= 0.98 ? 35 : 0) -
+          groupOverlap * 150 -
+          clutter * 220 -
+          grazing * 160 -
+          Math.max(0, 2.3 - nearest) * 60 -
+          stance * (roomy ? 60 : 4) -
           (cropped ? 40 : 0);
         if (!best || score > best.score)
           best = { score, coverage, position, fov, target };
@@ -661,12 +840,20 @@ export function inspectionShot(
   bounds.min.y = Math.min(bounds.min.y, own.min.y);
   bounds.max.y = Math.max(bounds.max.y, own.max.y);
   bounds.expandByVector(new Vector3(0.14, 0.06, 0.14));
-  const solids = design.cabinets
-    .filter((o) => o.id !== id)
-    .map((o) =>
-      cabinetBounds({ ...design, cabinets: [o] }, catalog).expandByScalar(0.15),
-    );
+  const staged = stagedObstacles(design, catalog);
+  const facePoints = frontFacePoints(design, catalog, id);
+  const solids = [
+    ...design.cabinets
+      .filter((o) => o.id !== id)
+      .map((o) =>
+        cabinetBounds({ ...design, cabinets: [o] }, catalog).expandByScalar(
+          0.15,
+        ),
+      ),
+    ...staged.map((b) => b.clone().expandByScalar(0.1)),
+  ];
   const roomWalls = cameraObstacles(design, catalog).slice(-4);
+  const envelope = resolveRoom(design).envelope.room;
   const ceiling = design.room.height / 100 - 0.15;
   const eyes = [straight.position[1], 1.85, 2.1].filter((y) => y <= ceiling);
   const forward = new Vector3(
@@ -694,7 +881,7 @@ export function inspectionShot(
           fov,
         );
         const p = new Vector3(...view.position);
-        const behind = stanceWall(p, design.room);
+        const behind = stanceWall(p, envelope);
         if (behind === "invalid" || p.y > ceiling) continue;
         if (solids.some((box) => box.containsPoint(p))) continue;
         // Behind a hidden wall only as an eye-level photograph: none of the
@@ -705,14 +892,25 @@ export function inspectionShot(
           lens.position.copy(p);
           lens.lookAt(new Vector3(...view.target));
           lens.updateProjectionMatrix();
-          if (cutInView(lens, design.room, behind)) continue;
+          if (cutInView(lens, envelope, behind)) continue;
         }
         const seen = frontVisibility(design, catalog, id, p);
         if (!seen.middle) continue;
+        // Staged chairs, table or plant never stand between the camera and
+        // the front being inspected.
+        if (
+          staged.length &&
+          facePoints.filter((f) =>
+            staged.some((b) => segmentHitsBox(p, f, b)),
+          ).length >
+            facePoints.length * 0.1
+        )
+          continue;
         // Walls count too, except one the camera stands behind (hidden).
         const walls = roomWalls.filter((_, i) => WALL_ORDER[i] !== behind);
         const clutter = foregroundClutter({ ...view, fov }, aspect, [
           ...others,
+          ...staged,
           ...walls,
         ]);
         if (clutter > 0.3) continue;
@@ -814,13 +1012,17 @@ export function cameraObstacles(design: DesignDocument, catalog: Catalog) {
       c.id,
     ]).expandByScalar(0.08),
   );
-  const w = design.room.width / 200,
-    d = design.room.depth / 200,
-    h = design.room.height / 100;
-  // Conservative whole walls, including apertures: snapping is preferable to
-  // guessing that a camera fits through an architectural opening.
+  const room = resolveRoom(design).envelope.room;
+  const w = room.width / 200,
+    d = room.depth / 200,
+    h = room.height / 100;
+  const shift = new Vector3(room.cx, 0, room.cz);
+  // Conservative whole walls of the presentation room, including apertures:
+  // snapping is preferable to guessing that a camera fits through an
+  // architectural opening.
   return [
     ...furniture,
+    ...stagedObstacles(design, catalog),
     new Box3(
       new Vector3(-w - 0.12, 0, -d - 0.12),
       new Vector3(w + 0.12, h + 0.12, -d + 0.12),
@@ -834,7 +1036,18 @@ export function cameraObstacles(design: DesignDocument, catalog: Catalog) {
       new Vector3(-w + 0.12, h + 0.12, d),
     ),
     new Box3(new Vector3(w - 0.12, 0, -d), new Vector3(w + 0.12, h + 0.12, d)),
-  ];
+  ].map((b, i, all) => (i >= all.length - 4 ? b.translate(shift) : b));
+}
+
+/** Staged room furniture (dining group, chairs, plant) as camera obstacles,
+ * centred scene frame. The hero view is composed with them in mind, so only
+ * inspection and camera paths consult them. */
+export function stagedObstacles(design: DesignDocument, catalog: Catalog) {
+  if (!resolveRoom(design).furnished) return [];
+  const shift = new Vector3(design.room.width / 200, 0, design.room.depth / 200);
+  return roomStaging(design, catalog).solids.map((v) =>
+    new Box3(new Vector3(...v.min).sub(shift), new Vector3(...v.max).sub(shift)),
+  );
 }
 
 /** Clear direct travel, or retreat above the room, cross, then approach.

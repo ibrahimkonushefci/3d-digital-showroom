@@ -83,6 +83,16 @@ export function presentationPresets(catalog: Catalog): ShowroomPreset[] {
       // nothing about openings receive the staged one.
       if (d && p.roomSceneId && !p.room.openings)
         d = { ...d, room: presetRoom(d.room, d.kind, d.cabinets) };
+      if (d && p.environment)
+        d = {
+          ...d,
+          environment: {
+            internalLed: d.kind === "wardrobe",
+            ...d.environment,
+            ...p.environment,
+          },
+        };
+      if (d && p.finishZones) d = { ...d, finishZones: p.finishZones };
       return d && validateDesign(d, catalog)
         ? [
             {

@@ -145,9 +145,12 @@ it("validates curated presets and filters unavailable catalog finishes", () => {
     ...catalog,
     fronts: catalog.fronts.filter((m) => m.id !== "cashmere"),
   };
+  // Only the cashmere kitchen uses cashmere fronts since Phase 2.
   expect(presentationPresets(missing).map((p) => p.id)).toEqual([
     "modern",
     "classic",
+    "wardrobe-straight",
+    "wardrobe",
   ]);
 });
 it("keeps legacy catalogs usable without presentation metadata", () => {

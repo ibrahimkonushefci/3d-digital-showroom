@@ -5,18 +5,28 @@ import type { DesignDocument } from "../../catalog/types";
 import { useQuality } from "../quality";
 import { ResourceCache, useSharedResource } from "../resources";
 import { wallPieces, openingShadowPieces } from "./lightingRecipe";
+import { resolveRoom } from "../rooms/resolveRoom";
 const cache = new ResourceCache<BufferGeometry>();
 export function ShadowShell({ design }: { design: DesignDocument }) {
   const quality = useQuality();
-  const pieces = useMemo(
-    () => [
+  const { envelope } = resolveRoom(design);
+  const pieces = useMemo(() => {
+    // The presentation room's walls, in the design room's corner frame.
+    const [ox, oz] = envelope.origin;
+    return [
       ...(["back", "left", "right", "front"] as const).flatMap((s) =>
-        wallPieces(design.room, s),
+        wallPieces(envelope.room, s),
       ),
-      ...openingShadowPieces(design.room),
-    ],
-    [design.room],
-  );
+      ...openingShadowPieces(envelope.room),
+    ].map((p) => ({
+      ...p,
+      position: [p.position[0] + ox, p.position[1], p.position[2] + oz] as [
+        number,
+        number,
+        number,
+      ],
+    }));
+  }, [envelope]);
   const geometry = useSharedResource(cache, JSON.stringify(pieces), () => {
     const parts = pieces.map((p) => {
       const box = new BoxGeometry(...p.size);

@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { Box3, Euler, Matrix4, Ray, Vector3 } from "three";
 import { CatalogSchema } from "../src/catalog/types";
 import { presentationPresets } from "../src/designer3d/presets";
+import { resolveRoom } from "../src/scene/rooms/resolveRoom";
 import { boundsCorners } from "../src/designer3d/framing";
 import {
   resolveLighting,
@@ -88,14 +89,31 @@ it("keys daylight to real apertures on every wall and keeps legacy solid rooms s
     const design = { ...original, room };
     const light = resolveLighting(design, catalog, "balanced");
     const ray = new Ray(light.position, light.direction.clone().negate());
+    // Daylight comes through the largest window of the presentation room
+    // (the design's window or the garden door the envelope adds).
+    const envelope = resolveRoom(design).envelope.room;
+    const largest = [...envelope.openings]
+      .filter((o) => o.type === "window")
+      .sort((a, b) => b.width * b.height - a.width * a.height)[0];
+    expect(light.window?.id).toBe(largest.id);
     expect(
-      ray.distanceToPoint(openingPosition(room, room.openings[0])),
+      ray.distanceToPoint(
+        openingPosition(envelope, largest).add(
+          new Vector3(envelope.cx, 0, envelope.cz),
+        ),
+      ),
     ).toBeLessThan(1e-8);
     expect(light.shadowSize).toBe(1024);
     expect(light.direction.y).toBeGreaterThan(0);
   }
   const solid = { ...original, room: { ...original.room, openings: [] } };
-  expect(resolveLighting(solid, catalog, "high").window).toBeUndefined();
+  // The design itself stays solid; daylight then comes from the garden
+  // door of the presentation room.
+  expect(resolveLighting(solid, catalog, "high").window?.id).toBe(
+    resolveRoom(solid).envelope.room.openings.some((o) => o.id === "envelope-garden")
+      ? "envelope-garden"
+      : undefined,
+  );
   expect(solid.room.openings).toEqual([]);
   expect(JSON.stringify(original)).toBe(before);
 });

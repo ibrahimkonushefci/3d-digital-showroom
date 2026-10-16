@@ -5,7 +5,8 @@
 // Every Home preset: Hero (initial), Front, Top, Overview, Open all fronts and,
 // for wardrobes, Interior view; canvas-only and full-UI PNGs at 1440×900 @2×.
 // Optional: CAPTURE_SIZE=1030x1025 (other window sizes), CAPTURE_SHOTS=hero
-// (opening views only), CAPTURE_SCALE=1.
+// (opening views only), CAPTURE_SCALE=1, CAPTURE_ONLY=<regex> (designs whose
+// file name matches, e.g. "cashmere|corner").
 import { connect } from "./cdp.mjs";
 import fs from "node:fs";
 const OUT = process.argv[3] || "out";
@@ -73,11 +74,20 @@ const seen = new Set();
 for (const card of cards) {
   if (seen.has(card.txt)) continue;
   seen.add(card.txt);
+  const only = process.env.CAPTURE_ONLY;
+  const slugOf = (t) =>
+    t
+      .replace(/(\d+ cm).*$/, "$1")
+      .replace(/^\d+/, "").toLowerCase().replace(/[^a-z]+/g, "-").replace(/^-|-$/g, "").slice(0, 30);
+  if (only && !new RegExp(only).test(slugOf(card.txt))) continue;
   await go(BASE + "/?brand=default");
   await c.evaluate(
     `[...document.querySelectorAll('img')][${card.k}].closest('button,a').click()`,
   );
+  // Card text up to its size ("… 420 × 360 cm"): Home's price and button
+  // labels never change the file names.
   const slug = card.txt
+    .replace(/(\d+ cm).*$/, "$1")
     .replace(/^\d+/, "")
     .toLowerCase()
     .replace(/[^a-z]+/g, "-")

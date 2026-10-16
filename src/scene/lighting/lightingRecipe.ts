@@ -105,8 +105,11 @@ export function resolveLighting(
   catalog: Catalog,
   quality: Quality,
 ) {
-  const recipe = resolveRoom(design).recipe;
-  const window = [...design.room.openings]
+  const { recipe, envelope } = resolveRoom(design);
+  // Daylight and room extent come from the presentation room.
+  const room = envelope.room;
+  const centre = new Vector3(room.cx, 0, room.cz);
+  const window = [...room.openings]
     .filter((o) => o.type === "window")
     .sort(
       (a, b) =>
@@ -117,14 +120,14 @@ export function resolveLighting(
     window ? Math.min(0.65, window.sill / 100) : 0.8,
     0,
   );
-  const aperture = window ? openingPosition(design.room, window) : null;
+  const aperture = window ? openingPosition(room, window).add(centre) : null;
   const direction = aperture
     ? aperture.clone().sub(target).normalize()
     : new Vector3(-0.35, 1, 0.25).normalize();
   const roomSize = new Vector3(
-    design.room.width / 100,
-    design.room.height / 100,
-    design.room.depth / 100,
+    room.width / 100,
+    room.height / 100,
+    room.depth / 100,
   );
   const position = target
     .clone()
@@ -133,7 +136,7 @@ export function resolveLighting(
     new Box3(
       new Vector3(-roomSize.x / 2 - 0.1, 0, -roomSize.z / 2 - 0.1),
       new Vector3(roomSize.x / 2 + 0.1, roomSize.y, roomSize.z / 2 + 0.1),
-    ),
+    ).translate(centre),
   );
   const right = new Vector3()
     .crossVectors(new Vector3(0, 1, 0), direction)
@@ -145,8 +148,9 @@ export function resolveLighting(
   const furniture = cabinetBounds(design, catalog);
   const keyTarget = furniture.getCenter(new Vector3()).setY(0.9);
   const heading = heroHeading(design);
-  const halfW = roomSize.x / 2 - 0.35,
-    halfD = roomSize.z / 2 - 0.35;
+  // The key stays over the furniture's own room, as before the envelope.
+  const halfW = design.room.width / 200 - 0.35,
+    halfD = design.room.depth / 200 - 0.35;
   const reach = Math.min(
     2.6,
     heading.x > 1e-6

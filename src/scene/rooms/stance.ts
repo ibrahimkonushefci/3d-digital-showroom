@@ -1,5 +1,11 @@
 import { Box3, Frustum, Matrix4, Vector3, type Camera } from "three";
 import type { DesignDocument } from "../../catalog/types";
+/** A room box: the design room (centred on the origin) or the presentation
+ * envelope, whose centre (cx, cz) is offset in the same frame. */
+export type RoomBox = Pick<DesignDocument["room"], "width" | "depth" | "height"> & {
+  cx?: number;
+  cz?: number;
+};
 
 export type WallSide = "back" | "front" | "left" | "right";
 export const WALL_SIDES: WallSide[] = ["back", "front", "left", "right"];
@@ -18,16 +24,18 @@ export const STANCE_MAX_HEIGHT = 1.8;
  * are in the centred scene frame. */
 export function stanceWall(
   position: { x: number; z: number },
-  room: DesignDocument["room"],
+  room: RoomBox,
   limit = HERO_STANCE_MAX,
 ): WallSide | null | "invalid" {
   const halfW = room.width / 200,
-    halfD = room.depth / 200;
+    halfD = room.depth / 200,
+    x = position.x - (room.cx ?? 0),
+    z = position.z - (room.cz ?? 0);
   const beyond = {
-    back: -halfD - position.z,
-    front: position.z - halfD,
-    left: -halfW - position.x,
-    right: position.x - halfW,
+    back: -halfD - z,
+    front: z - halfD,
+    left: -halfW - x,
+    right: x - halfW,
   };
   const out = WALL_SIDES.filter((side) => beyond[side] > 0);
   if (!out.length) return null;
@@ -37,7 +45,7 @@ export function stanceWall(
 
 /** Thin boxes around the cut outline of a hidden wall that can face the
  * camera: floor-slab edge and ceiling edge (centred scene frame). */
-export function cutBoxes(room: DesignDocument["room"], side: WallSide) {
+export function cutBoxes(room: RoomBox, side: WallSide) {
   const halfW = room.width / 200,
     halfD = room.depth / 200,
     h = room.height / 100;
@@ -62,7 +70,10 @@ export function cutBoxes(room: DesignDocument["room"], side: WallSide) {
   const end = along + 0.14;
   // Floor-slab edge and ceiling edge. The adjoining walls' ends sit at the
   // stance extension, behind any camera in the stance band.
-  return [box(-end, end, -0.07, 0.02), box(-end, end, h - 0.02, h + 0.06)];
+  const shift = new Vector3(room.cx ?? 0, 0, room.cz ?? 0);
+  return [box(-end, end, -0.07, 0.02), box(-end, end, h - 0.02, h + 0.06)].map(
+    (b) => b.translate(shift),
+  );
 }
 
 const frustum = new Frustum(),
@@ -70,7 +81,7 @@ const frustum = new Frustum(),
 /** True if any cut edge of `side` can appear in this camera's frame. */
 export function cutInView(
   camera: Camera,
-  room: DesignDocument["room"],
+  room: RoomBox,
   side: WallSide,
 ) {
   camera.updateMatrixWorld();
@@ -83,7 +94,7 @@ export function cutInView(
  * stance behind one hidden wall while none of that wall's cut edges are in
  * view (an interior photograph, not a cut-away model). Ceiling, downlights
  * and window views show then; overviews keep them hidden. */
-export function seesInterior(camera: Camera, room: DesignDocument["room"]) {
+export function seesInterior(camera: Camera, room: RoomBox) {
   if (camera.position.y >= room.height / 100 - 0.02) return false;
   const behind = stanceWall(camera.position, room);
   if (behind === null) return true;

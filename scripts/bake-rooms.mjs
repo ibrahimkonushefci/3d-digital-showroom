@@ -124,6 +124,8 @@ for (const card of cards) {
     bytes: fs.statSync(path.join(OUT, file)).size,
     rects: result.rects,
     room: result.room,
+    // World position of the shell's corner (the presentation envelope).
+    origin: json.origin,
     encodeMax: result.encodeMax,
     gamma: result.gamma,
     // Exposure match to the live lighting (scripts/review/calibrate-bakes.mjs).

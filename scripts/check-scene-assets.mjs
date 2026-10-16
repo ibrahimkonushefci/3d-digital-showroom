@@ -94,7 +94,8 @@ for (const slug of ["default", "druri-design"]) {
 for (const floor of ["laminate", "tiles", "concrete"])
   for (const map of ["color", "normal", "roughness"])
     await check(`shared/textures/${floor}-${map}.webp`);
-if (modelBytes > 2_500_000) throw Error("Room kit allocation exceeded");
+// Raised with the shipped budget for the Phase 2 rooms (owner, 16 October 2026).
+if (modelBytes > 3_500_000) throw Error("Room kit allocation exceeded");
 console.log(
   JSON.stringify(
     {

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "revision": "room-kit-v3",
+  "revision": "room-kit-v2",
   "assets": [
     {
       "id": "oven",
@@ -2046,6 +2046,793 @@
       "licenseKey": "original-room-kit-v2",
       "source": "art/blender/phase2_kit.py",
       "sourceSha256": "8b0a22f373419a687392080bea1f50e00ff9da3aac48c7ceb23c15f909cd7c1b",
+      "quotedProduct": false
+    },
+    {
+      "id": "dining-chair",
+      "revision": 1,
+      "path": "shared/models/dining-chair-balanced-3141fe52a1.glb",
+      "sha256": "3141fe52a13a054417e3abe8a174957b04fbec10556a7214e4283c80c98e214a",
+      "bytes": 90756,
+      "triangles": 5000,
+      "drawCalls": 1,
+      "geometryBytes": 98720,
+      "nativeDimensions": [
+        0.4332,
+        0.9731,
+        0.5768
+      ],
+      "bounds": {
+        "min": [
+          -0.21661949157714844,
+          0.00046980640036053956,
+          -0.2884586453437805
+        ],
+        "max": [
+          0.21661946177482605,
+          0.9735698699951172,
+          0.2882983386516571
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/dining-chair-lightweight-caade2c019.glb",
+        "sha256": "caade2c019b116f98765bc42f616ddc805f415da51c2ed75541e4bf3a5717c0a",
+        "bytes": 45676,
+        "triangles": 2500,
+        "drawCalls": 1,
+        "geometryBytes": 53920,
+        "nativeDimensions": [
+          0.4332,
+          0.9741,
+          0.5768
+        ],
+        "bounds": {
+          "min": [
+            -0.21661949157714844,
+            0.00046980640036053956,
+            -0.28852030634880066
+          ],
+          "max": [
+            0.21661946177482605,
+            0.9745776653289795,
+            0.288237601518631
+          ]
+        }
+      },
+      "materialSlots": [
+        "dining_chair_02"
+      ],
+      "origin": "floor",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 4183818,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/dining_chair_02",
+      "sourceSha256": "41db9c04063acb2238a2dfbd247db07fea10b433327e1490e309281f21aada62",
+      "quotedProduct": false
+    },
+    {
+      "id": "pendant-globe",
+      "revision": 1,
+      "path": "shared/models/pendant-globe-balanced-768c25ca72.glb",
+      "sha256": "768c25ca7214414e69c7aa3ccd6a8e482fb1887b9e29e0beeef0a78baf39627c",
+      "bytes": 46324,
+      "triangles": 3000,
+      "drawCalls": 3,
+      "geometryBytes": 58180,
+      "nativeDimensions": [
+        0.4316,
+        0.9516,
+        0.4317
+      ],
+      "bounds": {
+        "min": [
+          -0.2158246636390686,
+          -0.9516173601150513,
+          -0.21583038568496704
+        ],
+        "max": [
+          0.2158246636390686,
+          0,
+          0.21583038568496704
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/pendant-globe-lightweight-3710e1a63a.glb",
+        "sha256": "3710e1a63a27f3a00abc766d6e3a3075e1c99f803e239aeb0b525b248e434aaa",
+        "bytes": 27732,
+        "triangles": 1499,
+        "drawCalls": 3,
+        "geometryBytes": 31414,
+        "nativeDimensions": [
+          0.4328,
+          0.9519,
+          0.4318
+        ],
+        "bounds": {
+          "min": [
+            -0.2163776457309723,
+            -0.9519473314285278,
+            -0.21620811522006989
+          ],
+          "max": [
+            0.2163776308298111,
+            0,
+            0.2155788391828537
+          ]
+        }
+      },
+      "materialSlots": [
+        "modern_ceiling_lamp_01_glass",
+        "modern_ceiling_lamp_01",
+        "modern_ceiling_globe"
+      ],
+      "origin": "ceiling",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 1045955,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/modern_ceiling_lamp_01",
+      "sourceSha256": "7eea1d3318ce550b3251593de9c1110f8b9f76af1523ea19e87c3d638e3c117d",
+      "quotedProduct": false
+    },
+    {
+      "id": "vase-tall",
+      "revision": 1,
+      "path": "shared/models/vase-tall-balanced-52e0e7428c.glb",
+      "sha256": "52e0e7428c48bc2d364fca04ed34fdb9a3684f695595455fa9b84ae9b3a9c081",
+      "bytes": 30452,
+      "triangles": 1600,
+      "drawCalls": 1,
+      "geometryBytes": 31260,
+      "nativeDimensions": [
+        0.1123,
+        0.4144,
+        0.1123
+      ],
+      "bounds": {
+        "min": [
+          -0.056141361594200134,
+          -0.0000023791540115780663,
+          -0.056131988763809204
+        ],
+        "max": [
+          0.0561760775744915,
+          0.41436028480529785,
+          0.0561370924115181
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/vase-tall-lightweight-28f1f90b22.glb",
+        "sha256": "28f1f90b22c7d898726e92612a05dc40ba88215ffdf1332f830cb96ce2219502",
+        "bytes": 16004,
+        "triangles": 800,
+        "drawCalls": 1,
+        "geometryBytes": 16920,
+        "nativeDimensions": [
+          0.1124,
+          0.4143,
+          0.1123
+        ],
+        "bounds": {
+          "min": [
+            -0.05618401989340782,
+            0.000001850336957431864,
+            -0.056182436645030975
+          ],
+          "max": [
+            0.0562024787068367,
+            0.41431474685668945,
+            0.0561370924115181
+          ]
+        }
+      },
+      "materialSlots": [
+        "ceramic_vase_03"
+      ],
+      "origin": "countertop",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 1045955,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/ceramic_vase_03",
+      "sourceSha256": "4f740e0e7c2d929030baaa7e9cc53c5bdda501896163b307efde98fc29976c1c",
+      "quotedProduct": false
+    },
+    {
+      "id": "side-table",
+      "revision": 1,
+      "path": "shared/models/side-table-balanced-3fb1372ddd.glb",
+      "sha256": "3fb1372dddfe9f1a70fad5a09144c1c180352c97f1c06f29bead08b821684e6e",
+      "bytes": 62284,
+      "triangles": 2000,
+      "drawCalls": 1,
+      "geometryBytes": 63440,
+      "nativeDimensions": [
+        0.55,
+        0.5507,
+        0.45
+      ],
+      "bounds": {
+        "min": [
+          -0.27500003576278687,
+          0,
+          -0.22500000894069672
+        ],
+        "max": [
+          0.27500003576278687,
+          0.5506622791290283,
+          0.22500000894069672
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/side-table-lightweight-b01a6bada1.glb",
+        "sha256": "b01a6bada1015d20e00a7c659c0b31e1deed6e2fabfe5250b040b23c7bf6f8ba",
+        "bytes": 35772,
+        "triangles": 999,
+        "drawCalls": 1,
+        "geometryBytes": 38534,
+        "nativeDimensions": [
+          0.5491,
+          0.5507,
+          0.4491
+        ],
+        "bounds": {
+          "min": [
+            -0.2745508551597595,
+            0,
+            -0.22456133365631104
+          ],
+          "max": [
+            0.2745508551597595,
+            0.5506622791290283,
+            0.22456133365631104
+          ]
+        }
+      },
+      "materialSlots": [
+        "side_table_01"
+      ],
+      "origin": "floor",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 2353398,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/side_table_01",
+      "sourceSha256": "f67a6a076a432d4f55e962da3e5ac19561600fb54d410dd429177fdfc9b9a757",
+      "quotedProduct": false
+    },
+    {
+      "id": "sideboard",
+      "revision": 1,
+      "path": "shared/models/sideboard-balanced-cc2e1d5f3c.glb",
+      "sha256": "cc2e1d5f3c1f0caf93461105f332429e5234a2e13196e7e102b83a273b4ba9a1",
+      "bytes": 130312,
+      "triangles": 4000,
+      "drawCalls": 1,
+      "geometryBytes": 177840,
+      "nativeDimensions": [
+        2.44,
+        0.6801,
+        0.5204
+      ],
+      "bounds": {
+        "min": [
+          -1.2200000286102295,
+          0,
+          -0.26033642888069153
+        ],
+        "max": [
+          1.2200000286102295,
+          0.6801425218582153,
+          0.2600476145744324
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/sideboard-lightweight-2d1d10963e.glb",
+        "sha256": "2d1d10963ee1516cb9e6a0f596e49b2ae4e7ac0a8ec4f32e3edd5d1c8f09bf67",
+        "bytes": 78252,
+        "triangles": 2000,
+        "drawCalls": 1,
+        "geometryBytes": 111048,
+        "nativeDimensions": [
+          2.44,
+          0.6705,
+          0.5204
+        ],
+        "bounds": {
+          "min": [
+            -1.2200000286102295,
+            0.009636948816478252,
+            -0.26033642888069153
+          ],
+          "max": [
+            1.2200000286102295,
+            0.6801425218582153,
+            0.2600476145744324
+          ]
+        }
+      },
+      "materialSlots": [
+        "modern_wooden_cabinet"
+      ],
+      "origin": "floor",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 4183818,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/modern_wooden_cabinet",
+      "sourceSha256": "9c0765063297018e854d11bc27da3cbab3c33904a3be2f5c15f46635df7e857f",
+      "quotedProduct": false
+    },
+    {
+      "id": "plant-tree",
+      "revision": 1,
+      "path": "shared/models/plant-tree-balanced-d50e6369f6.glb",
+      "sha256": "d50e6369f65b004196e08d3dffafb862844dadf88fc1573560c6b5c9695d7353",
+      "bytes": 208268,
+      "triangles": 7000,
+      "drawCalls": 2,
+      "geometryBytes": 172460,
+      "nativeDimensions": [
+        1.0545,
+        1.9018,
+        0.9977
+      ],
+      "bounds": {
+        "min": [
+          -0.5272300243377686,
+          0.000029630085919052362,
+          -0.4991571605205536
+        ],
+        "max": [
+          0.5272775888442993,
+          1.9018590450286865,
+          0.49852102994918823
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/plant-tree-lightweight-245c23dcb1.glb",
+        "sha256": "245c23dcb19b90ce5b63457a97278013172b3758fbb8d298d39ce807e8987f26",
+        "bytes": 98984,
+        "triangles": 3500,
+        "drawCalls": 2,
+        "geometryBytes": 95940,
+        "nativeDimensions": [
+          1.0553,
+          1.9018,
+          0.9963
+        ],
+        "bounds": {
+          "min": [
+            -0.5280110836029053,
+            0.000071311580541078,
+            -0.5000224709510803
+          ],
+          "max": [
+            0.5272775888442993,
+            1.9018590450286865,
+            0.4963032007217407
+          ]
+        }
+      },
+      "materialSlots": [
+        "pachira_aquatica_01_bark",
+        "pachira_aquatica_01_leaves"
+      ],
+      "origin": "floor",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 8367636,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/pachira_aquatica_01",
+      "sourceSha256": "e73b77c0ffadd8b9fa686faabfecf37799123fe4bc756f816145a4f8c9f53364",
+      "quotedProduct": false
+    },
+    {
+      "id": "armchair",
+      "revision": 1,
+      "path": "shared/models/armchair-balanced-52f9dbec19.glb",
+      "sha256": "52f9dbec19a0a5630fba7f24130e8040a78a752c45401e1cf2b2af61a1be802d",
+      "bytes": 120728,
+      "triangles": 5000,
+      "drawCalls": 2,
+      "geometryBytes": 103980,
+      "nativeDimensions": [
+        0.8204,
+        1.023,
+        0.9866
+      ],
+      "bounds": {
+        "min": [
+          -0.41017967462539673,
+          -0.00012832284846808761,
+          -0.493280827999115
+        ],
+        "max": [
+          0.41017982363700867,
+          1.0228520631790161,
+          0.493280827999115
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/armchair-lightweight-8988171d95.glb",
+        "sha256": "8988171d95157d16714213150d6141b26bdc8c7dd4df719b9fc392c9381373e0",
+        "bytes": 59832,
+        "triangles": 2499,
+        "drawCalls": 2,
+        "geometryBytes": 58694,
+        "nativeDimensions": [
+          0.8204,
+          1.0228,
+          0.9873
+        ],
+        "bounds": {
+          "min": [
+            -0.4101686179637909,
+            0.00005807992783957161,
+            -0.49373942613601685
+          ],
+          "max": [
+            0.4101886451244354,
+            1.0228520631790161,
+            0.49357232451438904
+          ]
+        }
+      },
+      "materialSlots": [
+        "modern_arm_chair_01_legs",
+        "modern_arm_chair_01_pillow"
+      ],
+      "origin": "floor",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 8367636,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/modern_arm_chair_01",
+      "sourceSha256": "d31be520add2603447b43acedbdacf9516866f7c89e9ea9230c9edbac9cc6e6a",
+      "quotedProduct": false
+    },
+    {
+      "id": "vase-round",
+      "revision": 1,
+      "path": "shared/models/vase-round-balanced-88f921c182.glb",
+      "sha256": "88f921c182fa9c41df06ea8912acec6af5217989f71e18a7cb475f9b5362359c",
+      "bytes": 33812,
+      "triangles": 1600,
+      "drawCalls": 1,
+      "geometryBytes": 45760,
+      "nativeDimensions": [
+        0.2184,
+        0.3098,
+        0.2184
+      ],
+      "bounds": {
+        "min": [
+          -0.10877769440412521,
+          -0.00039541226578876376,
+          -0.10887088626623154
+        ],
+        "max": [
+          0.1096053421497345,
+          0.30938464403152466,
+          0.10950279980897903
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/vase-round-lightweight-9baf0ac206.glb",
+        "sha256": "9baf0ac206e2f8160c61a3a286a631cc9dc4c5abb07dc2f131669d96917d1c0c",
+        "bytes": 20576,
+        "triangles": 800,
+        "drawCalls": 1,
+        "geometryBytes": 25960,
+        "nativeDimensions": [
+          0.222,
+          0.3088,
+          0.2296
+        ],
+        "bounds": {
+          "min": [
+            -0.10834727436304092,
+            -0.00039364007534459233,
+            -0.11689861118793488
+          ],
+          "max": [
+            0.11366861313581467,
+            0.3084372282028198,
+            0.11272177845239639
+          ]
+        }
+      },
+      "materialSlots": [
+        "ceramic_vase_02"
+      ],
+      "origin": "countertop",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 697303,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/ceramic_vase_02",
+      "sourceSha256": "1bda047833b68c2c1b190ee53a55b1aa42d30748c84739909b6ca65b2f2d76c9",
+      "quotedProduct": false
+    },
+    {
+      "id": "dresser",
+      "revision": 1,
+      "path": "shared/models/dresser-balanced-30c845ec17.glb",
+      "sha256": "30c845ec17b6a977c2233777106540c543232fa6c4591ec39f28b0fabed5850d",
+      "bytes": 75916,
+      "triangles": 3000,
+      "drawCalls": 1,
+      "geometryBytes": 98080,
+      "nativeDimensions": [
+        1.1346,
+        1.8804,
+        0.4901
+      ],
+      "bounds": {
+        "min": [
+          -0.5672975778579712,
+          0.000006460091299231863,
+          -0.24404235184192657
+        ],
+        "max": [
+          0.567297637462616,
+          1.8804435729980469,
+          0.24607090651988983
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/dresser-lightweight-fcffc414fa.glb",
+        "sha256": "fcffc414fa186b4d93e8e6815da11f481facfa624a3ce4757a7db6786c506983",
+        "bytes": 43860,
+        "triangles": 1637,
+        "drawCalls": 1,
+        "geometryBytes": 55402,
+        "nativeDimensions": [
+          1.129,
+          1.3368,
+          0.4361
+        ],
+        "bounds": {
+          "min": [
+            -0.5653865933418274,
+            0.4219997823238373,
+            -0.19007323682308197
+          ],
+          "max": [
+            0.5636566281318665,
+            1.7588086128234863,
+            0.24607090651988983
+          ]
+        }
+      },
+      "materialSlots": [
+        "drawer_cabinet"
+      ],
+      "origin": "floor",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 2353398,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/drawer_cabinet",
+      "sourceSha256": "899581e6a041644139a138f909c6ba001684cc55b5d1702e08f01094e20d0617",
+      "quotedProduct": false
+    },
+    {
+      "id": "basket",
+      "revision": 1,
+      "path": "shared/models/basket-balanced-01a1ae22bc.glb",
+      "sha256": "01a1ae22bcd83c4dbdb313b3b6c7da0aae10384167d80d4b431d840e16d09dce",
+      "bytes": 101096,
+      "triangles": 2500,
+      "drawCalls": 1,
+      "geometryBytes": 52280,
+      "nativeDimensions": [
+        0.3466,
+        0.2008,
+        0.2544
+      ],
+      "bounds": {
+        "min": [
+          -0.17290106415748596,
+          0.00004139247539569624,
+          -0.1269732117652893
+        ],
+        "max": [
+          0.17365217208862305,
+          0.2008867710828781,
+          0.12745967507362366
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/basket-lightweight-5e66c529d6.glb",
+        "sha256": "5e66c529d668072d1c40c2bf66a9a273eee4c429a32a40df632367abd8e23fa4",
+        "bytes": 39028,
+        "triangles": 1249,
+        "drawCalls": 1,
+        "geometryBytes": 28314,
+        "nativeDimensions": [
+          0.3471,
+          0.2016,
+          0.2529
+        ],
+        "bounds": {
+          "min": [
+            -0.17296546697616577,
+            -0.0003937852452509105,
+            -0.12445961683988571
+          ],
+          "max": [
+            0.17412087321281433,
+            0.20124249160289764,
+            0.12848126888275146
+          ]
+        }
+      },
+      "materialSlots": [
+        "wicker_basket_02"
+      ],
+      "origin": "floor",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 2353398,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/wicker_basket_02",
+      "sourceSha256": "78c7a3bdd7025eb092b3ac744e9d83e9a75fbb242696b5dce87ec215af617768",
+      "quotedProduct": false
+    },
+    {
+      "id": "wall-art-tall",
+      "revision": 1,
+      "path": "shared/models/wall-art-tall-balanced-956721f6c2.glb",
+      "sha256": "956721f6c212766a6b6cc0305d3e76b0c3e02e992ecdec711ed97e0e92845926",
+      "bytes": 41316,
+      "triangles": 1600,
+      "drawCalls": 3,
+      "geometryBytes": 41676,
+      "nativeDimensions": [
+        0.5937,
+        0.8407,
+        0.0157
+      ],
+      "bounds": {
+        "min": [
+          -0.2968635559082031,
+          -0.4203588366508484,
+          0
+        ],
+        "max": [
+          0.2968635559082031,
+          0.42037683725357056,
+          0.01568799465894699
+        ]
+      },
+      "lowerDetail": {
+        "path": "shared/models/wall-art-tall-lightweight-e85633c8a4.glb",
+        "sha256": "e85633c8a4ad326591033c33d85bf4c42de7f2a268ecfba341b776734ff0781a",
+        "bytes": 24648,
+        "triangles": 799,
+        "drawCalls": 3,
+        "geometryBytes": 24130,
+        "nativeDimensions": [
+          0.5936,
+          0.8406,
+          0.0149
+        ],
+        "bounds": {
+          "min": [
+            -0.29678601026535034,
+            -0.420288622379303,
+            0.0004269851488061249
+          ],
+          "max": [
+            0.29678601026535034,
+            0.420288622379303,
+            0.015327444300055504
+          ]
+        }
+      },
+      "materialSlots": [
+        "hanging_picture_frame_01_glass",
+        "hanging_picture_frame_01_artwork",
+        "hanging_picture_frame_01"
+      ],
+      "origin": "wall",
+      "up": "+Y",
+      "forward": "+Z",
+      "anchors": {
+        "attachment": [
+          0,
+          0,
+          0
+        ]
+      },
+      "quality": "balanced",
+      "decodedTextureBytes": 3922330,
+      "licenseKey": "polyhaven-cc0",
+      "source": "https://polyhaven.com/a/hanging_picture_frame_01",
+      "sourceSha256": "00aaeab14751485287443b4c5cc2ee5673136510595daa6a2948519c116ad47b",
       "quotedProduct": false
     }
   ]

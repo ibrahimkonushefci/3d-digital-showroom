@@ -81,7 +81,8 @@ it("records local, original, hash-verified metre models and reduced-cost LODs un
       }
     }
   }
-  expect(bytes).toBeLessThan(2_500_000);
+  // Phase 2 rooms (owner raised the shipped working limit to about 11 MB).
+  expect(bytes).toBeLessThan(3_500_000);
 });
 it("rejects remote paths, unknown coordinate conventions and billable decor metadata", () => {
   for (const patch of [

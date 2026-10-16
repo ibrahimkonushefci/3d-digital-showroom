@@ -36,8 +36,8 @@ export function ShellBakeDriver({
   uniforms: ShellBakeUniforms;
 }) {
   const { scene, invalidate } = useThree();
-  const { assetUrl } = useBrand();
-  const signature = bakeSignature(design);
+  const { assetUrl, catalog } = useBrand();
+  const signature = bakeSignature(design, catalog);
   const entry: BakeEntry | undefined = BAKES[signature];
   const state = useRef<{
     wanted: { signature: string; texture: Texture; entry: BakeEntry } | null;

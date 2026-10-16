@@ -29,6 +29,8 @@ export type BakeEntry = {
   /** Atlas rects [x, y, w, h] (0-1) for floor, ceiling, back, front, left, right. */
   rects: Record<string, [number, number, number, number]>;
   room: [number, number, number];
+  /** World position of the shell corner; older bakes sat at (-w/2, 0, -d/2). */
+  origin?: [number, number, number];
   encodeMax: number;
   gamma: number;
   gain: number;
@@ -147,6 +149,7 @@ export function applyBakeEntry(
     uniforms.bakeRects.value[i].set(...entry.rects[s]),
   );
   uniforms.bakeRoom.value.set(w, h, d);
-  // The room group sits at (-w/2, 0, -d/2); see Scene.tsx.
-  uniforms.bakeOrigin.value.set(-w / 2, 0, -d / 2);
+  // The shell corner: the presentation envelope's corner in world space.
+  if (entry.origin) uniforms.bakeOrigin.value.set(...entry.origin);
+  else uniforms.bakeOrigin.value.set(-w / 2, 0, -d / 2);
 }

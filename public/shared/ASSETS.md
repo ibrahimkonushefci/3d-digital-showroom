@@ -85,3 +85,12 @@ All new sources are CC0; provenance is also listed in `licenses/polyhaven-cc0.tx
 
 - `bench` (original room kit) and `basket` (Poly Haven CC0 decor, placed only beside the bench) were removed with the wardrobe bench: manifest entries and GLBs. Both remain in Git history if a later room needs them.
 - Unused room recipes `kitchen-warm-v1/v2.json` and `wardrobe-warm-v1/v2.json` were removed; `*-v3.json` are the active recipes.
+
+## Phase 2 rooms — 16 October 2026
+
+All new sources are CC0 Poly Haven assets (https://polyhaven.com/license), downloaded by script from the Poly Haven public API on 16 October 2026; licence key `polyhaven-cc0` (`licenses/polyhaven-cc0.txt`).
+
+- `textures/exterior-garden-pano.webp` (3584 × 856, about 585 KB): latitude band +38° to −48° of the tonemapped HDRI "Suburban Garden" (https://polyhaven.com/a/suburban_garden), resized and WebP-encoded locally. Drawn on one panorama sphere around the presentation room and only through window openings. Replaces `exterior-garden.webp` (Poly Haven "Balcony"), which was removed.
+- Room models, prepared headless in Blender by `art/blender/prepare_decor.py` with `art/blender/decor.json` (one variant kept where a source file holds several, decimated, WebP textures) and registered by `node scripts/register-decor.mjs <prepared-dir> <download-dir> [ids]` (meshopt-compressed, content-hashed): `dining-chair` (dining_chair_02), `pendant-globe` (modern_ceiling_lamp_01), `vase-tall` (ceramic_vase_03), `side-table` (side_table_01), `wall-art-tall` (hanging_picture_frame_01; its glass made see-through on registration), `sideboard` (modern_wooden_cabinet), `plant-tree` (pachira_aquatica_01, variant d), `armchair` (modern_arm_chair_01), `vase-round` (ceramic_vase_02), `dresser` (drawer_cabinet), `basket` (wicker_basket_02). Decorative, unpriced, never selectable.
+- Tried and not shipped (removed again): `plant-floor` (potted_plant_02), `lounge-chair` (mid_century_lounge_chair), `plant-calathea`, `books`, `display-shelves`, `coffee-table`.
+- The presentation room's architecture (walls, garden door, doorway and hallway glimpse, bulkhead, shadow gaps, slatted feature wall), the dining table, rug, open shelves, clock and mirror are original geometry built in code (`src/scene/rooms/`).

@@ -9,6 +9,7 @@ import {
   type Volume,
 } from "../assets/placement";
 import { modelRecord } from "../assets/manifest";
+import { presentationEnvelope } from "./envelope";
 const recipes = [
   RoomRecipeSchema.parse(kitchen),
   RoomRecipeSchema.parse(wardrobe),
@@ -66,7 +67,14 @@ export function resolveRoom(design: DesignDocument) {
       place("pendant", [c.x / 100, design.room.height / 100, c.z / 100], yaw);
     }
   }
-  return { recipe, room: design.room, furnished, props };
+  return {
+    recipe,
+    room: design.room,
+    /** The larger presentation room drawn around the design room. */
+    envelope: presentationEnvelope(design),
+    furnished,
+    props,
+  };
 }
 /** Only explicit authored presets receive staging; any customer openings win. */
 export function presetRoom(

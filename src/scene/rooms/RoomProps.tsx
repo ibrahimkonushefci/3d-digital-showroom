@@ -2,12 +2,15 @@ import { useMemo, useRef, type ReactNode } from "react";
 import { useFrame } from "@react-three/fiber";
 import type { Group } from "three";
 import { insideWall } from "./RoomShell";
+import type { RoomBox } from "./stance";
 import type { Catalog, DesignDocument } from "../../catalog/types";
 import { resolveRoom } from "./resolveRoom";
 import { ModelAsset } from "../assets/ModelAsset";
 import { Box } from "../Primitives";
 import { countertopThickness } from "../furnitureMaterials";
-import { wallArt, worktopDecor, type DecorItem } from "./decor";
+import { worktopDecor, type DecorItem } from "./decor";
+import { roomStaging } from "./staging";
+import { StagingPiece } from "./StagingPieces";
 /** Decor hanging on a wall disappears with that wall when it is cut away
  * (overview, or the hero stance behind it), instead of floating. */
 function OnWall({
@@ -15,7 +18,7 @@ function OnWall({
   wall,
   children,
 }: {
-  room: DesignDocument["room"];
+  room: RoomBox;
   wall?: DecorItem["wall"];
   children: ReactNode;
 }) {
@@ -50,20 +53,57 @@ export function RoomProps({
       catalog,
       counter ? [counter.id] : [],
     );
-    const art = wallArt(design);
-    if (art) items.push(art);
     return items;
   }, [design, catalog, room, counter]);
+  const staging = useMemo(
+    () =>
+      room.furnished
+        ? roomStaging(design, catalog)
+        : { models: [], built: [], solids: [] },
+    [design, catalog, room],
+  );
+  // Staged models grouped by id and wall: one instanced draw per group.
+  const stagedGroups = useMemo(() => {
+    const groups = new Map<string, typeof staging.models>();
+    for (const m of staging.models) {
+      const key = m.id + "|" + (m.wall ?? "");
+      groups.set(key, [...(groups.get(key) ?? []), m]);
+    }
+    return [...groups.entries()];
+  }, [staging]);
   return (
     <group userData={{ reflectionStatic: true }}>
       {[...new Set(decor.map((d) => d.id))].map((id) => {
         const items = decor.filter((d) => d.id === id);
         return (
-          <OnWall key={"decor-" + id} room={design.room} wall={items[0].wall}>
+          <OnWall key={"decor-" + id} room={room.envelope.room} wall={items[0].wall}>
             <ModelAsset id={id} transforms={items} />
           </OnWall>
         );
       })}
+      {stagedGroups.map(([key, items]) => (
+        <OnWall key={"staged-" + key} room={room.envelope.room} wall={items[0].wall}>
+          <ModelAsset
+            id={items[0].id}
+            transforms={items}
+            castShadow={items[0].id !== "pendant-globe" && !items[0].wall}
+            glow={
+              items[0].id === "pendant-globe"
+                ? "modern_ceiling_globe"
+                : undefined
+            }
+          />
+        </OnWall>
+      ))}
+      {staging.built.map((piece, i) => (
+        <OnWall
+          key={"built-" + piece.type + i}
+          room={room.envelope.room}
+          wall={"wall" in piece ? piece.wall : undefined}
+        >
+          <StagingPiece piece={piece} />
+        </OnWall>
+      ))}
       {[...new Set(room.props.map((p) => p.id))].map((id) => (
         <ModelAsset
           key={id}

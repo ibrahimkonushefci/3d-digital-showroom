@@ -15,7 +15,12 @@ art/blender/prepare_decor.py with art/blender/decor.json):
 - wall-art: https://polyhaven.com/a/hanging_picture_frame_02 — James Ray Cock
 - basket: https://polyhaven.com/a/wicker_basket_02 — Kuutti Siitonen
 
-Window view (public/shared/textures/exterior-garden.webp): perspective crop of
-the HDRI https://polyhaven.com/a/balcony — Greg Zaal (CC0).
+Window view (public/shared/textures/exterior-garden-pano.webp): latitude band of
+the tonemapped HDRI https://polyhaven.com/a/suburban_garden (CC0).
+
+Phase 2 room models (CC0, https://polyhaven.com/a/<name>): dining_chair_02,
+modern_ceiling_lamp_01, ceramic_vase_03, side_table_01, hanging_picture_frame_01,
+modern_wooden_cabinet, pachira_aquatica_01, modern_arm_chair_01,
+ceramic_vase_02, drawer_cabinet, wicker_basket_02.
 
 These are decorative, unpriced props. They are not supplier products.

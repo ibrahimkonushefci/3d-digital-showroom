@@ -10,12 +10,19 @@ import {
 import { CatalogSchema } from "../src/catalog/types";
 import { hobCabinet } from "../src/designer3d/layout";
 import { presentationPresets } from "../src/designer3d/presets";
+import { resolveRoom } from "../src/scene/rooms/resolveRoom";
 import {
   insideWall,
   insideRoom,
   downlights,
 } from "../src/scene/rooms/RoomShell";
-import { worktopDecor, wallArt } from "../src/scene/rooms/decor";
+import { worktopDecor } from "../src/scene/rooms/decor";
+import { roomStaging } from "../src/scene/rooms/staging";
+import {
+  freePlacement,
+  overlaps,
+  cabinetExclusion,
+} from "../src/scene/assets/placement";
 import { excludedFromAO } from "../src/scene/pipeline/RenderPipeline";
 import { resolveLighting } from "../src/scene/lighting/lightingRecipe";
 import { calculatePrice } from "../src/pricing";
@@ -96,18 +103,46 @@ it("dresses free worktop only: never the sink, hob or a reused cabinet, below wa
   }
 });
 
-it("hangs wall art only on a wall without cabinets or openings", () => {
+it("stages room furniture clear of cabinets and their fronts", () => {
   for (const preset of presets) {
-    const art = wallArt(preset.design);
-    if (!art) continue;
-    const [x, , z] = art.position;
-    const w = preset.design.room.width / 100,
-      d = preset.design.room.depth / 100;
-    const side =
-      z < 0.01 ? "back" : z > d - 0.01 ? "front" : x < 0.01 ? "left" : "right";
-    expect(preset.design.cabinets.some((c) => c.wall === side)).toBe(false);
-    expect(x).toBeGreaterThanOrEqual(0);
-    expect(x).toBeLessThanOrEqual(w);
+    const { design } = preset;
+    const staging = roomStaging(design, catalog);
+    // Every prepared room gets furniture beyond the cabinets.
+    expect(
+      staging.models.length + staging.built.length,
+      preset.id,
+    ).toBeGreaterThan(2);
+    // Solids stand inside the presentation room, clear of every unit with
+    // its opening fronts, and (floor pieces) outside the design room.
+    const { envelope } = resolveRoom(design);
+    const [ox, oz] = envelope.origin;
+    const W = envelope.room.width / 100,
+      D = envelope.room.depth / 100;
+    for (const v of staging.solids) {
+      expect(v.min[0], `${preset.id} solid`).toBeGreaterThanOrEqual(ox);
+      expect(v.min[2], `${preset.id} solid`).toBeGreaterThanOrEqual(oz);
+      expect(v.max[0], `${preset.id} solid`).toBeLessThanOrEqual(ox + W);
+      expect(v.max[2], `${preset.id} solid`).toBeLessThanOrEqual(oz + D);
+      for (const c of design.cabinets)
+        expect(overlaps(v, cabinetExclusion(c)), `${preset.id} solid`).toBe(
+          false,
+        );
+    }
+    // Wall pieces avoid furniture and its swept fronts.
+    for (const piece of staging.built)
+      if (piece.type === "shelves" || piece.type === "clock")
+        for (const c of design.cabinets) {
+          const v = cabinetExclusion(c);
+          const [x, y, z] = piece.position;
+          const inside =
+            x > v.min[0] &&
+            x < v.max[0] &&
+            z > v.min[2] - 0.3 &&
+            z < v.max[2] + 0.3 &&
+            y > v.min[1] &&
+            y < v.max[1];
+          expect(inside, `${preset.id} ${piece.type}`).toBe(false);
+        }
   }
 });
 
@@ -115,7 +150,7 @@ it("decor and lighting never change the quote", () => {
   for (const preset of presets) {
     const before = calculatePrice(preset.design, catalog, "en").total;
     worktopDecor(preset.design, catalog);
-    wallArt(preset.design);
+    roomStaging(preset.design, catalog);
     resolveLighting(preset.design, catalog, "balanced");
     expect(calculatePrice(preset.design, catalog, "en").total).toBe(before);
   }

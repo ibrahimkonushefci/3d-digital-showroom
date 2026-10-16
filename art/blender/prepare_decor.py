@@ -1,7 +1,11 @@
 """Prepare CC0 Poly Haven decor for the showroom (run headless in Blender).
 
   /Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup \
-    --python art/blender/prepare_decor.py -- art/blender/decor.json <download-dir> <out-dir>
+    --python art/blender/prepare_decor.py -- art/blender/decor.json <download-dir> <out-dir> [id,id,...]
+
+Sources are Poly Haven downloads, one folder per asset holding either the 1K
+glTF (`<asset>_1k.gltf`) or the .blend file (`<asset>_1k.blend` / `_2k.blend`).
+An optional comma-separated id list prepares only those entries.
 
 For each entry in decor.json: import the 1K glTF parts, place them, join,
 decimate to a triangle budget, put the origin where the room recipe anchors
@@ -21,6 +25,7 @@ from mathutils import Vector
 argv = sys.argv[sys.argv.index("--") + 1 :]
 config = json.loads(Path(argv[0]).read_text())
 src, out = Path(argv[1]), Path(argv[2])
+only = set(argv[3].split(",")) if len(argv) > 3 else None
 out.mkdir(parents=True, exist_ok=True)
 
 
@@ -30,9 +35,26 @@ def reset():
 
 def import_part(part):
     before = set(bpy.data.objects)
-    path = src / part["asset"] / f"{part['asset']}_1k.gltf"
-    bpy.ops.import_scene.gltf(filepath=str(path))
-    new = [o for o in bpy.data.objects if o not in before]
+    folder = src / part["asset"]
+    path = folder / f"{part['asset']}_1k.gltf"
+    if path.exists():
+        bpy.ops.import_scene.gltf(filepath=str(path))
+    else:
+        blend = sorted(folder.glob("*.blend"))[0]
+        with bpy.data.libraries.load(str(blend)) as (data_from, data_to):
+            data_to.objects = data_from.objects
+        for o in data_to.objects:
+            if o is not None and o.type in {"MESH", "EMPTY"}:
+                bpy.context.scene.collection.objects.link(o)
+        bpy.ops.file.pack_all()
+    new = [o for o in bpy.data.objects if o not in before and o.users_scene]
+    # Poly Haven files often hold several variants side by side: "keep"
+    # lists the object-name suffixes of the one to use.
+    keep = part.get("keep")
+    if keep:
+        for o in [o for o in new if o.type == "MESH" and not any(o.name.split(".")[0].endswith(k) for k in keep)]:
+            bpy.data.objects.remove(o)
+        new = [o for o in bpy.data.objects if o not in before and o.users_scene]
     roots = [o for o in new if o.parent is None or o.parent not in new]
     for root in roots:
         root.location += Vector(part.get("offset", [0, 0, 0]))
@@ -48,6 +70,9 @@ def join_meshes(objects):
     for o in meshes:
         o.select_set(True)
     bpy.context.view_layer.objects.active = meshes[0]
+    # .blend sources may carry subdivision/bevel modifiers: bake them in so
+    # the triangle budget below counts the real geometry.
+    bpy.ops.object.convert(target="MESH")
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     if len(meshes) > 1:
         bpy.ops.object.join()
@@ -71,6 +96,8 @@ def place_origin(obj, mode):
     # Blender is Z-up and the glTF exporter maps Blender -Y to glTF +Z.
     if mode == "back":  # wall piece: origin on its back plane, centred
         pivot = Vector((centre.x, hi.y, centre.z))
+    elif mode == "top":  # ceiling piece: origin at its top centre
+        pivot = Vector((centre.x, centre.y, hi.z))
     else:  # floor / countertop / shelf: bottom centre
         pivot = Vector((centre.x, centre.y, lo.z))
     obj.data.transform(__import__("mathutils").Matrix.Translation(-pivot))
@@ -105,6 +132,8 @@ def export(obj, path, budget, texture):
 
 
 for item in config:
+    if only and item["id"] not in only:
+        continue
     for detail, budget, texture in [
         ("balanced", item["triangles"], item.get("texture", 512)),
         ("lightweight", item["triangles"] // 2, item.get("texture", 512) // 2),

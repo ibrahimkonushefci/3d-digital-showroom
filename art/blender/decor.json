@@ -38,11 +38,11 @@
       {
         "asset": "lemon",
         "offset": [
-          0.0,
+          0,
           -0.045,
           0.04
         ],
-        "yaw": 4.0
+        "yaw": 4
       }
     ],
     "texture": 384
@@ -79,8 +79,113 @@
     "texture": 384
   },
   {
+    "id": "dining-chair",
+    "triangles": 5000,
+    "parts": [
+      {
+        "asset": "dining_chair_02"
+      }
+    ],
+    "texture": 512
+  },
+  {
+    "id": "pendant-globe",
+    "origin": "top",
+    "triangles": 3000,
+    "parts": [
+      {
+        "asset": "modern_ceiling_lamp_01"
+      }
+    ],
+    "texture": 256
+  },
+  {
+    "id": "vase-tall",
+    "triangles": 1600,
+    "parts": [
+      {
+        "asset": "ceramic_vase_03"
+      }
+    ],
+    "texture": 256
+  },
+  {
+    "id": "side-table",
+    "triangles": 2000,
+    "parts": [
+      {
+        "asset": "side_table_01"
+      }
+    ],
+    "texture": 384
+  },
+  {
+    "id": "wall-art-tall",
+    "origin": "back",
+    "triangles": 1600,
+    "parts": [
+      {
+        "asset": "hanging_picture_frame_01"
+      }
+    ],
+    "texture": 384
+  },
+  {
+    "id": "sideboard",
+    "triangles": 4000,
+    "parts": [
+      {
+        "asset": "modern_wooden_cabinet"
+      }
+    ],
+    "texture": 512
+  },
+  {
+    "id": "plant-tree",
+    "triangles": 7000,
+    "parts": [
+      {
+        "asset": "pachira_aquatica_01",
+        "keep": [
+          "_d"
+        ]
+      }
+    ],
+    "texture": 512
+  },
+  {
+    "id": "armchair",
+    "triangles": 5000,
+    "parts": [
+      {
+        "asset": "modern_arm_chair_01"
+      }
+    ],
+    "texture": 512
+  },
+  {
+    "id": "vase-round",
+    "triangles": 1600,
+    "parts": [
+      {
+        "asset": "ceramic_vase_02"
+      }
+    ],
+    "texture": 256
+  },
+  {
+    "id": "dresser",
+    "triangles": 3000,
+    "parts": [
+      {
+        "asset": "drawer_cabinet"
+      }
+    ],
+    "texture": 384
+  },
+  {
     "id": "basket",
-    "triangles": 3600,
+    "triangles": 2500,
     "parts": [
       {
         "asset": "wicker_basket_02"

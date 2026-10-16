@@ -11,6 +11,7 @@ import {
 import { generateLayout, newDesign } from "../src/designer3d/layout";
 import { bounds, validateDesign, wallPosition } from "../src/designer3d/layout";
 import { countertopThickness } from "../src/scene/furnitureMaterials";
+import { resolveRoom } from "../src/scene/rooms/resolveRoom";
 import {
   cabinetBounds,
   cameraBounds,
@@ -470,7 +471,7 @@ function shotCamera(
   camera.updateMatrixWorld();
   return camera;
 }
-it("stands inside the room, or just behind one empty hidden wall, at eye level for the interior hero", () => {
+it("stands inside the presentation room, or just behind one empty hidden wall, at eye level for the interior hero", () => {
   for (const [kind, layouts] of [
     ["kitchen", ["straight", "l", "island"]],
     ["wardrobe", ["straight", "corner"]],
@@ -482,21 +483,19 @@ it("stands inside the room, or just behind one empty hidden wall, at eye level f
         if (view.fov === undefined)
           expect.unreachable(`${layout} has no interior hero`);
         const [x, y, z] = view.position;
-        const behind = stanceWall({ x, z }, design.room);
+        // The camera stands in the presentation room around the furniture.
+        const room = resolveRoom(design).envelope.room;
+        const behind = stanceWall({ x, z }, room);
         expect(behind).not.toBe("invalid");
         if (behind) {
           // Only an empty wall is stepped behind, and its cut outline (slab
           // edge, wall ends, ceiling edge) never enters the frame.
           expect(design.cabinets.some((c) => c.wall === behind)).toBe(false);
           expect(
-            cutInView(
-              shotCamera(view, aspect),
-              design.room,
-              behind as WallSide,
-            ),
+            cutInView(shotCamera(view, aspect), room, behind as WallSide),
           ).toBe(false);
         }
-        expect(seesInterior(shotCamera(view, aspect), design.room)).toBe(true);
+        expect(seesInterior(shotCamera(view, aspect), room)).toBe(true);
         expect(y).toBeGreaterThan(1.4);
         expect(y).toBeLessThan(design.room.height / 100 - 0.25);
         expect(view.fov).toBeGreaterThanOrEqual(HERO_FOV);
@@ -542,7 +541,9 @@ it("shows each whole prepared proposal with breathing room, never a cropped end"
         // settings panel stays inside the room; long runs may lose a sliver.
       ).toBeGreaterThanOrEqual(aspect > 1 ? 1 : 0.94);
       const fill = frameFill(eye, target, outline, view.fov!, aspect);
-      expect(fill, preset.id).toBeGreaterThan(0.55);
+      // The furniture leads the picture; the room around it (garden door,
+      // dining or reading group) takes the rest.
+      expect(fill, preset.id).toBeGreaterThan(0.42);
       if (aspect > 1)
         expect(fill, preset.id).toBeLessThanOrEqual(HERO_OCCUPANCY.x + 0.01);
     }
@@ -592,7 +593,9 @@ it("inspects every unit of the prepared designs from a camera that sees it", () 
           const view = inspectionShot(design, brandCatalog, c.id, aspect);
           expect(view, `${design.layout} ${c.moduleId}`).not.toBeNull();
           const p = new Vector3(...view!.position);
-          expect(standingBehind(p, design.room)).not.toBe("invalid");
+          expect(
+            standingBehind(p, resolveRoom(design).envelope.room),
+          ).not.toBe("invalid");
           expect(p.y).toBeLessThan(design.room.height / 100);
           const seen = frontVisibility(design, brandCatalog, c.id, p);
           expect(seen.middle, `${design.layout} ${c.moduleId}`).toBe(true);

@@ -8,6 +8,8 @@ import {
 import { ShadowShell } from "../scene/lighting/ShadowShell";
 import { RoomShell, insideWall } from "../scene/rooms/RoomShell";
 import { RoomProps } from "../scene/rooms/RoomProps";
+import { resolveRoom } from "../scene/rooms/resolveRoom";
+import type { RoomBox } from "../scene/rooms/stance";
 import { pendingModelLoads } from "../scene/assets/ModelAsset";
 import { warmupPending } from "../scene/pipeline/shaderWarmup";
 import { environmentPending } from "../scene/lighting/RoomEnvironment";
@@ -77,7 +79,7 @@ function WallSupport({
   color,
 }: {
   cabinet: DesignDocument["cabinets"][number];
-  room: DesignDocument["room"];
+  room: RoomBox;
   color: string;
 }) {
   const group = useRef<Group>(null);
@@ -288,7 +290,7 @@ export default function Scene({
                 <WallSupport
                   key={`support-${c.id}`}
                   cabinet={c}
-                  room={design.room}
+                  room={resolveRoom(design).envelope.room}
                   color={design.environment?.wallColor || "#e5e0d7"}
                 />
               ))}
