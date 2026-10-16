@@ -1,20 +1,19 @@
 # Digital Showroom Designer
 
-A static, white-label furniture sales demo dedicated to kitchens and wardrobes. `3d_designer.md` describes the current project scope. See [the removal report](verification/furniture-only/REPORT.md) for the permanent specialist-module cleanup and size comparison.
+A static, white-label sales demo for companies in Kosovo that make **kitchens and wardrobes**. A freelance developer walks into a showroom with a laptop (later a tablet) and shows the owner a working 3D designer that already carries their name, logo, colours and products. It must feel like a finished product, work offline, and be rebrandable in about 15 minutes.
 
-## Furniture sales release — 10 October 2026
+- **Users:** the showroom salesperson next to a customer (touch-first, big controls), customers at home on a phone (including diaspora in Germany/Switzerland), and a non-technical business owner who must find it impressive and simple.
+- **Languages:** Albanian (default), English, German. EUR, metric (cm).
+- **Stack:** React + TypeScript + Vite, Three.js via React Three Fiber/drei, Zustand, Tailwind. No backend; state lives in memory, localStorage/IndexedDB and share URLs. PWA with offline support; deploys as a static site.
+- **Out of scope for the demo:** accounts, backend, catalog admin UI (JSON editing is fine), manufacturing output, payments.
 
-The local sales flow is **prepared design → material family/decor → layout or storage inspection → A/B comparison → choose → indicative offer**.
+## Working constraints
 
-- `/designer/kitchen` and `/designer/wardrobe` are the two product modules. Unknown product routes return Home.
-- `/compare?brand=default&kind=kitchen` (or `wardrobe`) holds two named local alternatives. Save A/B captures a closed overall view independently of inspection/opening state. Storage uses the dedicated IndexedDB database `showroom-furniture-comparisons`; customer and offer fields are excluded. Choosing an alternative preserves the active offer details. This comparison is not shareable; the chosen design uses the existing PDF/share flow.
-- Prices recalculate from the active catalog. Catalog changes queue sequential preview refreshes. Missing products block selection; capture/quota failures preserve the prior slot.
-- Front and countertop families expose catalog-listed decors. Family changes keep a compatible decor or visibly select the first available decor. Collections change finishes, never cabinet arrangements.
-- Countertops use optional catalog `thicknessMm`: 38 mm laminate, 12 mm compact, illustrative 20 mm quartz/granite. Omitted metadata keeps the legacy 38 mm default. Optional authored `presentationPresets[].cabinets` does not change catalog/design versions.
-- Warm surroundings, material-specific responses, readable carcasses, supported upper cabinets and catalog hardware use bundled assets. Materials, storage clearances and prices remain illustrative, not manufacturer or fabrication specifications. Gola pricing retains its existing per-position calculation and is labelled as an indicative allowance.
-- The representative kitchen and wardrobe proposals fit two pages in SQ/EN/DE; longer offers may legitimately paginate further.
-
-See [current verification and remaining limitations](verification/furniture-sales/REPORT.md). Visual acceptance by the owner and physical tablet rehearsal remain required before calling the demo meeting-ready. Nothing in this release deploys the application.
+- **Budget $0.** No paid assets, marketplace models or services. Only CC0 sources (Poly Haven, ambientCG) and original work. Provenance is recorded in `public/shared/ASSETS.md` and `public/shared/licenses/`.
+- **Presentation machine:** M4 MacBook Air (16 GB) in Chrome. Visual and performance acceptance is judged there, in a normal window; headless numbers are supporting evidence only. Tablets are a later, separate check.
+- **Blender 5.2** is a local authoring tool only (run headless by script), never a runtime or build dependency.
+- **Review gate:** a phase is done when matched before/after captures and a live check on the laptop pass, not when tests pass.
+- **Visual references:** IKEA (eye-level framing, soft shadows), Schmidt (complete room with ceiling, window and exterior, restrained decor), Cosentino (surface presentation). Showroom mode opens on an eye-level view inside the room; editing switches to the overview.
 
 ## Run locally
 
@@ -31,13 +30,6 @@ Open the local address printed in the terminal. For the production/offline demo:
 pnpm test
 pnpm build
 pnpm preview --port 4173
-```
-
-On this Codex desktop, if Node/pnpm are absent from PATH:
-
-```sh
-export PATH="/Users/ibrahimi/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:/Users/ibrahimi/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:$PATH"
-pnpm dev
 ```
 
 `pnpm exec prettier --write src tests` formats the source. The lockfile is included. Offline caching is enabled in the production build, not the Vite development server.
@@ -127,7 +119,7 @@ Adjust iframe height for the host site's phone layout. The embed route omits app
 
 Run `pnpm test` for schemas, brand precedence, translations/formatting, all layouts, corners, islands/aisles, openings/collisions, rejected edits/history, catalog pricing, VAT/ranges, share round trips and A/B storage/compatibility. Production build also type-checks the app.
 
-Browser verification is performed exclusively in **@Browser**. The furniture release checks cover 1180×820, 1024×768, 820×1180 and 390×844. This verifies layout, not physical device performance. See `verification/furniture-sales/REPORT.md` for current results, screenshots and SQ/EN/DE PDFs. Earlier reports remain historical context. `/qa.html` remains an optional iframe harness.
+Browser checks use the built-in browser (@Browser). Layout has been checked at 1440×900, 1180×820, 1024×768, 820×1180 and 390×844; this verifies layout, not device performance. Review evidence (captures, reports) is kept locally in `verification/` and is not committed.
 
 The renderer uses on-demand frames, adaptive pixel ratio, lazy routes/textures, reusable local environment lighting and a lower-quality performance mode. **30+ fps on physical iPad/Android hardware remains unverified.** Test orbiting, animations, camera/file capture and native sharing on the actual showroom devices before promising a hardware performance level.
 
@@ -135,11 +127,9 @@ This is a demo: editable illustrative prices, procedural products, simplified ro
 
 ## Code boundaries
 
-Phase 1 material/construction verification is recorded in [verification/showroom-realism/phase-1/REPORT.md](verification/showroom-realism/phase-1/REPORT.md). The development studio adds fixed inspection shots, temporary decor controls and neutral/highlight calibration lights. These do not replace customer drafts or appear in production. One repeat uses authored centimetre dimensions; oak's source grain is horizontal and walnut's is vertical. These remain illustrative maps, including supplier references. Optional catalog `mapping`, `response`, `matches` and local `aoMap` metadata are validated; older entries retain the previous material response until deliberately populated. AO uses explicit Three r180 `uv1` / texture channel 1; no AO assets or baked lighting have been added.
-
-Run `pnpm dev --port 5173 --strictPort` and open `http://127.0.0.1:5173/preview-studio?brand=default` (or `brand=druri-design`). Each **Run 10s motion sample** clears motion history while keeping the warmed renderer; **Reset measurements** rebuilds the scene. Repeat samples remain variable and exceed the proposed 33 ms p95 target in this browser session. Draw-count/asset-budget checks pass; physical-tablet, thermal and installed-PWA acceptance remain open. See the Phase 1 report before authorizing Phase 2.
-
 `src/app` routes/shell; `brand` loading/setup/theme/export; `catalog` versioned schemas; `pricing` pure calculations; `designer3d` pure layout/collision logic plus render/editor/cameras; `scene` shared primitives, PBR materials, appliances and furniture storage details; `sharing` compression/draft URLs; `documents` Unicode PDF offers; `persistence` brand-scoped saves/IndexedDB; `i18n` translations; `pwa` readiness/updates. Product data stays in `public/brands`; local assets in `public/shared`.
+
+`/preview-studio?brand=default` (development server only) has fixed fixture designs, camera/frame counters, motion samples, missing-model and context-loss tests. It never touches saved drafts and is excluded from production.
 
 ## Demo phone and presentation mode
 
@@ -153,102 +143,16 @@ Settings → **Modaliteti i prezantimit** hides the offline badge, fictional-dem
 
 Offer details contain optional customer name/phone/city, salesperson, device-generated brand/year sequence, date, validity, payment terms and notes. They are saved with the design and printed in the PDF, but omitted from share links. Device storage clearing resets the offer counter; this is a local sequence, not a company-wide invoice system. Furniture Design v1/v2 inputs are migrated in memory to Design v3 on read. Original furniture IDs, dimensions, room and offer details are preserved; reading alone does not rewrite the stored record.
 
-## Showroom realism — Phase 0 (13 October 2026)
+## How the visuals are built
 
-Phase 0 adds reproducible compatibility fixtures, a shared render-input boundary and resource ownership, plus a **development-only** measurement studio. Appearance, furniture editing, document versions, commercial rules and existing storage keys remain unchanged. No models/textures were acquired, dependencies upgraded or deployment performed.
+- **Furniture** is procedural (`src/designer3d/furniture/`, `src/scene/`), so any size can open, animate and be priced. Physical UV mapping, per-finish material responses and dark front gaps live in `src/scene/Materials.tsx`, `Primitives.tsx` and `GapShade.tsx`.
+- **Render pipeline** (`src/scene/pipeline/`): MSAA → GTAO ambient occlusion → output, shared by the live view and every capture; lightweight quality bypasses it. Shaders compile in the background before new objects appear (`shaderWarmup.ts`).
+- **Room** (`src/scene/rooms/`): walls, ceiling with downlights, window with a garden backplate and a half-lowered blind, room recipes in `public/shared/rooms/*-v3.json`, lighting in `src/scene/lighting/`. Decor props are placed by clearance rules (`decor.ts`).
+- **Models** (`public/shared/models/`): clothes, appliances, stools, pendant and CC0 decor as meshopt-compressed GLBs with two detail levels and a procedural fallback each. Rebuild the kit (about 10 s): `/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python art/blender/phase2_kit.py -- <out-dir> [--preview]`, then `node scripts/register-kit.mjs <out-dir>`. After a build, `node scripts/check-scene-assets.mjs dist` checks the asset manifest and precache.
+- **Baked room lighting** for the five prepared designs (`src/scene/bake/`, `public/shared/bakes/`): a Cycles lightmap of floor, walls and ceiling, applied only while the design's signature (room, openings, LEDs, cabinet placement) matches; finish changes keep it, structural edits fade to live lighting in 300 ms. Re-bake after changing a prepared design or its room (dev server, Chrome with `--remote-debugging-port=9333`, about 2 min per design): `pnpm dev --port 5203 --strictPort`, then `node scripts/bake-rooms.mjs http://127.0.0.1:5203 <work-dir> [name] [--preview]` and `node scripts/review/calibrate-bakes.mjs http://127.0.0.1:5203`.
+- **Home thumbnails:** `node scripts/review/capture-thumbnails.mjs <preview-url> --write`.
+- **Review tools** drive an isolated Chrome: `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --remote-debugging-port=9333 --user-data-dir=<empty dir> --use-angle=metal --enable-gpu about:blank`. Captures: `pnpm capture:review <base-url> <out-dir>` (all presets × Hero/Overview/Front/Top/Open/Interior at 1440×900 @2×); close-ups `scripts/review/capture-closeups.mjs`; frame cost `scripts/review/measure-gpu.mjs`; front interactions `scripts/review/check-front-interactions.mjs`.
 
-```sh
-pnpm dev --port 5173 --strictPort
-```
+## History
 
-Open `http://127.0.0.1:5173/preview-studio?brand=default` (or `brand=druri-design`). The studio uses fixed-ID fixture designs without touching saved drafts. Select a preset and quality, run the 10-second motion sample, toggle fronts/interior, measure the temporary closed A/B Canvas peak, then download metrics JSON or an image/PDF. Reset measurements starts a fresh renderer; the decoded source cache can remain warm. Quality is locked locally in this studio and does not change the editor's performance preference.
-
-Main/shadow/contact passes are reported separately; initial PMREM probe work has its own cumulative count. Moving-frame p50/p95 excludes explicit idle boundaries; CPU submission time is not GPU execution time. Texture/target/geometry/framebuffer bytes and the combined capture peak are estimates. The studio and profiler are excluded from production routing and bundles.
-
-See [the Phase 0 baseline and device protocol](verification/showroom-realism/BASELINE.md) for exact evidence, known limits and real-tablet steps. Physical iPad/Android performance, thermal stability and installed-PWA/native-sharing rehearsal remain unverified. Phase 1 (physical materials and visible construction) requires separate authorization.
-
-## Showroom realism — Phase 2 (14 October 2026)
-
-Phase 2 adds warm kitchen/dressing-room recipes and an original generic model kit: appliance fronts/tap, stools/pendants, bench, countertop ceramics, hanging silhouettes, folds, shoes and boxes. Both catalogs declare actual preset windows; existing saved rooms keep their openings, including solid walls. Furniture, storage presets and pricing remain procedural. Presentation is inferred by furniture kind; no Design v3 or finish/interior editor was introduced.
-
-Models are metre-scale, have two local detail levels and isolated procedural fallbacks. Props are omitted when room, cabinet, swept-front or door clearance fails, when the room is outside the authored range, or for 24+ cabinets. Enclosed contents stay available through closing and inspection. Carcass panels/handle parts are batched without changing their Phase 1 mapping or outer dimensions. The room floor now matches the zero-height furniture/prop anchors. Lighting/environment remain inherited; Phase 3 has not started.
-
-The 30 GLBs total 980,308 bytes. No asset was purchased/downloaded and no dependency upgraded. Provenance, hashes, dimensions, draw/triangle counts and original-use permission are in `public/shared/asset-manifest.json`, `public/shared/ASSETS.md` and `public/shared/licenses/original-room-kit-v1.txt`. Authoring source is `scripts/author-room-kit.mjs`. After a build, run `node scripts/check-scene-assets.mjs dist` in addition to the normal budget check.
-
-Use `/preview-studio?brand=default` for fixed fixtures without touching drafts. **Models → Missing model test** exercises isolated failure; **Original room kit** restores the models. Repeat balanced/lightweight samples and inspect open fronts. Production excludes this studio. Offline preparation now checks the complete required room asset set; on a first visit, choose **Finish setup** if prompted. Keep the normal save/update flow.
-
-See `verification/showroom-realism/phase-2/REPORT.md` for current checks and remaining acceptance gaps. Desktop browser results do not establish physical-tablet performance, thermal stability, native sharing or owner visual approval. Stop after Phase 2; Phase 3 requires a separate instruction.
-
-## Showroom realism — Phase 3 (14 October 2026)
-
-Phase 3 replaces generic studio lighting with one shadowed key derived from the actual room window, restrained fill and a separate no-color/no-depth shadow shell. Visible walls still cut away for editing; shadow walls retain real apertures. Solid saved rooms use overhead presentation lighting without adding a window. Balanced uses a 1024 shadow map; high uses 2048. Kitchen and wardrobe LED fills share a maximum of three combined runs.
-
-Both rooms have an original code-authored 64 px reflection fallback and one debounced 128 px room/decor refresh after loading or structural edits. Furniture, opening animations, orbit and finish hovers do not feed that probe. A refresh over 50 ms falls back and disables further runtime attempts for that renderer. Performance mode keeps the authored environment and inexpensive stationary cavity contrast, with dynamic shadows and LED fills disabled. The reflections approximate room brightness; they are not accurate mirrors. No lightmaps, full-screen AO, bloom/SSR, new runtime dependency or acquired asset was added.
-
-`public/shared/rooms/*-warm-v2.json` carries the lighting recipes while the old v1 files remain available unchanged. Design versions, stored furniture, prices, offer details and editing remain compatible. Capture waits for reflection readiness and uses the same scene. Existing A/B previews refresh through a lighting revision without rewriting their furniture.
-
-Run `pnpm dev --port 5173 --strictPort`, then open `http://127.0.0.1:5173/preview-studio?brand=default`. Reflections, Window study, Lighting camera and LED fills are temporary development checks that do not save drafts. Choose Actual fixture opening for normal staging; study windows may intentionally intersect furniture and are not customer layouts. Use Perspective, Front and Top, toggle fronts/interior, compare matte/acrylic and test balanced/lightweight/high. Wait for assets/probe to settle before a motion sample. Production excludes these controls.
-
-Evidence and exact test steps are in [the Phase 3 report](verification/showroom-realism/phase-3/REPORT.md). Automated checks and desktop browser evidence pass within delivery/draw/memory budgets. Owner visual review and sustained physical-device acceptance are still required. Stop after Phase 3; Phase 4 is not started.
-
-## Showroom realism — Phase 4 (14 October 2026)
-
-Phase 4 adds independent finish zones and matching indicative offers. `design.style` remains the global default; `finishZones` (`base`, `wall`, `tall`, `island`, `wardrobe`) and cabinet `finishOverride` records take precedence. Island wins over cabinet level. Overrides contain catalog IDs for fronts, carcasses, handles and plinths, plus the front profile. Shared resolvers in `src/designer3d/finishes.ts` feed rendering, pricing and material associations. Matching plinth appearance follows the effective front; its selected product still determines its price.
-
-In Styles & Finishes choose All · defaults, a relevant zone, or Selected cabinet. All changes defaults while retaining overrides. Mixed means the cabinets in that scope differ; select a family to choose a compatible decor. Apply defaults to all / clear overrides clears cabinet, zone and worktop overrides in one undo step. Clear this scope’s overrides restores inheritance. Collections explicitly apply to the shown scope; All collections clear overrides, while zone collections preserve individual cabinet overrides. A collection on Selected replaces that cabinet's finishes. Room/layout regeneration retains its existing explicit replacement behavior for individual module edits.
-
-Worktop scope is separate: Global default, Main worktop or Island worktop. Each surface uses a catalog finish and its tier thickness; connected main corners/cutouts remain procedural. Use global default clears that surface's override. Matching backsplash follows the main surface's worktop. Current catalog running-length allowances remain indicative, including existing backsplash rules; this is not a fabrication takeoff.
-
-Pricing separates different effective finishes, handles/plinths and split worktops. Summary and A/B show zone associations and quantities; comparison details expand to show every material role. Mixed PDFs add a complete zone/cabinet-position association section and may exceed two pages. Uniform legacy designs keep their exact frozen line prices and totals. Discount → installation → VAT ordering is unchanged.
-
-`src/catalog/migrations.ts` normalizes v1/v2/v3; unknown future versions and unsupported finish references are rejected. Incompatible drafts remain stored and display an error instead of being replaced with a differently priced default. Existing localStorage keys and A/B database names stay unchanged. Share envelope v1 now carries Design v3; updated apps still read old links, but older deployed apps cannot read new v3 links until updated. Private offer/customer fields remain excluded from sharing and A/B. Encode/decode retain the 30,000 encoded / 150,000 decompressed-character limits with localized size feedback.
-
-The isolated Phase 4 dev preview uses `pnpm dev --port 52745 --strictPort`; production review uses `pnpm preview --port 52746 --strictPort`. Open `/designer/kitchen?brand=default` or `/designer/wardrobe?brand=druri-design`. See [Phase 4 evidence and exact test actions](verification/showroom-realism/phase-4/REPORT.md). All prior lighting/material/construction work is retained. Physical-device acceptance gaps remain open. No Phase 5/6 work, purchase, deployment or dependency upgrade was performed.
-
-## Showroom realism — Phase 5 (14 October 2026)
-
-Phase 5 implements individual wardrobe shelf/rail/drawer/basket editing. In **Storage & Lighting**, choose a cabinet and component, then Move up/down, Apply height, Replace, Remove or Add. Interior-view scene taps select components without toggling fronts. Drawers/baskets open independently; the accessible list provides the same workflow. First edit materializes a stable inventory; untouched designs retain their legacy presets/quotes. All mounting, fit and prices are illustrative rather than supplier manufacturing rules.
-
-Optional catalog `interiorItems` / `interiorPresets` and module `interiorPricing` declare included presets, additions and bounded removal credits. Moving is free; unchanged included items are not charged twice. Removal credits default to zero; accessories remain separate. Both catalogs ship zero credits. Component inventory follows undo/redo, reload, sharing and A/B, and appears in Summary/PDF. Selection, opening and decorative-content visibility remain transient. Full-width editing ships first; partial spans/dividers and dragging are deferred. Sliding-front full-width pull-outs are blocked. Incompatible resize is rejected; Reset to included interior is explicit. Room/layout rebuilds warn before replacing custom inventories and remain undoable.
-
-Review with `pnpm dev --port 52747 --strictPort`, or production `pnpm build` then `pnpm preview --port 52748 --strictPort`. Open `/designer/wardrobe?brand=default` (or `druri-design`); `/designer/kitchen` retains its existing flow. The development studio's **Custom wardrobe storage** inspection study uses disposable fixed fixtures and saves no drafts.
-
-See [Phase 5 evidence and complete test actions](verification/showroom-realism/phase-5/REPORT.md). Final checks: 159 passing tests, TypeScript/build/asset closure/budget/whitespace pass; 5.87 MB shipped. @Browser verified storage/price/history/share/A/B/brand/language and stopped-origin cache behavior. Viewport override stayed at 1280×720, so new tablet/portrait/phone layouts remain unverified. Physical touch, sustained performance, supplier rules and installed-device acceptance remain open. Stop after Phase 5; Phase 6 requires a separate instruction. No deployment, dependency upgrade or new asset was performed.
-
-## Showroom realism — Phase 6 (14 October 2026)
-
-Phase 6 adds room Hero, Overall, Front and Top shots, a visible **Inspect up close** toolbar action, 600 ms deliberate camera moves with conservative obstacle checks, immediate pointer/orbit cancellation and reduced-motion snapping. The first view is composed immediately. Tap/click still opens one unit without flying the camera. Material and storage-placement changes preserve the chosen view; rotation also preserves it, so use Overall to refit after changing orientation. Inspection includes conservative open-front clearance; pinch/wheel can move closer for construction details.
-
-The camera math is in `src/designer3d/cameraShots.ts` / `framing.ts`; `SceneControls.tsx` coordinates transitions and keeps wheel/pinch recentering. Unclear/blocked travel snaps to the destination instead of crossing a cabinet or wall. The entire demand loop pauses in background tabs, and a lost WebGL context offers **Restore 3D view** while retaining the design. Visible rendering pauses during the temporary closed A/B capture. Summary owns its own closed Overall capture; opening the offer no longer waits for the inspection camera, and failed capture never substitutes an older/inspection image. Offer URLs retain the furniture kind across reload, including when another tab edits the other module.
-
-Camera/language/material/storage controls have 44 px minimum targets and the camera toolbar wraps on narrow screens. Update notices have **Later**, sit above the phone offer bar and disable activation while capture/export or cabinet dragging is in progress. An explicit update still preserves the normal saved drafts and A/B flow. Home, material switcher, embed, comparison and PDF use the same scene/resolvers. Existing static Home thumbnails are retained pending owner approval of final imagery; no new thumbnail is represented as approved.
-
-Laptop presentation is the immediate target, following the owner's clarification that no tablet is currently available. Actual tablet touch/thermal and installed-device/native-sharing checks remain deferred. See [the Phase 6 report](verification/showroom-realism/REPORT.md) for final evidence, limitations and the laptop rehearsal checklist. No deployment or Git handoff is included.
-
-```sh
-cd /Users/ibrahimi/3d_designer
-pnpm build
-pnpm preview --port 52750 --strictPort
-```
-
-Open `http://127.0.0.1:52750/designer/kitchen?brand=default` or `/designer/wardrobe?brand=druri-design`. Reuse the owned preview if it is already running. Offline checks require this production build, Finish setup / Save and update if offered, and Offline ready. Development: `pnpm dev --port 52749 --strictPort`; `/preview-studio?brand=default` has disposable fixed fixtures, camera/frame counters, 10-second or 10-minute motion samples, Stop, context-loss simulation and the existing image/PDF/memory tools. These diagnostics are excluded from production. A motion sample pauses in a hidden tab; its timings remain browser measurements, not physical GPU or tablet results.
-
-Phase 6 final checks: 164 tests, TypeScript, production build, asset/precache closure and budget pass; 5,881,827 shipped bytes. The stable ten-minute desktop sample recorded 24.9 ms p95 / 110.6 ms maximum at the documented DPR/viewport, with stable counters. Normal-editor rendering became idle. Both brands/rooms, A/B and the Albanian PDF worked with the owned origin stopped; the preview was restarted. Physical-device and owner acceptance are still separate.
-
-## Showroom correction — Phase 1 (15 October 2026)
-
-Showroom mode now opens **inside the room**: an eye-level, nearly level camera chosen to show the most cabinet fronts, with a ceiling, downlights and a garden view through windows. **Edit modules** switches to the Overview. Enclosed layouts (U, galley, walk-in) and narrow portrait screens keep the outside composition. One render pipeline (MSAA → GTAO → output) serves the live view and every capture; lightweight quality bypasses it. v3 room recipes add a soft in-room key light and lower the uniform room radiance. Closed front gaps read dark; CC0 surfaces (oak, floor, plaster, lacquer micro-texture) and six CC0 decor props are included, all local and offline. Prices, offers, A/B, sharing, languages and saved designs are unchanged.
-
-Review: `pnpm build && pnpm preview --port 52771 --strictPort`, then open http://127.0.0.1:52771/?brand=default in Chrome. Matched gate captures: `pnpm capture:review <base-url> <out-dir>` (Chrome with `--remote-debugging-port=9333`; see `scripts/review/capture-showroom.mjs`). Evidence and acceptance: [verification/phase1-review/REPORT.md](verification/phase1-review/REPORT.md). Asset sources: `public/shared/ASSETS.md`, `art/`.
-
-## Showroom correction — Phase 2 (15 October 2026)
-
-Clothes, appliances and props are now original Blender-scripted models instead of code-built boxes: shirts, tees, dresses, coats and trousers on real hangers (fabric colour varies per item, and each rail fans its fronts towards the room), folded stacks, towels, sneakers, loafers and a handbag; an inset sink, a chrome gooseneck tap (a matt-black tap on dark fronts), a glass induction hob, a built-in oven, a chimney hood, a fridge, a counter stool with a low back and a dome pendant. Every model keeps its previous procedural fallback, and sizes that do not match a model (e.g. a 45 cm sink or a 90 cm hood) keep the fallback instead of stretching. Prices, offers, A/B, sharing, languages, offline and saved designs are unchanged.
-
-Rebuild the kit (Blender 5.2, headless, about 10 s): `/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python art/blender/phase2_kit.py -- <out-dir> [--preview]`, then `node scripts/register-kit.mjs <out-dir>` (quantises and meshopt-compresses, writes hashed files and the manifest). Close-ups and frame-cost comparisons: `scripts/review/capture-closeups.mjs`, `scripts/review/measure-gpu.mjs`. Evidence: `verification/phase2-review/REPORT.md` (local).
-
-## Showroom correction — Phase 3 (15 October 2026)
-
-The five prepared designs open with **baked room lighting**: a Blender Cycles lightmap of the floor, walls and ceiling (sun and sky through the window, the in-room key, downlights and LED runs, every bounce and the furniture's own shadows). The shell shader swaps its live diffuse light for the bake; reflections stay live, and the furniture keeps its Phase 1–2 lighting. A finish change keeps the bake; moving, adding or resizing a cabinet, or changing the room, fades to live lighting over 300 ms, and undoing it fades the bake back. Windows get a half-lowered venetian blind. Home thumbnails are regenerated from the live opening views. Shaders now compile in the background, which removed the freezes when a design opens, when zooming brings new objects into view and when fronts open.
-
-Re-bake after changing a prepared design, its room or the bake scene (DEV server, Chrome on 9333, about 2 min per design): `pnpm dev --port 5203 --strictPort`, then `node scripts/bake-rooms.mjs http://127.0.0.1:5203 <work-dir> [name] [--preview]` and `node scripts/review/calibrate-bakes.mjs http://127.0.0.1:5203` (matches each bake's exposure to the live lighting). Thumbnails: `node scripts/review/capture-thumbnails.mjs <preview-url> --write`. Lightmaps and their manifest are in `public/shared/bakes/`. Evidence: `verification/phase3-review/REPORT.md` (local).
+Built in milestones from 8 October 2026: the foundation and sales release (brand system, layouts, pricing, PDF offers, A/B), six realism phases (materials, furnished rooms, lighting, finish zones, editable wardrobe storage, camera), then three correction phases: an eye-level room you stand in (`d1554d7`), Blender-generated objects (`299cd59`), background shader compilation (`ff93842`) and baked room lighting (Phase 3). Git history holds the detailed reports that were removed from the working tree.

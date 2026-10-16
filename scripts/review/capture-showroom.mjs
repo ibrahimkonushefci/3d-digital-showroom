@@ -1,4 +1,4 @@
-// Matched review captures for the phase gate (see SHOWROOM_CORRECTION_PLAN.md §5).
+// Matched review captures for the phase gate (see README, "How the visuals are built").
 // 1. pnpm build && pnpm preview --port 52760 --strictPort
 // 2. Chrome with --remote-debugging-port=9333 and an empty --user-data-dir
 // 3. node scripts/review/capture-showroom.mjs http://localhost:52760 <out-dir>

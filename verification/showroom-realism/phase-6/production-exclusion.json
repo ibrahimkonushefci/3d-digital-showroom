@@ -1,7 +1,0 @@
-{
-  "Simulate WebGL context loss": true,
-  "Motion sample complete": true,
-  "Reset measurements": true,
-  "tests/fixtures/realism": true,
-  "render-metrics": true
-}

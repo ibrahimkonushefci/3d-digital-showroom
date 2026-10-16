@@ -1,9 +1,0 @@
-{
-  "tests": 98,
-  "testFiles": 12,
-  "typescript": "passed",
-  "build": "passed",
-  "productionProfiler": "excluded",
-  "publicAssetsAndDependencyManifests": "unchanged",
-  "physicalTablets": "not available; not tested"
-}

@@ -6,7 +6,8 @@
 //
 // 1. pnpm build && pnpm preview --port 52771 --strictPort
 // 2. Chrome with --remote-debugging-port=9333 and an empty --user-data-dir
-//    (see verification/correction-review/tools/README.md)
+//    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new
+//    --remote-debugging-port=9333 --user-data-dir=<empty dir> --use-angle=metal --enable-gpu about:blank
 // 3. node scripts/review/check-front-interactions.mjs http://127.0.0.1:52771 <out-dir> [lightweight]
 import { connect } from "./cdp.mjs";
 import fs from "node:fs";

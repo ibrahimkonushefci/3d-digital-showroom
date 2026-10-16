@@ -1,1 +1,0 @@
-Asset budget: shipped 5,816,037 bytes; unique precache 5,776,757 bytes (122 URLs).
