@@ -1,11 +1,6 @@
 import type { Cabinet, Catalog, DesignDocument } from "../../catalog/types";
 import { hobCabinet, wallOffset } from "../../designer3d/layout";
 import { countertopThickness } from "../furnitureMaterials";
-import {
-  freePlacement,
-  transformedVolume,
-  type Volume,
-} from "../assets/placement";
 import { modelRecord } from "../assets/manifest";
 
 export type DecorItem = {
@@ -224,32 +219,6 @@ export function wallArt(design: DesignDocument): DecorItem | null {
                 rotation: [0, -Math.PI / 2, 0],
               };
     return { ...placed, wall: side };
-  }
-  return null;
-}
-
-/** A storage basket on the floor beside the dressing bench, if it fits. */
-export function floorBasket(
-  design: DesignDocument,
-  bench: Volume | undefined,
-  occupied: Volume[],
-): DecorItem | null {
-  const record = modelRecord("basket");
-  if (!record || !bench || design.kind !== "wardrobe") return null;
-  for (const dx of [0.78, -0.78]) {
-    const position: [number, number, number] = [
-      (bench.min[0] + bench.max[0]) / 2 + dx,
-      0,
-      (bench.min[2] + bench.max[2]) / 2,
-    ];
-    const volume = transformedVolume(
-      record.bounds.min,
-      record.bounds.max,
-      position,
-      0.3,
-    );
-    if (freePlacement(volume, design, occupied))
-      return { id: "basket", position, rotation: [0, 0.3, 0] };
   }
   return null;
 }

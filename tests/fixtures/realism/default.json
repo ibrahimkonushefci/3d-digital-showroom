@@ -28,11 +28,7 @@
       "iban": "XK05 0000 0000 0000 0001",
       "website": "formastudio.example"
     },
-    "languages": [
-      "sq",
-      "en",
-      "de"
-    ],
+    "languages": ["sq", "en", "de"],
     "defaultLanguage": "sq",
     "modules": {
       "kitchenDesigner": true,
@@ -163,16 +159,8 @@
           }
         ],
         "camera": {
-          "position": [
-            3.7,
-            2.45,
-            4.7
-          ],
-          "target": [
-            0,
-            1.1,
-            -0.4
-          ]
+          "position": [3.7, 2.45, 4.7],
+          "target": [0, 1.1, -0.4]
         }
       },
       {
@@ -275,16 +263,8 @@
           }
         ],
         "camera": {
-          "position": [
-            2.4,
-            2.2,
-            5
-          ],
-          "target": [
-            0,
-            1,
-            -1
-          ]
+          "position": [2.4, 2.2, 5],
+          "target": [0, 1, -1]
         }
       },
       {
@@ -423,16 +403,8 @@
           }
         ],
         "camera": {
-          "position": [
-            0.3,
-            2.6,
-            5.8
-          ],
-          "target": [
-            0,
-            1.1,
-            -0.3
-          ]
+          "position": [0.3, 2.6, 5.8],
+          "target": [0, 1.1, -0.3]
         }
       },
       {
@@ -487,16 +459,8 @@
           }
         ],
         "camera": {
-          "position": [
-            2,
-            2,
-            5
-          ],
-          "target": [
-            0,
-            1,
-            -1
-          ]
+          "position": [2, 2, 5],
+          "target": [0, 1, -1]
         }
       },
       {
@@ -563,16 +527,8 @@
           }
         ],
         "camera": {
-          "position": [
-            3.7,
-            2.45,
-            4.7
-          ],
-          "target": [
-            0,
-            1.1,
-            -0.4
-          ]
+          "position": [3.7, 2.45, 4.7],
+          "target": [0, 1.1, -0.4]
         }
       }
     ],
@@ -1368,16 +1324,7 @@
         "kind": "kitchen",
         "type": "doors",
         "level": "base",
-        "widths": [
-          30,
-          40,
-          45,
-          50,
-          60,
-          80,
-          90,
-          100
-        ],
+        "widths": [30, 40, 45, 50, 60, 80, 90, 100],
         "height": 72,
         "depth": 60,
         "pricePerMeter": 235,
@@ -1393,16 +1340,7 @@
         "kind": "kitchen",
         "type": "drawers",
         "level": "base",
-        "widths": [
-          30,
-          40,
-          45,
-          50,
-          60,
-          80,
-          90,
-          100
-        ],
+        "widths": [30, 40, 45, 50, 60, 80, 90, 100],
         "height": 72,
         "depth": 60,
         "pricePerMeter": 330,
@@ -1419,12 +1357,7 @@
         "kind": "kitchen",
         "type": "sink",
         "level": "base",
-        "widths": [
-          60,
-          80,
-          90,
-          100
-        ],
+        "widths": [60, 80, 90, 100],
         "height": 72,
         "depth": 60,
         "pricePerMeter": 280,
@@ -1440,10 +1373,7 @@
         "kind": "kitchen",
         "type": "dishwasher",
         "level": "base",
-        "widths": [
-          45,
-          60
-        ],
+        "widths": [45, 60],
         "height": 72,
         "depth": 60,
         "pricePerMeter": 160,
@@ -1459,9 +1389,7 @@
         "kind": "kitchen",
         "type": "oven",
         "level": "tall",
-        "widths": [
-          60
-        ],
+        "widths": [60],
         "height": 210,
         "depth": 60,
         "pricePerMeter": 430,
@@ -1477,9 +1405,7 @@
         "kind": "kitchen",
         "type": "fridge",
         "level": "tall",
-        "widths": [
-          60
-        ],
+        "widths": [60],
         "height": 210,
         "depth": 60,
         "pricePerMeter": 390,
@@ -1495,16 +1421,7 @@
         "kind": "kitchen",
         "type": "pantry",
         "level": "tall",
-        "widths": [
-          30,
-          40,
-          45,
-          50,
-          60,
-          80,
-          90,
-          100
-        ],
+        "widths": [30, 40, 45, 50, 60, 80, 90, 100],
         "height": 210,
         "depth": 60,
         "pricePerMeter": 450,
@@ -1521,9 +1438,7 @@
         "kind": "kitchen",
         "type": "corner",
         "level": "base",
-        "widths": [
-          90
-        ],
+        "widths": [90],
         "height": 72,
         "depth": 90,
         "pricePerMeter": 390,
@@ -1540,16 +1455,7 @@
         "kind": "kitchen",
         "type": "doors",
         "level": "wall",
-        "widths": [
-          30,
-          40,
-          45,
-          50,
-          60,
-          80,
-          90,
-          100
-        ],
+        "widths": [30, 40, 45, 50, 60, 80, 90, 100],
         "height": 72,
         "depth": 35,
         "pricePerMeter": 210,
@@ -1565,16 +1471,7 @@
         "kind": "kitchen",
         "type": "glass",
         "level": "wall",
-        "widths": [
-          30,
-          40,
-          45,
-          50,
-          60,
-          80,
-          90,
-          100
-        ],
+        "widths": [30, 40, 45, 50, 60, 80, 90, 100],
         "height": 72,
         "depth": 35,
         "pricePerMeter": 265,
@@ -1590,16 +1487,7 @@
         "kind": "kitchen",
         "type": "open",
         "level": "wall",
-        "widths": [
-          30,
-          40,
-          45,
-          50,
-          60,
-          80,
-          90,
-          100
-        ],
+        "widths": [30, 40, 45, 50, 60, 80, 90, 100],
         "height": 72,
         "depth": 35,
         "pricePerMeter": 155,
@@ -1615,13 +1503,7 @@
         "kind": "wardrobe",
         "type": "hanging",
         "level": "wardrobe",
-        "widths": [
-          40,
-          50,
-          60,
-          80,
-          100
-        ],
+        "widths": [40, 50, 60, 80, 100],
         "height": 230,
         "depth": 60,
         "pricePerMeter": 345,
@@ -1637,13 +1519,7 @@
         "kind": "wardrobe",
         "type": "doors",
         "level": "wardrobe",
-        "widths": [
-          40,
-          50,
-          60,
-          80,
-          100
-        ],
+        "widths": [40, 50, 60, 80, 100],
         "height": 230,
         "depth": 60,
         "pricePerMeter": 315,
@@ -1659,13 +1535,7 @@
         "kind": "wardrobe",
         "type": "drawers",
         "level": "wardrobe",
-        "widths": [
-          40,
-          50,
-          60,
-          80,
-          100
-        ],
+        "widths": [40, 50, 60, 80, 100],
         "height": 230,
         "depth": 60,
         "pricePerMeter": 440,
@@ -1682,13 +1552,7 @@
         "kind": "wardrobe",
         "type": "open",
         "level": "wardrobe",
-        "widths": [
-          40,
-          50,
-          60,
-          80,
-          100
-        ],
+        "widths": [40, 50, 60, 80, 100],
         "height": 230,
         "depth": 60,
         "pricePerMeter": 270,
@@ -1704,13 +1568,7 @@
         "kind": "wardrobe",
         "type": "sliding",
         "level": "wardrobe",
-        "widths": [
-          40,
-          50,
-          60,
-          80,
-          100
-        ],
+        "widths": [40, 50, 60, 80, 100],
         "height": 230,
         "depth": 60,
         "pricePerMeter": 410,
@@ -1726,15 +1584,7 @@
         "kind": "kitchen",
         "type": "hood",
         "level": "wall",
-        "widths": [
-          30,
-          40,
-          45,
-          50,
-          60,
-          80,
-          90
-        ],
+        "widths": [30, 40, 45, 50, 60, 80, 90],
         "height": 72,
         "depth": 35,
         "pricePerMeter": 180,
@@ -1869,11 +1719,7 @@
         },
         "perMeter": 75,
         "thicknessMm": 38,
-        "decors": [
-          "marble",
-          "concrete",
-          "oak"
-        ]
+        "decors": ["marble", "concrete", "oak"]
       },
       {
         "id": "compact",
@@ -1884,10 +1730,7 @@
         },
         "perMeter": 150,
         "thicknessMm": 12,
-        "decors": [
-          "travertine",
-          "egger-f206"
-        ]
+        "decors": ["travertine", "egger-f206"]
       },
       {
         "id": "quartz",
@@ -1898,9 +1741,7 @@
         },
         "perMeter": 320,
         "thicknessMm": 20,
-        "decors": [
-          "quartz"
-        ]
+        "decors": ["quartz"]
       },
       {
         "id": "granite",
@@ -1911,9 +1752,7 @@
         },
         "perMeter": 280,
         "thicknessMm": 20,
-        "decors": [
-          "granite"
-        ]
+        "decors": ["granite"]
       }
     ],
     "appliancePackages": [
@@ -1973,16 +1812,8 @@
       },
       "thumbnail": "shared/showroom/japandi.webp",
       "camera": {
-        "position": [
-          3.7,
-          2.45,
-          4.7
-        ],
-        "target": [
-          0,
-          1.1,
-          -0.4
-        ]
+        "position": [3.7, 2.45, 4.7],
+        "target": [0, 1.1, -0.4]
       },
       "design": {
         "version": 2,
@@ -2206,11 +2037,7 @@
               "unit": "piece",
               "amount": 351,
               "unitPrice": 351,
-              "size": [
-                90,
-                90,
-                72
-              ]
+              "size": [90, 90, 72]
             },
             {
               "id": "a-carousel",
@@ -2227,11 +2054,7 @@
               "unit": "piece",
               "amount": 168,
               "unitPrice": 168,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "dishwasher@60x60x72",
@@ -2240,11 +2063,7 @@
               "unit": "piece",
               "amount": 96,
               "unitPrice": 96,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "base-drawers@60x60x72",
@@ -2253,11 +2072,7 @@
               "unit": "piece",
               "amount": 594,
               "unitPrice": 198,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "a-organizer",
@@ -2274,11 +2089,7 @@
               "unit": "piece",
               "amount": 282,
               "unitPrice": 141,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "oven@60x60x210",
@@ -2287,11 +2098,7 @@
               "unit": "piece",
               "amount": 258,
               "unitPrice": 258,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "fridge@60x60x210",
@@ -2300,11 +2107,7 @@
               "unit": "piece",
               "amount": 234,
               "unitPrice": 234,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "wall-doors@60x35x72",
@@ -2313,11 +2116,7 @@
               "unit": "piece",
               "amount": 504,
               "unitPrice": 126,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "wall-hood@60x35x72",
@@ -2326,11 +2125,7 @@
               "unit": "piece",
               "amount": 108,
               "unitPrice": 108,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "countertop",
@@ -2376,11 +2171,7 @@
               "unit": "piece",
               "amount": 351,
               "unitPrice": 351,
-              "size": [
-                90,
-                90,
-                72
-              ]
+              "size": [90, 90, 72]
             },
             {
               "id": "a-carousel",
@@ -2397,11 +2188,7 @@
               "unit": "piece",
               "amount": 168,
               "unitPrice": 168,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "dishwasher@60x60x72",
@@ -2410,11 +2197,7 @@
               "unit": "piece",
               "amount": 96,
               "unitPrice": 96,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "base-drawers@60x60x72",
@@ -2423,11 +2206,7 @@
               "unit": "piece",
               "amount": 594,
               "unitPrice": 198,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "a-organizer",
@@ -2444,11 +2223,7 @@
               "unit": "piece",
               "amount": 282,
               "unitPrice": 141,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "oven@60x60x210",
@@ -2457,11 +2232,7 @@
               "unit": "piece",
               "amount": 258,
               "unitPrice": 258,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "fridge@60x60x210",
@@ -2470,11 +2241,7 @@
               "unit": "piece",
               "amount": 234,
               "unitPrice": 234,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "wall-doors@60x35x72",
@@ -2483,11 +2250,7 @@
               "unit": "piece",
               "amount": 504,
               "unitPrice": 126,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "wall-hood@60x35x72",
@@ -2496,11 +2259,7 @@
               "unit": "piece",
               "amount": 108,
               "unitPrice": 108,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "countertop",
@@ -2546,11 +2305,7 @@
               "unit": "piece",
               "amount": 351,
               "unitPrice": 351,
-              "size": [
-                90,
-                90,
-                72
-              ]
+              "size": [90, 90, 72]
             },
             {
               "id": "a-carousel",
@@ -2567,11 +2322,7 @@
               "unit": "piece",
               "amount": 168,
               "unitPrice": 168,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "dishwasher@60x60x72",
@@ -2580,11 +2331,7 @@
               "unit": "piece",
               "amount": 96,
               "unitPrice": 96,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "base-drawers@60x60x72",
@@ -2593,11 +2340,7 @@
               "unit": "piece",
               "amount": 594,
               "unitPrice": 198,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "a-organizer",
@@ -2614,11 +2357,7 @@
               "unit": "piece",
               "amount": 282,
               "unitPrice": 141,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "oven@60x60x210",
@@ -2627,11 +2366,7 @@
               "unit": "piece",
               "amount": 258,
               "unitPrice": 258,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "fridge@60x60x210",
@@ -2640,11 +2375,7 @@
               "unit": "piece",
               "amount": 234,
               "unitPrice": 234,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "wall-doors@60x35x72",
@@ -2653,11 +2384,7 @@
               "unit": "piece",
               "amount": 504,
               "unitPrice": 126,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "wall-hood@60x35x72",
@@ -2666,11 +2393,7 @@
               "unit": "piece",
               "amount": 108,
               "unitPrice": 108,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "countertop",
@@ -2718,16 +2441,8 @@
       },
       "thumbnail": "shared/showroom/modern.webp",
       "camera": {
-        "position": [
-          2.4,
-          2.2,
-          5
-        ],
-        "target": [
-          0,
-          1,
-          -1
-        ]
+        "position": [2.4, 2.2, 5],
+        "target": [0, 1, -1]
       },
       "design": {
         "version": 2,
@@ -2915,11 +2630,7 @@
               "unit": "piece",
               "amount": 258,
               "unitPrice": 258,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "fridge@60x60x210",
@@ -2928,11 +2639,7 @@
               "unit": "piece",
               "amount": 234,
               "unitPrice": 234,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "sink@60x60x72",
@@ -2941,11 +2648,7 @@
               "unit": "piece",
               "amount": 168,
               "unitPrice": 168,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "dishwasher@60x60x72",
@@ -2954,11 +2657,7 @@
               "unit": "piece",
               "amount": 96,
               "unitPrice": 96,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "base-drawers@60x60x72",
@@ -2967,11 +2666,7 @@
               "unit": "piece",
               "amount": 396,
               "unitPrice": 198,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "a-organizer",
@@ -2988,11 +2683,7 @@
               "unit": "piece",
               "amount": 141,
               "unitPrice": 141,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "wall-doors@60x35x72",
@@ -3001,11 +2692,7 @@
               "unit": "piece",
               "amount": 504,
               "unitPrice": 126,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "wall-hood@60x35x72",
@@ -3014,11 +2701,7 @@
               "unit": "piece",
               "amount": 108,
               "unitPrice": 108,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "countertop",
@@ -3072,11 +2755,7 @@
               "unit": "piece",
               "amount": 258,
               "unitPrice": 258,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "fridge@60x60x210",
@@ -3085,11 +2764,7 @@
               "unit": "piece",
               "amount": 234,
               "unitPrice": 234,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "sink@60x60x72",
@@ -3098,11 +2773,7 @@
               "unit": "piece",
               "amount": 168,
               "unitPrice": 168,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "dishwasher@60x60x72",
@@ -3111,11 +2782,7 @@
               "unit": "piece",
               "amount": 96,
               "unitPrice": 96,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "base-drawers@60x60x72",
@@ -3124,11 +2791,7 @@
               "unit": "piece",
               "amount": 396,
               "unitPrice": 198,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "a-organizer",
@@ -3145,11 +2808,7 @@
               "unit": "piece",
               "amount": 141,
               "unitPrice": 141,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "wall-doors@60x35x72",
@@ -3158,11 +2817,7 @@
               "unit": "piece",
               "amount": 504,
               "unitPrice": 126,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "wall-hood@60x35x72",
@@ -3171,11 +2826,7 @@
               "unit": "piece",
               "amount": 108,
               "unitPrice": 108,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "countertop",
@@ -3229,11 +2880,7 @@
               "unit": "piece",
               "amount": 258,
               "unitPrice": 258,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "fridge@60x60x210",
@@ -3242,11 +2889,7 @@
               "unit": "piece",
               "amount": 234,
               "unitPrice": 234,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "sink@60x60x72",
@@ -3255,11 +2898,7 @@
               "unit": "piece",
               "amount": 168,
               "unitPrice": 168,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "dishwasher@60x60x72",
@@ -3268,11 +2907,7 @@
               "unit": "piece",
               "amount": 96,
               "unitPrice": 96,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "base-drawers@60x60x72",
@@ -3281,11 +2916,7 @@
               "unit": "piece",
               "amount": 396,
               "unitPrice": 198,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "a-organizer",
@@ -3302,11 +2933,7 @@
               "unit": "piece",
               "amount": 141,
               "unitPrice": 141,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "wall-doors@60x35x72",
@@ -3315,11 +2942,7 @@
               "unit": "piece",
               "amount": 504,
               "unitPrice": 126,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "wall-hood@60x35x72",
@@ -3328,11 +2951,7 @@
               "unit": "piece",
               "amount": 108,
               "unitPrice": 108,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "countertop",
@@ -3388,16 +3007,8 @@
       },
       "thumbnail": "shared/showroom/classic.webp",
       "camera": {
-        "position": [
-          0.3,
-          2.6,
-          5.8
-        ],
-        "target": [
-          0,
-          1.1,
-          -0.3
-        ]
+        "position": [0.3, 2.6, 5.8],
+        "target": [0, 1.1, -0.3]
       },
       "design": {
         "version": 2,
@@ -3657,11 +3268,7 @@
               "unit": "piece",
               "amount": 258,
               "unitPrice": 258,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "fridge@60x60x210",
@@ -3670,11 +3277,7 @@
               "unit": "piece",
               "amount": 234,
               "unitPrice": 234,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "sink@60x60x72",
@@ -3683,11 +3286,7 @@
               "unit": "piece",
               "amount": 168,
               "unitPrice": 168,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "dishwasher@60x60x72",
@@ -3696,11 +3295,7 @@
               "unit": "piece",
               "amount": 96,
               "unitPrice": 96,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "base-drawers@60x60x72",
@@ -3709,11 +3304,7 @@
               "unit": "piece",
               "amount": 1188,
               "unitPrice": 198,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "a-organizer",
@@ -3730,11 +3321,7 @@
               "unit": "piece",
               "amount": 282,
               "unitPrice": 141,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "wall-doors@60x35x72",
@@ -3743,11 +3330,7 @@
               "unit": "piece",
               "amount": 630,
               "unitPrice": 126,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "wall-hood@60x35x72",
@@ -3756,11 +3339,7 @@
               "unit": "piece",
               "amount": 108,
               "unitPrice": 108,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "countertop",
@@ -3814,11 +3393,7 @@
               "unit": "piece",
               "amount": 258,
               "unitPrice": 258,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "fridge@60x60x210",
@@ -3827,11 +3402,7 @@
               "unit": "piece",
               "amount": 234,
               "unitPrice": 234,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "sink@60x60x72",
@@ -3840,11 +3411,7 @@
               "unit": "piece",
               "amount": 168,
               "unitPrice": 168,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "dishwasher@60x60x72",
@@ -3853,11 +3420,7 @@
               "unit": "piece",
               "amount": 96,
               "unitPrice": 96,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "base-drawers@60x60x72",
@@ -3866,11 +3429,7 @@
               "unit": "piece",
               "amount": 1188,
               "unitPrice": 198,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "a-organizer",
@@ -3887,11 +3446,7 @@
               "unit": "piece",
               "amount": 282,
               "unitPrice": 141,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "wall-doors@60x35x72",
@@ -3900,11 +3455,7 @@
               "unit": "piece",
               "amount": 630,
               "unitPrice": 126,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "wall-hood@60x35x72",
@@ -3913,11 +3464,7 @@
               "unit": "piece",
               "amount": 108,
               "unitPrice": 108,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "countertop",
@@ -3971,11 +3518,7 @@
               "unit": "piece",
               "amount": 258,
               "unitPrice": 258,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "fridge@60x60x210",
@@ -3984,11 +3527,7 @@
               "unit": "piece",
               "amount": 234,
               "unitPrice": 234,
-              "size": [
-                60,
-                60,
-                210
-              ]
+              "size": [60, 60, 210]
             },
             {
               "id": "sink@60x60x72",
@@ -3997,11 +3536,7 @@
               "unit": "piece",
               "amount": 168,
               "unitPrice": 168,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "dishwasher@60x60x72",
@@ -4010,11 +3545,7 @@
               "unit": "piece",
               "amount": 96,
               "unitPrice": 96,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "base-drawers@60x60x72",
@@ -4023,11 +3554,7 @@
               "unit": "piece",
               "amount": 1188,
               "unitPrice": 198,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "a-organizer",
@@ -4044,11 +3571,7 @@
               "unit": "piece",
               "amount": 282,
               "unitPrice": 141,
-              "size": [
-                60,
-                60,
-                72
-              ]
+              "size": [60, 60, 72]
             },
             {
               "id": "wall-doors@60x35x72",
@@ -4057,11 +3580,7 @@
               "unit": "piece",
               "amount": 630,
               "unitPrice": 126,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "wall-hood@60x35x72",
@@ -4070,11 +3589,7 @@
               "unit": "piece",
               "amount": 108,
               "unitPrice": 108,
-              "size": [
-                60,
-                35,
-                72
-              ]
+              "size": [60, 35, 72]
             },
             {
               "id": "countertop",
@@ -4130,16 +3645,8 @@
       },
       "thumbnail": "shared/showroom/wardrobe-straight.webp",
       "camera": {
-        "position": [
-          2,
-          2,
-          5
-        ],
-        "target": [
-          0,
-          1,
-          -1
-        ]
+        "position": [2, 2, 5],
+        "target": [0, 1, -1]
       },
       "design": {
         "version": 2,
@@ -4231,11 +3738,7 @@
               "unit": "piece",
               "amount": 276,
               "unitPrice": 276,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "wardrobe-shelves@80x60x230",
@@ -4244,11 +3747,7 @@
               "unit": "piece",
               "amount": 252,
               "unitPrice": 252,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "wardrobe-drawers@80x60x230",
@@ -4257,11 +3756,7 @@
               "unit": "piece",
               "amount": 352,
               "unitPrice": 352,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "a-organizer",
@@ -4278,11 +3773,7 @@
               "unit": "piece",
               "amount": 410,
               "unitPrice": 410,
-              "size": [
-                100,
-                60,
-                230
-              ]
+              "size": [100, 60, 230]
             },
             {
               "id": "handles",
@@ -4328,11 +3819,7 @@
               "unit": "piece",
               "amount": 276,
               "unitPrice": 276,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "wardrobe-shelves@80x60x230",
@@ -4341,11 +3828,7 @@
               "unit": "piece",
               "amount": 252,
               "unitPrice": 252,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "wardrobe-drawers@80x60x230",
@@ -4354,11 +3837,7 @@
               "unit": "piece",
               "amount": 352,
               "unitPrice": 352,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "a-organizer",
@@ -4375,11 +3854,7 @@
               "unit": "piece",
               "amount": 410,
               "unitPrice": 410,
-              "size": [
-                100,
-                60,
-                230
-              ]
+              "size": [100, 60, 230]
             },
             {
               "id": "handles",
@@ -4425,11 +3900,7 @@
               "unit": "piece",
               "amount": 276,
               "unitPrice": 276,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "wardrobe-shelves@80x60x230",
@@ -4438,11 +3909,7 @@
               "unit": "piece",
               "amount": 252,
               "unitPrice": 252,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "wardrobe-drawers@80x60x230",
@@ -4451,11 +3918,7 @@
               "unit": "piece",
               "amount": 352,
               "unitPrice": 352,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "a-organizer",
@@ -4472,11 +3935,7 @@
               "unit": "piece",
               "amount": 410,
               "unitPrice": 410,
-              "size": [
-                100,
-                60,
-                230
-              ]
+              "size": [100, 60, 230]
             },
             {
               "id": "handles",
@@ -4524,16 +3983,8 @@
       },
       "thumbnail": "shared/showroom/wardrobe.webp",
       "camera": {
-        "position": [
-          3.7,
-          2.45,
-          4.7
-        ],
-        "target": [
-          0,
-          1.1,
-          -0.4
-        ]
+        "position": [3.7, 2.45, 4.7],
+        "target": [0, 1.1, -0.4]
       },
       "design": {
         "version": 2,
@@ -4649,11 +4100,7 @@
               "unit": "piece",
               "amount": 552,
               "unitPrice": 276,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "wardrobe-shelves@80x60x230",
@@ -4662,11 +4109,7 @@
               "unit": "piece",
               "amount": 504,
               "unitPrice": 252,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "wardrobe-drawers@80x60x230",
@@ -4675,11 +4118,7 @@
               "unit": "piece",
               "amount": 352,
               "unitPrice": 352,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "a-organizer",
@@ -4696,11 +4135,7 @@
               "unit": "piece",
               "amount": 410,
               "unitPrice": 410,
-              "size": [
-                100,
-                60,
-                230
-              ]
+              "size": [100, 60, 230]
             },
             {
               "id": "handles",
@@ -4746,11 +4181,7 @@
               "unit": "piece",
               "amount": 552,
               "unitPrice": 276,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "wardrobe-shelves@80x60x230",
@@ -4759,11 +4190,7 @@
               "unit": "piece",
               "amount": 504,
               "unitPrice": 252,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "wardrobe-drawers@80x60x230",
@@ -4772,11 +4199,7 @@
               "unit": "piece",
               "amount": 352,
               "unitPrice": 352,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "a-organizer",
@@ -4793,11 +4216,7 @@
               "unit": "piece",
               "amount": 410,
               "unitPrice": 410,
-              "size": [
-                100,
-                60,
-                230
-              ]
+              "size": [100, 60, 230]
             },
             {
               "id": "handles",
@@ -4843,11 +4262,7 @@
               "unit": "piece",
               "amount": 552,
               "unitPrice": 276,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "wardrobe-shelves@80x60x230",
@@ -4856,11 +4271,7 @@
               "unit": "piece",
               "amount": 504,
               "unitPrice": 252,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "wardrobe-drawers@80x60x230",
@@ -4869,11 +4280,7 @@
               "unit": "piece",
               "amount": 352,
               "unitPrice": 352,
-              "size": [
-                80,
-                60,
-                230
-              ]
+              "size": [80, 60, 230]
             },
             {
               "id": "a-organizer",
@@ -4890,11 +4297,7 @@
               "unit": "piece",
               "amount": 410,
               "unitPrice": 410,
-              "size": [
-                100,
-                60,
-                230
-              ]
+              "size": [100, 60, 230]
             },
             {
               "id": "handles",

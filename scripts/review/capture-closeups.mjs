@@ -51,7 +51,7 @@ const SHOTS = JSON.parse(
 );
 const click = (t) =>
   c.evaluate(
-    `(()=>{const e=[...document.querySelectorAll('button,a,[role=button]')].filter(e=>e.offsetParent!==null).find(e=>e.textContent.trim().includes(${JSON.stringify(t)}));if(!e)return 'missing';e.click();return 'ok'})()`,
+    `(()=>{const e=[...document.querySelectorAll('button,a,[role=button]')].filter(e=>e.offsetParent!==null).find(e=>(${JSON.stringify(t)}==="Interior view"?["Interior view","Look inside"]:[${JSON.stringify(t)}]).some(x=>e.textContent.trim().includes(x)));if(!e)return 'missing';e.click();return 'ok'})()`,
   );
 const rect = () =>
   c.evaluate(

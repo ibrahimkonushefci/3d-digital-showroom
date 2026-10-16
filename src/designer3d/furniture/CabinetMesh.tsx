@@ -494,10 +494,9 @@ export function CabinetMesh({
         {...interaction}
       >
         {/* Fridge housings keep an open niche above the appliance. */}
-        {!["open", "glass", "fridge"].includes(m.type) &&
-          !(design.layout === "walkin" && m.type === "hanging") && (
-            <GapShade w={w} h={h} d={d} closed={!open && !interior} />
-          )}
+        {!["open", "glass", "fridge"].includes(m.type) && (
+          <GapShade w={w} h={h} d={d} closed={!open && !interior} />
+        )}
         <CabinetShell
           w={w}
           h={h}
@@ -513,13 +512,7 @@ export function CabinetMesh({
           }
         />
         <InspectionContents
-          visible={
-            open ||
-            interior ||
-            m.type === "open" ||
-            m.type === "glass" ||
-            (design.layout === "walkin" && m.type === "hanging")
-          }
+          visible={open || interior || m.type === "open" || m.type === "glass"}
         >
           {c.level === "wardrobe" ? (
             <InteriorComponents
@@ -696,10 +689,7 @@ export function CabinetMesh({
               roughness={0.32}
             />
           </group>
-        ) : m.type !== "open" &&
-          m.type !== "oven" &&
-          m.type !== "fridge" &&
-          !(design.layout === "walkin" && m.type === "hanging") ? (
+        ) : m.type !== "open" && m.type !== "oven" && m.type !== "fridge" ? (
           <group position={[0, h / 2, d / 2 + 0.012]}>
             {w > 0.55 ? (
               [-1, 1].map((side) => (
@@ -775,7 +765,7 @@ export function CabinetMesh({
         ) : null}
         {c.level === "wardrobe" && m.type === "drawers" && (
           <>
-            {design.layout !== "walkin" && !interior && (
+            {!interior && (
               <group position={[0, (h + doorBottom) / 2, d / 2 + 0.012]}>
                 <DoorPanel
                   profile={finishes.profile}

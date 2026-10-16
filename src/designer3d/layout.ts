@@ -79,13 +79,15 @@ export function validateDesign(
   )
     return false;
   if (
-    (design.kind === "kitchen" &&
-      ["corner", "walkin"].includes(design.layout)) ||
-    (design.kind === "wardrobe" &&
-      ["l", "u", "parallel", "island"].includes(design.layout))
+    (design.kind === "kitchen" && design.layout === "corner") ||
+    (design.kind === "wardrobe" && ["l", "island"].includes(design.layout))
   )
     return false;
-  if (validateFinishReferences(design, catalog).length || validateInteriorReferences(design, catalog).length) return false;
+  if (
+    validateFinishReferences(design, catalog).length ||
+    validateInteriorReferences(design, catalog).length
+  )
+    return false;
   const ids = new Set<string>();
   for (const o of room.openings) {
     const length = ["left", "right"].includes(o.wall) ? room.depth : room.width;
@@ -240,16 +242,7 @@ export function generateLayout(
   const { kind, layout, room } = d;
   const kitchen = kind === "kitchen";
   const cornerDepth = kitchen ? 90 : 60;
-  const hasLeft = ["l", "u", "corner", "walkin"].includes(layout),
-    hasRight = ["u", "walkin"].includes(layout);
-  if (
-    kitchen &&
-    layout === "parallel" &&
-    room.depth < 120 + catalog.pricing.minimumAisle
-  )
-    return null;
-  if (hasLeft && hasRight && room.width < 120 + catalog.pricing.minimumAisle)
-    return null;
+  const hasLeft = layout === "l" || layout === "corner";
   const push = (
     moduleId: string,
     wall: Wall,
@@ -279,17 +272,10 @@ export function generateLayout(
     return true;
   };
   if (kitchen && hasLeft) push("corner", "back", 0, 90);
-  if (kitchen && hasRight) push("corner", "back", room.width - 90, 90);
   const runs: Array<[Wall, number, number]> = [
-    [
-      "back",
-      hasLeft && kitchen ? cornerDepth : 0,
-      room.width - (hasRight && kitchen ? cornerDepth : 0),
-    ],
+    ["back", hasLeft && kitchen ? cornerDepth : 0, room.width],
   ];
   if (hasLeft) runs.push(["left", cornerDepth, room.depth]);
-  if (hasRight) runs.push(["right", cornerDepth, room.depth]);
-  if (layout === "parallel") runs.push(["front", 0, room.width]);
   let count = 0;
   if (kitchen) {
     const tallRun = runs[runs.length - 1];
@@ -320,19 +306,12 @@ export function generateLayout(
                 : count % 2
                   ? "base-doors"
                   : "base-drawers"
-        : (layout === "walkin"
-            ? [
-                "wardrobe-hanging",
-                "wardrobe-open",
-                "wardrobe-drawers",
-                "wardrobe-open",
-              ]
-            : [
-                "wardrobe-hanging",
-                "wardrobe-shelves",
-                "wardrobe-drawers",
-                "wardrobe-sliding",
-              ])[count % 4];
+        : [
+            "wardrobe-hanging",
+            "wardrobe-shelves",
+            "wardrobe-drawers",
+            "wardrobe-sliding",
+          ][count % 4];
       let added = false;
       for (const id of [candidate, kitchen ? "base-doors" : "wardrobe-open"]) {
         const m = catalog.modules.find((m) => m.id === id);
@@ -393,7 +372,7 @@ export function examples(catalog: Catalog): DesignDocument[] {
         profile: "flat",
       },
     }),
-    Object.assign(newDesign("kitchen", "u"), {
+    Object.assign(newDesign("kitchen", "straight"), {
       style: {
         front: "white",
         carcass: "white",

@@ -189,3 +189,88 @@ export function scopeValue(
   ];
   return values.length === 1 ? values[0]! : "";
 }
+
+/** Relative luminance of a #rrggbb colour (0 black … 1 white). */
+function luminance(hex: string) {
+  const n = parseInt(hex.slice(1), 16);
+  const lin = (v: number) => {
+    const c = v / 255;
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  };
+  return (
+    0.2126 * lin((n >> 16) & 255) +
+    0.7152 * lin((n >> 8) & 255) +
+    0.0722 * lin(n & 255)
+  );
+}
+/** The carcass (inside of units) that goes with a front: white behind light
+ * fronts, graphite behind dark ones, oak behind light oak-like wood. There
+ * is no separate carcass choice in the app; collections set their own. */
+export function carcassFor(frontId: string, catalog: Catalog) {
+  const front = catalog.fronts.find((f) => f.id === frontId);
+  const has = (id: string) => catalog.carcasses.some((c) => c.id === id);
+  const fallback = catalog.carcasses[0]?.id ?? "white";
+  if (!front) return fallback;
+  const lum = luminance(front.color);
+  const pick =
+    front.texture && lum > 0.15 ? "oak" : lum < 0.12 ? "dark" : "white";
+  return has(pick) ? pick : fallback;
+}
+type FinishKey = keyof FinishOverride;
+const without = <T extends object>(value: T | undefined, keys: FinishKey[]) => {
+  if (!value) return value;
+  const next = { ...value } as Record<string, unknown>;
+  for (const k of keys) delete next[k];
+  return Object.keys(next).length ? (next as T) : undefined;
+};
+/**
+ * What a customer means by a choice: "Whole kitchen" changes every unit,
+ * a zone changes every unit in it, and one unit changes only that unit.
+ * Choices made earlier for smaller parts give way for the changed
+ * properties only. A front change brings its matching carcass along.
+ */
+export function applyFinishChoice(
+  design: DesignDocument,
+  scope: FinishScope,
+  patch: FinishOverride,
+  catalog?: Catalog,
+): DesignDocument {
+  const full: FinishOverride =
+    patch.front && catalog && !patch.carcass
+      ? { ...patch, carcass: carcassFor(patch.front, catalog) }
+      : patch;
+  const keys = Object.keys(full) as FinishKey[];
+  const next = applyFinishChange(design, scope, full);
+  if (typeof scope === "object") return next;
+  const inScope = (c: Cabinet) => scope === "all" || finishZone(c) === scope;
+  const cabinets = next.cabinets.map((c) => {
+    if (!c.finishOverride || !inScope(c)) return c;
+    const { finishOverride, ...rest } = c;
+    const remaining = without(finishOverride, keys);
+    return remaining ? { ...rest, finishOverride: remaining } : rest;
+  });
+  if (scope !== "all") return { ...next, cabinets };
+  const zones: NonNullable<DesignDocument["finishZones"]> = {};
+  for (const [zone, value] of Object.entries(next.finishZones ?? {})) {
+    const remaining = without(value, keys);
+    if (remaining) zones[zone as FinishZone] = remaining;
+  }
+  const { finishZones: _old, ...rest } = next;
+  return Object.keys(zones).length
+    ? { ...rest, cabinets, finishZones: zones }
+    : { ...rest, cabinets };
+}
+/** A single unit that differs goes back to its zone or the whole kitchen. */
+export function matchSurroundings(
+  design: DesignDocument,
+  cabinetId: string,
+): DesignDocument {
+  return {
+    ...design,
+    cabinets: design.cabinets.map((c) => {
+      if (c.id !== cabinetId) return c;
+      const { finishOverride: _, ...rest } = c;
+      return rest;
+    }),
+  };
+}

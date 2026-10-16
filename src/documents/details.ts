@@ -5,20 +5,7 @@ import type {
   OfferDetails,
 } from "../catalog/types";
 import { label } from "../i18n";
-export function brandSetting(brand: string, key: string, fallback: string) {
-  try {
-    return localStorage.getItem(`showroom-${key}-${brand}`) ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-export function saveBrandSetting(brand: string, key: string, value: string) {
-  try {
-    localStorage.setItem(`showroom-${key}-${brand}`, value);
-  } catch {
-    /* device preference optional */
-  }
-}
+/** Number, date and terms printed on the PDF; there is no offer form. */
 export function newOffer(
   brand: BrandConfig,
   catalog: Catalog,
@@ -37,16 +24,9 @@ export function newOffer(
   return {
     number: `${catalog.pricing.offerPrefix}-${year}-${String(count).padStart(4, "0")}`,
     date: `${year}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`,
-    validityDays:
-      Number(
-        brandSetting(
-          brand.slug,
-          "validity",
-          String(catalog.pricing.validityDays),
-        ),
-      ) || catalog.pricing.validityDays,
+    validityDays: catalog.pricing.validityDays,
     customer: { name: "", phone: "", city: "" },
-    salesperson: brandSetting(brand.slug, "salesperson", ""),
+    salesperson: "",
     paymentTerms: label(catalog.pricing.paymentTerms, language),
     notes: "",
   };

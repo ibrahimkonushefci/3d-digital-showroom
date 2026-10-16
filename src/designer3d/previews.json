@@ -1,0 +1,244 @@
+{
+  "version": 1,
+  "items": {
+    "floor:concrete": {
+      "src": "shared/previews/floor-concrete.webp"
+    },
+    "floor:laminate": {
+      "src": "shared/previews/floor-laminate.webp"
+    },
+    "floor:tiles": {
+      "src": "shared/previews/floor-tiles.webp"
+    },
+    "front:acrylic-anthracite": {
+      "src": "shared/previews/front-acrylic-anthracite.webp",
+      "color": "#343e3e"
+    },
+    "front:acrylic-black": {
+      "src": "shared/previews/front-acrylic-black.webp",
+      "color": "#232927"
+    },
+    "front:acrylic-cashmere": {
+      "src": "shared/previews/front-acrylic-cashmere.webp",
+      "color": "#d7ccba"
+    },
+    "front:acrylic-sage": {
+      "src": "shared/previews/front-acrylic-sage.webp",
+      "color": "#7e927a"
+    },
+    "front:acrylic-white": {
+      "src": "shared/previews/front-acrylic-white.webp",
+      "color": "#f3f0e6"
+    },
+    "front:anthracite": {
+      "src": "shared/previews/front-anthracite.webp",
+      "color": "#343e3e"
+    },
+    "front:black": {
+      "src": "shared/previews/front-black.webp",
+      "color": "#232927"
+    },
+    "front:cashmere": {
+      "src": "shared/previews/front-cashmere.webp",
+      "color": "#d7ccba"
+    },
+    "front:egger-h3303": {
+      "src": "shared/previews/front-egger-h3303.webp",
+      "color": "#bb8a55"
+    },
+    "front:egger-u708": {
+      "src": "shared/previews/front-egger-u708.webp",
+      "color": "#b9bab4"
+    },
+    "front:egger-u961": {
+      "src": "shared/previews/front-egger-u961.webp",
+      "color": "#383b3b"
+    },
+    "front:fenix-anthracite": {
+      "src": "shared/previews/front-fenix-anthracite.webp",
+      "color": "#343e3e"
+    },
+    "front:fenix-black": {
+      "src": "shared/previews/front-fenix-black.webp",
+      "color": "#232927"
+    },
+    "front:fenix-cashmere": {
+      "src": "shared/previews/front-fenix-cashmere.webp",
+      "color": "#d7ccba"
+    },
+    "front:fenix-sage": {
+      "src": "shared/previews/front-fenix-sage.webp",
+      "color": "#7e927a"
+    },
+    "front:fenix-white": {
+      "src": "shared/previews/front-fenix-white.webp",
+      "color": "#f3f0e6"
+    },
+    "front:foil-anthracite": {
+      "src": "shared/previews/front-foil-anthracite.webp",
+      "color": "#343e3e"
+    },
+    "front:foil-black": {
+      "src": "shared/previews/front-foil-black.webp",
+      "color": "#232927"
+    },
+    "front:foil-cashmere": {
+      "src": "shared/previews/front-foil-cashmere.webp",
+      "color": "#d7ccba"
+    },
+    "front:foil-sage": {
+      "src": "shared/previews/front-foil-sage.webp",
+      "color": "#7e927a"
+    },
+    "front:foil-white": {
+      "src": "shared/previews/front-foil-white.webp",
+      "color": "#f3f0e6"
+    },
+    "front:gloss": {
+      "src": "shared/previews/front-gloss.webp",
+      "color": "#f8f8f4"
+    },
+    "front:kronospan-k190": {
+      "src": "shared/previews/front-kronospan-k190.webp",
+      "color": "#191c1d"
+    },
+    "front:lacquer-anthracite": {
+      "src": "shared/previews/front-lacquer-anthracite.webp",
+      "color": "#343e3e"
+    },
+    "front:lacquer-black": {
+      "src": "shared/previews/front-lacquer-black.webp",
+      "color": "#232927"
+    },
+    "front:lacquer-cashmere": {
+      "src": "shared/previews/front-lacquer-cashmere.webp",
+      "color": "#d7ccba"
+    },
+    "front:lacquer-sage": {
+      "src": "shared/previews/front-lacquer-sage.webp",
+      "color": "#7e927a"
+    },
+    "front:lacquer-white": {
+      "src": "shared/previews/front-lacquer-white.webp",
+      "color": "#f3f0e6"
+    },
+    "front:oak": {
+      "src": "shared/previews/front-oak.webp",
+      "color": "#bb8a55"
+    },
+    "front:sage": {
+      "src": "shared/previews/front-sage.webp",
+      "color": "#7e927a"
+    },
+    "front:walnut": {
+      "src": "shared/previews/front-walnut.webp",
+      "color": "#74533a"
+    },
+    "front:white": {
+      "src": "shared/previews/front-white.webp",
+      "color": "#f3f0e6"
+    },
+    "handle:bar": {
+      "src": "shared/previews/handle-bar.webp",
+      "color": "#b5b9b7"
+    },
+    "handle:bar-wardrobe": {
+      "src": "shared/previews/handle-bar-wardrobe.webp",
+      "color": "#b5b9b7"
+    },
+    "handle:knob": {
+      "src": "shared/previews/handle-knob.webp",
+      "color": "#202322"
+    },
+    "handle:knob-wardrobe": {
+      "src": "shared/previews/handle-knob-wardrobe.webp",
+      "color": "#202322"
+    },
+    "handle:none": {
+      "src": "shared/previews/handle-none.webp",
+      "color": "#222b28"
+    },
+    "handle:none-wardrobe": {
+      "src": "shared/previews/handle-none-wardrobe.webp",
+      "color": "#222b28"
+    },
+    "handle:profile": {
+      "src": "shared/previews/handle-profile.webp",
+      "color": "#252c2a"
+    },
+    "handle:profile-wardrobe": {
+      "src": "shared/previews/handle-profile-wardrobe.webp",
+      "color": "#252c2a"
+    },
+    "look:anthracite": {
+      "src": "shared/previews/look-anthracite.webp"
+    },
+    "look:boutique-walnut": {
+      "src": "shared/previews/look-boutique-walnut.webp"
+    },
+    "look:japandi": {
+      "src": "shared/previews/look-japandi.webp"
+    },
+    "look:metropolitan-anthracite": {
+      "src": "shared/previews/look-metropolitan-anthracite.webp"
+    },
+    "look:milano-oak": {
+      "src": "shared/previews/look-milano-oak.webp"
+    },
+    "look:modern-white": {
+      "src": "shared/previews/look-modern-white.webp"
+    },
+    "look:nordic-cashmere": {
+      "src": "shared/previews/look-nordic-cashmere.webp"
+    },
+    "look:oak": {
+      "src": "shared/previews/look-oak.webp"
+    },
+    "look:sage": {
+      "src": "shared/previews/look-sage.webp"
+    },
+    "look:white-brass": {
+      "src": "shared/previews/look-white-brass.webp"
+    },
+    "profile:flat-kitchen": {
+      "src": "shared/previews/profile-flat-kitchen.webp"
+    },
+    "profile:flat-wardrobe": {
+      "src": "shared/previews/profile-flat-wardrobe.webp"
+    },
+    "profile:panel-kitchen": {
+      "src": "shared/previews/profile-panel-kitchen.webp"
+    },
+    "profile:panel-wardrobe": {
+      "src": "shared/previews/profile-panel-wardrobe.webp"
+    },
+    "worktop:concrete": {
+      "src": "shared/previews/worktop-concrete.webp",
+      "color": "#a3a29c"
+    },
+    "worktop:egger-f206": {
+      "src": "shared/previews/worktop-egger-f206.webp",
+      "color": "#3c3d3c"
+    },
+    "worktop:granite": {
+      "src": "shared/previews/worktop-granite.webp",
+      "color": "#85817a"
+    },
+    "worktop:marble": {
+      "src": "shared/previews/worktop-marble.webp",
+      "color": "#e8e6df"
+    },
+    "worktop:oak": {
+      "src": "shared/previews/worktop-oak.webp",
+      "color": "#bd9566"
+    },
+    "worktop:quartz": {
+      "src": "shared/previews/worktop-quartz.webp",
+      "color": "#eeeae0"
+    },
+    "worktop:travertine": {
+      "src": "shared/previews/worktop-travertine.webp",
+      "color": "#d0c3ac"
+    }
+  }
+}

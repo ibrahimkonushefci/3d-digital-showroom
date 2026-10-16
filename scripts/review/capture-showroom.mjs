@@ -26,10 +26,24 @@ await c.send("Emulation.setDeviceMetricsOverride", {
   deviceScaleFactor: Number(process.env.CAPTURE_SCALE || 2),
   mobile: false,
 });
-const click = (t, exact = false) =>
-  c.evaluate(
-    `(()=>{const els=[...document.querySelectorAll('button,a,[role=button]')].filter(e=>e.offsetParent!==null);const e=els.find(e=>${exact}?e.textContent.trim()===${JSON.stringify(t)}:e.textContent.trim().includes(${JSON.stringify(t)}));if(!e)return 'missing:'+${JSON.stringify(t)};e.click();return 'ok'})()`,
-  );
+// Labels changed in Phase 1 round 2 ("Hero" → "Main view", …); either
+// works so before and after builds capture the same views.
+const LABELS = {
+  Hero: ["Hero", "Main view"],
+  Front: ["Front", "Front view"],
+  Top: ["Top", "From above"],
+  "Interior view": ["Interior view", "Look inside"],
+};
+const click = async (t, exact = false) => {
+  let result = "";
+  for (const label of LABELS[t] ?? [t]) {
+    result = await c.evaluate(
+      `(()=>{const els=[...document.querySelectorAll('button,a,[role=button]')].filter(e=>e.offsetParent!==null);const e=els.find(e=>${exact}?e.textContent.trim()===${JSON.stringify(label)}:e.textContent.trim().includes(${JSON.stringify(label)}));if(!e)return 'missing:'+${JSON.stringify(label)};e.click();return 'ok'})()`,
+    );
+    if (result === "ok") break;
+  }
+  return result;
+};
 const canvasClip = () =>
   c.evaluate(
     `(()=>{const r=document.querySelector('canvas').getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}})()`,

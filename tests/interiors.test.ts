@@ -24,13 +24,7 @@ import { storageMeasurements } from "../src/designer3d/storage";
 import { calculatePrice } from "../src/pricing";
 import { useDesigner } from "../src/designer3d/store";
 import { validateDesign, wallPosition } from "../src/designer3d/layout";
-import { decodeShare, encodeShare } from "../src/sharing";
 import { readDesign, saveDesign } from "../src/persistence";
-import {
-  restoreAlternative,
-  compatibleAlternative,
-  type Alternative,
-} from "../src/designer3d/comparison";
 import { interiorAssociations } from "../src/documents/finishes";
 import { storagePopulation } from "../src/scene/rooms/WardrobePopulation";
 import { parseDesignDocument } from "../src/catalog/migrations";
@@ -263,23 +257,6 @@ for (const slug of ["default", "druri-design"])
       });
       saveDesign(slug, design);
       expect(readDesign(slug, "wardrobe", catalog).design).toEqual(design);
-      const decoded = decodeShare(
-        encodeShare(design, brand, catalog.id, false),
-      );
-      expect(decoded.design.cabinets).toEqual(design.cabinets);
-      expect(decoded.design.offer).toBeUndefined();
-      const alternative: Alternative = {
-        version: 1,
-        name: "Storage",
-        design: decoded.design,
-        image: "data:image/png;base64,eA==",
-        catalogSignature: "",
-        savedAt: "",
-      };
-      expect(compatibleAlternative(alternative, catalog)).toBe(true);
-      expect(restoreAlternative(alternative, catalog, design).offer).toEqual(
-        design.offer,
-      );
       const bad = structuredClone(design);
       bad.cabinets[1].interior!.components[0].productId = "unknown";
       map.set(`showroom-design-${slug}-wardrobe`, JSON.stringify(bad));

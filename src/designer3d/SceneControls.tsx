@@ -29,6 +29,7 @@ import {
   SHOT_DURATION_MS,
 } from "./cameraShots";
 import { setSceneMoving } from "../scene/activity";
+import { liveCamera } from "./liveCamera";
 
 export default function SceneControls({
   preset,
@@ -184,6 +185,29 @@ export default function SceneControls({
       setSceneMoving(scene, "shot", false);
     } else invalidate();
   }, -2);
+  // Where the customer is looking from now (the settled view, not a frame
+  // of a glide), for "back to my view" after an inspection.
+  useEffect(() => {
+    const read = (): CameraView => {
+      const c = ref.current;
+      const lens = camera as PerspectiveCamera;
+      return {
+        position: (c
+          ? c.getPosition(new Vector3(), true)
+          : camera.position
+        ).toArray() as CameraView["position"],
+        target: (c
+          ? c.getTarget(new Vector3(), true)
+          : new Vector3()
+        ).toArray() as CameraView["target"],
+        fov: lens.isPerspectiveCamera ? lens.fov : undefined,
+      };
+    };
+    liveCamera.read = read;
+    return () => {
+      if (liveCamera.read === read) liveCamera.read = null;
+    };
+  }, [camera]);
   // Wheel, trackpad scroll and trackpad pinch all become one bounded dolly:
   // zooming in heads for what is under the cursor, zooming out glides back
   // to the whole-furniture framing instead of drifting into empty space.

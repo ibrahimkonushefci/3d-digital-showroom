@@ -194,7 +194,24 @@ it("refreshes reflection geometry on structural changes while finishes/LEDs neve
       }),
     ).not.toBe(signature);
     expect(
-      lightingSignature({ ...d, room: { ...d.room, openings: [] } }),
+      lightingSignature({
+        ...d,
+        room: {
+          ...d.room,
+          openings: [
+            ...d.room.openings,
+            {
+              id: "extra-window",
+              wall: "back",
+              type: "window",
+              offset: 10,
+              width: 60,
+              height: 60,
+              sill: 150,
+            },
+          ],
+        },
+      }),
     ).not.toBe(signature);
     expect(
       lightingSignature({

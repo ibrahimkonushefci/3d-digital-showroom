@@ -12,12 +12,10 @@ import {
   type BrandConfig,
   type Catalog,
 } from "../catalog/types";
-import { decodeShare, SnapshotSchema } from "../sharing";
 import { useT, useLanguage } from "../i18n";
 import { useDesigner } from "../designer3d/store";
 import { withDemoContacts } from "./contacts";
 import { usePreferences } from "../app/preferences";
-import { validateDesign } from "../designer3d/layout";
 export function resolveBrand(
   search: string,
   host: string,
@@ -81,12 +79,11 @@ export function BrandProvider({ children }: { children: ReactNode }) {
           active = "default";
           loaded = await loadFiles(active);
         }
-        let { brand, catalog } = loaded;
+        let { brand } = loaded;
+        const { catalog } = loaded;
         let logoUrl = `/brands/${active}/${brand.logo}`,
           local = false,
           initialError: string | null = null;
-        let assetBrand = active;
-        const sharedKey = "showroom-shared-brand-" + active;
         try {
           const saved = localStorage.getItem(key(active));
           if (saved) {
@@ -100,48 +97,8 @@ export function BrandProvider({ children }: { children: ReactNode }) {
                 : logoUrl;
             local = true;
           }
-          const shared = sessionStorage.getItem(sharedKey);
-          if (shared) {
-            const basic = SnapshotSchema.parse(JSON.parse(shared));
-            brand = BrandSchema.parse({ ...basic, logo: "logo.svg" });
-            logoUrl = "/icon.svg";
-            local = true;
-          }
         } catch {
           initialError = "storageError";
-        }
-        const encoded = new URLSearchParams(location.hash.slice(1)).get(
-          "design",
-        );
-        if (encoded) {
-          try {
-            const payload = decodeShare(encoded);
-            const linkedCatalog = CatalogSchema.parse(
-              await (
-                await fetch(`/brands/${payload.catalogId}/catalog.json`)
-              ).json(),
-            );
-            if (!validateDesign(payload.design, linkedCatalog))
-              throw Error("invalidLink");
-            catalog = linkedCatalog;
-            assetBrand = payload.catalogId;
-            if (payload.brand) {
-              brand = BrandSchema.parse({ ...payload.brand, logo: "logo.svg" });
-              logoUrl = "/icon.svg";
-              local = true;
-              try {
-                sessionStorage.setItem(
-                  sharedKey,
-                  JSON.stringify(payload.brand),
-                );
-              } catch {
-                initialError = "storageError";
-              }
-            }
-            useDesigner.getState().setDesign(payload.design);
-          } catch {
-            initialError = "invalidLink";
-          }
         }
         if (
           !localStorage.getItem("showroom-language") ||
@@ -149,9 +106,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
         )
           useLanguage.getState().setLanguage(brand.defaultLanguage);
         const assetUrl = (path: string) =>
-          path.startsWith("shared/")
-            ? "/" + path
-            : `/brands/${assetBrand}/${path}`;
+          path.startsWith("shared/") ? "/" + path : `/brands/${active}/${path}`;
         const setLocal = (b: BrandConfig, logo: string) => {
           const next = BrandSchema.parse({
             ...b,
@@ -164,7 +119,6 @@ export function BrandProvider({ children }: { children: ReactNode }) {
               key(active),
               JSON.stringify({ brand: next, logo }),
             );
-            sessionStorage.removeItem(sharedKey);
           } catch {
             useDesigner.getState().setError("storageError");
             throw Error("storageError");
@@ -185,7 +139,6 @@ export function BrandProvider({ children }: { children: ReactNode }) {
             assetUrl,
             clearLocal: () => {
               localStorage.removeItem(key(active));
-              sessionStorage.removeItem(sharedKey);
               location.reload();
             },
           });

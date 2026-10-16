@@ -22,7 +22,11 @@ export function resolveFurnitureStyle(
 export function resolveFurnitureCabinet(cabinet: Cabinet, catalog: Catalog) {
   const module = catalog.modules.find((m) => m.id === cabinet.moduleId);
   if (!module) throw Error(`Unresolved furniture module: ${cabinet.moduleId}`);
-  return { cabinet, module, interior: storageMeasurements(cabinet, module, catalog) };
+  return {
+    cabinet,
+    module,
+    interior: storageMeasurements(cabinet, module, catalog),
+  };
 }
 
 /** cm and stable identity remain in commercial state; metres are derived here. */

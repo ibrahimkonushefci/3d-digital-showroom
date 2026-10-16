@@ -1,7 +1,5 @@
-// Sales-flow check for the Phase 1 follow-up gate (production build):
-// L kitchen → Save A → another front finish → Save B → Compare A/B → choose A
-// (price returns to the original) → Your offer → Download PDF → Copy design
-// link → open the link in a fresh page; plus Full screen at two window sizes.
+// Sales-flow check (production build): L kitchen → another front finish →
+// Your offer (picture, items, total) → Download PDF. Plus Full screen at two window sizes.
 // Same Chrome setup as check-front-interactions.mjs:
 //   node scripts/review/check-sales-flow.mjs http://127.0.0.1:52772 <out-dir>
 import { connect } from "./cdp.mjs";
@@ -34,19 +32,16 @@ await c
       downloadPath: OUT,
     }),
   );
-await c
-  .send("Browser.grantPermissions", {
-    permissions: ["clipboardReadWrite", "clipboardSanitizedWrite"],
-    origin: new URL(BASE).origin,
-  })
-  .catch(() => {});
+await c;
 const ev = (e) => c.evaluate(e);
 const click = (t, exact = true) =>
   ev(
     `(()=>{const e=[...document.querySelectorAll('button,a,[role=button]')].find(e=>e.offsetParent&&!e.disabled&&(${exact}?e.textContent.trim()===${JSON.stringify(t)}:e.textContent.includes(${JSON.stringify(t)})));if(!e)return false;e.click();return true})()`,
   );
 const price = () =>
-  ev(`(document.body.innerText.match(/\\d[\\d,.]*\\s?€/)||[])[0]||null`);
+  ev(
+    `(document.body.innerText.match(/\\d{1,3}(?:[,.]\\d{3})+\\s?€/)||[])[0]||null`,
+  );
 const log = (...a) => console.log(...a);
 const results = {};
 const firstFrame = async () => {
@@ -76,9 +71,6 @@ results.startPrice = await price();
 log("L kitchen price", results.startPrice);
 await c.shot(`${OUT}/1-kitchen-hero.png`);
 
-// Clear both comparison slots by saving over them.
-results.saveA = await click("Save A");
-await c.sleep(6000);
 // Another front finish: the swatch list's first option that is not Cashmere.
 // Front finish swatches are buttons labelled with the material name.
 results.finish = await ev(
@@ -87,32 +79,15 @@ results.finish = await ev(
 await c.sleep(2500);
 results.changedPrice = await price();
 log("finish", results.finish, "→ price", results.changedPrice);
-results.saveB = await click("Save B");
-await c.sleep(6000);
-results.compare = await click("Compare A / B", false);
-await c.sleep(2500);
-await c.shot(`${OUT}/2-compare-ab.png`);
-results.compareImages = await ev(
-  `[...document.querySelectorAll('img')].filter(i=>i.offsetParent&&i.naturalWidth>200).map(i=>i.naturalWidth+'x'+i.naturalHeight)`,
-);
-results.compareText = await ev(
-  `document.body.innerText.match(/\\d[\\d,.]*\\s?€/g)`,
-);
-log("compare images", results.compareImages, "prices", results.compareText);
-// Choose A (first "Choose and continue").
-results.chooseA = await click("Choose and continue");
-await c.sleep(3000);
-await firstFrame();
-results.afterChooseA = await price();
-log("after choosing A", results.afterChooseA);
-
 results.offer = await click("Your offer", false);
 await c.sleep(5000);
 await c.shot(`${OUT}/3-offer.png`, undefined);
 results.offerImages = await ev(
   `[...document.querySelectorAll('img')].filter(i=>i.offsetParent&&i.naturalWidth>300).map(i=>i.naturalWidth+'x'+i.naturalHeight)`,
 );
-results.offerPrice = await price();
+results.offerPrice = await ev(
+  `document.querySelector('.summary-price h2')?.textContent.trim()||null`,
+);
 log("offer images", results.offerImages, "price", results.offerPrice);
 const before = new Set(fs.readdirSync(OUT));
 results.pdfClick = await click("Download PDF offer", false);
@@ -126,31 +101,12 @@ results.pdf = pdf
   : null;
 log("pdf", results.pdf);
 
-results.copy = await click("Copy design link", false);
-await c.sleep(1000);
-results.link = await ev(`navigator.clipboard.readText().catch(()=>null)`).catch(
-  () => null,
+results.offerControls = await ev(
+  `[...document.querySelectorAll('.offer-card button')].filter(b=>b.offsetParent).map(b=>b.textContent.trim())`,
 );
-if (!results.link)
-  results.link = await ev(
-    `(()=>{const i=[...document.querySelectorAll('input,textarea')].find(i=>/http/.test(i.value));return i?i.value:null})()`,
-  );
-log(
-  "link",
-  results.link && results.link.slice(0, 90) + "…",
-  "length",
-  results.link?.length,
-);
-if (results.link) {
-  await ev(`localStorage.removeItem("showroom-design-default-kitchen")`);
-  await c.send("Page.navigate", { url: results.link });
-  await c.sleep(3000);
-  await firstFrame();
-  await c.sleep(3000);
-  results.linkPrice = await price();
-  await c.shot(`${OUT}/4-shared-link.png`);
-  log("shared link opens with price", results.linkPrice);
-}
+log("offer controls", results.offerControls);
+// The PDF embeds its font, so its text is not plain: compare its total
+// with results.offerPrice by opening the downloaded file.
 
 // Full screen at the desktop fallback size and the laptop size.
 for (const [w, h] of [

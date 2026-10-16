@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
@@ -55,6 +56,14 @@ export default defineConfig({
       },
     }),
   ],
+  resolve: {
+    alias: Object.fromEntries(
+      ["html2canvas", "dompurify", "canvg"].map((name) => [
+        name,
+        fileURLToPath(new URL("./src/documents/pdfOptional.ts", import.meta.url)),
+      ]),
+    ),
+  },
   preview: {
     allowedHosts: true,
   },

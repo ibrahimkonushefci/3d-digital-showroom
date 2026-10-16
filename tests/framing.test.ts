@@ -81,7 +81,7 @@ it("uses the selected worktop thickness in both clearance validation and camera 
 });
 
 it("frames every cabinet at desktop and portrait aspect ratios for all layouts and views", () => {
-  for (const layout of ["straight", "l", "u", "parallel", "island"] as const) {
+  for (const layout of ["straight", "l", "island"] as const) {
     const design = generateLayout(newDesign("kitchen", layout), catalog)!;
     expect(design).toBeTruthy();
     for (const aspect of [0.55, 1.4, 2.2]) {
@@ -171,8 +171,8 @@ const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
 const deg = (d: number) => (d * Math.PI) / 180;
 it("keeps the authored view inside the orbit limits for every layout and preset", () => {
   const layouts = [
-    ["kitchen", ["straight", "l", "u", "parallel", "island"]],
-    ["wardrobe", ["straight", "corner", "walkin"]],
+    ["kitchen", ["straight", "l", "island"]],
+    ["wardrobe", ["straight", "corner"]],
   ] as const;
   for (const [kind, names] of layouts)
     for (const layout of names) {
@@ -240,8 +240,8 @@ it("lets L-shaped kitchens and corner wardrobes face either wing square-on", () 
 });
 it("always zooms out past the whole-furniture view, even while inspecting one unit", () => {
   const layouts = [
-    ["kitchen", ["straight", "l", "u", "parallel", "island"]],
-    ["wardrobe", ["straight", "corner", "walkin"]],
+    ["kitchen", ["straight", "l", "island"]],
+    ["wardrobe", ["straight", "corner"]],
   ] as const;
   for (const [kind, names] of layouts)
     for (const layout of names) {
@@ -291,8 +291,8 @@ it("re-centers the orbit point as the camera zooms back out", () => {
   }
   expect(previous).toBeCloseTo(0);
 });
-it("limits inspection to the selected cabinet's front, including front-wall runs across ±π", () => {
-  for (const layout of ["l", "parallel", "u"] as const) {
+it("limits inspection to the selected cabinet's front", () => {
+  for (const layout of ["l", "straight"] as const) {
     const d = generateLayout(newDesign("kitchen", layout), catalog)!;
     for (const c of d.cabinets) {
       const view = cabinetCamera(
@@ -306,9 +306,9 @@ it("limits inspection to the selected cabinet's front, including front-wall runs
       expect(Math.abs(wrap(start - c.rotation))).toBeLessThan(deg(1));
       expect(limits.minAzimuth).toBeLessThanOrEqual(start + 1e-9);
       expect(limits.maxAzimuth).toBeGreaterThanOrEqual(start - 1e-9);
-      // Limits are continuous around the start even when it sits near ±π.
+      // At most 70° to either side of the selected front.
       expect(limits.maxAzimuth - limits.minAzimuth).toBeLessThanOrEqual(
-        deg(110) + 1e-6,
+        deg(140) + 1e-6,
       );
       expect(limits.minDistance).toBeLessThan(2);
     }
@@ -336,8 +336,8 @@ import {
 } from "../src/designer3d/cameraShots";
 it("fits room shots including swept open fronts without framing decorative room objects", () => {
   for (const [kind, layouts] of [
-    ["kitchen", ["straight", "l", "u", "parallel", "island"]],
-    ["wardrobe", ["straight", "corner", "walkin"]],
+    ["kitchen", ["straight", "l", "island"]],
+    ["wardrobe", ["straight", "corner"]],
   ] as const)
     for (const layout of layouts) {
       const design = generateLayout(newDesign(kind, layout), catalog)!;
@@ -398,8 +398,8 @@ it("retreats above obstacles and never interpolates through a cabinet or wall", 
 });
 it("all planned hero/front/top/inspection transition segments are safe or use the bounded snap fallback", () => {
   for (const [kind, layouts] of [
-    ["kitchen", ["straight", "l", "u", "parallel", "island"]],
-    ["wardrobe", ["straight", "corner", "walkin"]],
+    ["kitchen", ["straight", "l", "island"]],
+    ["wardrobe", ["straight", "corner"]],
   ] as const)
     for (const layout of layouts) {
       const design = generateLayout(newDesign(kind, layout), catalog)!;
@@ -472,18 +472,15 @@ function shotCamera(
 }
 it("stands inside the room, or just behind one empty hidden wall, at eye level for the interior hero", () => {
   for (const [kind, layouts] of [
-    ["kitchen", ["straight", "l", "u", "parallel", "island"]],
-    ["wardrobe", ["straight", "corner", "walkin"]],
+    ["kitchen", ["straight", "l", "island"]],
+    ["wardrobe", ["straight", "corner"]],
   ] as const)
     for (const layout of layouts) {
       const design = generateLayout(newDesign(kind, layout), catalog)!;
       for (const aspect of [0.88, 1.0, 1.4, 1.73, 2.4]) {
         const view = roomShot(design, catalog, "hero", aspect);
-        // Enclosed layouts may keep the fitted overview (covered above).
-        if (view.fov === undefined) {
-          expect(["u", "parallel", "walkin"]).toContain(layout);
-          continue;
-        }
+        if (view.fov === undefined)
+          expect.unreachable(`${layout} has no interior hero`);
         const [x, y, z] = view.position;
         const behind = stanceWall({ x, z }, design.room);
         expect(behind).not.toBe("invalid");
@@ -570,11 +567,66 @@ it("never shows the ceiling or garden view from the cut-away overview or top sho
       }
   };
   for (const [kind, layouts] of [
-    ["kitchen", ["straight", "l", "u", "parallel", "island"]],
-    ["wardrobe", ["straight", "corner", "walkin"]],
+    ["kitchen", ["straight", "l", "island"]],
+    ["wardrobe", ["straight", "corner"]],
   ] as const)
     for (const layout of layouts)
       check(generateLayout(newDesign(kind, layout), catalog)!, layout);
   for (const preset of presentationPresets(catalog))
     check(preset.design, preset.id);
+});
+
+import {
+  frontVisibility,
+  inspectionShot,
+  stanceWall as standingBehind,
+} from "../src/designer3d/cameraShots";
+it("inspects every unit of the prepared designs from a camera that sees it", () => {
+  for (const brand of ["default", "druri-design"]) {
+    const brandCatalog = CatalogSchema.parse(
+      JSON.parse(readFileSync(`public/brands/${brand}/catalog.json`, "utf8")),
+    );
+    for (const { design } of presentationPresets(brandCatalog))
+      for (const c of design.cabinets)
+        for (const aspect of [1.7, 1.25]) {
+          const view = inspectionShot(design, brandCatalog, c.id, aspect);
+          expect(view, `${design.layout} ${c.moduleId}`).not.toBeNull();
+          const p = new Vector3(...view!.position);
+          expect(standingBehind(p, design.room)).not.toBe("invalid");
+          expect(p.y).toBeLessThan(design.room.height / 100);
+          const seen = frontVisibility(design, brandCatalog, c.id, p);
+          expect(seen.middle, `${design.layout} ${c.moduleId}`).toBe(true);
+          expect(seen.share).toBeGreaterThanOrEqual(0.6);
+          // Never inside another unit (the corner carousel stood in the fridge).
+          for (const o of design.cabinets.filter((o) => o.id !== c.id))
+            expect(
+              cabinetBounds({ ...design, cabinets: [o] }, brandCatalog)
+                .expandByScalar(0.1)
+                .containsPoint(p),
+            ).toBe(false);
+        }
+  }
+});
+it("keeps the corner carousel in view instead of standing behind the fridge", () => {
+  const l = presentationPresets(catalog).find(
+    (p) => p.design.layout === "l",
+  )!.design;
+  const corner = l.cabinets.find((c) => c.moduleId === "corner")!;
+  const view = inspectionShot(l, catalog, corner.id, 1.7)!;
+  const p = new Vector3(...view.position);
+  expect(frontVisibility(l, catalog, corner.id, p).share).toBe(1);
+});
+import { foregroundClutter } from "../src/designer3d/cameraShots";
+it("keeps other furniture out of the foreground of a close-up", () => {
+  for (const { design } of presentationPresets(catalog))
+    for (const c of design.cabinets) {
+      const view = inspectionShot(design, catalog, c.id, 1.7)!;
+      const others = design.cabinets
+        .filter((o) => o.id !== c.id)
+        .map((o) => cabinetBounds({ ...design, cabinets: [o] }, catalog));
+      expect(
+        foregroundClutter(view, 1.7, others),
+        `${design.layout} ${c.moduleId}`,
+      ).toBeLessThanOrEqual(0.3);
+    }
 });

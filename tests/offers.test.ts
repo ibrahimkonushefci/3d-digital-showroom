@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs";
 import { BrandSchema, CatalogSchema, DesignSchema } from "../src/catalog/types";
 import { examples, newDesign, generateLayout } from "../src/designer3d/layout";
 import { calculatePrice } from "../src/pricing";
-import { encodeShare, decodeShare } from "../src/sharing";
 const catalog = CatalogSchema.parse(
     JSON.parse(readFileSync("public/brands/default/catalog.json", "utf8")),
   ),
@@ -25,9 +24,6 @@ it("migrates version one and excludes private offer information from shared desi
     },
   });
   expect(design.version).toBe(3);
-  expect(
-    decodeShare(encodeShare(design, brand, catalog.id, false)).design.offer,
-  ).toBeUndefined();
   expect(design.offer?.customer.name).toBe("Private person");
 });
 it("material tiers and appliance packages contribute independently to the estimate", () => {
@@ -113,7 +109,7 @@ it("applies the discount to the goods before installation and VAT", () => {
   );
 });
 it("lists cabinets per size with unit prices that add up to each line", () => {
-  const d = generateLayout(newDesign("kitchen", "u"), catalog)!;
+  const d = generateLayout(newDesign("kitchen", "l"), catalog)!;
   const price = calculatePrice(d, catalog, "en");
   const cabinets = price.lines.filter((l) => l.size);
   expect(cabinets.reduce((n, l) => n + l.quantity, 0)).toBe(d.cabinets.length);

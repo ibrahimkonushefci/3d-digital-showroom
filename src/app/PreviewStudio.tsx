@@ -241,9 +241,9 @@ export default function PreviewStudio() {
         <EnvironmentPolicy.Provider value={environmentPolicy}>
           <main style={{ padding: 20 }}>
             <p>
-              Phase 0–6 verification · development only · fixed
-              IDs · does not load or save drafts. Memory is estimated; physical
-              tablets are unverified.
+              Phase 0–6 verification · development only · fixed IDs · does not
+              load or save drafts. Memory is estimated; physical tablets are
+              unverified.
             </p>
             <label>
               Reflections{" "}
@@ -638,7 +638,6 @@ export default function PreviewStudio() {
                       : [],
                     interior,
                   }}
-                  lockQuality
                   suspended={captureScene}
                   diagnostics={
                     <>
@@ -677,12 +676,11 @@ export default function PreviewStudio() {
               )}
             </details>
             {captureScene && p && (
-              <div aria-hidden="true" className="comparison-capture">
+              <div aria-hidden="true" className="offscreen-capture">
                 <Scene
                   design={renderDesign!}
                   catalog={catalog}
                   capture={captureTemporary}
-                  lockQuality
                   diagnostics={
                     <RenderMetrics
                       sceneId={`${brand.slug}:${id}:temporary-capture`}

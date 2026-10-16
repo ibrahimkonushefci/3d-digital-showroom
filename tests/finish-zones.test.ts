@@ -1,6 +1,6 @@
 import { lightingSignature } from "../src/scene/lighting/lightingRecipe";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { BrandSchema, CatalogSchema, DesignSchema } from "../src/catalog/types";
 import { parseDesignDocument } from "../src/catalog/migrations";
 import { presentationPresets } from "../src/designer3d/presets";
@@ -17,13 +17,7 @@ import {
 import { useDesigner } from "../src/designer3d/store";
 import { validateDesign } from "../src/designer3d/layout";
 import { calculatePrice } from "../src/pricing";
-import { decodeShare, encodeShare } from "../src/sharing";
 import { loadDesign, readDesign, saveDesign } from "../src/persistence";
-import {
-  restoreAlternative,
-  compatibleAlternative,
-  type Alternative,
-} from "../src/designer3d/comparison";
 import { assembleRenderInput } from "../src/scene/renderInput";
 import { worktopRuns } from "../src/scene/countertopGeometry";
 import {
@@ -236,29 +230,6 @@ for (const slug of ["default", "druri-design"]) {
         );
         expect(data.get(key)).toBe(invalid);
         data.set(key, original);
-
-        const share = decodeShare(
-          encodeShare({ ...d, offer }, brand, slug, true),
-        );
-        expect(share.design).toEqual(d);
-        expect(JSON.stringify(share)).not.toContain("SECRET");
-        const record: Alternative = {
-          version: 1,
-          name: "Mixed",
-          design: share.design,
-          image: "data:image/png;base64,a",
-          catalogSignature: "old",
-          savedAt: "now",
-        };
-        expect(restoreAlternative(record, catalog, { ...d, offer })).toEqual({
-          ...d,
-          offer,
-        });
-        const bad = {
-          ...record,
-          design: applyFinishChange(d, "all", { front: "unavailable" }),
-        };
-        expect(compatibleAlternative(bad, catalog)).toBe(false);
       }
     });
     it("exports complete material associations and multilingual mixed kitchen/wardrobe PDFs", async () => {
@@ -311,34 +282,89 @@ for (const slug of ["default", "druri-design"]) {
           });
           expect(doc.getNumberOfPages()).toBeGreaterThanOrEqual(2);
           expect(doc.output("arraybuffer").byteLength).toBeGreaterThan(10000);
-          if (process.env.PHASE4_ARTIFACTS) {
-            const root = "verification/showroom-realism/phase-4";
-            writeFileSync(
-              `${root}/${slug}-${d.kind}-${language}.pdf`,
-              Buffer.from(doc.output("arraybuffer")),
-            );
-            writeFileSync(
-              `${root}/${slug}-${d.kind}.json`,
-              JSON.stringify(d, null, 2),
-            );
-            writeFileSync(
-              `${root}/${slug}-${d.kind}-share.txt`,
-              encodeShare(d, brand, slug, false),
-            );
-          }
         }
     });
   });
 }
-it("enforces share encode limits before generating an unreadable link", () => {
+
+import {
+  applyFinishChoice,
+  carcassFor,
+  matchSurroundings,
+} from "../src/designer3d/finishes";
+describe("finish choices as the customer means them", () => {
   const catalog = CatalogSchema.parse(
     JSON.parse(readFileSync("public/brands/default/catalog.json", "utf8")),
   );
-  const brand = BrandSchema.parse(
-    JSON.parse(readFileSync("public/brands/default/brand.json", "utf8")),
-  );
-  const d = presentationPresets(catalog)[0].design;
-  expect(() =>
-    encodeShare({ ...d, id: "x".repeat(150001) }, brand, "default", false),
-  ).toThrow("shareTooLarge");
+  const island = () =>
+    presentationPresets(catalog).find((p) => p.design.layout === "island")!
+      .design;
+  it("lets the carcass follow the front", () => {
+    expect(carcassFor("white", catalog)).toBe("white");
+    expect(carcassFor("cashmere", catalog)).toBe("white");
+    expect(carcassFor("anthracite", catalog)).toBe("dark");
+    expect(carcassFor("fenix-black", catalog)).toBe("dark");
+    expect(carcassFor("walnut", catalog)).toBe("dark");
+    expect(carcassFor("oak", catalog)).toBe("oak");
+    expect(carcassFor("egger-h3303", catalog)).toBe("oak");
+  });
+  it("changes every unit for the whole kitchen, every unit of a zone, or one unit", () => {
+    let d = applyFinishChoice(island(), "island", { front: "oak" }, catalog);
+    const one = d.cabinets.find((c) => c.level === "wall")!;
+    d = applyFinishChoice(
+      d,
+      { cabinetId: one.id },
+      { front: "sage", handle: "bar" },
+      catalog,
+    );
+    // Whole kitchen: everything gets the front (and its carcass); the unit's
+    // own handle choice stays because handles were not changed.
+    const all = applyFinishChoice(d, "all", { front: "white" }, catalog);
+    for (const c of all.cabinets) {
+      const style = resolveCabinetStyle(all, c, catalog);
+      expect(style.front.id).toBe("white");
+      expect(style.carcass.id).toBe("white");
+    }
+    expect(
+      resolveCabinetStyle(
+        all,
+        all.cabinets.find((c) => c.id === one.id)!,
+        catalog,
+      ).handle.id,
+    ).toBe("bar");
+    expect(all.finishZones).toBeUndefined();
+    // A zone choice reaches units inside it that had their own front.
+    const islandUnit = d.cabinets.find((c) => c.wall === "island")!;
+    const withUnit = applyFinishChoice(
+      d,
+      { cabinetId: islandUnit.id },
+      { front: "walnut" },
+      catalog,
+    );
+    const zone = applyFinishChoice(
+      withUnit,
+      "island",
+      { front: "anthracite" },
+      catalog,
+    );
+    for (const c of zone.cabinets.filter((c) => c.wall === "island"))
+      expect(resolveCabinetStyle(zone, c, catalog).front.id).toBe("anthracite");
+    // Other zones keep theirs.
+    expect(
+      resolveCabinetStyle(
+        zone,
+        zone.cabinets.find((c) => c.id === one.id)!,
+        catalog,
+      ).front.id,
+    ).toBe("sage");
+    // "Match the rest of the kitchen" for one unit.
+    const matched = matchSurroundings(zone, one.id);
+    expect(
+      resolveCabinetStyle(
+        matched,
+        matched.cabinets.find((c) => c.id === one.id)!,
+        catalog,
+      ).front.id,
+    ).toBe(island().style.front);
+  });
 });

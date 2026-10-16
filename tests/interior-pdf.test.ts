@@ -1,11 +1,10 @@
 import { afterEach, expect, it, vi } from "vitest";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { BrandSchema, CatalogSchema } from "../src/catalog/types";
 import { presentationPresets } from "../src/designer3d/presets";
 import { presetComponents, withInterior } from "../src/designer3d/interiors";
 import { createOffer } from "../src/documents/offer";
 import { translate } from "../src/i18n";
-import { encodeShare } from "../src/sharing";
 afterEach(() => vi.unstubAllGlobals());
 for (const slug of ["default", "druri-design"])
   it(`${slug}: paginates interior inventory and signed credit lines in SQ/EN/DE`, async () => {
@@ -48,25 +47,5 @@ for (const slug of ["default", "druri-design"])
       });
       expect(doc.getNumberOfPages()).toBeGreaterThanOrEqual(2);
       expect(doc.output("arraybuffer").byteLength).toBeGreaterThan(10000);
-      if (process.env.PHASE5_ARTIFACTS) {
-        const root = "verification/showroom-realism/phase-5";
-        writeFileSync(
-          `${root}/${slug}-interior-${language}.pdf`,
-          Buffer.from(doc.output("arraybuffer")),
-        );
-        writeFileSync(
-          `${root}/${slug}-interior.json`,
-          JSON.stringify(design, null, 2),
-        );
-        // Live catalogs intentionally use zero credits; these catalog-mutated PDFs are formatting fixtures.
-        writeFileSync(
-          `${root}/${slug}-interior-formatting-catalog.json`,
-          JSON.stringify(catalog, null, 2),
-        );
-        writeFileSync(
-          `${root}/${slug}-interior-share.txt`,
-          encodeShare(design, brand, slug, false),
-        );
-      }
     }
   });

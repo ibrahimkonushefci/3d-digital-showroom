@@ -11,29 +11,25 @@ import {
   useCallback,
 } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Download, Link2, MessageCircle, Send } from "lucide-react";
+import { ArrowLeft, Download } from "lucide-react";
 import { useBrand } from "../brand";
 import { useDesigner } from "../designer3d/store";
 import { calculatePrice, estimateLabel, quantityLabel } from "../pricing";
 import { useLanguage, useT, money, number } from "../i18n";
-import { OfferFields } from "./OfferFields";
 import { newOffer } from "../documents/details";
 import { restoreSummary } from "../persistence";
-import { SendAnyone } from "./SendAnyone";
-import { shareUrl, messageUrl, hasContact, shareOfferPdf } from "../sharing";
 import { Toggle, ErrorNotice } from "./components";
 const Scene = lazy(() => import("../designer3d/Scene"));
 export default function Summary() {
-  const { brand, catalog, logoUrl, local } = useBrand(),
+  const { brand, catalog, logoUrl } = useBrand(),
     state = useDesigner(),
     t = useT(),
     { language } = useLanguage();
   const presentation = usePresentation(brand);
   const [busy, setBusy] = useState(false),
-    [notice, setNotice] = useState<string | null>(null),
-    [link, setLink] = useState("");
+    [notice, setNotice] = useState<string | null>(null);
   const capture = useRef<(() => Promise<string>) | null>(null);
-  // The last generated PDF, so a second tap can share it without delay.
+  // The last generated PDF, so a second tap downloads it without delay.
   const prepared = useRef<{ revision: string; file: File } | null>(null);
   const lastRender = useRef<{ look: string; image: string } | null>(null);
   const register = useCallback((fn: () => Promise<string>) => {
@@ -68,48 +64,6 @@ export default function Summary() {
     );
   const price = calculatePrice(design, catalog, language);
   const estimate = estimateLabel(price, design.exact, language);
-  const url = () => shareUrl(design, brand, catalog.id, local);
-  const safeLink = (() => {
-    try {
-      return url();
-    } catch {
-      return "";
-    }
-  })();
-  const offerText = () =>
-    t("offerMessage", {
-      name: design.offer?.customer.name ? " " + design.offer.customer.name : "",
-      number: design.offer?.number || "",
-      company: brand.companyName,
-      total: estimate,
-      days: design.offer?.validityDays ?? catalog.pricing.validityDays,
-      link: url(),
-    });
-  const copy = async () => {
-    let value: string;
-    try {
-      value = url();
-    } catch {
-      setNotice("shareTooLarge");
-      return;
-    }
-    setLink(value);
-    try {
-      await navigator.clipboard.writeText(value);
-      setNotice("copied");
-    } catch {
-      setLink(value);
-      setNotice("copyFallback");
-    }
-  };
-  const send = (service: "whatsapp" | "viber") => {
-    try {
-      const target = messageUrl(service, brand, offerText());
-      window.open(target, "_blank", "noopener,noreferrer");
-    } catch {
-      setNotice("shareTooLarge");
-    }
-  };
   const revision = JSON.stringify([design, language, presentation]);
   // Offer fields and price toggles do not change the picture.
   const look = JSON.stringify([
@@ -163,12 +117,8 @@ export default function Summary() {
     setNotice(null);
     try {
       await task();
-    } catch (error) {
-      setNotice(
-        error instanceof Error && error.message === "shareTooLarge"
-          ? "shareTooLarge"
-          : "exportError",
-      );
+    } catch {
+      setNotice("exportError");
     } finally {
       setBusy(false);
       endCapture();
@@ -179,23 +129,6 @@ export default function Summary() {
       const { downloadBlob } = await import("../documents/offer");
       const file = await buildPdf();
       downloadBlob(file, file.name);
-    });
-  const sendOffer = () =>
-    withBusy(async () => {
-      const file = await buildPdf();
-      const result = await shareOfferPdf(file, file.name, offerText());
-      if (result === "blocked") setNotice("readyToSend");
-      else if (result === "unsupported") {
-        // Desktop browsers: hand over the file and open the chat to attach it.
-        const { downloadBlob } = await import("../documents/offer");
-        downloadBlob(file, file.name);
-        window.open(
-          messageUrl("whatsapp", brand, offerText()),
-          "_blank",
-          "noopener,noreferrer",
-        );
-        setNotice("pdfDownloadedAttach");
-      }
     });
   return (
     <main className="page summary-page">
@@ -315,12 +248,6 @@ export default function Summary() {
             <h2>{estimate}</h2>
           </div>
           <p className="helper">{t("priceDisclaimer")}</p>
-          {design.offer && (
-            <OfferFields
-              details={design.offer}
-              onChange={(offer) => state.edit({ ...design, offer }, catalog)}
-            />
-          )}
           <Toggle
             label={`${t("installation")} · ${catalog.pricing.installationPercent}%`}
             checked={design.installation}
@@ -340,65 +267,16 @@ export default function Summary() {
           />
           <button
             className="button primary full"
-            onClick={sendOffer}
-            disabled={busy}
-          >
-            <Send size={18} />
-            {t(busy ? "preparing" : "sendOffer")}
-          </button>
-          <button
-            className="button secondary full"
             onClick={download}
             disabled={busy}
           >
             <Download size={18} />
-            {t("pdf")}
+            {t(busy ? "preparing" : "pdf")}
           </button>
-          <button className="button secondary full" onClick={copy}>
-            <Link2 size={18} />
-            {t("share")}
-          </button>
-          {safeLink ? (
-            <SendAnyone
-              title={brand.companyName}
-              text={t("message", { link: "" })}
-              url={safeLink}
-            />
-          ) : (
-            <p role="alert">{t("shareTooLarge")}</p>
-          )}
-          <div className="two-buttons">
-            <button
-              className="button secondary"
-              onClick={() => send("whatsapp")}
-            >
-              <MessageCircle size={16} />
-              {t("whatsapp")}
-            </button>
-            {hasContact("viber", brand) && (
-              <button
-                className="button secondary"
-                onClick={() => send("viber")}
-              >
-                {t("viber")}
-              </button>
-            )}
-          </div>
           {notice && (
-            <div className="notice" role="status">
+            <div className="notice" role="alert">
               {t(notice as Parameters<typeof t>[0])}
             </div>
-          )}
-          {link && (
-            <textarea
-              aria-label={t("copyFallback")}
-              readOnly
-              value={link}
-              onFocus={(e) => e.target.select()}
-            />
-          )}{" "}
-          {local && !presentation && (
-            <p className="helper">{t("sharedBrandNote")}</p>
           )}
           <div className="offer-contact">
             <img src={logoUrl} alt="" />

@@ -215,15 +215,7 @@ export const CatalogSchema = z
           id: z.string(),
           name: Label,
           kind: z.enum(["kitchen", "wardrobe"]),
-          layout: z.enum([
-            "straight",
-            "l",
-            "u",
-            "parallel",
-            "island",
-            "corner",
-            "walkin",
-          ]),
+          layout: z.enum(["straight", "l", "island", "corner"]),
           thumbnail: asset,
           roomSceneId: z
             .enum(["kitchen-warm-v1", "wardrobe-warm-v1"])
@@ -499,15 +491,7 @@ const DesignFields = z.object({
   appliancePackage: z.string().optional(),
   id: z.string(),
   kind: z.enum(["kitchen", "wardrobe"]),
-  layout: z.enum([
-    "straight",
-    "l",
-    "u",
-    "parallel",
-    "island",
-    "corner",
-    "walkin",
-  ]),
+  layout: z.enum(["straight", "l", "island", "corner"]),
   room: RoomSchema,
   environment: z
     .object({

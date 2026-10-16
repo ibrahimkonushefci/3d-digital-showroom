@@ -2,7 +2,7 @@
   "revision": 2,
   "bakes": {
     "ea3621d8": {
-      "preset": "Anthracite \u00b7 Island",
+      "preset": "Anthracite · Island",
       "file": "ea3621d8.webp",
       "bytes": 29478,
       "rects": {
@@ -54,61 +54,8 @@
       "samples": 512,
       "script": "art/blender/bake_room.py"
     },
-    "86359e37": {
-      "preset": "Corner wardrobe",
-      "file": "86359e37.webp",
-      "bytes": 20082,
-      "rects": {
-        "floor": [
-          0,
-          0,
-          0.4205607476635514,
-          0.35046728971962615
-        ],
-        "ceiling": [
-          0.42990654205607476,
-          0,
-          0.4205607476635514,
-          0.35046728971962615
-        ],
-        "back": [
-          0,
-          0.3598130841121495,
-          0.4205607476635514,
-          0.31542056074766356
-        ],
-        "front": [
-          0.42990654205607476,
-          0.3598130841121495,
-          0.4205607476635514,
-          0.31542056074766356
-        ],
-        "left": [
-          0,
-          0.6845794392523364,
-          0.35046728971962615,
-          0.31542056074766356
-        ],
-        "right": [
-          0.3598130841121495,
-          0.6845794392523364,
-          0.35046728971962615,
-          0.31542056074766356
-        ]
-      },
-      "room": [
-        3.6,
-        2.7,
-        3
-      ],
-      "encodeMax": 7.0534,
-      "gamma": 2.2,
-      "gain": 1.641,
-      "samples": 512,
-      "script": "art/blender/bake_room.py"
-    },
     "bd2a4932": {
-      "preset": "Cashmere \u00b7 L kitchen",
+      "preset": "Cashmere · L kitchen",
       "file": "bd2a4932.webp",
       "bytes": 21180,
       "rects": {
@@ -161,7 +108,7 @@
       "script": "art/blender/bake_room.py"
     },
     "a3cf004a": {
-      "preset": "Warm white \u00b7 Straight",
+      "preset": "Warm white · Straight",
       "file": "a3cf004a.webp",
       "bytes": 24154,
       "rects": {
@@ -216,7 +163,7 @@
     "1d9f9f02": {
       "preset": "Straight wardrobe",
       "file": "1d9f9f02.webp",
-      "bytes": 22396,
+      "bytes": 19338,
       "rects": {
         "floor": [
           0,
@@ -260,10 +207,63 @@
         2.7,
         3
       ],
-      "encodeMax": 5.2114,
+      "encodeMax": 5.7393,
       "gamma": 2.2,
       "gain": 1.092,
-      "samples": 512,
+      "samples": 768,
+      "script": "art/blender/bake_room.py"
+    },
+    "a7ce0813": {
+      "preset": "Corner wardrobe",
+      "file": "a7ce0813.webp",
+      "bytes": 19578,
+      "rects": {
+        "floor": [
+          0,
+          0,
+          0.4205607476635514,
+          0.35046728971962615
+        ],
+        "ceiling": [
+          0.42990654205607476,
+          0,
+          0.4205607476635514,
+          0.35046728971962615
+        ],
+        "back": [
+          0,
+          0.3598130841121495,
+          0.4205607476635514,
+          0.31542056074766356
+        ],
+        "front": [
+          0.42990654205607476,
+          0.3598130841121495,
+          0.4205607476635514,
+          0.31542056074766356
+        ],
+        "left": [
+          0,
+          0.6845794392523364,
+          0.35046728971962615,
+          0.31542056074766356
+        ],
+        "right": [
+          0.3598130841121495,
+          0.6845794392523364,
+          0.35046728971962615,
+          0.31542056074766356
+        ]
+      },
+      "room": [
+        3.6,
+        2.7,
+        3
+      ],
+      "encodeMax": 5.5455,
+      "gamma": 2.2,
+      "gain": 1.521,
+      "samples": 768,
       "script": "art/blender/bake_room.py"
     }
   }

@@ -46,7 +46,7 @@ await c.send("Emulation.setDeviceMetricsOverride", {
 });
 const clickText = (t, exact = false) =>
   c.evaluate(
-    `(()=>{const els=[...document.querySelectorAll('button,a,[role=button]')].filter(e=>e.offsetParent!==null&&!e.disabled);const e=els.find(e=>${exact}?e.textContent.trim()===${JSON.stringify(t)}:e.textContent.trim().includes(${JSON.stringify(t)}));if(!e)return false;e.click();return true})()`,
+    `(()=>{const els=[...document.querySelectorAll('button,a,[role=button]')].filter(e=>e.offsetParent!==null&&!e.disabled);const e=els.find(e=>${exact}?(${JSON.stringify(t)}==="Interior view"?["Interior view","Look inside"]:[${JSON.stringify(t)}]).includes(e.textContent.trim()):(${JSON.stringify(t)}==="Interior view"?["Interior view","Look inside"]:[${JSON.stringify(t)}]).some(x=>e.textContent.trim().includes(x)));if(!e)return false;e.click();return true})()`,
   );
 const canvasClip = () =>
   c.evaluate(

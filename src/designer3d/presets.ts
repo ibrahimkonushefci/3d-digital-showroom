@@ -30,7 +30,7 @@ export function presentationPresets(catalog: Catalog): ShowroomPreset[] {
               "base-drawers",
               "wall-doors",
               "wall-hood",
-              ...(["l", "u"].includes(p.layout) ? ["corner"] : []),
+              ...(p.layout === "l" ? ["corner"] : []),
             ]
           : [
               "wardrobe-hanging",
@@ -79,7 +79,9 @@ export function presentationPresets(catalog: Catalog): ShowroomPreset[] {
         };
         if (d.cabinets.length !== p.cabinets.length) return [];
       }
-      if (d && p.roomSceneId)
+      // An explicit empty list means "no window"; only presets that say
+      // nothing about openings receive the staged one.
+      if (d && p.roomSceneId && !p.room.openings)
         d = { ...d, room: presetRoom(d.room, d.kind, d.cabinets) };
       return d && validateDesign(d, catalog)
         ? [

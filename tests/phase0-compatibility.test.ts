@@ -4,22 +4,8 @@ import { BrandSchema, CatalogSchema, DesignSchema } from "../src/catalog/types";
 import { presentationPresets } from "../src/designer3d/presets";
 import { validateDesign } from "../src/designer3d/layout";
 import { calculatePrice } from "../src/pricing";
-import { decodeShare, encodeShare } from "../src/sharing";
-import {
-  compatibleAlternative,
-  restoreAlternative,
-  loadAlternative,
-  type Alternative,
-} from "../src/designer3d/comparison";
 import { loadDesign } from "../src/persistence";
 import { assembleRenderInput } from "../src/scene/renderInput";
-const database = vi.hoisted(() => new Map<string, unknown>());
-vi.mock("idb", () => ({
-  openDB: async () => ({
-    get: async (_: string, key: string) => structuredClone(database.get(key)),
-    close() {},
-  }),
-}));
 
 for (const slug of ["default", "druri-design"]) {
   const fixture = JSON.parse(
@@ -96,17 +82,7 @@ for (const slug of ["default", "druri-design"]) {
         DesignSchema.safeParse({ ...fixture.v2, version: 4 }).success,
       ).toBe(false);
     });
-    it("decodes frozen links and excludes private offer details from new links", () => {
-      for (const share of fixture.shares) {
-        const decoded = decodeShare(share.payload);
-        expect(decoded.catalogId).toBe(slug);
-        expect(decoded.design).toEqual(
-          DesignSchema.parse(
-            share.inputVersion === 1 ? fixture.v1 : fixture.v2,
-          ),
-        );
-        expect(Boolean(decoded.brand)).toBe(share.local);
-      }
+    it("keeps private offer details out of the picture and the quote", () => {
       const offer = {
         number: "TEST",
         date: "2026-10-13",
@@ -118,8 +94,6 @@ for (const slug of ["default", "druri-design"]) {
         discountPercent: 7,
       };
       const design = { ...DesignSchema.parse(fixture.v2), offer };
-      const share = decodeShare(encodeShare(design, brand, slug, true));
-      expect(share.design.offer).toBeUndefined();
       const input = assembleRenderInput(
         design,
         catalog,
@@ -131,27 +105,6 @@ for (const slug of ["default", "druri-design"]) {
       expect(calculatePrice(input.commercial.design, catalog, "de")).toEqual(
         calculatePrice(design, catalog, "de"),
       );
-    });
-    it("loads frozen kitchen/wardrobe A/B records and preserves the active offer", async () => {
-      database.clear();
-      for (const entry of fixture.comparisons) {
-        const record = entry.record as Alternative;
-        database.set(`${slug}:${record.design.kind}:${entry.slot}`, record);
-        const loaded = (await loadAlternative(
-          slug,
-          record.design.kind,
-          entry.slot,
-        ))!;
-        expect(compatibleAlternative(loaded, catalog)).toBe(true);
-        expect(restoreAlternative(loaded, catalog)).toEqual(
-          DesignSchema.parse(record.design),
-        );
-        expect(loaded.design.offer).toBeUndefined();
-        expect(loaded.image).toBe(record.image);
-      }
-      expect(
-        await loadAlternative("other-brand", "kitchen", "A"),
-      ).toBeUndefined();
     });
     it("rejects unresolved furniture references and presentation quality never alters the quote", () => {
       const design = DesignSchema.parse(fixture.v2);

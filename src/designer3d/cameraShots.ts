@@ -1,4 +1,4 @@
-import { Box3, MathUtils, PerspectiveCamera, Vector3 } from "three";
+import { Box3, MathUtils, PerspectiveCamera, Ray, Vector3 } from "three";
 import type { Catalog, DesignDocument } from "../catalog/types";
 import {
   cabinetBounds,
@@ -11,6 +11,7 @@ import {
 import {
   cutInView,
   HERO_STANCE_MAX,
+  STANCE_MAX_HEIGHT,
   stanceWall,
   WALL_SIDES,
   type WallSide,
@@ -105,14 +106,7 @@ export function heroHeading(design: DesignDocument) {
     z += Math.cos(c.rotation) * c.width;
     total += c.width;
   }
-  if (Math.hypot(x, z) >= 0.35 * total) return new Vector3(x, 0, z).normalize();
-  // Runs facing each other (parallel, walk-in): look along the aisle.
-  const longest = runs.reduce((a, b) => (b.width > a.width ? b : a));
-  return new Vector3(
-    Math.cos(longest.rotation),
-    0,
-    -Math.sin(longest.rotation),
-  ).normalize();
+  return new Vector3(x, 0, z).normalize();
 }
 
 /** Vertical FOV needed to keep every corner in frame from `eye`, looking at
@@ -368,8 +362,8 @@ function searchInteriorHero(
               : new Vector3(halfW, y, s - halfD);
       return { wall: o.wall, centre };
     });
-  // Staged floor props (bench, stools) are either wholly in the picture or
-  // out of it; a half-cropped bench at the bottom edge looks like a mistake.
+  // Staged floor props (stools) are either wholly in the picture or out of
+  // it; a half-cropped stool at the bottom edge looks like a mistake.
   const props = resolveRoom(design)
     .props.filter((p) => p.id !== "pendant")
     .map(({ volume }) => {
@@ -520,6 +514,220 @@ function searchInteriorHero(
   };
 }
 
+/** Points just in front of a unit's front face (centred scene frame), on a
+ * 5 × 2 grid inside its edges. */
+export function frontFacePoints(
+  design: DesignDocument,
+  catalog: Catalog,
+  id: string,
+) {
+  const c = design.cabinets.find((c) => c.id === id);
+  if (!c) return [];
+  const box = cabinetBounds({ ...design, cabinets: [c] }, catalog);
+  const y0 = box.min.y,
+    h = box.max.y - box.min.y,
+    w = c.width / 100,
+    z = c.depth / 200 + 0.03;
+  return [-0.4, -0.2, 0, 0.2, 0.4].flatMap((u) =>
+    [0.3, 0.7].map(
+      (v) =>
+        new Vector3(
+          c.x / 100 -
+            design.room.width / 200 +
+            u * w * Math.cos(c.rotation) +
+            z * Math.sin(c.rotation),
+          y0 + v * h,
+          c.z / 100 -
+            design.room.depth / 200 -
+            u * w * Math.sin(c.rotation) +
+            z * Math.cos(c.rotation),
+        ),
+    ),
+  );
+}
+
+/** How much of a unit's front `position` sees past the other furniture.
+ * Front parts that a neighbour stands against (the blind side of a corner
+ * unit) are not counted; `middle` is the exposed point nearest the centre
+ * of the exposed front. */
+export function frontVisibility(
+  design: DesignDocument,
+  catalog: Catalog,
+  id: string,
+  position: Vector3,
+) {
+  const others = design.cabinets
+    .filter((c) => c.id !== id)
+    .map((c) =>
+      cabinetBounds({ ...design, cabinets: [c] }, catalog).expandByScalar(
+        -0.01,
+      ),
+    );
+  const exposed = frontFacePoints(design, catalog, id).filter(
+    (p) => !others.some((box) => box.containsPoint(p)),
+  );
+  if (!exposed.length) return { middle: false, share: 0 };
+  const centre = exposed
+    .reduce((sum, p) => sum.add(p), new Vector3())
+    .divideScalar(exposed.length);
+  const seen = exposed.map(
+    (p) => !others.some((box) => segmentHitsBox(position, p, box)),
+  );
+  const middle = exposed.reduce(
+    (best, p, i) =>
+      p.distanceTo(centre) < exposed[best].distanceTo(centre) ? i : best,
+    0,
+  );
+  return {
+    middle: seen[middle],
+    share: seen.filter(Boolean).length / exposed.length,
+  };
+}
+
+/** Share of the frame covered by other furniture standing much nearer the
+ * camera than the subject (an oven filling half of a corner close-up). */
+export function foregroundClutter(
+  view: CameraView,
+  aspect: number,
+  obstacles: Box3[],
+) {
+  const lens = new PerspectiveCamera(view.fov ?? 35, aspect, 0.05, 50);
+  lens.position.set(...view.position);
+  lens.lookAt(new Vector3(...view.target));
+  lens.updateMatrixWorld();
+  const near = 0.6 * lens.position.distanceTo(new Vector3(...view.target));
+  const ray = new Ray(),
+    hit = new Vector3();
+  let blocked = 0,
+    total = 0;
+  for (let i = 0; i < 6; i++)
+    for (let j = 0; j < 5; j++) {
+      const u = -0.85 + (1.7 * i) / 5,
+        v = -0.8 + (1.6 * j) / 4;
+      ray.origin.copy(lens.position);
+      ray.direction
+        .set(u, v, 0.5)
+        .unproject(lens)
+        .sub(lens.position)
+        .normalize();
+      total++;
+      if (
+        obstacles.some(
+          (box) =>
+            ray.intersectBox(box, hit) && hit.distanceTo(lens.position) < near,
+        )
+      )
+        blocked++;
+    }
+  return blocked / total;
+}
+
+/** Order of the wall boxes at the end of cameraObstacles(). */
+const WALL_ORDER: WallSide[] = ["back", "front", "left", "right"];
+const INSPECT_ANGLES = [0, 15, -15, 30, -30, 45, -45, 60, -60];
+const INSPECT_FOVS = [35, 45, 55, 65];
+/**
+ * Close-up of one unit. Searches viewing angles (straight on first, then up
+ * to 60° to either side), eye heights and lens widths for a camera that
+ * stands in the room (or at eye level just behind one hidden wall), is not
+ * inside other furniture, and sees the unit's front past everything else,
+ * e.g. a corner carousel next to a tall fridge.
+ */
+export function inspectionShot(
+  design: DesignDocument,
+  catalog: Catalog,
+  id: string,
+  aspect: number,
+  opened?: readonly string[],
+): CameraView | null {
+  const c = design.cabinets.find((c) => c.id === id);
+  if (!c) return null;
+  const straight = inspectionCamera(design, id, catalog)!;
+  const others = design.cabinets
+    .filter((o) => o.id !== id)
+    .map((o) => cabinetBounds({ ...design, cabinets: [o] }, catalog));
+  // Frame the part of the front a customer can see (a corner unit's door,
+  // not the blind part behind its neighbour); an open unit keeps the room
+  // its doors swing into.
+  const own = cabinetBounds({ ...design, cabinets: [c] }, catalog);
+  const exposed = frontFacePoints(design, catalog, id).filter(
+    (p) => !others.some((box) => box.containsPoint(p)),
+  );
+  const bounds = opened?.includes(id)
+    ? furnitureEnvelope({ ...design, cabinets: [c] }, catalog, [id])
+    : new Box3().setFromPoints(
+        exposed.length ? exposed : [own.getCenter(new Vector3())],
+      );
+  bounds.min.y = Math.min(bounds.min.y, own.min.y);
+  bounds.max.y = Math.max(bounds.max.y, own.max.y);
+  bounds.expandByVector(new Vector3(0.14, 0.06, 0.14));
+  const solids = design.cabinets
+    .filter((o) => o.id !== id)
+    .map((o) =>
+      cabinetBounds({ ...design, cabinets: [o] }, catalog).expandByScalar(0.15),
+    );
+  const roomWalls = cameraObstacles(design, catalog).slice(-4);
+  const ceiling = design.room.height / 100 - 0.15;
+  const eyes = [straight.position[1], 1.85, 2.1].filter((y) => y <= ceiling);
+  const forward = new Vector3(
+    straight.position[0] - straight.target[0],
+    0,
+    straight.position[2] - straight.target[2],
+  ).normalize();
+  let best: { view: CameraView; cost: number } | null = null;
+  for (const [ei, eye] of eyes.entries())
+    for (const fov of INSPECT_FOVS)
+      for (const angle of INSPECT_ANGLES) {
+        const heading = forward
+          .clone()
+          .applyAxisAngle(new Vector3(0, 1, 0), MathUtils.degToRad(angle));
+        const target = new Vector3(...straight.target);
+        const view = cabinetCamera(
+          bounds,
+          "perspective",
+          aspect,
+          {
+            target: target.toArray(),
+            position: target.clone().add(heading).setY(eye).toArray(),
+          },
+          0.84,
+          fov,
+        );
+        const p = new Vector3(...view.position);
+        const behind = stanceWall(p, design.room);
+        if (behind === "invalid" || p.y > ceiling) continue;
+        if (solids.some((box) => box.containsPoint(p))) continue;
+        // Behind a hidden wall only as an eye-level photograph: none of the
+        // wall's cut edges (and the dark outside) may show.
+        if (behind) {
+          if (p.y > STANCE_MAX_HEIGHT) continue;
+          const lens = new PerspectiveCamera(fov, aspect, 0.05, 50);
+          lens.position.copy(p);
+          lens.lookAt(new Vector3(...view.target));
+          lens.updateProjectionMatrix();
+          if (cutInView(lens, design.room, behind)) continue;
+        }
+        const seen = frontVisibility(design, catalog, id, p);
+        if (!seen.middle) continue;
+        // Walls count too, except one the camera stands behind (hidden).
+        const walls = roomWalls.filter((_, i) => WALL_ORDER[i] !== behind);
+        const clutter = foregroundClutter({ ...view, fov }, aspect, [
+          ...others,
+          ...walls,
+        ]);
+        if (clutter > 0.3) continue;
+        const cost =
+          clutter * 160 +
+          Math.abs(angle) +
+          (fov - 35) * 0.9 +
+          ei * 14 +
+          (behind ? (p.y > STANCE_MAX_HEIGHT ? 60 : 18) : 0) +
+          (1 - seen.share) * 120;
+        if (!best || cost < best.cost) best = { view: { ...view, fov }, cost };
+      }
+  return best?.view ?? null;
+}
+
 export function roomShot(
   design: DesignDocument,
   catalog: Catalog,
@@ -532,6 +740,18 @@ export function roomShot(
   } = {},
 ) {
   const focused = design.cabinets.find((c) => c.id === options.focus);
+  if (focused) {
+    const close = inspectionShot(
+      design,
+      catalog,
+      focused.id,
+      aspect,
+      options.opened,
+    );
+    if (close) return close;
+  }
+  // A view the customer had before inspecting: restored exactly.
+  if (!focused && options.authored?.exact) return options.authored;
   const interior =
     shot === "hero" && !focused && aspect >= HERO_MIN_ASPECT
       ? interiorHero(design, catalog, aspect, options.opened)
@@ -548,7 +768,7 @@ export function roomShot(
         );
   if (focused) bounds.expandByScalar(0.08);
   const heading = focused
-    ? inspectionCamera(design, focused.id)!
+    ? inspectionCamera(design, focused.id, catalog)!
     : (options.authored ??
       ({
         // Warm kitchen: slightly oblique across the worktop. Dressing room:

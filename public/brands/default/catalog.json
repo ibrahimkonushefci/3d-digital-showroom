@@ -1325,10 +1325,10 @@
         "de": "F206 PM · Black Pietra Grigia"
       },
       "tier": "compact",
-      "color": "#85817a",
-      "texture": "shared/textures/granite-color.webp",
-      "normalMap": "shared/textures/granite-normal.webp",
-      "roughnessMap": "shared/textures/granite-roughness.webp",
+      "color": "#3c3d3c",
+      "texture": "shared/textures/f206-color.webp",
+      "normalMap": "shared/textures/marble-normal.webp",
+      "roughnessMap": "shared/textures/f206-roughness.webp",
       "roughness": 0.3,
       "multiplier": 1,
       "perMeter": 150,
@@ -2681,17 +2681,7 @@
         "width": 360,
         "depth": 300,
         "height": 270,
-        "openings": [
-          {
-            "id": "wardrobe-warm-v1-staged-window",
-            "wall": "right",
-            "type": "window",
-            "offset": 100,
-            "width": 100,
-            "height": 120,
-            "sill": 100
-          }
-        ]
+        "openings": []
       },
       "style": {
         "front": "cashmere",

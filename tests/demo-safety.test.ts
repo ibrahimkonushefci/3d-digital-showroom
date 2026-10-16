@@ -8,7 +8,6 @@ import {
 import { examples } from "../src/designer3d/layout";
 import { saveDesign, restoreSummary } from "../src/persistence";
 import { withDemoContacts } from "../src/brand/contacts";
-import { messageUrl } from "../src/sharing";
 const read = (slug: string, file: string) =>
   JSON.parse(readFileSync(`public/brands/${slug}/${file}.json`, "utf8"));
 const catalog = CatalogSchema.parse(read("default", "catalog"));
@@ -48,16 +47,6 @@ describe("demo safety", () => {
     expect(
       withDemoContacts({ ...brand, demo: false }, "+38344123456").contact.phone,
     ).toBe("");
-    expect(messageUrl("viber", brand, "hello")).toBe(
-      "viber://forward?text=hello",
-    );
-    expect(
-      messageUrl(
-        "whatsapp",
-        { ...brand, contact: { ...brand.contact, phone: "+383 44 123456" } },
-        "hi",
-      ),
-    ).toBe("https://wa.me/38344123456?text=hi");
   });
   it("isolates product catalogs and requires sections for enabled tools", () => {
     for (const slug of ["default", "druri-design"]) {

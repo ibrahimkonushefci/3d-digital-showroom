@@ -5,10 +5,17 @@ import de from "./de.json";
 import type { Language } from "../catalog/types";
 const translations = { sq, en, de };
 export type TranslationKey = keyof typeof en;
-const initial =
-  typeof localStorage === "undefined"
+// ?lang=en|sq|de in the address wins (review links), then the saved choice.
+const requested =
+  typeof location === "undefined"
     ? null
-    : localStorage.getItem("showroom-language");
+    : new URLSearchParams(location.search).get("lang");
+const initial =
+  requested === "en" || requested === "de" || requested === "sq"
+    ? requested
+    : typeof localStorage === "undefined"
+      ? null
+      : localStorage.getItem("showroom-language");
 export const useLanguage = create<{
   language: Language;
   setLanguage: (l: Language) => void;

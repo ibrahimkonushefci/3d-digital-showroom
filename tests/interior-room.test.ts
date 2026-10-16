@@ -8,11 +8,7 @@ import {
   BoxGeometry,
 } from "three";
 import { CatalogSchema } from "../src/catalog/types";
-import {
-  generateLayout,
-  hobCabinet,
-  newDesign,
-} from "../src/designer3d/layout";
+import { hobCabinet } from "../src/designer3d/layout";
 import { presentationPresets } from "../src/designer3d/presets";
 import {
   insideWall,
@@ -113,13 +109,6 @@ it("hangs wall art only on a wall without cabinets or openings", () => {
     expect(x).toBeGreaterThanOrEqual(0);
     expect(x).toBeLessThanOrEqual(w);
   }
-  // A room lined with cabinets on every wall gets no art.
-  const u = generateLayout(newDesign("kitchen", "u"), catalog)!;
-  const art = wallArt(u);
-  if (art)
-    expect(
-      u.cabinets.some((c) => art.position[2] < 0.01 && c.wall === "back"),
-    ).toBe(false);
 });
 
 it("decor and lighting never change the quote", () => {

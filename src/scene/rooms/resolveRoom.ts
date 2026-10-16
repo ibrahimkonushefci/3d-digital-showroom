@@ -53,17 +53,6 @@ export function resolveRoom(design: DesignDocument) {
     )
       props.push({ id, position, rotation: [0, yaw, 0], volume });
   };
-  if (furnished && design.kind === "wardrobe") {
-    // Search predictable free zones; omit when drawer/door clearance is unavailable.
-    for (const [x, z] of [
-      [0.64, 0.68],
-      [design.room.width / 200, design.room.depth / 200 + 0.22],
-      [design.room.width / 100 - 0.64, design.room.depth / 100 - 0.68],
-    ]) {
-      place("bench", [x, 0, z]);
-      if (props.length) break;
-    }
-  }
   if (furnished && design.kind === "kitchen") {
     const island = design.cabinets.filter((c) => c.wall === "island");
     for (const c of island.filter((_, i) => i % 2 === 0).slice(0, 2)) {

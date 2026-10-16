@@ -8,6 +8,8 @@ export type CameraView = {
   target: [number, number, number];
   /** Vertical field of view in degrees; omitted means CABINET_FOV. */
   fov?: number;
+  /** Restore this exact view (e.g. the one before an inspection). */
+  exact?: boolean;
 };
 export type CameraPreset = "perspective" | "hero" | "overall" | "front" | "top";
 export const CABINET_FOV = 35;
@@ -195,8 +197,7 @@ export function orbitLimits(
   };
   let minAzimuth = start - reach(-1),
     maxAzimuth = start + reach(1);
-  // U-shapes, parallel runs and walk-ins face each other: no angle sees every
-  // front, so allow a comfortable swing around the authored view instead.
+  // Safety net: never lock the orbit to a sliver around the authored view.
   if (maxAzimuth - minAzimuth < 60 * DEG) {
     minAzimuth = start - 40 * DEG;
     maxAzimuth = start + 40 * DEG;
@@ -232,12 +233,15 @@ export function recenterTarget(
 export function inspectionCamera(
   design: DesignDocument,
   id: string,
+  catalog?: Catalog,
 ): CameraView | null {
   const c = design.cabinets.find((c) => c.id === id);
   if (!c) return null;
+  // Aim at the unit's real height: wall cabinets hang above the worktop.
+  const box = cabinetBounds({ ...design, cabinets: [c] }, catalog);
   const target: [number, number, number] = [
     c.x / 100 - design.room.width / 200,
-    c.height / 200,
+    (box.min.y + box.max.y) / 2,
     c.z / 100 - design.room.depth / 200,
   ];
   return {

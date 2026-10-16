@@ -25,6 +25,9 @@ import {
 } from "./lightingRecipe";
 
 const pending = new WeakSet<Scene>();
+/** Scenes whose first probe has run: later edits debounce, the first runs
+ * as soon as loading allows, behind the loading cue. */
+const probed = new WeakSet<Scene>();
 const slowRenderers = new WeakSet<WebGLRenderer>();
 export const environmentPending = (scene: Scene) => pending.has(scene);
 export const EnvironmentPolicy = createContext<"auto" | "authored">("auto");
@@ -208,7 +211,8 @@ export function RoomEnvironment({
           invalidate();
         }
       };
-      timer = setTimeout(refresh, 650);
+      timer = setTimeout(refresh, probed.has(scene) ? 650 : 0);
+      probed.add(scene);
     } else
       status.fallbackReason = !probeResolution
         ? "manual-performance"

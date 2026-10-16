@@ -44,6 +44,35 @@ Additional findings from the latest review that must be addressed:
 9. **Baked lighting:** the implementer judges whether the Phase 3 bake is a suitable starting point (recommendation in Phase 2 below).
 10. **Cleanup:** remove obsolete planning material, review evidence and other files no longer relevant; reduce unnecessary project size while keeping everything the app needs. Distinguish local-folder cleanup from changes that actually reduce downloads, memory use or rendering cost.
 
+### 2.1 Owner feedback after testing the first Phase 1 build (16 October 2026)
+
+Phase 1 was **not approved**. The owner tested the build and asked for the following. The plan keeps three phases; the "Look" panel work that Phase 3 described moves forward into Phase 1 (round 2), and the Home page redesign joins Phase 2 (owner choice: design Home together with the final rooms and colours).
+
+- **General:** each panel tab remembers its own scroll position (an unvisited tab starts at the top). *Inspect up close* is a toggle: a second press returns to the camera position from before the inspection. The reset confirmation is a small notice at the bottom right with Undo that never moves or resizes the showroom. Beginner-friendly wording and visual choices instead of technical terms. Keep every finish colour, but drop the separate "Colour" step: browse finishes in clear visual collections with better previews. Smoothness and quality remain priorities; performance counts as verified only with the owner's visible-Chrome measurements.
+- **Room & layout:** remove the *Daylight window*, *Interior door* and *Room openings* editors (they cause fit errors and are not needed); the rooms keep their staged windows, doors and garden; the Corner wardrobe keeps no middle window. Floors get small image previews. Wall colours: a short list of useful colours, no custom picker. Custom dimensions stay, shown expanded, and must behave predictably: changing the L kitchen from 420 × 360 × 270 to 440 × 360 × 280 rebuilt it from 15 to 19 units. Layout icons small enough to fit in one row on the laptop.
+- **Styles & finishes:** a much clearer visual explanation of which parts a finish scope changes; real-looking previews for handles and front styles; no backsplash control; no carcass control (it follows the chosen finish or collection); one simple worktop choice instead of the worktop-scope controls; no "Clear this scope's overrides" or similar technical wording.
+- **Showroom and editing:** no *Cabinets & Units* tab in Showroom mode (unit management belongs to editing). Inspecting the Corner carousel put the camera behind the fridge; fix it and check every inspection position. Continue towards the visual adding/replacing experience (Phase 3).
+- **Wardrobes:** the same improvements, including handle and front-style previews; remove the wardrobe Plinth control (no useful visible difference); keep finish choice and interior editing simple.
+- **Home page:** a complete modern redesign that feels like a small furniture website or catalogue, with the Showroom as the standout feature; attractive browsing of kitchens, wardrobes and ready-made designs; entering the Showroom obvious; lightweight. → Phase 2.
+
+### 2.2 Owner feedback after Round 2 — final Phase 1 pass (16 October 2026)
+
+Round 2 was generally accepted (Codex re-check: 188 tests and the asset check passed; Inspect return, tab scroll memory, scoped finishes, Undo and separate island worktops worked). One focused final pass, then Phase 1 closes. No expansion into small bugs or unrelated improvements.
+
+1. **Dimensions:** room and furniture dimensions were confused. Kitchens keep *Kitchen width*; L layouts add a clearly named second side length; Straight and Island hide room depth; the ceiling control is called *Ceiling height*; kitchen-unit heights stay fixed (no adjustable-height system). Wardrobes the same: room depth must not look like wardrobe depth; wardrobes that get shorter under a lower ceiling must say so. Compact / Standard / Spacious follow the same simplified dimensions.
+2. **Essential appliances:** Cashmere L → Compact → 200 × 200 cm fell to four units without fridge, hob and hood. Essential units must stay; rejecting a size that cannot keep them is acceptable.
+3. **Preview images:** floor, front-style and handle pictures looked like weak screenshots; make them attractive, clear and easy to tell apart. Previews and scene materials must show the intended choice (F206 Black Pietra Grigia looked pale and speckled in both). Keep Ready-made looks and the visual Fronts and handles approach.
+4. **Colour browsing:** keep every colour; Ready-made looks stay prominent; choosing a colour should be straightforward with material details secondary (kitchens and wardrobes).
+5. **Wall colours:** swatches without visible names; names stay as tooltips and accessibility labels.
+
+Performance felt good overall (very little lag); preserve it. Room presentation and the Home redesign stay in Phase 2; Edit units and the wardrobe-interior redesign stay in Phase 3.
+
+### 2.3 Phase 1 approved (16 October 2026)
+
+The owner **approved Phase 1, including the final pass**, and asked for it to be committed on `main` (192 tests and the build passed). One limitation is accepted and tracked, not fixed in Phase 1:
+
+- **Accepted limitation — zoom lag with Performance mode OFF.** Zooming in and out still lags badly in the owner's normal Chrome window when Performance mode is OFF. The cause is unresolved. Normal-Chrome FPS has **not** been measured (the `?fps=1` protocol in section 7 has not been run by the owner). This does not block Phase 1 and no further performance round starts now. Future work: run the section 7 protocol with Performance mode OFF, paste the reports, find the cause from them (candidates in 4.2) and fix it. Phase 2 must not make it worse: keep added room detail cheap (few draw calls, small textures, no new per-frame work).
+
 ## 3. Current Git state and work already done
 
 Verified on 16 October 2026:
@@ -59,7 +88,8 @@ Verified on 16 October 2026:
 - This plan file itself is **not committed yet**; commit it at the start of Phase 1 (or with it).
 - Cleanup already done in `167e359`: removed `3d_designer.md`, `SHOWROOM_REALISM_PLAN.md`, `SHOWROOM_CORRECTION_PLAN.md`, `public/qa.html` and ~590 tracked historical evidence files under `verification/`. Their still-useful content is condensed into `README.md`. `verification/` is now in `.gitignore` (review evidence stays local).
 - Still present locally, untracked and ignored (about 115 MB, **not recoverable once deleted**): `verification/correction-review/` (27 MB; contains `competitors/` reference images used for the room direction and `tools/`), `verification/phase1-review/` (57 MB), `verification/phase2-review/` (11 MB), `verification/phase3-review/` (19 MB), `verification/independent-phase1-review/` (1.6 MB). Owner decision 10 authorises removing obsolete evidence; see Phase 1, step 1.
-- `.claude/launch.json` (untracked) has two preview configurations: `dev` (Vite dev server, port 5203) and `prod` (`vite preview` of `dist`, port 52775). Use `preview_start` with these names; never start servers through Bash.
+- `.claude/launch.json` (untracked) has three preview configurations: `dev` (Vite dev server, port 5203), `prod` (`vite preview` of `dist`, port 52775) and `baseline` (`vite preview` of `verification/phase1-review/baseline-dist`, port 52776, the "before" build for the Phase 1 gate). Use `preview_start` with these names; never start servers through Bash. A second preview of `dist` on port 52777 was used as the "after" build in the first Phase 1 review.
+- **Phase 1 status (16 October 2026, afternoon):** round 1 is implemented in the working tree on `main` (uncommitted; report in `verification/phase1-review/REPORT.md`). The owner reviewed it and asked for round 2 (section 2.1, Phase 1 step 6). Round 1's build is kept as `verification/phase1-review/round1-dist` for comparison. Round 2 is implemented in the working tree (uncommitted, report in `verification/phase1-review/round2/REPORT.md`). The owner then asked for one final pass (section 2.2, Phase 1 step 7); it is implemented in the working tree (uncommitted, "Final pass" section of the same report; the Round 2 build is kept as `verification/phase1-review/round2-dist`). **Phase 1 was approved by the owner on 16 October 2026 and committed on `main`** (section 2.3). Normal-Chrome FPS is still not measured; zoom lag with Performance mode OFF is an accepted, tracked limitation.
 - Node is `/opt/homebrew/bin/node` (v26), pnpm `/opt/homebrew/bin/pnpm`. Blender 5.2 at `/Applications/Blender.app` (local authoring only, run headless).
 
 ## 4. Findings
@@ -156,13 +186,54 @@ Three phases, each producing a visible, reviewable result. Order: simplify and m
 - **Offers**: Summary page keeps the picture, item list, total and **Download PDF**. Remove the offer/customer form (client, salesperson, discount, validity, notes), send buttons (WhatsApp/Viber/native share/"send to anyone"), share-link buttons and related Settings fields from the interface. Keep pricing. Remove code that becomes unused; keep share-link *reading* only if it stays cheap, otherwise remove `lz-string` too.
 - Download reduction: exclude the PDF's optional `html2canvas` (and `dompurify` if unused by the PDF path) from the build, or at least from the precache (≈ 230 KB). Remove unused models/recipes/textures found by the asset check.
 
-**Preserves:** the three kitchen and two wardrobe prepared designs, rooms, Phase 2 objects, Phase 3 bake pipeline, lighting, prices, branding and `/setup`, SQ/EN/DE, offline use, undo/redo, Performance mode.
+**Step 6 — Review round 2 (owner feedback, section 2.1)**
 
-**What the owner should notice:** fewer buttons; a sharper picture when still; smooth zoom and orbit from the first seconds; gardens in every window; no black flash.
+*Behaviour*
 
-### Phase 2 — A convincing room and better default colours
+- Panel tabs: one remembered scroll position per tab (and per Showroom/Edit mode); a tab not yet visited opens at the top.
+- *Inspect up close* toggles. Pressing it stores the live camera (position and target); pressing it again, or *Back* on the unit card, glides back to exactly that view. Other camera buttons still go to their presets.
+- Notices (reset done, design replaced, fit problems, units removed by a resize) become small toasts at the bottom right, outside the page flow, with Undo where it applies. The header buttons keep one height.
+- Inspection camera: replace the fixed "4 m in front of the unit" heading with a search over viewing angles (straight on, then up to ±60°) and eye heights that keeps the camera inside the room and keeps the line of sight from the camera to the unit's front free of other furniture (`segmentHitsBox` on `cameraObstacles`). Aim at the unit's real height (wall cabinets were aimed at floor level). A unit test checks every unit of all five prepared designs.
+- Showroom mode shows only *Styles* and *Room*; a selected unit shows its card (name, size, open/close, inspect, and for wardrobes "Edit inside" that switches to editing). Units and interiors are edited in Edit mode.
 
-**Goal:** the opening views read as real, furnished rooms at the level of the competitor references, with crisper default colour combinations.
+*Predictable room size and layout*
+
+- Cause of 15 → 19 units: every room change (custom dimensions, the size buttons) discarded the prepared units and ran the greedy generator (`generateLayout`: units of at most 60 cm, a wall cabinet above every base unit). Room height played no part.
+- New pure `resizeRoom(design, room, catalog)`: keeps every unit and its order; each wall run stays attached to its corner, and a block of tall units at the far end of a run stays at that end; extra length is absorbed by widening flexible units (doors, drawers, wall cabinets, pantry and wardrobe units, keeping wall cabinets aligned with the base units below) to other catalogue widths; a remaining gap of at least 30 cm gets a matching unit (base + wall cabinet, or a wardrobe unit); shrinking narrows flexible units first, then removes the least important ones from the open end (never sink, hob, oven, fridge or corner while others can go). Wardrobe heights follow the room height. The staged window keeps its wall and is moved only when it no longer fits. A toast reports added or removed units, with Undo. Unit tests: the 440 × 360 × 280 case keeps 15 units, growth/shrink steps change the count by at most what is needed, and every result passes `validateDesign`.
+- Layout buttons start from that layout's prepared design (same units and arrangement as on Home), resized to the current room and keeping the current finishes, instead of the generator.
+
+*Room tab*
+
+- Remove the window, door and opening editors; existing openings in designs stay. Layout icons in one compact row (three kitchen layouts, two wardrobe layouts). Room size buttons, then *Custom dimensions* expanded (width, depth, height, Apply; Enter applies; invalid values explained in place). Floor choices as small image tiles. Five wall colours (off-white, warm white, warm grey, sage grey, charcoal) without a custom picker; a design whose colour is not in the list shows it as a sixth "current" tile until changed.
+
+*Styles tab (kitchens and wardrobes)*
+
+- Order: **Ready-made looks** (the existing collections, as picture cards rendered from the real scene) → **Fronts** → **Front style** → **Handles** → **Worktop** (kitchens) → **Plinth** (kitchens only).
+- **Which parts change** ("Whole kitchen / Wall cabinets / Base cabinets / Tall units / Island / Selected unit"; wardrobes: "All wardrobes / Selected unit") with a small drawing for each choice that highlights the affected parts. It applies to fronts, front style and handles. Choosing "Whole kitchen" now really changes every unit (it also clears per-zone and per-unit choices for that property), a zone choice changes every unit in the zone, and a single unit that differs offers "Match the rest of the kitchen". This replaces "Apply defaults to all / clear overrides" and the related hints.
+- **Fronts:** the five material tiers shown together as collections (heading = material, with a simple price hint), each with its colours as picture tiles and names; no separate tier dropdown and Colour step. All 32 finishes stay.
+- **Front style** and **Handles:** picture cards rendered from the real 3D front (flat / panelled; handle-free, steel bar, Gola profile, black bar).
+- **Worktop:** one row of picture tiles for all worktops (material name under each); for kitchens with an island a switch "Different worktop on the island" reveals a second row. No worktop-scope dropdown.
+- **Removed controls:** backsplash (stored value kept), carcass (follows the front: light fronts → white, dark → graphite, oak-like wood → oak, collections keep their own), wardrobe plinth.
+- Previews are rendered by a script from the real scene materials (dev-only page + `scripts/review/render-previews.mjs`) into small WebP files under `public/shared/previews/` with a manifest; a missing preview falls back to the colour swatch. Re-run after Phase 2 changes colours or rooms. Phase 3 reuses the same script for unit picture cards.
+
+*Wardrobes:* the same Styles and Room changes; interior editing stays under the selected wardrobe in Edit mode, with the redesign of its controls in Phase 3.
+
+**Step 7 — Final pass (owner feedback, section 2.2)**
+
+- *Dimensions* (`RoomPanel.tsx`): fields follow the layout. Straight and Island kitchens: **Kitchen width** and **Ceiling height** (room depth is hidden and kept); L kitchens add **Second side length** (the left wall, i.e. the room depth). Wardrobes: **Wardrobe width**, **Second side length** for Corner, **Ceiling height**. Kitchen units keep fixed heights (a short line says so); for wardrobes a live line says how tall they will be under the ceiling being entered ("made 220 cm tall to fit, normally 230 cm"), and the room notice reports it. The size buttons per layout: one number for one-wall layouts (Straight 3.2 / 4.2 / 5 m, Island 4 / 4.8 / 5.6 m, wardrobes 2.8 / 3.6 / 4.4 m), two for L / Corner. The canvas caption reads "420 × 360 cm · Ceiling height 270 cm". The custom form skips the browser's step validation (it silently blocked values such as a 225 cm ceiling).
+- *Essential units* (`resize.ts`): sink, hob with its hood, oven, fridge and corner unit are never removed and every wall run keeps at least one unit; a size that cannot keep them is rejected, the design stays unchanged and the form names the smallest size that works (`smallestRoom`, e.g. 210 × 210 cm for the Compact Cashmere L). Dishwasher and pantry may still go after the flexible units.
+- *Materials*: F206 gets its own dark stone map (`f206-color/roughness`, derived from the CC0 Marble012 veining; it used the pale granite map and colour); the concrete map loses its terrazzo pebbles; the tiles map gets 5 mm grout joints (`art/textures/derive_surfaces_phase1.py`).
+- *Previews* (`PreviewRender.tsx`): floors as an empty room corner with skirting; front style as a three-quarter product view of a sage unit (kitchen) and a close view of the upper door corners (wardrobe, where the frame is a fine groove); handles on a cashmere drawer unit at three-quarters (kitchen) and at handle height (wardrobe). All 64 pictures re-rendered. `render-previews.mjs` gained a try-out mode (`PREVIEW_OUT`, `PREVIEW_CAM`); stage cameras sit at least 1.6 m from their target (orbit limits).
+- *Colour browsing* (`StylesPanel.tsx`, `frontColours.ts`): one grid of 11 colours (identical-looking finishes grouped, light to dark, wood decors last); below it **Material for <colour>** with the materials that colour comes in and a €–€€€€ hint. Changing colour keeps the material when available. Supplier codes appear only to tell two decors apart. All 32 finishes stay selectable; same for wardrobes.
+- *Wall colours*: round swatches only, names as tooltip and accessible label.
+
+**Preserves:** the three kitchen and two wardrobe prepared designs, rooms, Phase 2 objects, Phase 3 bake pipeline, lighting, prices, branding and `/setup`, SQ/EN/DE, offline use, undo/redo, Performance mode, every finish, stored finish zones and per-unit finishes.
+
+**What the owner should notice:** fewer buttons; a sharper picture when still; smooth zoom and orbit from the first seconds; gardens in every window; no black flash. After round 2: picture choices instead of technical lists, a clear "which parts change" drawing, resizing that keeps the kitchen, an Inspect button that takes you back, and notices that never move the showroom.
+
+### Phase 2 — A convincing room, better default colours and a new Home page
+
+**Goal:** the opening views read as real, furnished rooms at the level of the competitor references, with crisper default colour combinations, and a Home page that presents them like a small furniture catalogue with the Showroom as its highlight.
 
 **Room (kitchens):**
 
@@ -170,6 +241,8 @@ Three phases, each producing a visible, reviewable result. Order: simplify and m
 - Sources: free CC0 models and textures (Poly Haven, ambientCG) or other clearly permitted free sources, plus simple architecture built in code. Optimise with the existing pipeline (`scripts/register-decor.mjs`, meshopt + WebP, two detail levels where useful), register in the asset manifest with provenance. Decorative objects are not interactive and never enter the price.
 - Placement through the existing clearance rules, authored per preset where needed; objects omitted when they collide with furniture, opening fronts or doors.
 - Budget: keep shipped size under the existing 9 MB working limit (currently 7.6 MB). Check memory (texture count/size) and frame cost with the `?fps=1` overlay in the owner's Chrome.
+
+- Floors: tile joints and a calmer concrete were added in the Phase 1 final pass (step 7); re-render the floor previews after any further floor change.
 
 **Room (wardrobes):** dressing-room staging without the bench: a mirror, an armchair or pouf, a plant, a rug, soft textiles, framed art; Corner wardrobe without the middle window (Phase 1).
 
@@ -182,20 +255,27 @@ Three phases, each producing a visible, reviewable result. Order: simplify and m
   - Straight wardrobe: white fronts, oak interior (carcass), bar handles, soft sage-grey wall, oak floor.
   - Corner wardrobe: walnut fronts, white interior, handle-free, off-white wall, concrete floor.
 - Present these as rendered before/after images of each preset at the gate; the owner may swap any combination. The previous defaults remain selectable finishes.
-- Consider adding "suggested combinations" (one-tap presets) in the Look tab in Phase 3, without removing any individual colour.
+- The "Ready-made looks" cards (Phase 1 round 2) are the one-tap combinations; align their content with the new defaults and re-render all previews (`scripts/review/render-previews.mjs`) after the rooms and colours are final.
+
+**Home page (owner feedback 2.1):** a complete redesign, lightweight (no new libraries, no 3D on Home):
+
+- Feels like a small furniture website or catalogue: a large photographic header from the best Hero render with one clear call to action "Enter the showroom"; sections for **Kitchens** and **Wardrobes**, each with picture cards of the prepared designs (name, layout, size, "from … €" from the real price calculation) that open the design directly in the Showroom; a short "How it works" strip (choose a design → change colours → get your offer), and the brand's contact details.
+- Showroom is the standout: the call to action, the cards' primary action and the header all lead into it; continuing the last design on this device is offered when one exists.
+- Images are the regenerated Home thumbnails (`scripts/review/capture-thumbnails.mjs --write`) plus one or two larger WebP renders; responsive at 1440×900 down to 390×844; SQ/EN/DE.
+- Gate: before/after screenshots at laptop and phone width, Home download size before/after.
 
 **Baked lighting — recommendation:** keep the bake pipeline as the starting point: it costs almost nothing at runtime (one ~20–30 KB lightmap per preset, applied only while the design is unedited, fading to live lighting on structural edits) and gives softer corners and contact shading. Because Phase 2 changes room contents, windows and wall colours, **re-bake all five presets** after the room is final (`scripts/bake-rooms.mjs`, `scripts/review/calibrate-bakes.mjs`, see README) and decide at the gate with live-vs-baked image pairs. If the bake does not visibly improve the new rooms (for example GTAO plus bake makes corners too dark), remove it to keep the code simpler. Regenerate Home thumbnails (`scripts/review/capture-thumbnails.mjs --write`).
 
 **Preserves:** editing behaviour, prices, Performance mode, offline use, all finishes.
 
-**What the owner should notice:** furnished, believable rooms with real windows and a garden; fronts that separate clearly from walls and floors.
+**What the owner should notice:** furnished, believable rooms with real windows and a garden; fronts that separate clearly from walls and floors; a Home page that looks like a furniture catalogue and leads straight into the Showroom.
 
 ### Phase 3 — Easy editing (kitchens and wardrobes)
 
 **Goal:** someone with no design-software experience can add, remove and replace units without help.
 
-- **Three tabs:** **Look** (suggested combinations from the existing palette first, then fronts, worktop, handles; finish zones and per-cabinet overrides under "More options"), **Units** (picture cards), **Room** (layout, room size, window/door, floor, wall colour). Keep the Showroom / Edit distinction only if it still helps; Edit should land on a clear overview.
-- **Picture cards:** every unit type shown with a small image rendered from the real 3D unit in the current finish (generated by a script into static WebP files per brand, or rendered once at runtime and cached), with its name and available widths.
+- **Tabs:** *Styles* and *Room* were simplified in Phase 1 round 2 (picture choices, "which parts change" drawing, no window/door editors). This phase rebuilds **Units** (Edit mode only). Keep the Showroom / Edit distinction only if it still helps; Edit should land on a clear overview.
+- **Picture cards:** every unit type shown with a small image rendered from the real 3D unit (extend `scripts/review/render-previews.mjs` from Phase 1 into static WebP files; a runtime render in the current finish only if the static ones look wrong next to the chosen finish), with its name and available widths.
 - **Free-space finder:** a pure function on top of `validateDesign` that, for a unit type, lists every wall/level gap where it fits and the largest catalog width that fits each gap (10 cm steps). Unit-tested on full, partly full and empty kitchens and wardrobes.
 - **Drag from the menu:** dragging a card into the 3D view shows a ghost unit that snaps to the nearest valid gap and resizes to the best width; invalid areas show why. Dropping adds it as one undo step.
 - **Easy alternative to dragging:** tap a card → the scene highlights the places it fits ("+ 40 cm"), and the panel lists them ("Back wall, left of the sink — 40 cm"); tap one to place it.
@@ -204,9 +284,12 @@ Three phases, each producing a visible, reviewable result. Order: simplify and m
 - **Wardrobes:** same flow for wardrobe units; "Inside this unit" for shelves, rails, drawers and baskets as picture cards with add/remove/replace and the same "where it fits" help (reuse `interiorValidation.ts`).
 - Touch-friendly sizes stay (44 px minimum). SQ/EN/DE strings for all new text.
 
-**Removes:** text-only unit list and catalog grid, nudge buttons, scope controls shown up front.
+- **Free-space finder and resizing** share code: build the finder on the run/gap analysis of `resizeRoom` (Phase 1 round 2), so "where does it fit" and "what happens when the room changes" give the same answers.
+- **Wardrobe interior:** "Inside this unit" as picture cards (shelf, rail, drawer, basket) with plain-language help; replaces the current interior form controls.
 
-**Preserves:** layout rules (`validateDesign`), pricing, undo/redo, room/layout generation, finishes and finish zones, wardrobe interior data.
+**Removes:** text-only unit list and catalog grid, nudge buttons, interior form controls.
+
+**Preserves:** layout rules (`validateDesign`), pricing, undo/redo, predictable resizing, finishes and finish zones, wardrobe interior data.
 
 **What the owner should notice:** a picture menu of units; drag or tap to place; the app sizes units to the gap and suggests replacements when the room is full.
 
@@ -230,8 +313,10 @@ A phase is not complete because tests pass.
 - Garden visible (not white) through every window in Hero, Front, Overview and Interior for all five presets, including wardrobes.
 - No black frame in ≥ 10 cold-load frame-by-frame captures of the corner wardrobe Interior view.
 - Still images visibly sharper than before at normal viewing distance; seams even.
-- Performance (owner's Chrome, section 7): no automatic quality change; frame rate during the first 10 seconds comparable to later; no sustained drop below ~55 fps while zooming, orbiting and opening fronts; no long frame (> 50 ms) on the first front tap. If the measured numbers fall short, report them honestly with the cause found.
+- Performance (owner's Chrome, section 7) — *not met at approval; accepted as a tracked limitation (section 2.3): zoom lags with Performance mode OFF, FPS unmeasured*: no automatic quality change; frame rate during the first 10 seconds comparable to later; no sustained drop below ~55 fps while zooming, orbiting and opening fronts; no long frame (> 50 ms) on the first front tap. If the measured numbers fall short, report them honestly with the cause found.
 - Tests, build, budget, asset check, offline pass. Download size reported before/after.
+- Round 2 (section 2.1): each tab returns to its own scroll position, an unvisited tab starts at the top; Inspect up close twice returns to the earlier view; Reset shows a bottom-right toast with Undo and the canvas does not move or resize (measured canvas rectangle before/after); the Corner carousel and every other unit of the five prepared designs are visible when inspected; Showroom mode has no Units tab; no window/door/opening editors, backsplash, carcass or wardrobe plinth controls, no custom wall-colour picker, no "overrides" wording; floors, fronts, front styles, handles, worktops and ready-made looks are picture choices; every previous finish is still selectable; "Which parts change" shows a drawing for each choice; the L kitchen resized to 440 × 360 × 280 keeps its 15 units; layout icons fit in one row at 1440×900.
+- Final pass (section 2.2): Straight and Island show only Kitchen width and Ceiling height, L and Corner add Second side length, wardrobes say Wardrobe width; the size buttons match; the Cashmere L at Compact → 200 × 200 is refused with the smallest working size and no essential unit ever disappears (unit test over all prepared designs); a lower ceiling's effect on wardrobe height is stated; F206 reads as dark stone in its picture and the scene; floors, front styles and handles are clearly distinguishable pictures; fronts are chosen by colour, then material; wall colours are text-free swatches with tooltips.
 
 **Phase 2**
 
@@ -240,6 +325,7 @@ A phase is not complete because tests pass.
 - Fronts separate clearly from walls, floors and worktops in all presets; all previous finishes still selectable.
 - Bake decision recorded with live-vs-baked images; Home thumbnails match the first view.
 - Shipped size under 9 MB; performance protocol still passes in the owner's Chrome.
+- Home: reads as a small furniture catalogue; Kitchens, Wardrobes and the prepared designs are browsable as picture cards; "Enter the showroom" is the most prominent action and every card opens its design in the Showroom; works at 1440×900 and 390×844; no heavier than before.
 
 **Phase 3 (task tests, done by the owner without help)**
 

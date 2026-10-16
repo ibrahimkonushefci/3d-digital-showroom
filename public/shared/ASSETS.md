@@ -24,6 +24,7 @@ Downloaded through @Browser from ambientCG, CC0: https://docs.ambientcg.com/lice
 - `tiles-*`: neutral porcelain illustration derived from the licensed concrete source.
 - `quartz-*`: original seeded procedural fine aggregate illustration; CC0 dedication by this project. No supplier-product or species claim.
 - `smooth-*`: original neutral normal/roughness maps for untextured finishes; CC0 dedication by this project.
+- Phase 1 review fixes, 16 October 2026, by `python3 art/textures/derive_surfaces_phase1.py public/shared/textures` (Pillow only, from the maps above; no new downloads): `f206-color` / `f206-roughness` (a dark slate-grey stone with fine light veins for EGGER F206, made by inverting the Marble012 veining; matt), a calmer neutral-grey `concrete-color` / `concrete-normal` with the source's pebbles removed, and `tiles-*` with a grout joint at the 60 cm tile edges.
 
 All new material maps are 1K; no remote runtime asset requests.
 
@@ -34,7 +35,7 @@ These are product-name references only. No proprietary supplier images were down
 - EGGER [H3303 ST10 Natural Hamilton Oak](https://www.egger.com/en/furniture-interior-design/decors/H3303_10?country=GE). H3303 is **not Arlington Oak**. The demo uses the existing licensed veneer, not an exact H3303 scan.
 - EGGER [U708 PM Light Grey](https://www.egger.com/en/furniture-interior-design/decors/U708_PM?country=MT).
 - EGGER [U961 PM Graphite Grey](https://www.egger.com/en/furniture-interior-design/decors/U961_PM), PerfectSense Premium Matt; replaces the brief's non-specific "PerfectSense Matt Anthracite" wording with a verified reference.
-- EGGER [F206 PM Black Pietra Grigia](https://www.egger.com/en/furniture-interior-design/decors/F206_PM?country=XK). The illustrative dark stone map is not an exact vein reproduction.
+- EGGER [F206 PM Black Pietra Grigia](https://www.egger.com/en/furniture-interior-design/decors/F206_PM?country=XK). Uses its own illustrative dark stone map (`f206-*`, derived from Marble012); not an exact vein reproduction.
 - Kronospan [K190 Black](https://kronospan.com/en_EN/decors/view/kronodesign/color/K190/).
 
 `shared/showroom/*.webp` are locally rendered thumbnails of this app's procedural scenes. No third-party interior portfolio images or supplier endorsement is implied.
@@ -79,3 +80,8 @@ All new sources are CC0; provenance is also listed in `licenses/polyhaven-cc0.tx
 ## Phase 3 room lightmaps — 15 October 2026
 
 `bakes/<signature>.webp` (5 files, 20–30 KB each, 1024 px) and `bakes/manifest.json`: original work by this project (same licence as the scripted kit, `original-room-kit-v2`). Each is a Cycles bake (512 samples, Metal GPU) of one prepared design's room shell, made by `art/blender/bake_room.py` from the live scene exported by `scripts/bake-rooms.mjs`; no external input. Atlas layout, encoding (`encodeMax`, gamma 2.2), white balance and the exposure `gain` (from `scripts/review/calibrate-bakes.mjs`) are recorded per entry. The file name is the design's bake signature (`src/scene/bake/signature.ts`): room, openings, LED state and cabinet placement; finishes are not part of it. Home thumbnails `showroom/*.webp` are regenerated from these baked opening views by `scripts/review/capture-thumbnails.mjs`.
+
+## Removed 16 October 2026 (showroom simplification, Phase 1)
+
+- `bench` (original room kit) and `basket` (Poly Haven CC0 decor, placed only beside the bench) were removed with the wardrobe bench: manifest entries and GLBs. Both remain in Git history if a later room needs them.
+- Unused room recipes `kitchen-warm-v1/v2.json` and `wardrobe-warm-v1/v2.json` were removed; `*-v3.json` are the active recipes.

@@ -16,16 +16,19 @@ export function GapShade({
   d: number;
   closed: boolean;
 }) {
-  const [show, setShow] = useState(closed);
+  // Hidden in the same render that opens anything: hiding it from an effect
+  // left one or more frames (more while start-up work was running) showing
+  // this dark plane where the fronts had been, a black flash.
+  const [settled, setSettled] = useState(closed);
   useEffect(() => {
     if (!closed) {
-      setShow(false);
+      setSettled(false);
       return;
     }
-    const timer = setTimeout(() => setShow(true), 900);
+    const timer = setTimeout(() => setSettled(true), 900);
     return () => clearTimeout(timer);
   }, [closed]);
-  return show ? (
+  return closed && settled ? (
     <mesh position={[0, h / 2, d / 2 + 0.0012]} raycast={() => {}}>
       <planeGeometry args={[w - 0.002, h - 0.002]} />
       <meshStandardMaterial color="#14120f" roughness={1} />

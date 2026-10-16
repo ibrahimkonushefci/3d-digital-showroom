@@ -1,12 +1,20 @@
 import { wallPieces, windowFittings } from "../lighting/lightingRecipe";
 import { Fittings } from "../Fittings";
 import { WindowBlind } from "./WindowBlind";
-import { Suspense, useContext, useRef, useMemo } from "react";
+import { Suspense, useContext, useEffect, useRef, useMemo } from "react";
 import { applyShellBake, ShellBake, SHELL_BAKE_KEY } from "../bake/shellBake";
 import { useFrame, useLoader } from "@react-three/fiber";
 import {
+  AlwaysStencilFunc,
+  BackSide,
+  ClampToEdgeWrapping,
+  CylinderGeometry,
+  EqualStencilFunc,
   Group,
   DoubleSide,
+  KeepStencilOp,
+  MirroredRepeatWrapping,
+  ReplaceStencilOp,
   SRGBColorSpace,
   TextureLoader,
   type Camera,
@@ -77,52 +85,112 @@ export function insideRoom(camera: Camera, room: Room) {
     ) && camera.position.y < room.height / 100 - 0.02
   );
 }
+/** Stencil value the window openings write; the garden draws only there. */
+const WINDOW_STENCIL = 1;
+/** Garden backdrop: a curved section around each window, drawn only through
+ * the window's opening (stencil), so every camera that sees a window sees
+ * the garden, and no camera ever sees the backdrop itself beside a cut-away
+ * room. The curve covers grazing angles; the photo repeats mirrored to the
+ * sides so it keeps its natural proportions, and its top and bottom rows
+ * extend into sky and lawn for steep views. */
+const GARDEN_RADIUS = 7;
+const GARDEN_ARC = (220 * Math.PI) / 180;
+/** Angle one copy of the 16:9 photo covers: keeps its proportions. */
+const GARDEN_COPY = Math.PI / 2;
 function ExteriorView({
-  room,
-  w,
   centre,
 }: {
-  room: Room;
-  w: number;
   /** Window centre height above the floor, metres. */
   centre: number;
 }) {
   const texture = useLoader(TextureLoader, EXTERIOR_VIEW);
   texture.colorSpace = SRGBColorSpace;
-  const view = useRef<Group>(null);
-  useFrame(({ camera }) => {
-    if (view.current) view.current.visible = seesInterior(camera, room);
-  });
-  // A distant, fixed garden: real parallax through the glass, never seen
-  // from the cut-away overview.
-  const width = Math.max(9, w * 5),
-    height = (width * 9) / 16;
-  // The photo's horizon sits 68% of its half-height below the centre; put it
-  // at standing eye height so the view lines up with the room.
-  const y = 1.5 - centre + 0.68 * (height / 2);
+  if (texture.wrapS !== MirroredRepeatWrapping) {
+    texture.wrapS = MirroredRepeatWrapping;
+    texture.wrapT = ClampToEdgeWrapping;
+    texture.needsUpdate = true;
+  }
+  const geometry = useMemo(() => {
+    const photoHeight = GARDEN_RADIUS * GARDEN_COPY * (9 / 16),
+      height = 24;
+    // The photo's horizon sits 68% of its half-height below its centre; put
+    // it at standing eye height so the view lines up with the room.
+    const photoCentre = 1.5 - centre + 0.68 * (photoHeight / 2);
+    const g = new CylinderGeometry(
+      GARDEN_RADIUS,
+      GARDEN_RADIUS,
+      height,
+      96,
+      1,
+      true,
+      // three measures theta from +Z; the window looks out along -Z.
+      Math.PI - GARDEN_ARC / 2,
+      GARDEN_ARC,
+    );
+    const uv = g.getAttribute("uv"),
+      position = g.getAttribute("position");
+    for (let i = 0; i < uv.count; i++) {
+      // Seen from inside the curve, theta runs right to left: flip, centre
+      // one copy on the window, mirror copies to the sides.
+      const u = 0.5 + ((0.5 - uv.getX(i)) * GARDEN_ARC) / GARDEN_COPY;
+      const v = 0.5 + (position.getY(i) - photoCentre) / photoHeight;
+      uv.setXY(i, u, v);
+    }
+    return g;
+  }, [centre]);
+  useEffect(() => () => geometry.dispose(), [geometry]);
   return (
-    <group ref={view} userData={{ bakeSkip: true }}>
-      <mesh position={[0, y, -3.2]} raycast={() => {}}>
-        <planeGeometry args={[width, height]} />
-        <meshBasicMaterial
-          map={texture}
-          color="#c9c9c9"
-          side={DoubleSide}
-          fog={false}
-        />
-      </mesh>
-    </group>
+    <mesh
+      geometry={geometry}
+      renderOrder={2}
+      raycast={() => {}}
+      userData={{ bakeSkip: true, aoExclude: true }}
+    >
+      <meshBasicMaterial
+        map={texture}
+        color="#c9c9c9"
+        side={BackSide}
+        fog={false}
+        stencilWrite
+        stencilRef={WINDOW_STENCIL}
+        stencilFunc={EqualStencilFunc}
+        stencilFail={KeepStencilOp}
+        stencilZFail={KeepStencilOp}
+        stencilZPass={KeepStencilOp}
+      />
+    </mesh>
+  );
+}
+/** The window opening, invisible: marks where the garden may draw. It tests
+ * depth, so a cabinet or blind in front of the window keeps covering it. */
+function WindowPortal({ w, h }: { w: number; h: number }) {
+  return (
+    <mesh
+      position={[0, 0, -0.045]}
+      renderOrder={1}
+      raycast={() => {}}
+      userData={{ bakeSkip: true }}
+    >
+      <planeGeometry args={[w, h]} />
+      <meshBasicMaterial
+        colorWrite={false}
+        depthWrite={false}
+        side={DoubleSide}
+        stencilWrite
+        stencilRef={WINDOW_STENCIL}
+        stencilFunc={AlwaysStencilFunc}
+        stencilZPass={ReplaceStencilOp}
+      />
+    </mesh>
   );
 }
 function StudioWindow({
   w,
   h,
-  room,
   centre,
 }: {
   w: number;
   h: number;
-  room: Room;
   centre: number;
 }) {
   const sets = useMemo(() => {
@@ -166,8 +234,9 @@ function StudioWindow({
         />
       </mesh>
       <WindowBlind w={w} h={h} />
+      <WindowPortal w={w} h={h} />
       <Suspense fallback={null}>
-        <ExteriorView room={room} w={w} centre={centre} />
+        <ExteriorView centre={centre} />
       </Suspense>
     </group>
   );
@@ -324,7 +393,6 @@ function WallMesh({
             <StudioWindow
               w={o.width / 100}
               h={o.height / 100}
-              room={room}
               centre={(o.sill + o.height / 2) / 100}
             />
           ) : (

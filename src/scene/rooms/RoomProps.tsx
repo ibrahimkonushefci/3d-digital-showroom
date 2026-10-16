@@ -7,8 +7,7 @@ import { resolveRoom } from "./resolveRoom";
 import { ModelAsset } from "../assets/ModelAsset";
 import { Box } from "../Primitives";
 import { countertopThickness } from "../furnitureMaterials";
-import { freePlacement } from "../assets/placement";
-import { floorBasket, wallArt, worktopDecor, type DecorItem } from "./decor";
+import { wallArt, worktopDecor, type DecorItem } from "./decor";
 /** Decor hanging on a wall disappears with that wall when it is cut away
  * (overview, or the hero stance behind it), instead of floating. */
 function OnWall({
@@ -44,16 +43,6 @@ export function RoomProps({
             catalog.modules.find((m) => m.id === c.moduleId)?.type === "doors",
         )
       : undefined;
-  const bench = room.props.find((p) => p.id === "bench");
-  const rug =
-    bench &&
-    freePlacement(
-      {
-        min: [bench.position[0] - 0.66, 0, bench.position[2] - 0.31],
-        max: [bench.position[0] + 0.66, 0.006, bench.position[2] + 0.43],
-      },
-      design,
-    );
   const decor = useMemo(() => {
     if (!room.furnished) return [];
     const items: DecorItem[] = worktopDecor(
@@ -63,14 +52,8 @@ export function RoomProps({
     );
     const art = wallArt(design);
     if (art) items.push(art);
-    const basket = floorBasket(
-      design,
-      bench?.volume,
-      room.props.map((p) => p.volume),
-    );
-    if (basket) items.push(basket);
     return items;
-  }, [design, catalog, room, counter, bench]);
+  }, [design, catalog, room, counter]);
   return (
     <group userData={{ reflectionStatic: true }}>
       {[...new Set(decor.map((d) => d.id))].map((id) => {
@@ -81,19 +64,6 @@ export function RoomProps({
           </OnWall>
         );
       })}
-      {bench && rug && (
-        <mesh
-          position={[bench.position[0], 0.003, bench.position[2] + 0.06]}
-          receiveShadow
-          raycast={() => {}}
-        >
-          <boxGeometry args={[1.32, 0.006, 0.74]} />
-          <meshStandardMaterial
-            color={room.recipe.finishes.rug}
-            roughness={1}
-          />
-        </mesh>
-      )}
       {[...new Set(room.props.map((p) => p.id))].map((id) => (
         <ModelAsset
           key={id}
@@ -109,12 +79,8 @@ export function RoomProps({
                   <group key={i} position={p.position} rotation={p.rotation}>
                     <Box
                       decorative
-                      size={
-                        id === "bench"
-                          ? [1.05, 0.055, 0.4]
-                          : [0.42, 0.052, 0.38]
-                      }
-                      position={[0, id === "bench" ? 0.4 : 0.67, 0]}
+                      size={[0.42, 0.052, 0.38]}
+                      position={[0, 0.67, 0]}
                       color="#b99c76"
                     />
                     {[-1, 1].flatMap((x) =>
@@ -122,12 +88,8 @@ export function RoomProps({
                         <Box
                           decorative
                           key={`${x}${z}`}
-                          size={[0.028, id === "bench" ? 0.38 : 0.64, 0.028]}
-                          position={[
-                            x * (id === "bench" ? 0.43 : 0.16),
-                            id === "bench" ? 0.19 : 0.32,
-                            z * 0.13,
-                          ]}
+                          size={[0.028, 0.64, 0.028]}
+                          position={[x * 0.16, 0.32, z * 0.13]}
                           color="#293333"
                         />
                       )),

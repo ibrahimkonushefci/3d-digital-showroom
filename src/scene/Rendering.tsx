@@ -4,14 +4,8 @@ import { useEffect, useRef, useState, memo } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows, useProgress } from "@react-three/drei";
 import { ACESFilmicToneMapping, SRGBColorSpace, Vector2 } from "three";
-import {
-  aoScale,
-  aoShouldPause,
-  qualityForFrames,
-  useQuality,
-  useRenderQuality,
-} from "./quality";
-import { activityRevision, motionBoundary } from "./activity";
+import { MOTION_SETTLE_MS, pixelRatios, useQuality } from "./quality";
+import { activityRevision } from "./activity";
 import { useContactTargetOwnership } from "./resources";
 import { pendingModelLoads } from "./assets/ModelAsset";
 import { RenderPipeline } from "./pipeline/RenderPipeline";
@@ -26,12 +20,16 @@ export type CaptureImage = () => Promise<string>;
 export type RegisterCapture = (capture: CaptureImage) => void;
 export const showroomGL = {
   antialias: true,
+  // Window openings mark the garden backdrop's area (RoomShell).
+  stencil: true,
   preserveDrawingBuffer: false,
   toneMapping: ACESFilmicToneMapping,
   outputColorSpace: SRGBColorSpace,
   toneMappingExposure: 0.98,
 };
 const pendingContacts = new WeakSet<import("three").Scene>();
+export const contactsPending = (scene: import("three").Scene) =>
+  pendingContacts.has(scene);
 const CONTACT_OPACITY = 0.28;
 function OwnedContactShadows({
   scale,
@@ -82,14 +80,20 @@ export const RefreshShadows = memo(
     // Wait for the current opening animation/load before recomputing it.
     const [settled, setSettled] = useState(false);
     const [shown, setShown] = useState<string | null>(null);
+    // The first draw happens behind the loading cue, with nothing moving yet.
+    const first = useRef(true);
     useEffect(() => {
       setSettled(false);
       if (quality !== "lightweight") pendingContacts.add(scene);
-      const timer = setTimeout(() => {
-        setSettled(true);
-        setShown(JSON.stringify(revision));
-        pendingContacts.delete(scene);
-      }, 800);
+      const timer = setTimeout(
+        () => {
+          setSettled(true);
+          setShown(JSON.stringify(revision));
+          pendingContacts.delete(scene);
+        },
+        first.current ? 0 : 800,
+      );
+      first.current = false;
       return () => {
         clearTimeout(timer);
         pendingContacts.delete(scene);
@@ -110,65 +114,60 @@ export const RefreshShadows = memo(
     a.bake === b.bake &&
     JSON.stringify(a.revision) === JSON.stringify(b.revision),
 );
-export function Rendering({
-  capture,
-  lockQuality = false,
-  fullAO = false,
-}: {
-  capture?: RegisterCapture;
-  lockQuality?: boolean;
-  /** Presentation-only scenes (offer page, Home, Material Switcher) draw few
-   * frames, so they keep full-resolution AO; the designer uses the quality's. */
-  fullAO?: boolean;
-}) {
+export function Rendering({ capture }: { capture?: RegisterCapture }) {
   const { gl, scene, camera, invalidate, setDpr, advance } = useThree();
   const quality = useQuality();
-  const frames = useRef<number[]>([]),
-    exporting = useRef(false),
-    motion = useRef({ signature: NaN, active: false, boundary: 0 });
+  const ratios = pixelRatios(quality);
+  const exporting = useRef(false),
+    motion = useRef({ signature: NaN, last: -Infinity }),
+    settle = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => {
-    setDpr(
-      quality === "lightweight"
-        ? 1
-        : Math.min(window.devicePixelRatio, quality === "high" ? 1.75 : 1.5),
-    );
+    setDpr(ratios.still);
     invalidate();
-  }, [quality, gl, setDpr, invalidate]);
-  // Balanced/high share one AO pipeline with every capture; lightweight
-  // keeps the direct render.
+  }, [ratios.still, gl, setDpr, invalidate]);
+  // Balanced/high share the AO pipeline with every capture; lightweight
+  // keeps the direct render. A second pipeline at the lighter motion ratio
+  // draws while the view moves; both stay allocated, so switching is free.
   const pipeline = useRef<RenderPipeline | null>(null);
-  const aoPaused = useRenderQuality((s) => s.aoPaused);
+  const motionPipeline = useRef<RenderPipeline | null>(null);
   useEffect(() => {
     if (quality === "lightweight") return;
-    const next = new RenderPipeline(
-      gl,
-      scene,
-      camera,
-      fullAO ? 1 : aoScale(quality),
-    );
-    pipeline.current = next;
+    const still = new RenderPipeline(gl, scene, camera);
+    const moving =
+      ratios.motion < ratios.still
+        ? new RenderPipeline(gl, scene, camera, ratios.motion)
+        : null;
+    pipeline.current = still;
+    motionPipeline.current = moving;
     invalidate();
     return () => {
-      if (pipeline.current === next) pipeline.current = null;
-      next.dispose();
+      if (pipeline.current === still) pipeline.current = null;
+      if (motionPipeline.current === moving) motionPipeline.current = null;
+      still.dispose();
+      moving?.dispose();
     };
-  }, [gl, scene, camera, quality, invalidate, fullAO]);
-  useEffect(() => {
-    pipeline.current?.setAO(!aoPaused);
-    invalidate();
-  }, [aoPaused, quality, fullAO, invalidate]);
+  }, [gl, scene, camera, quality, ratios.still, ratios.motion, invalidate]);
+  useEffect(() => () => clearTimeout(settle.current), []);
   useEffect(() => {
     // The info-log reads force every program to finish linking on the spot;
     // production relies on the background warm-up instead.
     gl.debug.checkShaderErrors = import.meta.env.DEV;
   }, [gl]);
-  const render = () => {
-    const target = pipeline.current?.sceneTarget ?? null;
+  const render = (moving: boolean) => {
+    const active =
+      (moving && motionPipeline.current) || pipeline.current || null;
+    const target = active?.sceneTarget ?? null;
     if (!prepareFrame(gl, scene, camera, invalidate, target)) return;
-    if (pipeline.current) pipeline.current.render();
+    // Read by the `?fps=1` diagnostics only.
+    scene.userData.drawRatio =
+      active && active === motionPipeline.current
+        ? ratios.motion
+        : ratios.still;
+    if (active) active.render();
     else gl.render(scene, camera);
   };
-  useFrame((_, dt) => {
+  useFrame(() => {
+    let moving = false;
     if (!exporting.current) {
       // Constant-size camera sample plus explicit furniture-animation activity.
       let signature = 0,
@@ -186,32 +185,18 @@ export function Rendering({
       };
       measure(camera);
       signature += activityRevision(scene) * 23;
-      const active = Math.abs(signature - motion.current.signature) > 1e-7;
-      const boundary = motionBoundary(scene);
-      if (
-        active &&
-        motion.current.active &&
-        boundary === motion.current.boundary &&
-        dt > 0 &&
-        !document.hidden
-      )
-        frames.current.push(dt * 1000);
-      else if (!active) frames.current = [];
-      motion.current = { signature, active, boundary };
-      if (frames.current.length >= 120) {
-        if (
-          !lockQuality &&
-          aoShouldPause(quality, frames.current) &&
-          !useRenderQuality.getState().aoPaused
-        )
-          useRenderQuality.getState().pauseAO();
-        const next = qualityForFrames(quality, frames.current);
-        frames.current = [];
-        if (!lockQuality && next !== quality)
-          useRenderQuality.getState().setLevel(next);
+      const now = performance.now();
+      if (Math.abs(signature - motion.current.signature) > 1e-7) {
+        motion.current.last = now;
+        // Demand rendering draws nothing once the view rests: ask for the
+        // one sharp frame after the movement has settled.
+        clearTimeout(settle.current);
+        settle.current = setTimeout(invalidate, MOTION_SETTLE_MS + 10);
       }
+      motion.current.signature = signature;
+      moving = now - motion.current.last < MOTION_SETTLE_MS;
     }
-    if (!document.hidden && !gl.getContext().isContextLost()) render();
+    if (!document.hidden && !gl.getContext().isContextLost()) render(moving);
   }, 1);
   useEffect(() => {
     let live = true;
@@ -221,7 +206,6 @@ export function Rendering({
       const endCapture = beginCapture();
       exporting.current = true;
       const hidden: Array<import("three").Object3D> = [];
-      let restoreAO = () => {};
       const oldSize = gl.getSize(new Vector2()),
         dpr = gl.getPixelRatio();
       try {
@@ -257,16 +241,6 @@ export function Rendering({
             o.visible = false;
           }
         });
-        // A still has no frame budget: full-resolution AO (and AO even if it
-        // was paused for live motion), so offer and A/B images stay clean.
-        const still = pipeline.current;
-        const liveScale = still?.aoScale;
-        still?.setAOScale(1);
-        still?.setAO(true);
-        restoreAO = () => {
-          if (liveScale !== undefined) still?.setAOScale(liveScale);
-          still?.setAO(!useRenderQuality.getState().aoPaused);
-        };
         const ratio = 1600 / Math.max(oldSize.x, oldSize.y);
         gl.setPixelRatio(1);
         gl.setSize(
@@ -280,7 +254,6 @@ export function Rendering({
         advance(performance.now());
         return gl.domElement.toDataURL("image/png");
       } finally {
-        restoreAO();
         hidden.forEach((o) => (o.visible = true));
         gl.setPixelRatio(dpr);
         gl.setSize(oldSize.x, oldSize.y, false);

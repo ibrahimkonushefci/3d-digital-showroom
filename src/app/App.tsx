@@ -16,10 +16,16 @@ import { saveDesign } from "../persistence";
 import OfflineStatus from "../pwa/Status";
 import { usePresentation } from "./preferences";
 import Home from "./Home";
+import { fpsDiagnostics } from "../scene/diagnostics/enabled";
 const PreviewStudio = import.meta.env.DEV
   ? lazy(() => import("./PreviewStudio"))
   : null;
-const Compare = lazy(() => import("./Compare"));
+const PreviewRender = import.meta.env.DEV
+  ? lazy(() => import("./PreviewRender"))
+  : null;
+const FpsOverlay = fpsDiagnostics
+  ? lazy(() => import("../scene/diagnostics/FpsOverlay"))
+  : null;
 const Designer = lazy(() => import("../designer3d/Designer")),
   Summary = lazy(() => import("./Summary")),
   Setup = lazy(() => import("../brand/Setup")),
@@ -142,9 +148,11 @@ function Shell() {
           {PreviewStudio && (
             <Route path="/preview-studio" element={<PreviewStudio />} />
           )}
+          {PreviewRender && (
+            <Route path="/preview-render" element={<PreviewRender />} />
+          )}
           <Route path="/" element={<Home />} />
           <Route path="/designer/:kind" element={<ProductRoute />} />
-          <Route path="/compare" element={<Compare />} />
           <Route path="/summary" element={<Summary />} />
           <Route path="/setup" element={<Setup />} />
           <Route path="/settings" element={<Settings />} />
@@ -163,6 +171,11 @@ function Shell() {
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>
+      {FpsOverlay && (
+        <Suspense fallback={null}>
+          <FpsOverlay />
+        </Suspense>
+      )}
       {!embed && (
         <footer className="site-footer">
           <div>

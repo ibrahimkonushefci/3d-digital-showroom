@@ -288,3 +288,7 @@ export const useDesigner = create<State>((set, get) => ({
     set({ performance });
   },
 }));
+// Review scripts (development server only) read and drive the editor state.
+if (import.meta.env.DEV && typeof window !== "undefined")
+  (window as unknown as { __designer: typeof useDesigner }).__designer =
+    useDesigner;

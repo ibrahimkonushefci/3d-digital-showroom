@@ -32,7 +32,8 @@ it("replaces three's stepped PCF with a smooth bilinear kernel", () => {
   expect(next.indexOf("float smoothShadowTap")).toBeLessThan(
     next.indexOf("float getShadow("),
   );
-  const tail = (s: string) => s.slice(s.indexOf("#elif defined( SHADOWMAP_TYPE_PCF_SOFT )"));
+  const tail = (s: string) =>
+    s.slice(s.indexOf("#elif defined( SHADOWMAP_TYPE_PCF_SOFT )"));
   expect(tail(next)).toBe(tail(source));
   // An unexpected three.js chunk is left alone rather than half-patched.
   expect(smoothShadowChunk("float getShadow() {}")).toBeNull();
@@ -52,6 +53,9 @@ it("closes front gaps for the AO pass only", () => {
   // Every front panel is tagged; the visible geometry keeps its real gaps.
   const primitives = readFileSync("src/scene/Primitives.tsx", "utf8");
   expect(primitives).toMatch(/aoFront: size/);
-  const cabinet = readFileSync("src/designer3d/furniture/CabinetMesh.tsx", "utf8");
+  const cabinet = readFileSync(
+    "src/designer3d/furniture/CabinetMesh.tsx",
+    "utf8",
+  );
   expect(cabinet).toContain("size={[w - 0.006, h - 0.006, 0.02]}");
 });

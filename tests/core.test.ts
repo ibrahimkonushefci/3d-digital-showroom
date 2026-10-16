@@ -15,7 +15,6 @@ import {
   wallPosition,
 } from "../src/designer3d/layout";
 import { calculatePrice } from "../src/pricing";
-import { decodeShare, encodeShare, messageUrl } from "../src/sharing";
 import { resolveBrand } from "../src/brand";
 import { useDesigner } from "../src/designer3d/store";
 import { money } from "../src/i18n";
@@ -100,14 +99,14 @@ describe("catalog and branding", () => {
   });
 });
 describe("room layouts", () => {
-  for (const layout of ["straight", "l", "u", "parallel", "island"] as Layout[])
+  for (const layout of ["straight", "l", "island"] as Layout[])
     it(`fits ${layout} kitchens without collisions`, () => {
       const d = generateLayout(newDesign("kitchen", layout), catalog);
       expect(d).not.toBeNull();
       expect(validateDesign(d!, catalog)).toBe(true);
       expect(d!.cabinets.some((c) => c.level === "wall")).toBe(true);
     });
-  for (const layout of ["straight", "corner", "walkin"] as Layout[])
+  for (const layout of ["straight", "corner"] as Layout[])
     it(`fits ${layout} wardrobes`, () => {
       const d = generateLayout(newDesign("wardrobe", layout), catalog)!;
       expect(d).not.toBeNull();
@@ -121,8 +120,8 @@ describe("room layouts", () => {
       expect(validateDesign(d, catalog)).toBe(true);
     }
   });
-  it("rejects a parallel layout with insufficient aisle space", () => {
-    const d = newDesign("kitchen", "parallel");
+  it("rejects an island kitchen with insufficient aisle space", () => {
+    const d = newDesign("kitchen", "island");
     d.room.depth = 200;
     expect(generateLayout(d, catalog)).toBeNull();
   });
@@ -282,50 +281,6 @@ describe("history and sharing", () => {
     expect(useDesigner.getState().design!.style.front).toBe(d.style.front);
     useDesigner.getState().redo();
     expect(useDesigner.getState().design!.style.front).toBe("sage");
-  });
-  it("round-trips a design and basic branding without a photo or logo", () => {
-    const d = examples(catalog)[0];
-    const encoded = encodeShare(
-      d,
-      { ...brand, companyName: "Test Studio" },
-      catalog.id,
-      true,
-    );
-    const decoded = decodeShare(encoded);
-    expect(decoded.design).toEqual(d);
-    expect(decoded.brand!.companyName).toBe("Test Studio");
-    expect(decoded.brand).not.toHaveProperty("logo");
-    expect(decoded).not.toHaveProperty("photo");
-  });
-  it("rejects malformed and oversized links", () => {
-    expect(() => decodeShare("invalid")).toThrow();
-    expect(() => decodeShare("x".repeat(31000))).toThrow();
-    for (const kind of ["facade", "interior"])
-      expect(() =>
-        decodeShare(
-          encodeShare(
-            { ...examples(catalog)[0], kind } as never,
-            brand,
-            catalog.id,
-            false,
-          ),
-        ),
-      ).toThrow();
-  });
-  it("does not invent a company message destination", () => {
-    expect(messageUrl("whatsapp", brand, "test")).toBe(
-      "https://wa.me/?text=test",
-    );
-    expect(
-      messageUrl(
-        "whatsapp",
-        {
-          ...brand,
-          contact: { ...brand.contact, whatsapp: "+383 44 123 456" },
-        },
-        "Hello there",
-      ),
-    ).toBe("https://wa.me/38344123456?text=Hello%20there");
   });
 });
 import { selectFamily } from "../src/scene/furnitureMaterials";

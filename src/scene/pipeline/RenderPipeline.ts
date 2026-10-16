@@ -16,9 +16,6 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
 /** Colour targets the scene pass renders into (development metrics only). */
 export const pipelineSceneTargets = new WeakSet<WebGLRenderTarget>();
-/** Default fraction of the drawing buffer AO is computed at. The pipeline
- * takes the quality's own scale, see aoScale() in quality.ts. */
-export const AO_SCALE = 1;
 /** World-space tuning for cabinet/room scale contact darkening. */
 export const AO_SETTINGS = {
   radius: 0.3,
@@ -78,13 +75,15 @@ export function excludedFromAO(object: Object3D) {
  * render keeps the real gaps (and their dark GapShade). */
 export const AO_FRONT_GAP = 0.008;
 export function aoFrontScale(size: readonly number[]): [number, number] {
-  return [(size[0] + AO_FRONT_GAP) / size[0], (size[1] + AO_FRONT_GAP) / size[1]];
+  return [
+    (size[0] + AO_FRONT_GAP) / size[0],
+    (size[1] + AO_FRONT_GAP) / size[1],
+  ];
 }
 
-class ScaledGTAOPass extends GTAOPass {
+class FurnitureGTAOPass extends GTAOPass {
   private hidden: Object3D[] = [];
   private grown: Object3D[] = [];
-  scale = AO_SCALE;
   render(...args: Parameters<GTAOPass["render"]>) {
     this.hidden.length = 0;
     this.grown.length = 0;
@@ -116,45 +115,46 @@ class ScaledGTAOPass extends GTAOPass {
       }
     }
   }
-  setSize(width: number, height: number) {
-    super.setSize(
-      Math.max(1, Math.round(width * this.scale)),
-      Math.max(1, Math.round(height * this.scale)),
-    );
-  }
 }
 
 /**
  * One path for the live view and every capture: MSAA scene render, GTAO at
- * the quality's resolution multiplied over it, then tone
- * mapping/colour output.
- * Lightweight quality bypasses it and renders directly.
+ * the full resolution of that render multiplied over it, then tone
+ * mapping/colour output. Lightweight quality bypasses it and renders directly.
+ *
+ * `maxRatio` caps the pipeline's own pixel ratio below the canvas's: the
+ * motion pipeline renders at 1.5x and its output pass scales the picture up
+ * to the 2x canvas, so switching between still and motion never reallocates
+ * anything.
  */
 export class RenderPipeline {
   private composer: EffectComposer;
-  private ao: ScaledGTAOPass;
+  private ao: FurnitureGTAOPass;
   private size = new Vector2();
   private ratio = 0;
   constructor(
     private gl: WebGLRenderer,
     scene: Scene,
     camera: Camera,
-    aoScale = AO_SCALE,
+    private maxRatio = Infinity,
   ) {
     gl.getSize(this.size);
-    this.ratio = gl.getPixelRatio();
+    this.ratio = this.pipelineRatio();
     const target = new WebGLRenderTarget(
       Math.max(1, this.size.x * this.ratio),
       Math.max(1, this.size.y * this.ratio),
-      { type: HalfFloatType, samples: 4 },
+      // Stencil: window openings mark the garden backdrop's area.
+      { type: HalfFloatType, samples: 4, stencilBuffer: true },
     );
     this.composer = new EffectComposer(gl, target);
-    pipelineSceneTargets.add(this.composer.renderTarget1);
+    // The scene draws into renderTarget2 (the composer's first read buffer);
+    // renderTarget1 only receives the full-screen AO blend, so it needs no
+    // multisampling: less memory and one MSAA resolve fewer per frame.
+    this.composer.renderTarget1.samples = 0;
     pipelineSceneTargets.add(this.composer.renderTarget2);
     this.composer.setPixelRatio(this.ratio);
     this.composer.addPass(new RenderPass(scene, camera));
-    this.ao = new ScaledGTAOPass(scene, camera, 1, 1);
-    this.ao.scale = aoScale;
+    this.ao = new FurnitureGTAOPass(scene, camera, 1, 1);
     this.ao.updateGtaoMaterial(AO_SETTINGS);
     this.ao.updatePdMaterial(AO_DENOISE);
     this.ao.blendIntensity = 1;
@@ -164,25 +164,15 @@ export class RenderPipeline {
   }
   /** The off-screen target the scene pass draws into (shader warm-up). */
   get sceneTarget() {
-    return this.composer.renderTarget1;
+    return this.composer.renderTarget2;
   }
-  /** AO resolution fraction; captures use full resolution for a clean still. */
-  get aoScale() {
-    return this.ao.scale;
-  }
-  setAOScale(scale: number) {
-    if (this.ao.scale === scale) return;
-    this.ao.scale = scale;
-    this.composer.setSize(this.size.x, this.size.y);
-  }
-  /** Skips the AO pass (automatic fallback); the scene still renders fully. */
-  setAO(enabled: boolean) {
-    this.ao.enabled = enabled;
+  private pipelineRatio() {
+    return Math.min(this.gl.getPixelRatio(), this.maxRatio);
   }
   /** Follows capture-time resizes and DPR changes before drawing. */
   render() {
     const size = this.gl.getSize(new Vector2()),
-      ratio = this.gl.getPixelRatio();
+      ratio = this.pipelineRatio();
     if (!size.equals(this.size) || ratio !== this.ratio) {
       this.size.copy(size);
       this.ratio = ratio;

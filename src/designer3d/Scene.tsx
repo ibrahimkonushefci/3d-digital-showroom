@@ -10,6 +10,8 @@ import { RoomShell, insideWall } from "../scene/rooms/RoomShell";
 import { RoomProps } from "../scene/rooms/RoomProps";
 import { pendingModelLoads } from "../scene/assets/ModelAsset";
 import { warmupPending } from "../scene/pipeline/shaderWarmup";
+import { environmentPending } from "../scene/lighting/RoomEnvironment";
+import { useProgress } from "@react-three/drei";
 import { ShellBake, shellBakeUniforms } from "../scene/bake/shellBake";
 import { ShellBakeDriver, bakePending } from "../scene/bake/ShellBakeDriver";
 import { assembleRenderInput } from "../scene/renderInput";
@@ -18,10 +20,11 @@ import { Worktops } from "../scene/Worktops";
 import {
   Rendering,
   RefreshShadows,
+  contactsPending,
   showroomGL,
   type RegisterCapture,
 } from "../scene/Rendering";
-import { useQuality } from "../scene/quality";
+import { pixelRatios, useQuality } from "../scene/quality";
 import {
   lazy,
   Suspense,
@@ -103,17 +106,33 @@ function WallSupport({
     </group>
   );
 }
-/** Rendered beside the furniture, so it only commits once nothing suspends. */
+/** The longest the loading cue waits for start-up work before showing the
+ * scene anyway. */
+const STARTUP_LIMIT_MS = 5000;
+/** Rendered beside the furniture, so it only commits once nothing suspends.
+ * Every piece of start-up work (models, textures, shaders, lightmap,
+ * environment probe, contact shadows) finishes behind the loading cue, so
+ * none of it lands in the first seconds of zooming or orbiting. */
 function FirstFrame({ onFirstFrame }: { onFirstFrame: () => void }) {
   const done = useRef(false);
-  useFrame(({ scene }) => {
-    if (
-      done.current ||
-      pendingModelLoads() ||
+  const started = useRef(performance.now());
+  const poll = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(poll.current), []);
+  useFrame(({ scene, invalidate }) => {
+    if (done.current) return;
+    const pending =
+      pendingModelLoads() > 0 ||
       warmupPending(scene) ||
-      bakePending(scene)
-    )
+      bakePending(scene) ||
+      environmentPending(scene) ||
+      contactsPending(scene) ||
+      useProgress.getState().active;
+    if (pending && performance.now() - started.current < STARTUP_LIMIT_MS) {
+      // Demand rendering: keep checking until the work is done.
+      clearTimeout(poll.current);
+      poll.current = setTimeout(invalidate, 100);
       return;
+    }
     done.current = true;
     requestAnimationFrame(onFirstFrame);
     // After Rendering (priority 1): only a frame that was really drawn counts.
@@ -143,7 +162,6 @@ export default function Scene({
   reframe,
   diagnostics,
   inspection,
-  lockQuality = false,
   suspended = false,
   calibrationLight = false,
   calibrationHighlight = false,
@@ -153,7 +171,6 @@ export default function Scene({
   calibrationHighlight?: boolean;
   diagnostics?: ReactNode;
   inspection?: { opened: readonly string[]; interior: boolean };
-  lockQuality?: boolean;
   suspended?: boolean;
   /** Changing this re-frames the camera, e.g. for "overall view". */
   reframe?: unknown;
@@ -219,11 +236,7 @@ export default function Scene({
         role="img"
         aria-label={t("sceneLabel")}
         frameloop="demand"
-        dpr={
-          performance
-            ? 1
-            : Math.min(window.devicePixelRatio, quality === "high" ? 1.75 : 1.5)
-        }
+        dpr={pixelRatios(quality).still}
         // PCF honours each light's shadow.radius (PCFSoft ignores it).
         shadows={performance ? false : "percentage"}
         gl={showroomGL}
@@ -322,11 +335,7 @@ export default function Scene({
               : [])
           }
         />
-        <Rendering
-          capture={capture}
-          lockQuality={lockQuality}
-          fullAO={!interactive}
-        />
+        <Rendering capture={capture} />
         <FirstFrame
           key={generation}
           onFirstFrame={() => {

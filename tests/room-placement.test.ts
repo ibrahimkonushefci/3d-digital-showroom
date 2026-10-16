@@ -37,18 +37,20 @@ it("stages only explicit presets, never changes customer openings or furniture/q
     expect(validateDesign(p.design, catalog)).toBe(true);
     for (const o of p.design.room.openings)
       expect(openingBlocked(p.design.room, o, p.design.cabinets)).toBe(false);
-    expect(p.design.room.openings.length).toBe(1);
-    expect(presetRoom(p.design.room, p.design.kind, p.design.cabinets)).toBe(
-      p.design.room,
-    );
+    // The corner wardrobe has no window; every other preset has one.
+    expect(p.design.room.openings.length).toBe(p.id === "wardrobe" ? 0 : 1);
+    if (p.design.room.openings.length)
+      expect(presetRoom(p.design.room, p.design.kind, p.design.cabinets)).toBe(
+        p.design.room,
+      );
   }
   expect(JSON.stringify(raw)).toBe(before);
 });
 it("keeps room props out of fronts, drawers, doors and each other across all layouts and room sizes", () => {
   for (const kind of ["kitchen", "wardrobe"] as const)
     for (const layout of kind === "kitchen"
-      ? (["straight", "l", "u", "parallel", "island"] as const)
-      : (["straight", "corner", "walkin"] as const))
+      ? (["straight", "l", "island"] as const)
+      : (["straight", "corner"] as const))
       for (const size of [240, 420, 650, 900]) {
         const d = generateLayout(
           {

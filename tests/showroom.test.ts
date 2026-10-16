@@ -18,7 +18,7 @@ import {
   pointInPolygon,
   worktopRuns,
 } from "../src/scene/countertopGeometry";
-import { aoScale, aoShouldPause, qualityForFrames } from "../src/scene/quality";
+import { aoScale, pixelRatios } from "../src/scene/quality";
 import { calculatePrice } from "../src/pricing";
 import { modelRecord } from "../src/scene/assets/manifest";
 const catalog = CatalogSchema.parse(
@@ -123,7 +123,7 @@ it("merges adjacent worktops into one outline with a true sink opening", () => {
   expect(runs.flatMap((r) => r.holes).length).toBeGreaterThan(0);
 });
 it("keeps separated worktops separate across supported layouts", () => {
-  for (const layout of ["straight", "l", "u", "parallel", "island"] as const) {
+  for (const layout of ["straight", "l", "island"] as const) {
     const d = generateLayout(newDesign("kitchen", layout), catalog)!;
     expect(d).toBeTruthy();
     const runs = worktopRuns(d.cabinets, catalog);
@@ -156,32 +156,14 @@ it("keeps legacy catalogs usable without presentation metadata", () => {
     presentationPresets(CatalogSchema.parse(legacy)).length,
   ).toBeGreaterThan(0);
 });
-it("quality measurement ignores idle gaps and only moves between balanced and high", () => {
-  expect(qualityForFrames("high", Array(150).fill(500))).toBe("high");
-  expect(qualityForFrames("high", Array(120).fill(25))).toBe("balanced");
-  // Slow tablets stay on balanced; lightweight is only chosen manually.
-  expect(qualityForFrames("balanced", Array(120).fill(60))).toBe("balanced");
-  expect(qualityForFrames("balanced", Array(120).fill(12))).toBe("high");
-  // Hysteresis: frames between the thresholds keep the current level.
-  expect(qualityForFrames("balanced", Array(120).fill(18))).toBe("balanced");
-  expect(qualityForFrames("high", Array(120).fill(18))).toBe("high");
-  expect(qualityForFrames("lightweight", Array(120).fill(5))).toBe(
-    "lightweight",
-  );
-});
-it("runs AO at full resolution by default and pauses it, keeping shadows, only after sustained slow motion", () => {
+it("renders stills at the display's ratio and moves at a lighter one, never changing quality on its own", () => {
+  expect(pixelRatios("balanced", 2)).toEqual({ still: 2, motion: 1.5 });
+  expect(pixelRatios("balanced", 3)).toEqual({ still: 2, motion: 1.5 });
+  expect(pixelRatios("balanced", 1)).toEqual({ still: 1, motion: 1 });
+  expect(pixelRatios("lightweight", 2)).toEqual({ still: 1, motion: 1 });
   expect(aoScale("balanced")).toBe(1);
   expect(aoScale("high")).toBe(1);
   expect(aoScale("lightweight")).toBe(0);
-  // ~33 fps or better keeps AO; idle gaps and short bursts never count.
-  expect(aoShouldPause("balanced", Array(120).fill(16.7))).toBe(false);
-  expect(aoShouldPause("balanced", Array(120).fill(28))).toBe(false);
-  expect(aoShouldPause("balanced", Array(120).fill(500))).toBe(false);
-  expect(aoShouldPause("balanced", Array(60).fill(45))).toBe(false);
-  expect(aoShouldPause("balanced", Array(120).fill(45))).toBe(true);
-  // High first steps down to balanced (quality controller), never straight off.
-  expect(aoShouldPause("high", Array(120).fill(45))).toBe(false);
-  expect(aoShouldPause("lightweight", Array(120).fill(45))).toBe(false);
 });
 it("quality and transient opening states cannot change prices", () => {
   const d = design(),
@@ -230,7 +212,7 @@ it("reconciles selected and open IDs through edits, regeneration and history", (
   expect(useDesigner.getState().interior).toBe(false);
 });
 it("groups generated tall appliances at a run end and keeps sink and dishwasher adjacent", () => {
-  for (const layout of ["straight", "l", "u", "parallel", "island"] as const) {
+  for (const layout of ["straight", "l", "island"] as const) {
     const d = generateLayout(newDesign("kitchen", layout), catalog)!;
     const oven = d.cabinets.find((c) => c.moduleId === "oven")!,
       fridge = d.cabinets.find((c) => c.moduleId === "fridge")!;
