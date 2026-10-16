@@ -10,6 +10,8 @@ import { RoomShell, insideWall } from "../scene/rooms/RoomShell";
 import { RoomProps } from "../scene/rooms/RoomProps";
 import { pendingModelLoads } from "../scene/assets/ModelAsset";
 import { warmupPending } from "../scene/pipeline/shaderWarmup";
+import { ShellBake, shellBakeUniforms } from "../scene/bake/shellBake";
+import { ShellBakeDriver, bakePending } from "../scene/bake/ShellBakeDriver";
 import { assembleRenderInput } from "../scene/renderInput";
 import { RunLights } from "../scene/RunLights";
 import { Worktops } from "../scene/Worktops";
@@ -21,6 +23,8 @@ import {
 } from "../scene/Rendering";
 import { useQuality } from "../scene/quality";
 import {
+  lazy,
+  Suspense,
   useEffect,
   useMemo,
   useRef,
@@ -29,6 +33,10 @@ import {
   Component,
   type ReactNode,
 } from "react";
+// DEV only: the lightmap bake reads the live scene (stripped from production).
+const BakeExport = import.meta.env.DEV
+  ? lazy(() => import("../scene/bake/BakeExport"))
+  : null;
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Group, Vector3 } from "three";
 import type { Catalog, DesignDocument } from "../catalog/types";
@@ -83,6 +91,7 @@ function WallSupport({
   return (
     <group
       ref={group}
+      userData={{ bakeSkip: true }}
       position={[c.x / 100, 1.75, c.z / 100]}
       rotation={[0, c.rotation, 0]}
     >
@@ -98,7 +107,13 @@ function WallSupport({
 function FirstFrame({ onFirstFrame }: { onFirstFrame: () => void }) {
   const done = useRef(false);
   useFrame(({ scene }) => {
-    if (done.current || pendingModelLoads() || warmupPending(scene)) return;
+    if (
+      done.current ||
+      pendingModelLoads() ||
+      warmupPending(scene) ||
+      bakePending(scene)
+    )
+      return;
     done.current = true;
     requestAnimationFrame(onFirstFrame);
     // After Rendering (priority 1): only a frame that was really drawn counts.
@@ -171,6 +186,8 @@ export default function Scene({
     [design, catalog, quality],
   );
   const t = useT();
+  // One set per canvas generation; shell materials read it, the driver fades it.
+  const bake = useMemo(shellBakeUniforms, [generation]);
   const w = design.room.width / 100,
     d = design.room.depth / 100;
   return (
@@ -225,6 +242,11 @@ export default function Scene({
           }}
         />
         {diagnostics}
+        {BakeExport && interactive && (
+          <Suspense fallback={null}>
+            <BakeExport design={design} catalog={catalog} />
+          </Suspense>
+        )}
         <color attach="background" args={["#eee9df"]} />
         {calibrationLight ? (
           <>
@@ -242,35 +264,39 @@ export default function Scene({
           <CalibrationHighlight design={design} catalog={catalog} />
         )}
         <RoomEnvironment design={design} policy={environmentPolicy} />
-        <group position={[-w / 2, 0, -d / 2]}>
-          <RoomShell design={design} />
-          <ShadowShell design={design} />
-          {design.cabinets
-            .filter((c) => c.level === "wall")
-            .map((c) => (
-              <WallSupport
-                key={`support-${c.id}`}
-                cabinet={c}
-                room={design.room}
-                color={design.environment?.wallColor || "#e5e0d7"}
+        <ShellBakeDriver design={design} uniforms={bake} />
+        <ShellBake.Provider value={bake}>
+          <group position={[-w / 2, 0, -d / 2]}>
+            <RoomShell design={design} />
+            <ShadowShell design={design} />
+            {design.cabinets
+              .filter((c) => c.level === "wall")
+              .map((c) => (
+                <WallSupport
+                  key={`support-${c.id}`}
+                  cabinet={c}
+                  room={design.room}
+                  color={design.environment?.wallColor || "#e5e0d7"}
+                />
+              ))}
+            {input.furniture.cabinets.map((furniture) => (
+              <CabinetMesh
+                key={furniture.cabinet.id}
+                furniture={furniture}
+                finishes={furniture.style}
+                inspection={inspection}
+                design={design}
+                catalog={catalog}
+                interactive={interactive}
               />
             ))}
-          {input.furniture.cabinets.map((furniture) => (
-            <CabinetMesh
-              key={furniture.cabinet.id}
-              furniture={furniture}
-              finishes={furniture.style}
-              inspection={inspection}
-              design={design}
-              catalog={catalog}
-              interactive={interactive}
-            />
-          ))}
-          <Worktops design={design} catalog={catalog} />
-          <RoomProps design={design} catalog={catalog} />
-          <RunLights design={design} />
-        </group>
+            <Worktops design={design} catalog={catalog} />
+            <RoomProps design={design} catalog={catalog} />
+            <RunLights design={design} />
+          </group>
+        </ShellBake.Provider>
         <RefreshShadows
+          bake={bake}
           revision={[
             design,
             inspection?.opened || opened,

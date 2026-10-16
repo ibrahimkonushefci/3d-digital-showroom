@@ -17,6 +17,9 @@ import { pendingModelLoads } from "./assets/ModelAsset";
 import { RenderPipeline } from "./pipeline/RenderPipeline";
 import { installSmoothShadows } from "./pipeline/smoothShadows";
 import { prepareFrame, warmupPending } from "./pipeline/shaderWarmup";
+import { bakePending } from "./bake/ShellBakeDriver";
+import type { ShellBakeUniforms } from "./bake/shellBake";
+import type { Group, Mesh, MeshBasicMaterial } from "three";
 // Before any material compiles: shadow edges without stair-stepped copies.
 installSmoothShadows();
 export type CaptureImage = () => Promise<string>;
@@ -29,12 +32,32 @@ export const showroomGL = {
   toneMappingExposure: 0.98,
 };
 const pendingContacts = new WeakSet<import("three").Scene>();
-function OwnedContactShadows({ scale }: { scale: number }) {
+const CONTACT_OPACITY = 0.28;
+function OwnedContactShadows({
+  scale,
+  bake,
+  revision,
+}: {
+  scale: number;
+  bake?: ShellBakeUniforms;
+  /** A new value re-renders, and so redraws, the shadows. */
+  revision: string;
+}) {
   useContactTargetOwnership();
+  // A baked floor already holds its contact shadows: fade these with it.
+  const group = useRef<Group>(null);
+  useFrame(() => {
+    const plane = group.current?.children.find((o) => (o as Mesh).isMesh) as
+      Mesh<never, MeshBasicMaterial> | undefined;
+    if (plane)
+      plane.material.opacity =
+        CONTACT_OPACITY * (1 - (bake?.bakeWeight.value ?? 0));
+  });
   return (
     <ContactShadows
+      ref={group}
       position={[0, 0.001, 0]}
-      opacity={0.28}
+      opacity={CONTACT_OPACITY}
       scale={scale}
       blur={2.5}
       far={1.2}
@@ -47,20 +70,24 @@ export const RefreshShadows = memo(
   function RefreshShadows({
     revision,
     scale = 12,
+    bake,
   }: {
     revision: unknown;
     scale?: number;
+    bake?: ShellBakeUniforms;
   }) {
     const quality = useQuality();
     const { scene } = useThree();
     // Contact depth is static presentation work, never a 90-frame motion pass.
     // Wait for the current opening animation/load before recomputing it.
     const [settled, setSettled] = useState(false);
+    const [shown, setShown] = useState<string | null>(null);
     useEffect(() => {
       setSettled(false);
       if (quality !== "lightweight") pendingContacts.add(scene);
       const timer = setTimeout(() => {
         setSettled(true);
+        setShown(JSON.stringify(revision));
         pendingContacts.delete(scene);
       }, 800);
       return () => {
@@ -68,14 +95,19 @@ export const RefreshShadows = memo(
         pendingContacts.delete(scene);
       };
     }, [revision, quality, scene]);
-    return quality === "lightweight"
-      ? null
-      : settled && (
-          <OwnedContactShadows key={JSON.stringify(revision)} scale={scale} />
-        );
+    // One instance, hidden while things move and re-rendered (drei redraws
+    // its frames on every render) once they settle. Remounting it freed its
+    // shaders and re-linked them on the spot: a ~60 ms stall after each
+    // front opened or closed.
+    return quality === "lightweight" || shown === null ? null : (
+      <group visible={settled}>
+        <OwnedContactShadows revision={shown} scale={scale} bake={bake} />
+      </group>
+    );
   },
   (a, b) =>
     a.scale === b.scale &&
+    a.bake === b.bake &&
     JSON.stringify(a.revision) === JSON.stringify(b.revision),
 );
 export function Rendering({
@@ -211,6 +243,7 @@ export function Rendering({
             !pendingContacts.has(scene) &&
             !environmentPending(scene) &&
             !warmupPending(scene) &&
+            !bakePending(scene) &&
             key === previous
               ? stable + 1
               : 0;

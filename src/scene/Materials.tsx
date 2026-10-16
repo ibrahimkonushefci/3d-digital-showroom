@@ -1,4 +1,9 @@
 import { applyCavity, type Cavity } from "./lighting/InteriorOcclusion";
+import {
+  applyShellBake,
+  SHELL_BAKE_KEY,
+  type ShellBakeUniforms,
+} from "./bake/shellBake";
 import { furnitureResponse } from "./furnitureMaterials";
 import { useQuality } from "./quality";
 import { useLoader } from "@react-three/fiber";
@@ -21,12 +26,14 @@ export function SurfaceMaterial({
   repeat = [1, 1],
   world = false,
   lacquer = false,
+  bake = null,
 }: {
   cavity?: Cavity;
   material: Material;
   repeat?: [number, number];
   world?: boolean;
   lacquer?: boolean;
+  bake?: ShellBakeUniforms | null;
 }) {
   const { assetUrl } = useBrand(),
     performance = useQuality() === "lightweight";
@@ -77,6 +84,7 @@ export function SurfaceMaterial({
     world,
     !!material.mapping,
     !!material.aoMap,
+    !!bake,
   ].join();
   return (
     <meshPhysicalMaterial
@@ -145,10 +153,17 @@ export function SurfaceMaterial({
               : 0.6
       }
       customProgramCacheKey={() =>
-        JSON.stringify(["physical-v2", world, !!material.mapping, cavity])
+        JSON.stringify([
+          "physical-v2",
+          world,
+          !!material.mapping,
+          cavity,
+          bake ? SHELL_BAKE_KEY : "",
+        ])
       }
       onBeforeCompile={(shader) => {
         if (cavity) applyCavity(shader, cavity);
+        if (bake) applyShellBake(shader, bake);
         if (world && !material.mapping) {
           shader.vertexShader = shader.vertexShader
             .replace(

@@ -1,6 +1,8 @@
 import { wallPieces, windowFittings } from "../lighting/lightingRecipe";
 import { Fittings } from "../Fittings";
-import { Suspense, useRef, useMemo } from "react";
+import { WindowBlind } from "./WindowBlind";
+import { Suspense, useContext, useRef, useMemo } from "react";
+import { applyShellBake, ShellBake, SHELL_BAKE_KEY } from "../bake/shellBake";
 import { useFrame, useLoader } from "@react-three/fiber";
 import {
   Group,
@@ -8,6 +10,7 @@ import {
   SRGBColorSpace,
   TextureLoader,
   type Camera,
+  type WebGLProgramParametersWithUniforms,
 } from "three";
 import type { Room, DesignDocument, Material } from "../../catalog/types";
 import { Box } from "../Primitives";
@@ -98,7 +101,7 @@ function ExteriorView({
   // at standing eye height so the view lines up with the room.
   const y = 1.5 - centre + 0.68 * (height / 2);
   return (
-    <group ref={view}>
+    <group ref={view} userData={{ bakeSkip: true }}>
       <mesh position={[0, y, -3.2]} raycast={() => {}}>
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial
@@ -126,7 +129,7 @@ function StudioWindow({
     return windowFittings(w, h);
   }, [w, h]);
   return (
-    <group>
+    <group userData={{ bakeKeep: true }}>
       <Fittings
         parts={sets.reveal}
         color="#d6d0c5"
@@ -162,6 +165,7 @@ function StudioWindow({
           side={DoubleSide}
         />
       </mesh>
+      <WindowBlind w={w} h={h} />
       <Suspense fallback={null}>
         <ExteriorView room={room} w={w} centre={centre} />
       </Suspense>
@@ -256,21 +260,28 @@ function WallMesh({
   const rot = side === "left" || side === "right" ? -Math.PI / 2 : 0;
   const plaster = useMemo(() => wallMaterial(color), [color]);
   return (
-    <group ref={group} position={pos} rotation={[0, rot, 0]}>
+    <group
+      ref={group}
+      position={pos}
+      rotation={[0, rot, 0]}
+      userData={{ bakeIgnoreVisibility: true }}
+    >
       {wallPieces(room, side).map((piece, i) => (
-        <Box
-          key={i}
-          size={piece.size}
-          position={[
-            side === "left" || side === "right"
-              ? piece.position[2] - pos[2]
-              : piece.position[0] - pos[0],
-            piece.position[1],
-            0,
-          ]}
-          material={plaster}
-          castShadow={false}
-        />
+        <group key={i} userData={{ bakeSurface: "wall" }}>
+          <Box
+            size={piece.size}
+            position={[
+              side === "left" || side === "right"
+                ? piece.position[2] - pos[2]
+                : piece.position[0] - pos[0],
+              piece.position[1],
+              0,
+            ]}
+            material={plaster}
+            castShadow={false}
+            baked
+          />
+        </group>
       ))}
       {cuts.slice(0, -1).map((start, i) => {
         const end = cuts[i + 1],
@@ -295,6 +306,7 @@ function WallMesh({
             ]}
             color="#c3baaa"
             castShadow={false}
+            baked
           />
         );
       })}
@@ -328,43 +340,46 @@ export function RoomShell({ design }: { design: DesignDocument }) {
   const w = room.width / 100,
     d = room.depth / 100;
   return (
-    <group>
-      <Box
-        size={[w + 0.2, 0.06, d + 0.2]}
-        position={[w / 2, -0.03, d / 2]}
-        material={{
-          id: "floor",
-          name: { sq: "", en: "", de: "" },
-          color: "#b0a288",
-          roughness: 0.42,
-          mapping: {
-            tileSizeCm:
-              design.environment?.floor === "tiles"
-                ? [60, 60]
-                : (design.environment?.floor ?? "laminate") === "laminate"
-                  ? [180, 180]
-                  : [120, 120],
-            grain: "none",
-            variation: "none",
-            scaleBasis: "authored-illustrative",
-          },
-          response: {
-            roughness:
-              (design.environment?.floor ?? "laminate") === "laminate"
-                ? 1
-                : 0.72,
-            normalStrength: 0.12,
-            clearcoat: 0.015,
-            clearcoatRoughness: 0.6,
-            envMapIntensity: 0.6,
-          },
-          multiplier: 1,
-          perMeter: 0,
-          texture: `shared/textures/${design.environment?.floor || "laminate"}-color.webp`,
-          normalMap: `shared/textures/${design.environment?.floor || "laminate"}-normal.webp`,
-          roughnessMap: `shared/textures/${design.environment?.floor || "laminate"}-roughness.webp`,
-        }}
-      />
+    <group userData={{ bakeShell: true }}>
+      <group userData={{ bakeSurface: "floor" }}>
+        <Box
+          baked
+          size={[w + 0.2, 0.06, d + 0.2]}
+          position={[w / 2, -0.03, d / 2]}
+          material={{
+            id: "floor",
+            name: { sq: "", en: "", de: "" },
+            color: "#b0a288",
+            roughness: 0.42,
+            mapping: {
+              tileSizeCm:
+                design.environment?.floor === "tiles"
+                  ? [60, 60]
+                  : (design.environment?.floor ?? "laminate") === "laminate"
+                    ? [180, 180]
+                    : [120, 120],
+              grain: "none",
+              variation: "none",
+              scaleBasis: "authored-illustrative",
+            },
+            response: {
+              roughness:
+                (design.environment?.floor ?? "laminate") === "laminate"
+                  ? 1
+                  : 0.72,
+              normalStrength: 0.12,
+              clearcoat: 0.015,
+              clearcoatRoughness: 0.6,
+              envMapIntensity: 0.6,
+            },
+            multiplier: 1,
+            perMeter: 0,
+            texture: `shared/textures/${design.environment?.floor || "laminate"}-color.webp`,
+            normalMap: `shared/textures/${design.environment?.floor || "laminate"}-normal.webp`,
+            roughnessMap: `shared/textures/${design.environment?.floor || "laminate"}-roughness.webp`,
+          }}
+        />
+      </group>
 
       <Ceiling room={room} />
       <StanceWalls
@@ -485,6 +500,7 @@ function StanceWalls({ room, color }: { room: Room; color: string }) {
                   position={position}
                   material={plaster}
                   castShadow={false}
+                  baked
                 />
                 <Box
                   size={
@@ -497,6 +513,7 @@ function StanceWalls({ room, color }: { room: Room; color: string }) {
                   }
                   color="#c3baaa"
                   castShadow={false}
+                  baked
                 />
               </group>
             );
@@ -523,6 +540,18 @@ export function downlights(room: Room): Array<[number, number]> {
  * wall); the overview looks in from above. */
 function Ceiling({ room }: { room: Room }) {
   const group = useRef<Group>(null);
+  const bake = useContext(ShellBake);
+  const bakeHooks = useMemo(
+    () =>
+      bake
+        ? {
+            onBeforeCompile: (shader: WebGLProgramParametersWithUniforms) =>
+              applyShellBake(shader, bake),
+            customProgramCacheKey: () => SHELL_BAKE_KEY,
+          }
+        : {},
+    [bake],
+  );
   const w = room.width / 100,
     d = room.depth / 100,
     h = room.height / 100;
@@ -530,12 +559,13 @@ function Ceiling({ room }: { room: Room }) {
     if (group.current) group.current.visible = seesInterior(camera, room);
   });
   return (
-    <group ref={group}>
+    <group ref={group} userData={{ bakeIgnoreVisibility: true }}>
       {/* Floor/wall bounce keeps a real ceiling light rather than grey. */}
       <mesh
         position={[w / 2, h + 0.02, d / 2]}
         raycast={() => {}}
         receiveShadow
+        userData={{ bakeSurface: "ceiling" }}
       >
         <boxGeometry args={[w + 0.16, 0.04, d + 0.16]} />
         <meshStandardMaterial
@@ -543,6 +573,7 @@ function Ceiling({ room }: { room: Room }) {
           roughness={0.95}
           emissive="#efe9df"
           emissiveIntensity={0.42}
+          {...bakeHooks}
         />
       </mesh>
       {downlights(room).map(([x, z]) => (

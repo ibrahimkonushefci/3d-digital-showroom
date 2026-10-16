@@ -3,7 +3,9 @@ import {
   type Cavity,
 } from "./lighting/InteriorOcclusion";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
-import { Suspense, createContext, useContext } from "react";
+import { Suspense, createContext, useContext, useMemo } from "react";
+import { applyShellBake, ShellBake, SHELL_BAKE_KEY } from "./bake/shellBake";
+import type { WebGLProgramParametersWithUniforms } from "three";
 import { BoxGeometry, type BufferGeometry } from "three";
 import { mapPanelGeometry, panelOffset, type Grain } from "./materialMapping";
 import { Edges } from "@react-three/drei";
@@ -31,6 +33,8 @@ type BoxProps = {
   panelRole?: string;
   grain?: Grain;
   decorative?: boolean;
+  /** Room shell surface: takes the baked lightmap when one is active. */
+  baked?: boolean;
 };
 export function Box({
   cavity,
@@ -50,8 +54,25 @@ export function Box({
   panelRole,
   grain,
   decorative = false,
+  baked = false,
 }: BoxProps) {
-  const occlusion = useInteriorOcclusion(cavity);
+  const cavityOcclusion = useInteriorOcclusion(cavity);
+  const bake = useContext(ShellBake);
+  const shellBake = baked ? bake : null;
+  const occlusion = useMemo(
+    () =>
+      shellBake
+        ? {
+            onBeforeCompile: (shader: WebGLProgramParametersWithUniforms) => {
+              cavityOcclusion.onBeforeCompile?.(shader);
+              applyShellBake(shader, shellBake);
+            },
+            customProgramCacheKey: () =>
+              cavityOcclusion.customProgramCacheKey() + "|" + SHELL_BAKE_KEY,
+          }
+        : cavityOcclusion,
+    [shellBake, cavityOcclusion],
+  );
   bevel = bevel || (lacquer ? 0.0015 : 0);
   const response = material
     ? furnitureResponse(material)
@@ -86,7 +107,8 @@ export function Box({
   );
   // Fronts tell the AO pass their size so it can close the gaps between
   // them (see aoFrontScale in pipeline/RenderPipeline.ts).
-  const front = panelRole === "front" || panelRole?.startsWith("interior-front");
+  const front =
+    panelRole === "front" || panelRole?.startsWith("interior-front");
   return (
     <mesh
       position={position}
@@ -129,6 +151,7 @@ export function Box({
             material={material}
             world={world}
             lacquer={lacquer}
+            bake={shellBake}
           />
         </Suspense>
       ) : (
