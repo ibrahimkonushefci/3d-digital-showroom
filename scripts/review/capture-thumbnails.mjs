@@ -3,8 +3,7 @@
 //   2. Chrome with --remote-debugging-port=9333 (see capture-showroom.mjs)
 //   3. node scripts/review/capture-thumbnails.mjs http://127.0.0.1:52775 [--write]
 // Opens every Home card that shows a prepared design, waits for its first
-// complete (baked) frame and saves the canvas at 960 × 554 WebP (and, for
-// the first kitchen and wardrobe, Home's wide 1800 px photographs). Without
+// complete (baked) frame and saves the canvas at 960 × 554 WebP. Without
 // --write the images go to verification/thumbnails/ for review only.
 import { connect } from "./cdp.mjs";
 import { homeCards } from "./home.mjs";
@@ -17,10 +16,6 @@ const WRITE = process.argv.includes("--write");
 const OUT = WRITE ? "public" : "verification/thumbnails";
 const WIDTH = 960,
   HEIGHT = 554;
-const HERO_IMAGES = {
-  "shared/showroom/japandi.webp": "shared/showroom/hero-kitchen.webp",
-  "shared/showroom/wardrobe-straight.webp": "shared/showroom/hero-wardrobe.webp",
-};
 const c = await connect();
 await c.send("Page.enable");
 await c.send("Network.enable");
@@ -40,21 +35,18 @@ const cards = (await homeCards(c)).filter((x) =>
   x.src.startsWith("shared/showroom/"),
 );
 const done = new Set();
-// The category tiles ("Kitchens", "Wardrobes") reuse a preset's image but
-// open the last design: take each image from its own preset card, which
-// Home lists after the tiles.
 for (const { k, src } of [...cards].reverse()) {
   if (done.has(src)) continue;
   done.add(src);
   await home();
   // Home renders its cards progressively: wait for this one.
   for (let i = 0; i < 100; i++) {
-    if (await c.evaluate(`document.querySelectorAll('img').length > ${k}`))
+    if (await c.evaluate(`document.querySelectorAll('img:not(dialog img)').length > ${k}`))
       break;
     await c.sleep(100);
   }
   await c.evaluate(
-    `[...document.querySelectorAll('img')][${k}].closest('button,a').click()`,
+    `[...document.querySelectorAll('img:not(dialog img)')][${k}].closest('button,a').click()`,
   );
   for (let i = 0; i < 200; i++) {
     if (
@@ -97,31 +89,5 @@ for (const { k, src } of [...cards].reverse()) {
     target,
   ]);
   console.log(target, fs.statSync(target).size, "bytes");
-  // Home's large photographs: the first kitchen and the first wardrobe
-  // preset, the whole canvas width at about 1.9:1.
-  const wide = HERO_IMAGES[src];
-  if (wide) {
-    const wideH = Math.min(h, Math.round(w / 1.9));
-    const out = path.join(OUT, wide);
-    execFileSync("cwebp", [
-      "-quiet",
-      "-q",
-      "80",
-      "-m",
-      "6",
-      "-crop",
-      "0",
-      String(Math.floor((h - wideH) / 2)),
-      String(w),
-      String(wideH),
-      "-resize",
-      "1800",
-      "0",
-      png,
-      "-o",
-      out,
-    ]);
-    console.log(out, fs.statSync(out).size, "bytes");
-  }
 }
 process.exit(0);

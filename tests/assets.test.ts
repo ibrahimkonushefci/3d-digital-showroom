@@ -73,3 +73,18 @@ it("declares authored physical scales, response and matching relationships for b
     );
   }
 });
+
+it("ships the Room Edit room renders, local typefaces and their licenses for offline use", () => {
+  for (const asset of [
+    "showroom/home-island-front.webp",
+    "showroom/home-wardrobe-interior.webp",
+    "fonts/DM-Sans-Regular.woff2",
+    "fonts/DM-Sans-Medium.woff2",
+    "fonts/DM-Sans-Semibold.woff2",
+    "fonts/DM-Serif-Display-Regular.woff2",
+    "fonts/DM-Serif-Display-Italic.woff2",
+    "fonts/DM-Sans-OFL.txt",
+    "fonts/DM-Serif-Display-OFL.txt",
+  ])
+    expect(existsSync(`public/shared/${asset}`)).toBe(true);
+});

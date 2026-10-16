@@ -42,7 +42,7 @@ const open = async (card) => {
   await c.send("Page.navigate", { url: `${BASE}/?brand=default` });
   await c.sleep(2500);
   await ev(
-    `[...document.querySelectorAll('img')].map(i=>i.closest('button,a')).find(b=>b&&b.textContent.includes(${JSON.stringify(card)})).click()`,
+    `[...document.querySelectorAll('img:not(dialog img)')].map(i=>i.closest('button,a')).find(b=>b&&b.textContent.includes(${JSON.stringify(card)})).click()`,
   );
   await ready();
   await c.sleep(4500);

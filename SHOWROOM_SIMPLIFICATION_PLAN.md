@@ -98,6 +98,28 @@ This supersedes the earlier choices to design Home together with the rooms (sect
 
 The owner **approved Phase 2 (rooms only)** and asked for it to be committed on `main` without the Home files, not pushed. The Home redesign stays uncommitted in the working tree for Phase 3 (section 3). The zoom lag with Performance mode OFF remains the accepted, unmeasured limitation from section 2.3.
 
+### 2.7 Phase 3 Home — approved and complete (16–17 October 2026)
+
+The owner selected **A — The Room Edit** from Codex's three concepts and asked for an optional **Home-only deep green appearance (`#252c29`)**, including Home's header and footer. Light is the first-visit default; the device remembers the choice. This supersedes the older large photographic-header / promotional-band structure described in Phase 3 below.
+
+**What was built** (`src/app/Home.tsx`, `home.css`, `HomeShowroomChooser.tsx`, `preferences.ts`, `App.tsx`): a split opening with the approved island front view and wardrobe interior detail (`public/shared/showroom/home-island-front.webp`, `home-wardrobe-interior.webp`, from the approved Phase 2 captures); DM Serif Display / DM Sans bundled locally; equal-sized kitchen and wardrobe cards with calculated "As shown" prices that open their prepared room directly; a visual Showroom chooser (`<dialog>`) opened from the main button and the header; "Continue your design" only when a draft exists; on Home the header shows Kitchens / Wardrobes anchors, Showroom, a compact language selector on phones and the light/green switch; the appearance is removed on every other route. SQ/EN/DE.
+
+**Owner approval (17 October 2026):** the owner approved the visual design and user experience. Technical review was left to Claude.
+
+**Claude's technical review and fixes (17 October 2026):**
+- Home fonts converted losslessly from TTF to WOFF2 (283 KB → 117 KB, identical glyphs, SQ/DE characters covered).
+- Removed the two wide Home photographs of the previous draft (`hero-kitchen.webp`, `hero-wardrobe.webp`, 132 KB) that nothing referenced any more, and the code in `capture-thumbnails.mjs` that generated them.
+- Removed nine translation keys of the old Home in all three languages (`enterShowroom`, `step1Body`, `step2*`, `step3*`, `showroomBand*`, `contactBody`).
+- Review scripts that click Home's picture cards (`scripts/review/*.mjs`, `scripts/bake-rooms.mjs`) now skip the chooser's images, so they no longer see every prepared design twice. (Rendering the chooser only while open was tried and reverted: it left the pictures blank for a moment on first open.)
+- Verified: `pnpm test` 28 files / 201 tests, `pnpm build` (TypeScript and budget), `node scripts/check-scene-assets.mjs dist`; in @Browser on the production preview: card entry (Cashmere L 5,196 €), header and main-button chooser, Escape with focus return, chooser entry into the corner wardrobe (2,777 €) on a phone width, SQ/EN/DE text and prices, green appearance remembered and absent in the Showroom (Inter, brand background), no horizontal overflow at 375 px, 44 px header targets, the update prompt, and an offline reload with the preview server stopped (Home, pictures and fonts from the cache).
+- Shipped size with the committed files: about 10.04 MB (11 MB working limit).
+
+**Phase 3 is complete** and committed on `main` (not pushed). Codex's evidence: `verification/phase3-home/REPORT.md` (local).
+
+### 2.8 Owner authorization: Phase 4 follows Phase 3 directly (17 October 2026)
+
+The owner authorized starting **Phase 4 (easy editing)** immediately after the Phase 3 commit, without another confirmation. Phase 4 ends at its own review gate: report, visual evidence and manual checks, then stop; Phase 4 is **not** committed before the owner's review. Approved rooms, Phase 1 behaviour and the accepted zoom lag (section 2.3) stay as they are.
+
 ## 3. Current Git state and work already done
 
 Verified on 16 October 2026:
@@ -120,6 +142,7 @@ Verified on 16 October 2026:
   - `scripts/review/capture-thumbnails.mjs` (the wide Home photographs), `public/shared/showroom/hero-kitchen.webp`, `hero-wardrobe.webp`;
   - README text for Phase 3 (add it with the Home commit, replacing the "Home thumbnails" bullet): - **Home:** a small catalogue without 3D: a large photograph with *Enter the showroom*, three steps, the prepared kitchens and wardrobes as picture cards with their price (each opens in the Showroom), a showroom band and the company's contacts. Thumbnails and the two wide photographs: `node scripts/review/capture-thumbnails.mjs <preview-url> --write`.
   - Commit Phase 2 on approval with these paths excluded, e.g. `git stash push -u -m phase3-home -- <the paths above>`, commit, `git stash pop`. Verified 16 October 2026: with them set aside, `pnpm build` (9.30 MB shipped), `pnpm test` (196 passed) and the asset check pass, and the Phase 1 Home shows the new rooms. The prepared designs' thumbnails (`showroom/classic|japandi|modern|wardrobe|wardrobe-straight.webp`) are Phase 2 and go with its commit. Phase 1 "before" captures: `verification/phase2-review/before/`, build `verification/phase2-review/baseline-dist` (`baseline` preview).
+- **Phase 3 status (17 October 2026):** Home (The Room Edit) approved visually by the owner, technically reviewed and verified by Claude, **committed on `main`**, not pushed (section 2.7). Next: Phase 4 (section 2.8).
 - Node is `/opt/homebrew/bin/node` (v26), pnpm `/opt/homebrew/bin/pnpm`. Blender 5.2 at `/Applications/Blender.app` (local authoring only, run headless).
 
 ## 4. Findings
@@ -304,6 +327,8 @@ Four phases (since owner decision 2.5), each producing a visible, reviewable res
 **What the owner should notice:** furnished, believable rooms with real windows and a garden; fronts that separate clearly from walls and floors.
 
 ### Phase 3 — Home page (standalone, owner decision 2.5)
+
+**Status: complete (section 2.7).** What was actually built is described there; the bullets below are the original brief.
 
 **Goal:** a Home page that presents the approved rooms like a small furniture catalogue, with the Showroom as its highlight. Starts only after the Phase 2 gate is approved; built on the approved room renders.
 

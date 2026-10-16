@@ -39,7 +39,7 @@ for (const [label, button] of SCENES) {
   await click("EN");
   await c.sleep(500);
   await c.evaluate(
-    `[...document.querySelectorAll('img')].map(i=>i.closest('button,a')).find(b=>b&&b.textContent.includes(${JSON.stringify(label)})).click()`,
+    `[...document.querySelectorAll('img:not(dialog img)')].map(i=>i.closest('button,a')).find(b=>b&&b.textContent.includes(${JSON.stringify(label)})).click()`,
   );
   await c.sleep(7000);
   if (button) {

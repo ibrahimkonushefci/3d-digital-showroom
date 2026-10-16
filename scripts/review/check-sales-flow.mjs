@@ -83,7 +83,7 @@ results.offer = await click("Your offer", false);
 await c.sleep(5000);
 await c.shot(`${OUT}/3-offer.png`, undefined);
 results.offerImages = await ev(
-  `[...document.querySelectorAll('img')].filter(i=>i.offsetParent&&i.naturalWidth>300).map(i=>i.naturalWidth+'x'+i.naturalHeight)`,
+  `[...document.querySelectorAll('img:not(dialog img)')].filter(i=>i.offsetParent&&i.naturalWidth>300).map(i=>i.naturalWidth+'x'+i.naturalHeight)`,
 );
 results.offerPrice = await ev(
   `document.querySelector('.summary-price h2')?.textContent.trim()||null`,

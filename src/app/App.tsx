@@ -8,13 +8,14 @@ import {
   useLocation,
   useParams,
 } from "react-router-dom";
-import { Settings2, ArrowUpRight } from "lucide-react";
+import { Settings2, ArrowUpRight, Moon, Sun } from "lucide-react";
 import { BrandProvider, useBrand } from "../brand";
 import { useT, useLanguage } from "../i18n";
 import { useDesigner } from "../designer3d/store";
 import { saveDesign } from "../persistence";
 import OfflineStatus from "../pwa/Status";
-import { usePresentation } from "./preferences";
+import { usePresentation, usePreferences } from "./preferences";
+import { useHomeShowroom } from "./HomeShowroomChooser";
 import Home from "./Home";
 import { fpsDiagnostics } from "../scene/diagnostics/enabled";
 const PreviewStudio = import.meta.env.DEV
@@ -67,6 +68,8 @@ function Shell() {
     { language, setLanguage } = useLanguage(),
     location = useLocation();
   const presentation = usePresentation(brand);
+  const home = useHomeShowroom((state) => state.mounted);
+  const appearance = usePreferences((state) => state.homeAppearance);
   const design = useDesigner((s) => s.design);
   const embed = location.pathname.startsWith("/embed");
   useEffect(() => {
@@ -91,22 +94,44 @@ function Shell() {
             <img src={logoUrl} alt="" />
             <div>
               <strong>{brand.companyName}</strong>
-              <small>{t("appName")}</small>
+              <small>{t(home ? "homeBrandLabel" : "appName")}</small>
             </div>
           </Link>
           <nav aria-label={t("home")}>
-            <NavLink end to={"/" + location.search}>
-              {t("home")}
-            </NavLink>
-            {brand.modules.kitchenDesigner && (
-              <NavLink to={"/designer/kitchen" + location.search}>
-                {t("kitchens")}
-              </NavLink>
-            )}
-            {brand.modules.wardrobeDesigner && (
-              <NavLink to={"/designer/wardrobe" + location.search}>
-                {t("wardrobes")}
-              </NavLink>
+            {home ? (
+              <>
+                {brand.modules.kitchenDesigner && (
+                  <a href="#kitchens">{t("kitchens")}</a>
+                )}
+                {brand.modules.wardrobeDesigner && (
+                  <a href="#wardrobes">{t("wardrobes")}</a>
+                )}
+                {(brand.modules.kitchenDesigner ||
+                  brand.modules.wardrobeDesigner) && (
+                  <button
+                    type="button"
+                    onClick={useHomeShowroom.getState().open}
+                  >
+                    {t("showroom")} <ArrowUpRight size={14} />
+                  </button>
+                )}
+              </>
+            ) : (
+              <>
+                <NavLink end to={"/" + location.search}>
+                  {t("home")}
+                </NavLink>
+                {brand.modules.kitchenDesigner && (
+                  <NavLink to={"/designer/kitchen" + location.search}>
+                    {t("kitchens")}
+                  </NavLink>
+                )}
+                {brand.modules.wardrobeDesigner && (
+                  <NavLink to={"/designer/wardrobe" + location.search}>
+                    {t("wardrobes")}
+                  </NavLink>
+                )}
+              </>
             )}
           </nav>
           <div className="header-right">
@@ -126,6 +151,48 @@ function Shell() {
                 </button>
               ))}
             </div>
+            {home && (
+              <>
+                <select
+                  className="home-language-picker"
+                  aria-label={t("language")}
+                  value={language}
+                  onChange={(event) =>
+                    setLanguage(event.target.value as typeof language)
+                  }
+                >
+                  {brand.languages.map((l) => (
+                    <option value={l} key={l}>
+                      {l.toUpperCase()}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  className="icon-button home-appearance-switch"
+                  aria-label={t(
+                    appearance === "light" ? "homeUseGreen" : "homeUseLight",
+                  )}
+                  title={t(
+                    appearance === "light" ? "homeUseGreen" : "homeUseLight",
+                  )}
+                  aria-pressed={appearance === "deep-green"}
+                  onClick={() =>
+                    usePreferences
+                      .getState()
+                      .setHomeAppearance(
+                        appearance === "light" ? "deep-green" : "light",
+                      )
+                  }
+                >
+                  {appearance === "light" ? (
+                    <Moon size={19} />
+                  ) : (
+                    <Sun size={19} />
+                  )}
+                </button>
+              </>
+            )}
             <Link
               className="icon-button settings-link"
               aria-label={t("settings")}
@@ -178,12 +245,15 @@ function Shell() {
       )}
       {!embed && (
         <footer className="site-footer">
-          <div>
-            <strong>{brand.companyName}</strong>
-            <span>
-              {brand.contact.city} · {t("metric")}
-            </span>
-          </div>
+          {!home && (
+            <div>
+              <strong>{brand.companyName}</strong>
+              <span>
+                {brand.contact.city} · {t("metric")}
+              </span>
+            </div>
+          )}
+          {home && <span>{t("estimateNote")}</span>}
           {!presentation && (
             <span>
               {local

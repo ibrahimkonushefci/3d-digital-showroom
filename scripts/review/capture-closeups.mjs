@@ -63,7 +63,7 @@ for (const [label, name, fx, fy, steps, button, module] of SHOTS) {
   await click("EN");
   await c.sleep(600);
   const r = await c.evaluate(
-    `(()=>{const e=[...document.querySelectorAll('img')].map(i=>i.closest('button,a')).find(b=>b&&b.textContent.includes(${JSON.stringify(label)}));if(!e)return 'missing';e.click();return 'ok'})()`,
+    `(()=>{const e=[...document.querySelectorAll('img:not(dialog img)')].map(i=>i.closest('button,a')).find(b=>b&&b.textContent.includes(${JSON.stringify(label)}));if(!e)return 'missing';e.click();return 'ok'})()`,
   );
   if (r !== "ok") {
     console.log("missing preset", label);

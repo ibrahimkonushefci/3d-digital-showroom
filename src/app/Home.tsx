@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useLayoutEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
@@ -10,51 +10,69 @@ import {
 } from "lucide-react";
 import { useBrand } from "../brand";
 import { useT, label, useLanguage, type TranslationKey } from "../i18n";
-import { presentationPresets, type ShowroomPreset } from "../designer3d/presets";
+import {
+  presentationPresets,
+  type ShowroomPreset,
+} from "../designer3d/presets";
 import { useDesigner } from "../designer3d/store";
 import { calculatePrice, estimateLabel } from "../pricing";
 import { loadDesign } from "../persistence";
 import type { DesignDocument } from "../catalog/types";
+import { usePreferences } from "./preferences";
+import HomeShowroomChooser, { useHomeShowroom } from "./HomeShowroomChooser";
+import "./home.css";
 
-/**
- * Home: a small furniture catalogue in front of the Showroom. A large
- * photograph of the first prepared room with one clear way in, the three
- * steps, the prepared kitchens and wardrobes as picture cards (each opens
- * its design in the Showroom) and the company's contact details. No 3D here:
- * the scene loads only when the Showroom opens.
- */
-const HERO_IMAGE: Record<DesignDocument["kind"], string> = {
-  kitchen: "shared/showroom/hero-kitchen.webp",
-  wardrobe: "shared/showroom/hero-wardrobe.webp",
-};
-
+/** The Room Edit: a picture-led catalogue. Only selecting a room loads 3D. */
 export default function Home() {
-  const { brand, catalog } = useBrand(),
-    t = useT(),
-    { language } = useLanguage(),
-    navigate = useNavigate();
+  const { brand, catalog } = useBrand();
+  const t = useT();
+  const { language } = useLanguage();
+  const navigate = useNavigate();
+  const appearance = usePreferences((state) => state.homeAppearance);
   const presets = useMemo(
     () =>
-      presentationPresets(catalog).filter((p) =>
-        p.design.kind === "kitchen"
+      presentationPresets(catalog).filter((preset) =>
+        preset.design.kind === "kitchen"
           ? brand.modules.kitchenDesigner
           : brand.modules.wardrobeDesigner,
       ),
     [catalog, brand.modules],
   );
-  const kitchens = presets.filter((p) => p.design.kind === "kitchen");
-  const wardrobes = presets.filter((p) => p.design.kind === "wardrobe");
-  const featured = presets[0];
-  // A design this device already worked on: offered as "continue".
+  const kitchens = presets.filter((preset) => preset.design.kind === "kitchen");
+  const wardrobes = presets.filter(
+    (preset) => preset.design.kind === "wardrobe",
+  );
+  const island = kitchens.find((preset) => preset.id === "classic");
+  const inside = wardrobes.find((preset) => preset.id === "wardrobe-straight");
+  const hero = island || kitchens[0] || wardrobes[0];
+  const detail = inside || (kitchens.length ? wardrobes[0] : undefined);
   const recent = useMemo(() => {
     try {
       const kind = localStorage.getItem(`showroom-recent-${brand.slug}`);
-      if (kind !== "kitchen" && kind !== "wardrobe") return null;
-      return loadDesign(brand.slug, kind, catalog);
+      if (
+        (kind === "kitchen" && brand.modules.kitchenDesigner) ||
+        (kind === "wardrobe" && brand.modules.wardrobeDesigner)
+      )
+        return loadDesign(brand.slug, kind, catalog);
     } catch {
-      return null;
+      /* A catalogue remains useful when device storage is unavailable. */
     }
-  }, [brand.slug, catalog]);
+    return null;
+  }, [brand.slug, brand.modules, catalog]);
+  useLayoutEffect(() => {
+    document.documentElement.dataset.homeAppearance = appearance;
+    return () => {
+      delete document.documentElement.dataset.homeAppearance;
+    };
+  }, [appearance]);
+  useLayoutEffect(() => {
+    useHomeShowroom.getState().setMounted(true);
+    return () => {
+      useHomeShowroom.getState().close();
+      useHomeShowroom.getState().setMounted(false);
+    };
+  }, []);
+
   const open = (preset: ShowroomPreset) => {
     useDesigner.getState().setDesign(preset.design);
     useDesigner.getState().setCameraView(preset.camera);
@@ -66,6 +84,10 @@ export default function Home() {
       design.exact,
       language,
     );
+  const size = (design: DesignDocument) =>
+    design.layout === "l" || design.layout === "corner"
+      ? t("homeSides", { first: design.room.width, second: design.room.depth })
+      : `${t(design.kind === "kitchen" ? "kitchenWidth" : "wardrobeWidth")} ${design.room.width} cm`;
   const contact = brand.contact;
   const contacts = [
     contact.phone && {
@@ -93,179 +115,187 @@ export default function Home() {
     href?: string;
   }>;
 
-  if (!featured)
-    return (
-      <main className="home page">
-        <p className="empty-state">{t("noFurniture")}</p>
-      </main>
-    );
   return (
-    <main className="home page">
-      <section className="home-hero">
-        <div className="home-hero-copy">
-          <div>
-            <div className="eyebrow">
-              <span />
-              {t("homeEyebrow")}
-            </div>
-            <h1>{t("homeTitle")}</h1>
-          </div>
-          <div className="home-hero-side">
-            <p>{t("homeBody")}</p>
-            <div className="home-hero-actions">
+    <main className="home page" id="home-top">
+      {!hero ? (
+        <p className="empty-state">{t("noFurniture")}</p>
+      ) : (
+        <>
+          <section className="home-edit-hero">
+            <div className="home-edit-copy">
+              <p className="home-eyebrow">
+                {t("homeEyebrow", { count: presets.length })}
+              </p>
+              <h1>
+                {t("homeTitle")}
+                <br />
+                <em>{t("homeTitleAccent")}</em>
+              </h1>
+              <p className="home-edit-intro">
+                {t("homeBody")}
+                <br />
+                {t("homeBodySecond")}
+              </p>
               <button
                 type="button"
-                className="button primary home-cta"
-                onClick={() => open(featured)}
+                className="home-primary"
+                onClick={useHomeShowroom.getState().open}
               >
-                {t("enterShowroom")}
-                <ArrowRight size={18} />
+                {t("homeExploreShowroom")} <ArrowUpRight size={21} />
               </button>
               {recent && (
                 <button
                   type="button"
-                  className="button secondary"
+                  className="home-continue"
                   onClick={() =>
                     navigate("/designer/" + recent.kind + location.search)
                   }
                 >
-                  {t("continueDesign")}
+                  {t("continueDesign")} <ArrowRight size={14} />
                 </button>
               )}
-            </div>
-          </div>
-        </div>
-        <button
-          type="button"
-          className="home-hero-picture"
-          onClick={() => open(featured)}
-          aria-label={t("enterShowroom")}
-        >
-          <img
-            src={"/" + HERO_IMAGE[featured.design.kind]}
-            alt=""
-            fetchPriority="high"
-          />
-        </button>
-      </section>
-
-      <ol className="home-steps" aria-label={t("howItWorks")}>
-        {(["1", "2", "3"] as const).map((n) => (
-          <li key={n}>
-            <span className="home-step-number">0{n}</span>
-            <div>
-              <strong>{t(("step" + n + "Title") as TranslationKey)}</strong>
-              <p>{t(("step" + n + "Body") as TranslationKey)}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-
-      {[
-        { key: "kitchens", intro: "kitchensIntro", items: kitchens },
-        { key: "wardrobes", intro: "wardrobesIntro", items: wardrobes },
-      ]
-        .filter((group) => group.items.length)
-        .map((group) => (
-          <section
-            key={group.key}
-            className="home-collection"
-            id={group.key}
-            aria-labelledby={"home-" + group.key}
-          >
-            <div className="home-collection-heading">
-              <div>
-                <h2 id={"home-" + group.key}>
-                  {t(group.key as TranslationKey)}
-                </h2>
-                <p>{t(group.intro as TranslationKey)}</p>
+              <div className="home-category-links">
+                {kitchens.length > 0 && (
+                  <a href="#kitchens">
+                    {t("kitchens")}{" "}
+                    <small>{String(kitchens.length).padStart(2, "0")}</small> ↓
+                  </a>
+                )}
+                {wardrobes.length > 0 && (
+                  <a href="#wardrobes">
+                    {t("wardrobes")}{" "}
+                    <small>{String(wardrobes.length).padStart(2, "0")}</small> ↓
+                  </a>
+                )}
               </div>
-              <span className="home-collection-note">
-                {t("estimateNote")}
-              </span>
             </div>
-            <div
-              className={
-                "home-cards" + (group.items.length < 3 ? " two" : "")
-              }
-            >
-              {group.items.map((preset) => (
-                <button
-                  type="button"
-                  key={preset.id}
-                  // Name first in the markup (read first by screen readers
-                  // and review scripts); the picture shows above it.
-                  className="home-card"
-                  onClick={() => open(preset)}
-                >
-                  <span className="home-card-body">
-                    <strong>{label(preset.name, language)}</strong>
-                    <span className="home-card-meta">
-                      {t(preset.design.layout)} · {preset.design.room.width} ×{" "}
-                      {preset.design.room.depth} cm
-                    </span>
-                    <span className="home-card-price">
-                      <span>{t("shownPrice")}</span>
-                      {price(preset.design)}
-                    </span>
-                  </span>
-                  <span className="home-card-image">
-                    <img src={"/" + preset.thumbnail} alt="" loading="lazy" />
-                    <span className="home-card-open">
-                      {t("openInShowroom")}
-                      <ArrowUpRight size={15} />
-                    </span>
-                  </span>
-                </button>
-              ))}
+            <div className="home-edit-composition">
+              <img
+                className="home-edit-main-image"
+                src={
+                  island
+                    ? "/shared/showroom/home-island-front.webp"
+                    : "/" + hero.thumbnail
+                }
+                alt={label(hero.name, language)}
+                fetchPriority="high"
+              />
+              {detail && (
+                <div className="home-edit-detail">
+                  <img
+                    src={
+                      inside
+                        ? "/shared/showroom/home-wardrobe-interior.webp"
+                        : "/" + detail.thumbnail
+                    }
+                    alt={
+                      inside
+                        ? t("homeWardrobeInterior")
+                        : label(detail.name, language)
+                    }
+                  />
+                  <span>{t("homeDetailCaption")}</span>
+                </div>
+              )}
+              <span className="home-image-caption">
+                {t("homeImageCaption")}
+              </span>
             </div>
           </section>
-        ))}
-
-      {wardrobes[0] && kitchens[0] && (
-        <section className="home-band">
-          <img
-            src={"/" + HERO_IMAGE.wardrobe}
-            alt={label(wardrobes[0].name, language)}
-            loading="lazy"
-          />
-          <div className="home-band-copy">
-            <h2>{t("showroomBandTitle")}</h2>
-            <p>{t("showroomBandBody")}</p>
-            <button
-              type="button"
-              className="button primary"
-              onClick={() => open(wardrobes[0])}
-            >
-              {t("enterShowroom")}
-              <ArrowRight size={18} />
-            </button>
+          {[
+            { key: "kitchens", intro: "kitchensIntro", items: kitchens },
+            { key: "wardrobes", intro: "wardrobesIntro", items: wardrobes },
+          ]
+            .filter((group) => group.items.length)
+            .map((group) => (
+              <section
+                key={group.key}
+                className="home-collection"
+                id={group.key}
+                aria-labelledby={"home-" + group.key}
+              >
+                <div className="home-collection-heading">
+                  <h2 id={"home-" + group.key}>
+                    {t(group.key as TranslationKey)}{" "}
+                    <sup>{String(group.items.length).padStart(2, "0")}</sup>
+                  </h2>
+                  <p>{t(group.intro as TranslationKey)}</p>
+                </div>
+                <div className="home-cards">
+                  {group.items.map((preset) => (
+                    <button
+                      type="button"
+                      key={preset.id}
+                      className="home-card"
+                      data-preset={preset.id}
+                      onClick={() => open(preset)}
+                      aria-label={`${label(preset.name, language)} — ${size(preset.design)} — ${t("shownPrice")} ${price(preset.design)} — ${t("openInShowroom")}`}
+                    >
+                      <span className="home-card-image">
+                        <img
+                          src={"/" + preset.thumbnail}
+                          alt=""
+                          loading="lazy"
+                        />
+                      </span>
+                      <span className="home-card-body">
+                        <span className="home-card-heading">
+                          <strong>{label(preset.name, language)}</strong>
+                          <ArrowUpRight size={20} />
+                        </span>
+                        <span className="home-card-meta">
+                          {t(preset.design.layout)}
+                        </span>
+                        <span className="home-card-meta">
+                          {size(preset.design)}
+                        </span>
+                        <span className="home-card-price">
+                          <span>{t("shownPrice")}</span>
+                          {price(preset.design)}
+                        </span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            ))}
+          <div className="home-quiet-guide" aria-label={t("howItWorks")}>
+            <span>{t("homeYourRoom")}</span>
+            <ol>
+              <li>{t("step1Title")}</li>
+              <li>{t("homeGuideAdjust")}</li>
+              <li>{t("homeGuideOffer")}</li>
+            </ol>
           </div>
-        </section>
+        </>
       )}
-
-      <section className="home-contact">
+      <section className="home-contact" aria-label={t("contactTitle")}>
         <div>
-          <h2>{t("contactTitle")}</h2>
-          <p>{t("contactBody")}</p>
-        </div>
-        <div className="home-contact-details">
           <strong>{brand.companyName}</strong>
-          {contacts.map(({ icon: Icon, text, href }) =>
-            href ? (
-              <a key={text} href={href}>
-                <Icon size={16} />
-                {text}
-              </a>
-            ) : (
-              <span key={text}>
-                <Icon size={16} />
-                {text}
-              </span>
-            ),
-          )}
+          <p>{t("homeBrandLine")}</p>
         </div>
+        {contacts.length > 0 && (
+          <div className="home-contact-details">
+            {contacts.map(({ icon: Icon, text, href }) =>
+              href ? (
+                <a key={text} href={href}>
+                  <Icon size={14} />
+                  {text}
+                </a>
+              ) : (
+                <span key={text}>
+                  <Icon size={14} />
+                  {text}
+                </span>
+              ),
+            )}
+          </div>
+        )}
+        <a className="home-back-top" href="#home-top">
+          {t("homeBackTop")} ↑
+        </a>
       </section>
+      <HomeShowroomChooser presets={presets} onSelect={open} />
     </main>
   );
 }

@@ -64,11 +64,11 @@ await go(BASE + "/?brand=default");
 console.log(await click("EN", true));
 await c.sleep(800);
 const names = await c.evaluate(
-  `[...document.querySelectorAll('img')].map(i=>i.closest('button,a')?.textContent.trim()).filter(Boolean)`,
+  `[...document.querySelectorAll('img:not(dialog img)')].map(i=>i.closest('button,a')?.textContent.trim()).filter(Boolean)`,
 );
 console.log(names);
 const cards = await c.evaluate(
-  `[...document.querySelectorAll('img')].map((i,k)=>({k,txt:i.closest('button,a')?.textContent.trim()})).filter(x=>x.txt)`,
+  `[...document.querySelectorAll('img:not(dialog img)')].map((i,k)=>({k,txt:i.closest('button,a')?.textContent.trim()})).filter(x=>x.txt)`,
 );
 const seen = new Set();
 for (const card of cards) {
@@ -82,7 +82,7 @@ for (const card of cards) {
   if (only && !new RegExp(only).test(slugOf(card.txt))) continue;
   await go(BASE + "/?brand=default");
   await c.evaluate(
-    `[...document.querySelectorAll('img')][${card.k}].closest('button,a').click()`,
+    `[...document.querySelectorAll('img:not(dialog img)')][${card.k}].closest('button,a').click()`,
   );
   // Card text up to its size ("… 420 × 360 cm"): Home's price and button
   // labels never change the file names.

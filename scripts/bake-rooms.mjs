@@ -56,12 +56,12 @@ for (const card of cards) {
   await home();
   // Home renders its cards progressively: wait for this one.
   for (let i = 0; i < 100; i++) {
-    if (await c.evaluate(`document.querySelectorAll('img').length > ${card.k}`))
+    if (await c.evaluate(`document.querySelectorAll('img:not(dialog img)').length > ${card.k}`))
       break;
     await c.sleep(100);
   }
   await c.evaluate(
-    `[...document.querySelectorAll('img')][${card.k}].closest('button,a').click()`,
+    `[...document.querySelectorAll('img:not(dialog img)')][${card.k}].closest('button,a').click()`,
   );
   for (let i = 0; i < 200; i++) {
     const ready = await c.evaluate(

@@ -93,7 +93,7 @@ await c.evaluate(
 );
 await c.sleep(500);
 const cards = await c.evaluate(
-  `[...document.querySelectorAll('img')].map((i,k)=>({k,txt:i.closest('button,a')?.textContent.trim()})).filter(x=>x.txt)`,
+  `[...document.querySelectorAll('img:not(dialog img)')].map((i,k)=>({k,txt:i.closest('button,a')?.textContent.trim()})).filter(x=>x.txt)`,
 );
 const seen = new Set();
 for (const card of cards) {
@@ -108,7 +108,7 @@ for (const card of cards) {
   await c.send("Page.navigate", { url: BASE + "/?brand=default" });
   await c.sleep(2000);
   await c.evaluate(
-    `[...document.querySelectorAll('img')][${card.k}].closest('button,a').click()`,
+    `[...document.querySelectorAll('img:not(dialog img)')][${card.k}].closest('button,a').click()`,
   );
   await c.sleep(7000);
   const baseline = await measure(`${slug}-baseline`, true);

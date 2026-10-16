@@ -94,3 +94,17 @@ All new sources are CC0 Poly Haven assets (https://polyhaven.com/license), downl
 - Room models, prepared headless in Blender by `art/blender/prepare_decor.py` with `art/blender/decor.json` (one variant kept where a source file holds several, decimated, WebP textures) and registered by `node scripts/register-decor.mjs <prepared-dir> <download-dir> [ids]` (meshopt-compressed, content-hashed): `dining-chair` (dining_chair_02), `pendant-globe` (modern_ceiling_lamp_01), `vase-tall` (ceramic_vase_03), `side-table` (side_table_01), `wall-art-tall` (hanging_picture_frame_01; its glass made see-through on registration), `sideboard` (modern_wooden_cabinet), `plant-tree` (pachira_aquatica_01, variant d), `armchair` (modern_arm_chair_01), `vase-round` (ceramic_vase_02), `dresser` (drawer_cabinet), `basket` (wicker_basket_02). Decorative, unpriced, never selectable.
 - Tried and not shipped (removed again): `plant-floor` (potted_plant_02), `lounge-chair` (mid_century_lounge_chair), `plant-calathea`, `books`, `display-shelves`, `coffee-table`.
 - The presentation room's architecture (walls, garden door, doorway and hallway glimpse, bulkhead, shadow gaps, slatted feature wall), the dining table, rug, open shelves, clock and mirror are original geometry built in code (`src/scene/rooms/`).
+
+
+## Phase 3 Home — The Room Edit, 16 October 2026
+
+- `showroom/home-island-front.webp`: WebP conversion of the approved Phase 2 `verification/phase2-review/after/anthracite-islandwith-island-c-front.png` (2096 × 1258).
+- `showroom/home-wardrobe-interior.webp`: WebP conversion of the approved Phase 2 `verification/phase2-review/after/straight-wardrobestraight-cm-interior.png` (2096 × 1258).
+
+Both were prepared for the owner-selected A concept and copied unchanged into the application. No retouching, relighting, new furniture or third-party room photography. The five existing prepared-design thumbnails are unchanged. Original room-asset licenses and provenance above continue to apply.
+
+Home typography is bundled locally from Google Fonts (downloaded 16 October 2026; converted losslessly from TTF to WOFF2 with fontTools on 17 October 2026):
+- [DM Sans](https://fonts.google.com/specimen/DM+Sans), 400 / 500 / 600: `fonts/DM-Sans-Regular.woff2`, `DM-Sans-Medium.woff2`, `DM-Sans-Semibold.woff2`; SIL Open Font License in `fonts/DM-Sans-OFL.txt`.
+- [DM Serif Display](https://fonts.google.com/specimen/DM+Serif+Display), regular / italic: `fonts/DM-Serif-Display-Regular.woff2`, `DM-Serif-Display-Italic.woff2`; SIL Open Font License in `fonts/DM-Serif-Display-OFL.txt`.
+
+No remote font requests, paid assets or runtime font dependencies. Inter and the PDF fonts remain in use outside Home.
