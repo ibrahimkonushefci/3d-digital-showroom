@@ -1,8 +1,8 @@
 import manifest from "./previews.json";
 
 /**
- * Small pictures of finishes, handles, front styles, floors and ready-made
- * looks, rendered from the real scene by scripts/review/render-previews.mjs.
+ * Small pictures of finishes, handles, front styles, floors, ready-made
+ * looks, unit types and wardrobe interior parts, rendered from the real scene by scripts/review/render-previews.mjs.
  * Each entry records the catalogue colour it was rendered with, so a brand
  * that changes a colour falls back to a plain swatch instead of showing a
  * wrong picture.
@@ -11,7 +11,14 @@ type Entry = { src: string; color?: string };
 const items = (manifest as { items: Record<string, Entry> }).items;
 
 export type PreviewKind =
-  "front" | "worktop" | "handle" | "profile" | "floor" | "look";
+  | "front"
+  | "worktop"
+  | "handle"
+  | "profile"
+  | "floor"
+  | "look"
+  | "unit"
+  | "interior";
 
 export function previewSrc(
   kind: PreviewKind,

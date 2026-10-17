@@ -170,6 +170,18 @@
       "src": "shared/previews/handle-profile-wardrobe.webp",
       "color": "#252c2a"
     },
+    "interior:basket": {
+      "src": "shared/previews/interior-basket.webp"
+    },
+    "interior:drawer": {
+      "src": "shared/previews/interior-drawer.webp"
+    },
+    "interior:rail": {
+      "src": "shared/previews/interior-rail.webp"
+    },
+    "interior:shelf": {
+      "src": "shared/previews/interior-shelf.webp"
+    },
     "look:anthracite": {
       "src": "shared/previews/look-anthracite.webp"
     },
@@ -211,6 +223,57 @@
     },
     "profile:panel-wardrobe": {
       "src": "shared/previews/profile-panel-wardrobe.webp"
+    },
+    "unit:base-doors": {
+      "src": "shared/previews/unit-base-doors.webp"
+    },
+    "unit:base-drawers": {
+      "src": "shared/previews/unit-base-drawers.webp"
+    },
+    "unit:corner": {
+      "src": "shared/previews/unit-corner.webp"
+    },
+    "unit:dishwasher": {
+      "src": "shared/previews/unit-dishwasher.webp"
+    },
+    "unit:fridge": {
+      "src": "shared/previews/unit-fridge.webp"
+    },
+    "unit:oven": {
+      "src": "shared/previews/unit-oven.webp"
+    },
+    "unit:pantry": {
+      "src": "shared/previews/unit-pantry.webp"
+    },
+    "unit:sink": {
+      "src": "shared/previews/unit-sink.webp"
+    },
+    "unit:wall-doors": {
+      "src": "shared/previews/unit-wall-doors.webp"
+    },
+    "unit:wall-glass": {
+      "src": "shared/previews/unit-wall-glass.webp"
+    },
+    "unit:wall-hood": {
+      "src": "shared/previews/unit-wall-hood.webp"
+    },
+    "unit:wall-open": {
+      "src": "shared/previews/unit-wall-open.webp"
+    },
+    "unit:wardrobe-drawers": {
+      "src": "shared/previews/unit-wardrobe-drawers.webp"
+    },
+    "unit:wardrobe-hanging": {
+      "src": "shared/previews/unit-wardrobe-hanging.webp"
+    },
+    "unit:wardrobe-open": {
+      "src": "shared/previews/unit-wardrobe-open.webp"
+    },
+    "unit:wardrobe-shelves": {
+      "src": "shared/previews/unit-wardrobe-shelves.webp"
+    },
+    "unit:wardrobe-sliding": {
+      "src": "shared/previews/unit-wardrobe-sliding.webp"
     },
     "worktop:concrete": {
       "src": "shared/previews/worktop-concrete.webp",

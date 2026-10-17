@@ -6,6 +6,7 @@ import type { ResolvedInterior } from "../designer3d/interiors";
 import { useDesigner } from "../designer3d/store";
 import { useInteriorInteraction } from "../designer3d/useInteriorInteraction";
 import { Box } from "./Primitives";
+import { SelectionFrame } from "../designer3d/furniture/SelectionFrame";
 import { Fittings } from "./Fittings";
 import { useSceneInvalidation } from "./activity";
 function Component({
@@ -66,7 +67,6 @@ function Component({
             size={[w, h, d]}
             position={[0, y, -0.008]}
             material={carcass}
-            selected={selected}
             bevel={0.0015}
             grain="horizontal"
             panelRole={`interior-${part.id}`}
@@ -80,7 +80,7 @@ function Component({
             >
               <cylinderGeometry args={[0.008, 0.008, w - 0.014, 12]} />
               <meshStandardMaterial
-                color={selected ? "#dba862" : "#adb5b4"}
+                color="#adb5b4"
                 metalness={0.8}
                 roughness={0.25}
               />
@@ -99,7 +99,7 @@ function Component({
           <group position={[0, y, 0]}>
             {part.kind === "basket" ? (
               <Fittings
-                color={selected ? "#dba862" : "#879295"}
+                color="#879295"
                 parts={[
                   ...[-1, 1].flatMap((side) => [
                     {
@@ -164,7 +164,6 @@ function Component({
                   size={[w - 0.02, h, 0.018]}
                   position={[0, 0, d / 2 - 0.026]}
                   material={carcass}
-                  selected={selected}
                   panelRole={`interior-front-${part.id}`}
                 />
                 <Fittings
@@ -193,6 +192,16 @@ function Component({
             )}
           </group>
         ) : null}
+        {selected && (
+          <SelectionFrame
+            kind="selected"
+            w={w}
+            y0={y - Math.max(h / 2, 0.025)}
+            y1={y + Math.max(h / 2, 0.025)}
+            z0={-d / 2 - 0.008}
+            z1={d / 2}
+          />
+        )}
       </group>
     </group>
   );

@@ -216,3 +216,90 @@ export function validateInteriorReferences(
     }),
   ];
 }
+
+/**
+ * Every mounting height (cm from the internal floor) where this interior
+ * product fits in the unit next to its other parts, lowest first. With
+ * `replacing`, that part is left out first (moving or swapping it).
+ */
+export function interiorPositions(
+  c: Cabinet,
+  module: Module,
+  catalog: Catalog,
+  productId: string,
+  replacing?: string,
+): number[] {
+  const item = catalog.interiorItems?.find((i) => i.id === productId);
+  if (!item || !canEditInterior(module, catalog)) return [];
+  const parts = resolveInterior(c, module, catalog)
+    .filter((p) => p.id !== replacing)
+    .map(({ id, productId, yCm }) => ({ id, productId, yCm }));
+  const out: number[] = [];
+  for (
+    let y = item.mounting.originCm;
+    y < c.height - 3.6;
+    y += item.mounting.stepCm
+  ) {
+    const yCm = snapInterior(y, item);
+    const next = {
+      ...c,
+      interior: {
+        version: 1 as const,
+        components: [...parts, { id: "probe", productId, yCm }],
+      },
+    };
+    if (!validateInterior(next, module, catalog).length) out.push(yCm);
+  }
+  return out;
+}
+
+/** A sensible height among the valid ones: drawers and baskets low, a rail
+ * high, a shelf in the middle of the largest free space. */
+export function preferredPosition(
+  positions: number[],
+  kind: string,
+  taken: number[],
+  height: number,
+): number | undefined {
+  if (!positions.length) return undefined;
+  if (kind === "drawer" || kind === "basket") return positions[0];
+  if (kind === "rail") return positions.at(-1);
+  const distance = (y: number) =>
+    Math.min(y, height - y, ...taken.map((t) => Math.abs(t - y)));
+  return positions.reduce((a, b) => (distance(b) > distance(a) ? b : a));
+}
+
+/** A drawer or basket in this unit would hit a neighbouring unit when
+ * pulled out (the same rule as validateInteriorReferences; height does not
+ * matter, so one probe answers it). */
+export function pullOutBlocked(
+  design: DesignDocument,
+  c: Cabinet,
+  module: Module,
+  catalog: Catalog,
+  productId: string,
+  yCm: number,
+): boolean {
+  const parts = resolveInterior(c, module, catalog).map(
+    ({ id, productId, yCm }) => ({ id, productId, yCm }),
+  );
+  const probe = {
+    ...c,
+    interior: {
+      version: 1 as const,
+      components: [...parts, { id: "probe", productId, yCm }],
+    },
+  };
+  return validateInteriorReferences(
+    {
+      ...design,
+      cabinets: design.cabinets.map((x) => (x.id === c.id ? probe : x)),
+    },
+    catalog,
+  ).some(
+    (i) =>
+      i.cabinetId === c.id &&
+      i.componentId === "probe" &&
+      i.code === "interiorAccessError",
+  );
+}

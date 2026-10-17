@@ -48,6 +48,7 @@ import type { Catalog, DesignDocument } from "../catalog/types";
 import { Box } from "../scene/Primitives";
 import { useDesigner } from "./store";
 import { CabinetMesh } from "./furniture/CabinetMesh";
+import { PlacementSpots } from "./PlacementSpots";
 import { useT } from "../i18n";
 import { cabinetBounds, CABINET_FOV } from "./framing";
 import type { CameraView, CameraPreset } from "./framing";
@@ -308,6 +309,9 @@ export default function Scene({
             <Worktops design={design} catalog={catalog} />
             <RoomProps design={design} catalog={catalog} />
             <RunLights design={design} />
+            {interactive && (
+              <PlacementSpots design={committedDesign} catalog={catalog} />
+            )}
           </group>
         </ShellBake.Provider>
         <RefreshShadows

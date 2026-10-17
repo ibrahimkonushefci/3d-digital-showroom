@@ -8,7 +8,6 @@ import { applyShellBake, ShellBake, SHELL_BAKE_KEY } from "./bake/shellBake";
 import type { WebGLProgramParametersWithUniforms } from "three";
 import { BoxGeometry, type BufferGeometry } from "three";
 import { mapPanelGeometry, panelOffset, type Grain } from "./materialMapping";
-import { Edges } from "@react-three/drei";
 import type { Material } from "../catalog/types";
 import { furnitureResponse } from "./furnitureMaterials";
 import { SurfaceMaterial } from "./Materials";
@@ -21,7 +20,6 @@ type BoxProps = {
   position?: [number, number, number];
   color?: string;
   material?: Material;
-  selected?: boolean;
   metal?: number;
   transparent?: boolean;
   world?: boolean;
@@ -42,7 +40,6 @@ export function Box({
   position = [0, 0, 0],
   color = "#eeece2",
   material,
-  selected,
   metal = 0,
   transparent = false,
   world = false,
@@ -173,14 +170,6 @@ export function Box({
           emissiveIntensity={emissive ? 1.5 : 0}
           transparent={transparent}
           opacity={transparent ? 0.3 : 1}
-        />
-      )}{" "}
-      {/* A direct child, so drei outlines this panel's own geometry (inside a
-          group it found none and drew its 1 m placeholder segment). */}
-      {selected && (
-        <Edges
-          color="#c6ac77"
-          userData={{ exportHidden: true, aoExclude: true }}
         />
       )}
     </mesh>

@@ -8,6 +8,7 @@ import {
   LineSegments,
   Mesh,
   MeshStandardMaterial,
+  MeshBasicMaterial,
   BufferGeometry,
   Points,
   Sprite,
@@ -57,14 +58,30 @@ it("keeps screen-space lines and selection helpers out of the AO occluder pass",
   ).toBe(false);
 });
 
-it("outlines the selected panel itself, not a wrapper group with no geometry", () => {
-  // drei Edges reads its parent's geometry; inside a <group> it silently fell
-  // back to a 1 m placeholder segment.
-  const source = readFileSync("src/scene/Primitives.tsx", "utf8");
-  const block = source.slice(source.indexOf("{selected && ("));
-  const edges = block.slice(0, block.indexOf("/>"));
-  expect(edges).toContain("<Edges");
-  expect(edges).not.toContain("<group");
-  expect(edges).toContain("aoExclude: true");
-  expect(edges).toContain("exportHidden: true");
+it("draws the selection frame from its own geometry, kept out of AO and exports", () => {
+  // drei Edges read its parent's geometry; inside a <group> it silently fell
+  // back to a 1 m placeholder segment. The frame now passes explicit points
+  // (one box per unit or interior part) and no panel draws Edges any more.
+  expect(readFileSync("src/scene/Primitives.tsx", "utf8")).not.toContain(
+    "Edges",
+  );
+  const source = readFileSync(
+    "src/designer3d/furniture/SelectionFrame.tsx",
+    "utf8",
+  );
+  expect(source).not.toContain("Edges");
+  expect(source).toContain(
+    "const hidden = { exportHidden: true, aoExclude: true }",
+  );
+  // Both lines and the tint carry the flags and ignore picking.
+  expect(source.match(/userData=\{hidden\}/g)!.length).toBeGreaterThanOrEqual(
+    4,
+  );
+  expect(source.match(/raycast=\{noRaycast\}/g)!.length).toBe(3);
+  // The tint is see-through, so it never occludes in the AO pass either.
+  const tint = new Mesh(
+    new BoxGeometry(),
+    new MeshBasicMaterial({ transparent: true, depthWrite: false }),
+  );
+  expect(excludedFromAO(tint)).toBe(true);
 });

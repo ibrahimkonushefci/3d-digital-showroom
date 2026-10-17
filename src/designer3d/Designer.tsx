@@ -1,4 +1,6 @@
-import { InteriorEditor } from "./InteriorEditor";
+import { UnitsPanel, SpotLabels, deleteUnit } from "./UnitsPanel";
+import { movedCabinet } from "./drag";
+import { validateDesign } from "./layout";
 import { Materials } from "./StylesPanel";
 import { RoomAndLayoutSection, type RoomChange } from "./RoomPanel";
 import { liveCamera } from "./liveCamera";
@@ -9,21 +11,18 @@ import {
   useLayoutEffect,
   useRef,
   useState,
-  useMemo,
 } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ArrowRight,
   Undo2,
   Redo2,
-  Trash2,
   Box,
   LayoutGrid,
   Palette,
   DoorOpen,
   RotateCcw,
   Sliders,
-  Copy,
   Maximize2,
   Minimize2,
   RefreshCcw,
@@ -36,13 +35,12 @@ import { useT, useLanguage, label } from "../i18n";
 import { useDesigner } from "./store";
 import { defaultDesign, resetConfiguration } from "./presets";
 import { storageMeasurements } from "./storage";
-import { uid, wallOffset, wallPosition } from "./layout";
-import type { Cabinet, DesignDocument, Layout, Wall } from "../catalog/types";
+import { uid } from "./layout";
+import type { DesignDocument, Layout } from "../catalog/types";
 import type { CameraPreset, CameraView } from "./Scene";
 import { readDesign } from "../persistence";
 import { fpsDiagnostics } from "../scene/diagnostics/enabled";
 import { calculatePrice, estimateLabel } from "../pricing";
-import { Field, NumberField } from "../app/components";
 import { Toasts, type Toast } from "./Toasts";
 
 export { Materials };
@@ -135,6 +133,67 @@ export default function Designer() {
     });
     state.setError(null);
   }, [state.error]);
+  // Notices from editing (added, replaced, deleted): with Undo.
+  useEffect(() => {
+    if (!state.notice) return;
+    const { text, undo } = state.notice;
+    notify({
+      id: "edit",
+      text,
+      timeout: 8000,
+      ...(undo
+        ? {
+            action: {
+              label: t("undo"),
+              run: () => useDesigner.getState().undo(),
+            },
+          }
+        : {}),
+    });
+    state.setNotice(null);
+  }, [state.notice]);
+  // Edit mode keys: Delete removes the selected unit, arrows move it along
+  // its wall by 10 cm, Escape stops placing.
+  useEffect(() => {
+    if (state.interactionMode !== "edit") return;
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target instanceof Element ? e.target : null;
+      if (
+        e.defaultPrevented ||
+        e.metaKey ||
+        e.ctrlKey ||
+        e.altKey ||
+        target?.closest("input, select, textarea, [contenteditable]")
+      )
+        return;
+      const s = useDesigner.getState();
+      if (e.key === "Escape" && s.placing) {
+        s.setPlacing(null);
+        return;
+      }
+      const d = s.design,
+        id = s.selected;
+      if (!d || !id || s.dragging) return;
+      const c = d.cabinets.find((x) => x.id === id);
+      if (!c) return;
+      if (e.key === "Delete" || e.key === "Backspace") {
+        e.preventDefault();
+        const m = catalog.modules.find((x) => x.id === c.moduleId)!;
+        deleteUnit(
+          d,
+          id,
+          (next) => s.edit(next, catalog),
+          t("unitDeleted", { name: label(m.name, language) }),
+        );
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        const next = movedCabinet(d, id, e.key === "ArrowLeft" ? -10 : 10);
+        if (validateDesign(next, catalog)) s.edit(next, catalog);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [state.interactionMode, catalog, language]);
   useEffect(() => {
     if (!immersive) return;
     const onKey = (e: KeyboardEvent) => {
@@ -314,6 +373,7 @@ export default function Designer() {
                 aria-pressed={state.interactionMode === mode}
                 onClick={() => {
                   state.setInteractionMode(mode);
+                  if (mode === "edit") setPanel("cabinets");
                   state.select(null);
                   state.setCameraView(null);
                   state.focus(null);
@@ -491,6 +551,7 @@ export default function Designer() {
             </div>
           )}
 
+          {state.interactionMode === "edit" && <SpotLabels design={design} />}
           <div className="canvas-caption">
             <span>
               {design.layout === "l" || design.layout === "corner"
@@ -567,15 +628,8 @@ export default function Designer() {
             )}
 
             {panel === "cabinets" && state.interactionMode === "edit" && (
-              <CabinetsSection design={design} onChange={edit} />
+              <UnitsPanel design={design} onChange={edit} />
             )}
-
-            {panel === "cabinets" &&
-              state.interactionMode === "edit" &&
-              kind === "wardrobe" &&
-              design.cabinets.some((c) => c.id === selected) && (
-                <InteriorEditor design={design} />
-              )}
           </div>
 
           <div className="price-bar">
@@ -600,301 +654,6 @@ export default function Designer() {
         </button>
       </div>
     </main>
-  );
-}
-
-function CabinetsSection({
-  design,
-  onChange,
-}: {
-  design: DesignDocument;
-  onChange: (d: DesignDocument) => boolean;
-}) {
-  const { catalog } = useBrand(),
-    t = useT(),
-    { language } = useLanguage(),
-    state = useDesigner();
-
-  const c = design.cabinets.find((item) => item.id === state.selected);
-
-  const update = (partial: Partial<Cabinet>) => {
-    if (!c) return;
-    const next = { ...c, ...partial };
-    if (partial.width || partial.wall || partial.depth) {
-      Object.assign(
-        next,
-        wallPosition(
-          next.wall,
-          wallOffset(c),
-          next.width,
-          next.depth,
-          design.room,
-        ),
-      );
-    }
-    onChange({
-      ...design,
-      cabinets: design.cabinets.map((x) => (x.id === c.id ? next : x)),
-    });
-  };
-
-  const nudge = (step: number) => {
-    if (!c) return;
-    const currentOff = wallOffset(c);
-    const newOff = Math.max(0, currentOff + step);
-    const pos = wallPosition(c.wall, newOff, c.width, c.depth, design.room);
-    onChange({
-      ...design,
-      cabinets: design.cabinets.map((x) =>
-        x.id === c.id ? { ...x, ...pos } : x,
-      ),
-    });
-  };
-
-  const duplicate = () => {
-    if (!c) return;
-    const n: Cabinet = {
-      ...c,
-      id: uid(),
-      ...(c.interior
-        ? {
-            interior: {
-              version: 1 as const,
-              components: c.interior.components.map((i) => ({
-                ...i,
-                id: uid(),
-              })),
-            },
-          }
-        : {}),
-    };
-    const offset = wallOffset(c) + c.width;
-    Object.assign(
-      n,
-      wallPosition(c.wall, offset, n.width, n.depth, design.room),
-    );
-    if (onChange({ ...design, cabinets: [...design.cabinets, n] })) {
-      state.select(n.id);
-    }
-  };
-
-  const remove = () => {
-    if (!c) return;
-    if (
-      onChange({
-        ...design,
-        cabinets: design.cabinets.filter((x) => x.id !== c.id),
-      })
-    ) {
-      state.select(null);
-    }
-  };
-
-  const addModuleToKitchen = (moduleId: string, defaultWidth?: number) => {
-    const m = catalog.modules.find((x) => x.id === moduleId);
-    if (!m) return;
-    const wall: Wall = c?.wall || "back";
-    const width =
-      defaultWidth || m.widths[0] || (design.kind === "wardrobe" ? 80 : 60);
-    const offset = c
-      ? wallOffset(c) + c.width
-      : design.room.width / 2 - width / 2;
-    const n: Cabinet = {
-      id: uid(),
-      moduleId: m.id,
-      width,
-      height:
-        m.level === "wardrobe"
-          ? Math.min(m.height, design.room.height)
-          : m.height,
-      depth: m.depth,
-      level: m.level,
-      wall,
-      x: 0,
-      z: 0,
-      rotation: 0,
-    };
-    Object.assign(n, wallPosition(wall, offset, width, m.depth, design.room));
-    if (onChange({ ...design, cabinets: [...design.cabinets, n] })) {
-      state.select(n.id);
-    }
-  };
-
-  const selectedModule = c
-    ? catalog.modules.find((m) => m.id === c.moduleId)
-    : null;
-
-  const compatibleModules = useMemo(() => {
-    if (!c) return [];
-    return catalog.modules.filter(
-      (m) => m.kind === design.kind && m.level === c.level,
-    );
-  }, [c, catalog.modules, design.kind]);
-
-  return (
-    <>
-      {c && selectedModule ? (
-        <div className="inspector-card">
-          <div className="inspector-header">
-            <strong>{label(selectedModule.name, language)}</strong>
-            <span className="badge-dims">
-              {c.width} × {c.depth} × {c.height} cm
-            </span>
-          </div>
-
-          {c.interior && (
-            <>
-              <p className="helper">{t("interiorResizeHelp")}</p>
-              <button
-                className="button secondary full"
-                onClick={() => update({ interior: undefined })}
-              >
-                {t("interiorReset")}
-              </button>
-            </>
-          )}
-          <Field label={t("width")}>
-            <div className="segmented-pills">
-              {selectedModule.widths.map((w) => (
-                <button
-                  key={w}
-                  type="button"
-                  className={
-                    "segmented-pill " + (c.width === w ? "active" : "")
-                  }
-                  onClick={() => update({ width: w })}
-                >
-                  {w} cm
-                </button>
-              ))}
-            </div>
-          </Field>
-
-          {c.level === "wardrobe" && (
-            <NumberField
-              label={t("height")}
-              value={c.height}
-              min={180}
-              max={selectedModule.height}
-              onChange={(height) => update({ height })}
-            />
-          )}
-          {compatibleModules.length > 1 && (
-            <Field label={t("swapType")}>
-              <div className="segmented-pills">
-                {compatibleModules.map((mod) => (
-                  <button
-                    key={mod.id}
-                    type="button"
-                    className={
-                      "segmented-pill " +
-                      (c.moduleId === mod.id ? "active" : "")
-                    }
-                    onClick={() =>
-                      update({
-                        moduleId: mod.id,
-                        depth: mod.depth,
-                        height: mod.height,
-                        level: mod.level,
-                        width: mod.widths.includes(c.width)
-                          ? c.width
-                          : mod.widths[0],
-                      })
-                    }
-                  >
-                    {label(mod.name, language)}
-                  </button>
-                ))}
-              </div>
-            </Field>
-          )}
-
-          <div className="nudge-buttons">
-            <button type="button" onClick={() => nudge(-10)}>
-              ← {t("moveLeft")} 10cm
-            </button>
-            <button type="button" onClick={() => nudge(+10)}>
-              {t("moveRight")} 10cm →
-            </button>
-          </div>
-
-          <div className="inspector-actions">
-            <button
-              type="button"
-              className="button secondary"
-              onClick={() => state.toggleOpen(c.id)}
-            >
-              <DoorOpen size={16} />
-              {t("openClose")}
-            </button>
-            <button
-              type="button"
-              className="button secondary"
-              onClick={duplicate}
-            >
-              <Copy size={16} />
-              {t("duplicateUnit")}
-            </button>
-            <button
-              type="button"
-              className="button danger full"
-              style={{ gridColumn: "span 2" }}
-              onClick={remove}
-            >
-              <Trash2 size={16} />
-              {t("deleteUnit")}
-            </button>
-          </div>
-        </div>
-      ) : (
-        <p className="helper">{t("selectCabinet")}</p>
-      )}
-
-      <h3>{t("addUnitCatalog")}</h3>
-      <div className="unit-catalog-grid">
-        {catalog.modules
-          .filter((m) => m.kind === design.kind)
-          .map((m) => {
-            const width = m.widths.includes(design.kind === "kitchen" ? 60 : 80)
-              ? design.kind === "kitchen"
-                ? 60
-                : 80
-              : m.widths[0];
-            return (
-              <button
-                key={m.id}
-                className="unit-catalog-card"
-                onClick={() => addModuleToKitchen(m.id, width)}
-              >
-                <strong>{label(m.name, language)}</strong>
-                <span>
-                  {width} × {m.height} × {m.depth} cm
-                </span>
-              </button>
-            );
-          })}
-      </div>
-
-      <h3>{t(design.kind === "wardrobe" ? "wardrobes" : "cabinets")}</h3>
-      <div className="module-list">
-        {design.cabinets.map((x) => (
-          <button
-            key={x.id}
-            type="button"
-            className={x.id === state.selected ? "active" : ""}
-            onClick={() => state.select(x.id)}
-          >
-            <span>
-              {label(
-                catalog.modules.find((m) => m.id === x.moduleId)!.name,
-                language,
-              )}
-            </span>
-            <small>{x.width} cm</small>
-          </button>
-        ))}
-      </div>
-    </>
   );
 }
 

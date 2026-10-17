@@ -40,7 +40,20 @@ function reconcileInterior(
     openedInterior: openedInterior.filter(exists),
   };
 }
+/** A notice for the Designer's toasts, e.g. "Added. Undo". */
+export type Notice = { text: string; undo?: boolean };
 type State = {
+  /** The unit type being placed (tap a card): its free places are shown. */
+  placing: string | null;
+  /** The place a dragged card would drop into, by index of findSpots. */
+  placingHover: number | null;
+  setPlacing: (moduleId: string | null) => void;
+  setPlacingHover: (index: number | null) => void;
+  /** Units suggested for replacing or narrowing (dashed amber outline). */
+  highlight: string[];
+  setHighlight: (ids: string[]) => void;
+  notice: Notice | null;
+  setNotice: (notice: Notice | null) => void;
   interiorDecoration: boolean;
   setInteriorDecoration: (value: boolean) => void;
   selectedInterior: InteriorSelection | null;
@@ -93,6 +106,14 @@ type State = {
   setPerformance: (v: boolean) => void;
 };
 export const useDesigner = create<State>((set, get) => ({
+  placing: null,
+  placingHover: null,
+  setPlacing: (placing) => set({ placing, placingHover: null, highlight: [] }),
+  setPlacingHover: (placingHover) => set({ placingHover }),
+  highlight: [],
+  setHighlight: (highlight) => set({ highlight }),
+  notice: null,
+  setNotice: (notice) => set({ notice }),
   interiorDecoration: true,
   setInteriorDecoration: (interiorDecoration) => set({ interiorDecoration }),
   selectedInterior: null,
@@ -126,7 +147,15 @@ export const useDesigner = create<State>((set, get) => ({
   dragPreview: null,
   dragging: false,
   setInteractionMode: (interactionMode) =>
-    set({ interactionMode, focused: null, dragPreview: null, dragging: false }),
+    set({
+      interactionMode,
+      focused: null,
+      dragPreview: null,
+      dragging: false,
+      placing: null,
+      placingHover: null,
+      highlight: [],
+    }),
   previewDrag: (dragPreview) => set({ dragPreview, dragging: !!dragPreview }),
   cancelDrag: () => set({ dragPreview: null, dragging: false }),
   finishDrag: (catalog) => {
@@ -157,6 +186,9 @@ export const useDesigner = create<State>((set, get) => ({
       dragPreview: null,
       dragging: false,
       interactionMode: "showroom",
+      placing: null,
+      placingHover: null,
+      highlight: [],
       past: [],
       future: [],
       selected: null,

@@ -40,6 +40,7 @@ import {
 } from "../../scene/construction";
 import { Fittings, cabinetFittings } from "../../scene/Fittings";
 import { useDesigner } from "../store";
+import { SelectionFrame, type FrameKind } from "./SelectionFrame";
 
 function Handle({
   kind,
@@ -119,7 +120,6 @@ function DoorPanel({
   handle,
   glass,
   open,
-  selected,
   profile,
 }: {
   w: number;
@@ -129,7 +129,6 @@ function DoorPanel({
   handle: Catalog["handles"][number];
   glass: boolean;
   open: boolean;
-  selected: boolean;
   profile?: string;
 }) {
   const identity = useContext(PanelMapping);
@@ -189,7 +188,6 @@ function DoorPanel({
               size={[w - 0.006, h - 0.006, 0.02]}
               material={front}
               lacquer
-              selected={selected}
             />
           )}
           {profile === "panel" && !glass && (
@@ -379,7 +377,15 @@ export function CabinetMesh({
   inspection?: { opened: readonly string[]; interior: boolean };
 }) {
   const { cabinet: c, module: m, interior: storage } = furniture;
-  const selected = useDesigner((s) => interactive && s.selected === c.id),
+  const frame = useDesigner((s): FrameKind | null =>
+      !interactive
+        ? null
+        : s.selected === c.id
+          ? "selected"
+          : s.highlight.includes(c.id)
+            ? "suggested"
+            : null,
+    ),
     open = useDesigner((s) =>
       inspection
         ? inspection.opened.includes(c.id)
@@ -484,6 +490,16 @@ export function CabinetMesh({
         <group position={[0, 0, 0.125]}>
           <Hood width={w} />
         </group>
+        {frame && (
+          <SelectionFrame
+            kind={frame}
+            w={w}
+            y0={0}
+            y1={h}
+            z0={0.125 - d / 2}
+            z1={0.125 + d / 2 + 0.02}
+          />
+        )}
       </group>
     );
   return (
@@ -493,6 +509,16 @@ export function CabinetMesh({
         rotation={[0, c.rotation, 0]}
         {...interaction}
       >
+        {frame && (
+          <SelectionFrame
+            kind={frame}
+            w={w}
+            y0={c.level === "base" ? -y : 0}
+            y1={h + (c.level === "base" ? thickness : 0) + 0.004}
+            z0={-d / 2 - 0.004}
+            z1={d / 2 + 0.04}
+          />
+        )}
         {/* Fridge housings keep an open niche above the appliance. */}
         {!["open", "glass", "fridge"].includes(m.type) && (
           <GapShade w={w} h={h} d={d} closed={!open && !interior} />
@@ -601,7 +627,6 @@ export function CabinetMesh({
                 size={[w - 0.006, h - 0.006, 0.02]}
                 material={front}
                 lacquer
-                selected={selected}
               />
               <Handle color={handle.color} kind={handle.id} w={w} h={h} />
             </group>
@@ -702,7 +727,6 @@ export function CabinetMesh({
                     front={front}
                     handle={handle}
                     open={open}
-                    selected={selected}
                     glass={m.type === "glass"}
                   />
                 </group>
@@ -716,7 +740,6 @@ export function CabinetMesh({
                 front={front}
                 handle={handle}
                 open={open}
-                selected={selected}
                 glass={m.type === "glass"}
               />
             )}
@@ -732,7 +755,6 @@ export function CabinetMesh({
                 front={front}
                 handle={handle}
                 open={open}
-                selected={selected}
                 glass={false}
               />
             </group>
@@ -747,7 +769,6 @@ export function CabinetMesh({
                   front={front}
                   handle={handle}
                   open={open}
-                  selected={selected}
                   glass={false}
                 />
               </group>
@@ -775,7 +796,6 @@ export function CabinetMesh({
                   front={front}
                   handle={handle}
                   open={open}
-                  selected={selected}
                   glass={false}
                 />
               </group>

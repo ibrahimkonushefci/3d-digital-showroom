@@ -1,5 +1,6 @@
 // Picture previews for the Styles and Room tabs, rendered from the real
-// scene (finishes, worktops, handles, front styles, floors, ready-made looks).
+// scene (finishes, worktops, handles, front styles, floors, ready-made looks,
+// unit types and wardrobe interior parts).
 //   1. pnpm dev --port 5203 --strictPort   (the render page is dev-only)
 //   2. Chrome with --remote-debugging-port=9333 (see capture-showroom.mjs)
 //   3. node scripts/review/render-previews.mjs http://127.0.0.1:5203 [filter]
@@ -40,6 +41,11 @@ const items = [
   ),
   ...["laminate", "tiles", "concrete"].map((f) => [`floor:${f}`, [160, 160]]),
   ...[...looks].map((m) => [`look:${m[1]}`, [320, 200]]),
+  ...catalog.modules.map((m) => [`unit:${m.id}`, [240, 200]]),
+  ...["shelf", "rail", "drawer", "basket"].map((k) => [
+    `interior:${k}`,
+    [240, 200],
+  ]),
 ].filter(([item]) => item.includes(FILTER));
 
 const manifest = fs.existsSync(MANIFEST)

@@ -120,6 +120,25 @@ The owner selected **A — The Room Edit** from Codex's three concepts and asked
 
 The owner authorized starting **Phase 4 (easy editing)** immediately after the Phase 3 commit, without another confirmation. Phase 4 ends at its own review gate: report, visual evidence and manual checks, then stop; Phase 4 is **not** committed before the owner's review. Approved rooms, Phase 1 behaviour and the accepted zoom lag (section 2.3) stay as they are.
 
+### 2.9 Phase 4 easy editing — implemented, awaiting owner review (17 October 2026)
+
+Implemented in the working tree on `main` (not committed): the plan's Phase 4 below, with these decisions.
+
+- **Free-space finder** (`src/designer3d/placement.ts`, pure): free stretches per wall at the unit's height and depth (other units and the room's windows/doors block them), each width checked with `validateDesign`; the unit goes against its neighbour, otherwise positions along the stretch in 10 cm steps (island aisle). The L corner is offered once; the carousel never on the island. Also `replaceUnit`, `resizeUnit`, `replaceable` and `makeRoom` (narrow a neighbour), which never suggest essentials (sink, hob, hood, oven, fridge, corner). It is not built on `resizeRoom`'s column analysis as section 5 suggested: both rest on `validateDesign`, so their answers cannot disagree, and the finder also has to handle gaps `resizeRoom` never creates (between units, over the corner, on the island).
+- **Units tab** (`UnitsPanel.tsx`; Edit mode now opens on it): picture cards by level with "Free places: n"; tap → places listed and shown as green boxes with "+ cm" labels in the room (`PlacementSpots.tsx`, labels as DOM buttons); drag a card into the room → the real unit previews in the nearest place (existing drag-preview path) and drops as one undo step; nothing fits → replace / narrow suggestions with the units lit up. Selected unit: picture, widths that fit, *Replace with* picture cards, Open/Close, Delete (+ Delete key) with Undo notices; arrow keys move it 10 cm. Removed: the text unit list, nudge buttons, Duplicate (adding a card does the same without the dead end) and the old catalog grid.
+- **Wardrobe interiors** (`InteriorCards.tsx`, replaces `InteriorEditor.tsx`): rows with pictures (move to the next free height ≥ 10 cm away, open drawers/baskets, remove), add cards (drawers/baskets low, rails high, shelves in the largest free space), honest "no free height" / "not behind sliding doors" / "no room in front to pull it out" with swap offers, ready-made interiors. Height fields and product drop-downs are gone; `interiorPositions` / `pullOutBlocked` in `interiorValidation.ts`.
+- **Pictures:** 17 unit types and 4 interior parts rendered from the real scene (`render-previews.mjs`, stages in `PreviewRender.tsx`), 53 KB in total.
+- **Checks:** `pnpm test` 29 files / 225 tests (24 new for the finder and interiors), `pnpm build`, asset check; `scripts/review/check-easy-editing.mjs` runs the Phase 4 task tests with real mouse/keyboard input in the review Chrome (15/15). Evidence: `verification/phase4-review/` (local).
+- Not verified: the owner's own task tests without help (section 6), touch dragging on a real tablet (touch uses tap-to-place; a horizontal drag works, vertical swipes scroll the panel), frame timing in a visible window.
+
+### 2.10 Phase 4 visual pass before approval (17 October 2026)
+
+The owner tested Phase 4 (functions fine, dragging works in normal Chrome; Codex independently confirmed deletion, tap-to-place, fitting, replacement, narrowing, interiors, Undo and 225 tests) and asked for one focused visual pass before approving; no redesign.
+
+- **Selection:** `src/designer3d/furniture/SelectionFrame.tsx` draws one frame per unit (white halo + 6 px blue `#1f66e5` line, pale grey-blue tint at 6 %) around the carcass, so it stays while fronts open and covers units without doors; a selected interior part gets its own frame (`InteriorComponents.tsx`). Suggestions (`highlight`) are a dashed amber frame; free places stay green. The per-panel drei `Edges` and the `selected` prop on `Box` are removed; lines and tint stay excluded from AO and exports (`tests/selection-ao.test.ts` updated). A saturated tint was tried and rejected: it turned anthracite navy and walnut purple.
+- **Cards:** catalog, *Replace with* and interior add cards share one grid (`minmax(72px, 1fr)`, three per row in the side panel), 4:3 pictures, tighter padding/spacing.
+- Checks: 225 tests, build (10.41 MB), asset check, `check-easy-editing.mjs` 15/15; captures via `scripts/review/capture-selection.mjs`. Evidence: `verification/phase4-review/selection-sheet.jpg`, `cards-before-after.jpg`. **Approved by the owner on 17 October 2026 and committed on `main`** (not pushed).
+
 ## 3. Current Git state and work already done
 
 Verified on 16 October 2026:
@@ -142,7 +161,8 @@ Verified on 16 October 2026:
   - `scripts/review/capture-thumbnails.mjs` (the wide Home photographs), `public/shared/showroom/hero-kitchen.webp`, `hero-wardrobe.webp`;
   - README text for Phase 3 (add it with the Home commit, replacing the "Home thumbnails" bullet): - **Home:** a small catalogue without 3D: a large photograph with *Enter the showroom*, three steps, the prepared kitchens and wardrobes as picture cards with their price (each opens in the Showroom), a showroom band and the company's contacts. Thumbnails and the two wide photographs: `node scripts/review/capture-thumbnails.mjs <preview-url> --write`.
   - Commit Phase 2 on approval with these paths excluded, e.g. `git stash push -u -m phase3-home -- <the paths above>`, commit, `git stash pop`. Verified 16 October 2026: with them set aside, `pnpm build` (9.30 MB shipped), `pnpm test` (196 passed) and the asset check pass, and the Phase 1 Home shows the new rooms. The prepared designs' thumbnails (`showroom/classic|japandi|modern|wardrobe|wardrobe-straight.webp`) are Phase 2 and go with its commit. Phase 1 "before" captures: `verification/phase2-review/before/`, build `verification/phase2-review/baseline-dist` (`baseline` preview).
-- **Phase 3 status (17 October 2026):** Home (The Room Edit) approved visually by the owner, technically reviewed and verified by Claude, **committed on `main`**, not pushed (section 2.7). Next: Phase 4 (section 2.8).
+- **Phase 3 status (17 October 2026):** Home (The Room Edit) approved visually by the owner, technically reviewed and verified by Claude, **committed on `main`** (`fbd2c78`), not pushed (section 2.7).
+- **Phase 4 status (17 October 2026):** functions and visual pass (section 2.10) **approved by the owner and committed on `main`**, not pushed. The five old `public/shared/fonts/DM-*.ttf` files (replaced by WOFF2 in Phase 3, unreferenced) are left out of Git and still await the owner's cleanup.
 - Node is `/opt/homebrew/bin/node` (v26), pnpm `/opt/homebrew/bin/pnpm`. Blender 5.2 at `/Applications/Blender.app` (local authoring only, run headless).
 
 ## 4. Findings

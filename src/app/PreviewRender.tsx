@@ -184,6 +184,79 @@ export function previewStage(item: string, catalog: Catalog): Stage | null {
         size: [300, 300],
       };
     }
+    case "unit": {
+      // Each unit type as a small product photo: cashmere fronts, steel bar
+      // handles, three-quarters from the front at the unit's own height.
+      const m = catalog.modules.find((x) => x.id === id);
+      if (!m) return null;
+      const wardrobe = m.kind === "wardrobe";
+      const width = m.widths.includes(wardrobe ? 80 : 60)
+        ? wardrobe
+          ? 80
+          : 60
+        : m.widths[0];
+      const room = wardrobe
+        ? { width: 230, depth: 300, height: 250 }
+        : { width: 230, depth: 230, height: 250 };
+      const back = -room.depth / 200;
+      const centre =
+        m.level === "wall" ? 1.76 : m.level === "base" ? 0.5 : 1.12;
+      const target: [number, number, number] = [
+        0,
+        centre,
+        back + m.depth / 200,
+      ];
+      const far = m.level === "base" || m.level === "wall" ? 1.9 : 3.9;
+      return {
+        design: single(
+          catalog,
+          wardrobe ? "wardrobe" : "kitchen",
+          id,
+          width,
+          { front: "cashmere", handle: "bar" },
+          room,
+        ),
+        camera: {
+          position: [
+            far * 0.42,
+            centre + (m.level === "wall" ? -0.25 : 0.45),
+            target[2] + far * 0.9,
+          ],
+          target,
+          fov: m.level === "base" || m.level === "wall" ? 34 : 40,
+        },
+        size: [360, 300],
+      };
+    }
+    case "interior": {
+      // One interior part in an open wardrobe, seen from the front.
+      const item = catalog.interiorItems?.find((i) => i.kind === id);
+      if (!item) return null;
+      const room = { width: 300, depth: 300, height: 250 };
+      const d = single(
+        catalog,
+        "wardrobe",
+        "wardrobe-open",
+        80,
+        { front: "white", carcass: "oak" },
+        room,
+      );
+      const y = id === "rail" ? 150 : id === "shelf" ? 100 : 40;
+      d.cabinets[0].interior = {
+        version: 1,
+        components: [{ id: "preview", productId: item.id, yCm: y }],
+      };
+      const look = (y + (id === "rail" ? -20 : 10)) / 100;
+      return {
+        design: d,
+        camera: {
+          position: [0.5, look + 0.35, 0.3],
+          target: [0, look, -1.5 + 0.3],
+          fov: 34,
+        },
+        size: [360, 300],
+      };
+    }
     case "look": {
       const kitchen = KITCHEN_THEMES.find((t) => t.id === id);
       const look = kitchen ?? WARDROBE_THEMES.find((t) => t.id === id);
