@@ -139,6 +139,27 @@ The owner tested Phase 4 (functions fine, dragging works in normal Chrome; Codex
 - **Cards:** catalog, *Replace with* and interior add cards share one grid (`minmax(72px, 1fr)`, three per row in the side panel), 4:3 pictures, tighter padding/spacing.
 - Checks: 225 tests, build (10.41 MB), asset check, `check-easy-editing.mjs` 15/15; captures via `scripts/review/capture-selection.mjs`. Evidence: `verification/phase4-review/selection-sheet.jpg`, `cards-before-after.jpg`. **Approved by the owner on 17 October 2026 and committed on `main`** (not pushed).
 
+### 2.11 Final Home and materials refinements (17 October 2026)
+
+Owner requested improvements to the approved Home, stronger Showroom/materials
+visibility, more catalog variety, a wardrobe material study and phone usability
+fixes. Scope is the website presentation and standalone material pages; no
+`/designer` functionality, scene rendering, room recipes, layout/pricing rules or
+catalog sources may be changed. No commit, push or deployment is authorized.
+
+Implemented: prominent Showroom navigation; collapsed phone/tablet menu below the
+header; direct kitchen/wardrobe Materials navigation; 67px desktop title; larger,
+clickable phone hero; six kitchen and three wardrobe looks (four existing-finish
+editions with original renderer captures); compact Materials section; standalone
+`/wardrobe-materials` with local finish/handle/interior previews; compact phone
+material-study heading and tiles; Settings icon toggles back to the originating
+page; Back to top reaches document top. Approved Home palette and green preference
+remain. SQ/EN/DE and conditional categories remain supported.
+
+Verification and owner acceptance are recorded separately in
+`verification/home-final/REPORT.md`. This is a refinement of approved Phase 3, not
+a restart of its design or authorization to change Showroom/editing behavior.
+
 ## 3. Current Git state and work already done
 
 Verified on 16 October 2026:

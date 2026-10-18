@@ -76,7 +76,7 @@ Catalog groups are validated against the enabled kitchen/wardrobe tools. Preserv
 
 ## Showroom walkthrough
 
-- Choose a prepared design on Home: cashmere L, warm-white straight, anthracite island, straight wardrobe or corner wardrobe. Existing drafts load unchanged; presets replace a design only when explicitly chosen.
+- Choose a prepared design on Home: cashmere L, warm-white straight, anthracite island, straight wardrobe or corner wardrobe, plus four finish editions of those same furniture configurations (Natural Oak, Nordic Sage, Warm White & Oak and Milano Oak). Existing drafts load unchanged; presets replace a design only when explicitly chosen.
 - Room → choose a layout, a size (Compact / Standard / Spacious) or custom dimensions → Apply, then floor and wall colour (colour swatches; names on hover). Dimensions follow the layout: *Kitchen width* (or *Wardrobe width*) along the wall, a *Second side length* for L kitchens and Corner wardrobes, and *Ceiling height*; room depth is not shown for one-wall layouts. Kitchen units keep their standard heights; wardrobes are full height and become shorter only under a lower ceiling (the form says by how much). A layout button starts from that layout's prepared design in the current room, keeping the colours. Resizing keeps the units: more space adds a unit or widens flexible ones, less space first uses free wall, then narrows units, then removes the least important ones. The sink, hob and hood, oven, fridge and corner unit are never removed: a size too small for them is refused, with the smallest size that works. A notice with Undo says what changed. Windows, doors and the garden come with the prepared rooms; there are no opening editors. A saved design whose layout is no longer offered opens the prepared design with a short notice.
 - Styles → ready-made looks first, then "Which parts change?" (whole kitchen, wall, base or tall units, island, or the selected unit, each with a small drawing), the front colour (one picture per colour, light to dark) and then its material (the materials that colour comes in, with a €–€€€€ hint; changing colour keeps the material where possible), front style, handles, worktop (optionally a different one on the island) and, for kitchens, the plinth. The carcass follows the front; there is no backsplash or carcass control.
 - Showroom mode: tap a module to open it; *Inspect up close* moves to a clear view of it and, pressed again, returns to the earlier view. Wardrobe Interior view hides fronts without changing the design; *Edit inside this wardrobe* switches to editing. Overall view returns to the complete design.
@@ -159,3 +159,26 @@ The PDF carries a device-generated brand/year offer number, the date, the catalo
 ## History
 
 Built in milestones from 8 October 2026: the foundation and sales release (brand system, layouts, pricing, PDF offers, A/B), six realism phases (materials, furnished rooms, lighting, finish zones, editable wardrobe storage, camera), then three correction phases: an eye-level room you stand in (`d1554d7`), Blender-generated objects (`299cd59`), background shader compilation (`ff93842`) and baked room lighting (Phase 3). Git history holds the detailed reports that were removed from the working tree.
+
+## Final Home and materials refinements — 17 October 2026
+
+Home retains the approved Room Edit style and now presents six kitchen looks and
+three wardrobe looks, using existing layouts, finish collections and calculated
+prices. New room captures show alternate angles; these are finish editions, not
+additional furniture products. `src/app/homeCatalog.ts` supplies the presentations
+without changing the deployed catalogs or prepared rooms. The desktop title is
+67px; phones keep their heading sizes and receive a larger, clickable hero image.
+
+A prominent Showroom button appears in desktop navigation and beside the collapsed
+phone/tablet menu. Materials navigation opens either `/material-switcher` or the new
+`/wardrobe-materials`; both are also featured in a compact Home section. The wardrobe
+page offers finish collections, all front colours, handles and a local interior
+preview. Material studies use local state; drafts change only through the explicit
+designer action. `/embed/wardrobe-materials` is the corresponding headerless route.
+On phones, the large material-study headline is visually hidden and the picture
+choices are smaller. Settings' header icon now closes back to its originating
+page, and Home's Back to top scrolls to the start of the document.
+
+Verification and matched screenshots: `verification/home-final/REPORT.md` (local,
+ignored by Git). Owner review pending. No Showroom/editor, scene, room, pricing,
+persistence or catalog-source changes are part of this refinement.

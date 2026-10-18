@@ -1,0 +1,143 @@
+/* Standalone material studies only. These rules never target /designer. */
+.material-page-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.material-page-tabs a,
+.material-view-toggle button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 1px solid #cbd1c4;
+  border-radius: 5px;
+  font-size: 13px;
+  background: transparent;
+  color: var(--text);
+}
+.material-page-tabs a[aria-current],
+.material-view-toggle button[aria-pressed="true"] {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+.material-visual {
+  min-width: 0;
+}
+.material-view-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.material-page .material-wardrobe-looks h2,
+.material-page .material-handles h2 {
+  font-size: 20px;
+  margin-bottom: 14px;
+}
+.material-wardrobe-looks,
+.material-handles {
+  margin-bottom: 24px;
+}
+.material-look-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 8px;
+}
+.material-look-options button {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 0;
+  background: transparent;
+  font-size: 10px;
+  text-align: left;
+  line-height: 1.4;
+}
+.material-look-options img {
+  width: 100%;
+  aspect-ratio: 1.3;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.material-look-options button[aria-pressed="true"] img,
+.material-handles button[aria-pressed="true"] .picture-tile-image {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+@media (max-width: 760px) {
+  .material-page.page {
+    padding-top: 16px;
+  }
+  .material-page .material-heading {
+    margin-bottom: 12px;
+  }
+  .material-page .material-heading h1 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .material-page .material-heading p {
+    display: none;
+  }
+  .material-page-tabs {
+    margin-bottom: 12px;
+  }
+  .material-page .material-grid {
+    gap: 14px;
+  }
+  .material-page .material-scene {
+    height: clamp(300px, 48svh, 420px);
+  }
+  .material-page .material-controls {
+    padding: 18px 16px;
+  }
+  .material-page .panel-section {
+    margin-bottom: 20px;
+    padding-bottom: 18px;
+  }
+  .material-page .panel-section h2 {
+    font-size: 21px;
+  }
+  .material-page .picture-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px 10px;
+  }
+  .material-page .picture-tile {
+    min-height: 44px;
+  }
+  .material-page .picture-tile-image {
+    border-radius: 5px;
+  }
+  .material-page .picture-tile-name {
+    font-size: 9px;
+    line-height: 1.3;
+  }
+  .material-page .picture-tile-caption {
+    font-size: 8px;
+  }
+  .material-page .material-options {
+    gap: 6px;
+  }
+  .material-page .material-options button {
+    min-height: 44px;
+    padding: 7px 9px;
+    font-size: 11px;
+  }
+  .material-page .material-look-options {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .material-page .material-look-options button {
+    min-height: 44px;
+    font-size: 9px;
+  }
+  .material-page .material-handles .picture-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

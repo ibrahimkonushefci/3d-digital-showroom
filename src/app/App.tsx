@@ -8,7 +8,15 @@ import {
   useLocation,
   useParams,
 } from "react-router-dom";
-import { Settings2, ArrowUpRight, Moon, Sun } from "lucide-react";
+import {
+  Settings2,
+  ArrowUpRight,
+  Moon,
+  Sun,
+  Menu,
+  X,
+  ChevronDown,
+} from "lucide-react";
 import { BrandProvider, useBrand } from "../brand";
 import { useT, useLanguage } from "../i18n";
 import { useDesigner } from "../designer3d/store";
@@ -72,6 +80,27 @@ function Shell() {
   const appearance = usePreferences((state) => state.homeAppearance);
   const design = useDesigner((s) => s.design);
   const embed = location.pathname.startsWith("/embed");
+  const settingsOpen = location.pathname === "/settings";
+  const settingsFrom = location.state?.settingsFrom || {
+    pathname: "/",
+    search: location.search,
+  };
+  const hasRooms =
+    brand.modules.kitchenDesigner || brand.modules.wardrobeDesigner;
+  const materialLinks = (
+    <>
+      {brand.modules.kitchenDesigner && (
+        <Link to={"/material-switcher" + location.search}>
+          {t("kitchenMaterials")}
+        </Link>
+      )}
+      {brand.modules.wardrobeDesigner && (
+        <Link to={"/wardrobe-materials" + location.search}>
+          {t("wardrobeMaterials")}
+        </Link>
+      )}
+    </>
+  );
   useEffect(() => {
     if (!design) return;
     try {
@@ -89,7 +118,7 @@ function Shell() {
   return (
     <>
       {!embed && (
-        <header className="site-header">
+        <header className="site-header" id="site-top">
           <Link className="brand-lockup" to={"/" + location.search}>
             <img src={logoUrl} alt="" />
             <div>
@@ -106,10 +135,28 @@ function Shell() {
                 {brand.modules.wardrobeDesigner && (
                   <a href="#wardrobes">{t("wardrobes")}</a>
                 )}
+                {hasRooms && (
+                  <details
+                    className="home-desktop-materials"
+                    onKeyDown={(event) => {
+                      if (event.key === "Escape") {
+                        event.currentTarget.open = false;
+                        event.currentTarget.querySelector("summary")?.focus();
+                      }
+                    }}
+                  >
+                    <summary>
+                      {t("materials")}
+                      <ChevronDown size={14} />
+                    </summary>
+                    <div>{materialLinks}</div>
+                  </details>
+                )}
                 {(brand.modules.kitchenDesigner ||
                   brand.modules.wardrobeDesigner) && (
                   <button
                     type="button"
+                    className="home-nav-showroom"
                     onClick={useHomeShowroom.getState().open}
                   >
                     {t("showroom")} <ArrowUpRight size={14} />
@@ -195,13 +242,59 @@ function Shell() {
             )}
             <Link
               className="icon-button settings-link"
-              aria-label={t("settings")}
-              to={"/settings" + location.search}
+              aria-label={t(settingsOpen ? "closeSettings" : "settings")}
+              aria-expanded={settingsOpen}
+              to={settingsOpen ? settingsFrom : "/settings" + location.search}
+              state={
+                settingsOpen
+                  ? undefined
+                  : {
+                      settingsFrom: {
+                        pathname: location.pathname,
+                        search: location.search,
+                        hash: location.hash,
+                      },
+                    }
+              }
             >
-              <Settings2 size={19} />
+              {settingsOpen ? <X size={21} /> : <Settings2 size={19} />}
             </Link>
           </div>
         </header>
+      )}
+      {!embed && home && (
+        <div className="home-mobile-navigation">
+          <details>
+            <summary>
+              <Menu size={18} />
+              {t("menu")}
+            </summary>
+            <nav
+              aria-label={t("catalogNavigation")}
+              onClick={(event) =>
+                event.currentTarget.closest("details")?.removeAttribute("open")
+              }
+            >
+              {brand.modules.kitchenDesigner && (
+                <a href="#kitchens">{t("kitchens")}</a>
+              )}
+              {brand.modules.wardrobeDesigner && (
+                <a href="#wardrobes">{t("wardrobes")}</a>
+              )}
+              {materialLinks}
+            </nav>
+          </details>
+          {hasRooms && (
+            <button
+              type="button"
+              className="home-nav-showroom"
+              onClick={useHomeShowroom.getState().open}
+            >
+              {t("showroom")}
+              <ArrowUpRight size={18} />
+            </button>
+          )}
+        </div>
       )}
       <Suspense
         fallback={
@@ -224,9 +317,33 @@ function Shell() {
           <Route path="/setup" element={<Setup />} />
           <Route path="/settings" element={<Settings />} />
           <Route
+            path="/wardrobe-materials"
+            element={
+              brand.modules.wardrobeDesigner ? (
+                <MaterialSwitcher key="wardrobe" kind="wardrobe" />
+              ) : (
+                <Home />
+              )
+            }
+          />
+          <Route
+            path="/embed/wardrobe-materials"
+            element={
+              brand.modules.wardrobeDesigner ? (
+                <MaterialSwitcher key="wardrobe-embed" kind="wardrobe" />
+              ) : (
+                <Home />
+              )
+            }
+          />
+          <Route
             path="/material-switcher"
             element={
-              brand.modules.kitchenDesigner ? <MaterialSwitcher /> : <Home />
+              brand.modules.kitchenDesigner ? (
+                <MaterialSwitcher key="kitchen" />
+              ) : (
+                <Home />
+              )
             }
           />
           <Route

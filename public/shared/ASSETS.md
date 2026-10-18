@@ -108,3 +108,16 @@ Home typography is bundled locally from Google Fonts (downloaded 16 October 2026
 - [DM Serif Display](https://fonts.google.com/specimen/DM+Serif+Display), regular / italic: `fonts/DM-Serif-Display-Regular.woff2`, `DM-Serif-Display-Italic.woff2`; SIL Open Font License in `fonts/DM-Serif-Display-OFL.txt`.
 
 No remote font requests, paid assets or runtime font dependencies. Inter and the PDF fonts remain in use outside Home.
+
+## Home catalog finish editions — 17 October 2026
+
+`showroom/home-sage.webp`, `home-oak.webp`, `home-white-island.webp` and
+`home-oak-wardrobe.webp` are original captures of this project's existing renderer,
+prepared furniture and approved room assets. They show existing Nordic Sage,
+Natural Oak, Warm White & Oak and Milano Oak finish combinations, respectively.
+The Home-only catalog helper applies these existing finishes to existing layouts;
+there are no new furniture models, room recipes or third-party photographs.
+Captured through the built-in browser from the isolated material study, at 967×570,
+then encoded as WebP (quality 85), without retouching. Original PNGs and the capture
+camera definitions are in local ignored `verification/home-final/`. All underlying
+asset licenses remain as recorded above. The four WebPs total 200,562 bytes.

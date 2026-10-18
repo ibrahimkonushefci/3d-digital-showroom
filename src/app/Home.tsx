@@ -1,5 +1,5 @@
 import { useLayoutEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -10,10 +10,8 @@ import {
 } from "lucide-react";
 import { useBrand } from "../brand";
 import { useT, label, useLanguage, type TranslationKey } from "../i18n";
-import {
-  presentationPresets,
-  type ShowroomPreset,
-} from "../designer3d/presets";
+import { type ShowroomPreset } from "../designer3d/presets";
+import { homeCatalog } from "./homeCatalog";
 import { useDesigner } from "../designer3d/store";
 import { calculatePrice, estimateLabel } from "../pricing";
 import { loadDesign } from "../persistence";
@@ -31,7 +29,7 @@ export default function Home() {
   const appearance = usePreferences((state) => state.homeAppearance);
   const presets = useMemo(
     () =>
-      presentationPresets(catalog).filter((preset) =>
+      homeCatalog(catalog).filter((preset) =>
         preset.design.kind === "kitchen"
           ? brand.modules.kitchenDesigner
           : brand.modules.wardrobeDesigner,
@@ -132,8 +130,7 @@ export default function Home() {
                 <em>{t("homeTitleAccent")}</em>
               </h1>
               <p className="home-edit-intro">
-                {t("homeBody")}
-                <br />
+                {t("homeBody")} <br />
                 {t("homeBodySecond")}
               </p>
               <button
@@ -170,18 +167,34 @@ export default function Home() {
               </div>
             </div>
             <div className="home-edit-composition">
-              <img
-                className="home-edit-main-image"
-                src={
-                  island
-                    ? "/shared/showroom/home-island-front.webp"
-                    : "/" + hero.thumbnail
-                }
-                alt={label(hero.name, language)}
-                fetchPriority="high"
-              />
+              <button
+                type="button"
+                className="home-hero-room"
+                onClick={() => open(hero)}
+                aria-label={`${label(hero.name, language)} — ${t("openInShowroom")}`}
+              >
+                <img
+                  className="home-edit-main-image"
+                  src={
+                    island
+                      ? "/shared/showroom/home-island-front.webp"
+                      : "/" + hero.thumbnail
+                  }
+                  alt={label(hero.name, language)}
+                  fetchPriority="high"
+                />
+                <span>
+                  {t("homeExploreRoom")}
+                  <ArrowUpRight size={18} />
+                </span>
+              </button>
               {detail && (
-                <div className="home-edit-detail">
+                <button
+                  type="button"
+                  className="home-edit-detail"
+                  onClick={() => open(detail)}
+                  aria-label={`${label(detail.name, language)} — ${t("openInShowroom")}`}
+                >
                   <img
                     src={
                       inside
@@ -195,7 +208,7 @@ export default function Home() {
                     }
                   />
                   <span>{t("homeDetailCaption")}</span>
-                </div>
+                </button>
               )}
               <span className="home-image-caption">
                 {t("homeImageCaption")}
@@ -245,6 +258,9 @@ export default function Home() {
                         </span>
                         <span className="home-card-meta">
                           {t(preset.design.layout)}
+                          {preset.id.startsWith("home-") && (
+                            <> · {t("homeFinishEdition")}</>
+                          )}
                         </span>
                         <span className="home-card-meta">
                           {size(preset.design)}
@@ -259,6 +275,60 @@ export default function Home() {
                 </div>
               </section>
             ))}
+          <section
+            className="home-materials"
+            id="materials"
+            aria-labelledby="home-materials-title"
+          >
+            <div className="home-collection-heading">
+              <h2 id="home-materials-title">{t("exploreMaterials")}</h2>
+              <p>{t("homeMaterialsIntro")}</p>
+            </div>
+            <div className="home-material-cards">
+              {kitchens.length > 0 && (
+                <Link
+                  to={"/material-switcher" + location.search}
+                  className="home-material-card"
+                >
+                  <img
+                    src="/shared/previews/look-sage.webp"
+                    alt=""
+                    loading="lazy"
+                  />
+                  <div>
+                    <span className="home-eyebrow">{t("homeLivePreview")}</span>
+                    <h3>{t("kitchenMaterials")}</h3>
+                    <p>{t("homeKitchenMaterialsBody")}</p>
+                    <span className="home-material-action">
+                      {t("homeTryMaterials")}
+                      <ArrowUpRight size={20} />
+                    </span>
+                  </div>
+                </Link>
+              )}
+              {wardrobes.length > 0 && (
+                <Link
+                  to={"/wardrobe-materials" + location.search}
+                  className="home-material-card"
+                >
+                  <img
+                    src="/shared/showroom/home-wardrobe-interior.webp"
+                    alt=""
+                    loading="lazy"
+                  />
+                  <div>
+                    <span className="home-eyebrow">{t("homeLivePreview")}</span>
+                    <h3>{t("wardrobeMaterials")}</h3>
+                    <p>{t("homeWardrobeMaterialsBody")}</p>
+                    <span className="home-material-action">
+                      {t("homeTryMaterials")}
+                      <ArrowUpRight size={20} />
+                    </span>
+                  </div>
+                </Link>
+              )}
+            </div>
+          </section>
           <div className="home-quiet-guide" aria-label={t("howItWorks")}>
             <span>{t("homeYourRoom")}</span>
             <ol>
@@ -291,7 +361,20 @@ export default function Home() {
             )}
           </div>
         )}
-        <a className="home-back-top" href="#home-top">
+        <a
+          className="home-back-top"
+          href="#site-top"
+          onClick={(event) => {
+            event.preventDefault();
+            window.scrollTo({
+              top: 0,
+              behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+                .matches
+                ? "instant"
+                : "smooth",
+            });
+          }}
+        >
           {t("homeBackTop")} ↑
         </a>
       </section>
