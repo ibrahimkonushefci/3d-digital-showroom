@@ -5,6 +5,13 @@ export function saveDesign(brand: string, d: DesignDocument) {
   localStorage.setItem(`showroom-design-${brand}-${d.kind}`, JSON.stringify(d));
   localStorage.setItem(`showroom-recent-${brand}`, d.kind);
 }
+/** Reset demo: the brand's kitchen and wardrobe drafts. Branding, offer
+ * numbers and device settings stay. */
+export function clearDesigns(brand: string) {
+  for (const kind of ["kitchen", "wardrobe"])
+    localStorage.removeItem(`showroom-design-${brand}-${kind}`);
+  localStorage.removeItem(`showroom-recent-${brand}`);
+}
 export function readDesign(
   brand: string,
   kind: DesignDocument["kind"],

@@ -4,7 +4,8 @@ import { useBrand } from "../brand";
 import { useT, useLanguage } from "../i18n";
 import { Field, Toggle } from "./components";
 import { useDesigner } from "../designer3d/store";
-import { presentationPresets } from "../designer3d/presets";
+import { clearDesigns } from "../persistence";
+import { deployedBrands } from "../brand/deployed";
 import type { Language } from "../catalog/types";
 export default function Settings() {
   const { brand, catalog, local, clearLocal } = useBrand(),
@@ -33,9 +34,9 @@ export default function Settings() {
             value={catalog.id}
             onChange={(e) => (location.href = "/?brand=" + e.target.value)}
           >
-            {["default", "druri-design"].map((slug) => (
+            {deployedBrands.map(({ slug, name }) => (
               <option key={slug} value={slug}>
-                {slug === "default" ? "Forma Studio" : "Druri Design"}
+                {name}
               </option>
             ))}
           </select>
@@ -55,15 +56,12 @@ export default function Settings() {
         <p className="helper">{t("performanceHelp")}</p>
         <button
           className="button secondary full"
-          onClick={async () => {
+          onClick={() => {
             try {
-              for (const kind of ["kitchen", "wardrobe"])
-                localStorage.removeItem(
-                  `showroom-design-${brand.slug}-${kind}`,
-                );
-              localStorage.removeItem(`showroom-recent-${brand.slug}`);
-              const example = presentationPresets(catalog)[0]?.design;
-              if (example) state.setDesign(example);
+              clearDesigns(brand.slug);
+              // No open design, so autosave writes nothing back; the
+              // designer opens the prepared design next time.
+              state.setDesign(null);
             } catch {
               state.setError("storageError");
             }

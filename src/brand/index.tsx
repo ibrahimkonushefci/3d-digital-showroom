@@ -124,7 +124,9 @@ export function BrandProvider({ children }: { children: ReactNode }) {
             throw Error("storageError");
           }
           if (next.slug !== brand.slug) useDesigner.getState().setDesign(null);
-          usePreferences.getState().setPresentation(next.slug, true);
+          // A device brand presents by default (presentationMode); no saved
+          // choice, so a deployed brand of the same slug keeps its own.
+          usePreferences.getState().clearPresentation(next.slug);
           setValue((v) =>
             v ? { ...v, brand: next, logoUrl: logo, local: true } : v,
           );
@@ -138,6 +140,15 @@ export function BrandProvider({ children }: { children: ReactNode }) {
             setLocal,
             assetUrl,
             clearLocal: () => {
+              // The deployed brand returns with its own presentation default.
+              try {
+                const slug = JSON.parse(localStorage.getItem(key(active)) || "")
+                  ?.brand?.slug;
+                if (typeof slug === "string")
+                  usePreferences.getState().clearPresentation(slug);
+              } catch {
+                /* no readable device brand */
+              }
               localStorage.removeItem(key(active));
               location.reload();
             },

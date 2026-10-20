@@ -6,8 +6,10 @@ import {
   validateCatalogForBrand,
 } from "../src/catalog/types";
 import { examples } from "../src/designer3d/layout";
-import { saveDesign, restoreSummary } from "../src/persistence";
+import { clearDesigns, saveDesign, restoreSummary } from "../src/persistence";
 import { withDemoContacts } from "../src/brand/contacts";
+import { brandFolderTaken, deployedBrands } from "../src/brand/deployed";
+import { presentationFor, usePreferences } from "../src/app/preferences";
 const read = (slug: string, file: string) =>
   JSON.parse(readFileSync(`public/brands/${slug}/${file}.json`, "utf8"));
 const catalog = CatalogSchema.parse(read("default", "catalog"));
@@ -64,5 +66,32 @@ describe("demo safety", () => {
         brand,
       ),
     ).toBe(false);
+  });
+  it("reset clears only this brand's drafts", () => {
+    const designs = examples(catalog);
+    saveDesign(brand.slug, designs[0]);
+    saveDesign(brand.slug, designs[3]);
+    saveDesign("druri-design", designs[0]);
+    localStorage.setItem("showroom-offer-counter-default-2026", "7");
+    clearDesigns(brand.slug);
+    expect(restoreSummary(brand.slug, catalog)).toBeNull();
+    expect(localStorage.getItem("showroom-recent-default")).toBeNull();
+    expect(restoreSummary("druri-design", catalog)).not.toBeNull();
+    expect(localStorage.getItem("showroom-offer-counter-default-2026")).toBe(
+      "7",
+    );
+  });
+  it("never exports into a deployed or loaded brand folder", () => {
+    for (const { slug } of deployedBrands)
+      expect(brandFolderTaken(slug, "qa-test")).toBe(true);
+    expect(brandFolderTaken("qa-test", "qa-test")).toBe(true);
+    expect(brandFolderTaken("new-company", "default")).toBe(false);
+  });
+  it("clearing a presentation choice restores the brand default", () => {
+    usePreferences.getState().setPresentation("default", true);
+    expect(presentationFor(brand)).toBe(true);
+    usePreferences.getState().clearPresentation("default");
+    expect(localStorage.getItem("showroom-presentation-default")).toBeNull();
+    expect(presentationFor(brand)).toBe(brand.presentationMode);
   });
 });

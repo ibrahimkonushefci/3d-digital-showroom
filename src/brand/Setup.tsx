@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { Upload, Download, Check, LockKeyhole } from "lucide-react";
 import { BrandSchema, type BrandConfig } from "../catalog/types";
 import { useBrand } from ".";
+import { brandFolderTaken } from "./deployed";
 import { useT } from "../i18n";
 import { Field, ErrorNotice } from "../app/components";
 import { downloadBlob, imageToPng } from "../documents/offer";
@@ -109,8 +110,13 @@ export default function Setup() {
   };
   const exportZip = async () => {
     setBusy(true);
+    setNotice(null);
     try {
       const brand = validated();
+      if (brandFolderTaken(brand.slug, ctx.catalog.id)) {
+        setNotice("brandFolderTaken");
+        return;
+      }
       const { default: JSZip } = await import("jszip");
       const zip = new JSZip(),
         folder = zip.folder(brand.slug)!;
