@@ -1,201 +1,71 @@
-# Digital Showroom Designer
+# Kitchen & Wardrobe Showroom
 
-A static, white-label sales demo for companies in Kosovo that make **kitchens and wardrobes**. A freelance developer walks into a showroom with a laptop (later a tablet) and shows the owner a working 3D designer that already carries their name, logo, colours and products. It must feel like a finished product, work offline, and be rebrandable in about 15 minutes.
+A white-label 3D showroom for kitchen and wardrobe makers. Customers walk through furnished rooms, change fronts, worktops and handles, add or replace units, and leave with a priced PDF offer. It runs entirely in the browser, works offline, and can carry any company's name, logo, colours and catalog.
 
-- **Users:** the showroom salesperson next to a customer (touch-first, big controls), customers at home on a phone (including diaspora in Germany/Switzerland), and a non-technical business owner who must find it impressive and simple.
-- **Languages:** Albanian (default), English, German. EUR, metric (cm).
-- **Stack:** React + TypeScript + Vite, Three.js via React Three Fiber/drei, Zustand, Tailwind. No backend; state lives in memory and localStorage. PWA with offline support; deploys as a static site.
-- **Out of scope for the demo:** accounts, backend, catalog admin UI (JSON editing is fine), manufacturing output, payments.
+![Island kitchen in the showroom](public/shared/showroom/home-island-front.webp)
 
-## Working constraints
+## Features
 
-- **Budget $0.** No paid assets, marketplace models or services. Only CC0 sources (Poly Haven, ambientCG) and original work. Provenance is recorded in `public/shared/ASSETS.md` and `public/shared/licenses/`.
-- **Presentation machine:** M4 MacBook Air (16 GB) in Chrome. Visual and performance acceptance is judged there, in a normal window; headless numbers are supporting evidence only. Tablets are a later, separate check.
-- **Blender 5.2** is a local authoring tool only (run headless by script), never a runtime or build dependency.
-- **Review gate:** a phase is done when matched before/after captures and a live check on the laptop pass, not when tests pass.
-- **Visual references:** IKEA (eye-level framing, soft shadows), Schmidt (complete room with ceiling, window and exterior, restrained decor), Cosentino (surface presentation). Showroom mode opens on an eye-level view inside the room; editing switches to the overview.
+- **Furnished 3D rooms:** straight, L-shaped and island kitchens; straight and corner wardrobes, in rooms with windows, a garden view, lighting and furniture.
+- **Styles:** ready-made looks, front colours and materials, front styles, handles, worktops, floors and wall colours, all chosen from pictures.
+- **Easy editing:** add units by tapping or dragging picture cards, and the app shows where each one fits. You can also replace, resize or delete units, and furnish wardrobe interiors with shelves, rails, drawers and baskets. Undo and redo work throughout.
+- **Room sizes:** resizing keeps the design. Units widen, narrow or are added, and essentials such as the sink, hob and fridge always stay.
+- **Pricing and offers:** prices come from the catalog per unit and size, with installation and VAT. A summary page and a branded PDF offer are included.
+- **Branding:** each company is a folder with its brand file, catalog and logo. A built-in setup page previews and exports new brands.
+- **Languages:** Albanian, English and German. Prices in EUR, sizes in cm.
+- **Offline:** it installs as a PWA and keeps working without an internet connection once loaded.
 
-## Run locally
+## Tech stack
 
-Use Node 24 (or a Node release supported by Vite 7) and pnpm. This workspace was built with the bundled Node 24.19 / pnpm 11 runtime.
+React, TypeScript and Vite · Three.js with React Three Fiber and drei · Zustand · Tailwind CSS · jsPDF · vite-plugin-pwa. There is no backend: designs and settings are saved in the browser.
+
+## Getting started
+
+Requires Node 24 and pnpm.
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm dev
+pnpm dev          # development server
+pnpm test         # unit tests
+pnpm build        # type-check, production build and asset budget check
+pnpm preview      # serve the production build (offline caching works here)
 ```
 
-Open the local address printed in the terminal. For the production/offline demo:
+Copy `.env.example` to `.env` to configure the build:
 
-```sh
-pnpm test
-pnpm build
-pnpm preview --port 4173
-```
+| Variable | Purpose |
+| --- | --- |
+| `VITE_DEFAULT_BRAND` | Brand folder used when the address names none |
+| `VITE_SETUP_PIN` | PIN for the `/setup` page. Set your own; the PIN is a convenience, not authentication |
+| `VITE_BRAND_BASE_DOMAIN` | Enables `<brand>.<domain>` addresses |
+| `VITE_DEMO_CONTACT_PHONE` | Fallback phone number for the demo brands |
 
-`pnpm exec prettier --write src tests` formats the source. The lockfile is included. Offline caching is enabled in the production build, not the Vite development server.
+## Brands and catalogs
 
-## What's included
+Brands live in `public/brands/<folder>/`:
 
-| Area               | Working features                                                                                                                                                                                                                                                                                                                              |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Foundation         | Responsive shell; Albanian/English/German; EUR/cm; validated, versioned brand/catalog data; CSS themes; two fictional company brands; PIN setup with logo color extraction, device saving and ZIP export; PWA caching/status/update prompt.                                                                                                   |
-| Room and furniture | Room dimensions with the prepared rooms' windows and garden; procedural carcasses, fronts, worktops, handles, plinths and interiors; local textures and generated environment lighting; Hero/Overall/Inspect plus Front/Top cameras and orbit controls.                                                                                                                                        |
-| Editing            | Straight, L-shaped and island kitchens; straight and corner wardrobes; module selection, sizing, swapping, adding, deleting and wall positioning; predictable room resizing (units stay, widths adapt); picture choices for finishes, front styles, handles, worktops, floors and ready-made looks; floor and wall colour in the Room tab; collision/opening/aisle checks; rejected edits preserve the design; animations, undo/redo and performance mode. |
-| Summary            | Catalog pricing per position and size with unit prices, installation and VAT (single figure incl. VAT by default, range optional); a Summary page with the picture, item list and total; a branded PDF download with company registration/bank footer, totals and signature/stamp boxes. |
+- `brand.json`: company name, contacts, colours, languages, and the legal and bank details printed on offers.
+- `catalog.json`: modules, finishes, worktops, handles and all prices. Schemas are in `src/catalog/types.ts`.
+- The logo file.
 
-`default` / Forma Studio and `druri-design` contain furniture catalogs. Company contacts remain blank until configured, or use the demo phone environment fallback. Demo badges identify fictional companies and sample prices.
-
-## Rebrand in about 15 minutes
-
-1. Open `/setup?brand=druri-design`. Enter the default demo PIN **2468**. Change it before a meeting through `VITE_SETUP_PIN` in `.env`; rebuild afterward. The PIN is a front-end convenience, **not authentication**.
-2. Upload a logo. Suggested dominant colors appear. Select a suggestion or use the primary/accent color inputs.
-3. Enter the company name, a lowercase hyphenated folder name, tagline, city, business telephone, email/address and WhatsApp/Viber numbers, plus the registration and payment details printed on every offer page: NUI, fiscal number, VAT number, bank, IBAN and website (`legal` in `brand.json`). Check the live preview.
-4. Select **Use on this device** for a meeting on this browser. The override survives reload. Settings → **Remove device branding** restores the deployed brand. Each underlying demo brand has its own override.
-5. Select **Export brand ZIP**. Unzip the company folder into `public/brands/`. It contains `brand.json`, `catalog.json` and `logo.png`. Shared texture/font assets stay in `public/shared/`.
-6. Edit the exported `brand.json` if needed: `modules` controls which furniture tools appear and are accessible; `languages` and `defaultLanguage` control supported UI languages; `colors` contains all four theme values. Retain `version: 1` and `font: "Inter"`.
-7. Adjust catalog names, supported widths/finishes and prices. Add authorized local furniture textures and record their provenance.
-8. Build and deploy. Open `/?brand=your-company` and prepare offline use on the meeting device.
-
-Brand precedence is **query parameter → subdomain under the configured base domain → `VITE_DEFAULT_BRAND` → neutral default**. Missing, malformed or unsafe brand files fall back to the neutral brand. `.env.example` documents the build-time settings. A custom subdomain needs DNS and hosting configuration; setting the environment variable does not create DNS records.
-
-## Edit the catalog
-
-`public/brands/<slug>/catalog.json` is the pricing and product source. `src/catalog/types.ts` contains the version-1 schemas. IDs must be unique within each group, accessories must reference real accessory IDs, colors use six-digit hex, and asset paths must stay local. Keep the supplied module and default finish IDs when preparing a brand; the demo's preset generator uses those IDs. Add new modules with supported types to the editor, or extend the generator for a different product family.
-
-- `modules`: translated names, kitchen/wardrobe kind, level/type, allowed widths, height/depth in cm, `pricePerMeter`, `handleCount` and optional `accessory` ID.
-- `fronts` and `carcasses`: finish multipliers. Module amount = width in metres × module rate × front multiplier × carcass multiplier × height ratio. Panel fronts also apply `pricing.panelMultiplier`.
-- `countertops` / `backsplashes`: `perMeter` rates, applied to base-unit running length. Corner measurements are simplified demo estimates.
-- `handles`: per-piece price multiplied by catalog handle counts.
-- `plinths`: optional finish `perMeter` rate; zero uses `pricing.plinthPerMeter`.
-- `accessories`: fixed price per matching module. LED uses wall-cabinet running length and `pricing.ledPerMeter`.
-- `pricing`: installation %, VAT %, estimate range % (default 7), minimum aisle in cm, LED/plinth rates and panel multiplier.
-
-Installation applies to the subtotal; VAT applies after installation. New designs quote VAT included as a single figure. Totals remain unrounded internally and display rounded EUR values. The default range is total ± `rangePercent`. A single estimate is a display preference, not a binding quotation. Saved designs are always priced against the currently deployed catalog.
-
-Catalog groups are validated against the enabled kitchen/wardrobe tools. Preserve furniture IDs when changing catalogs so saved furniture designs continue to resolve.
-
-## Showroom walkthrough
-
-- Choose a prepared design on Home: cashmere L, warm-white straight, anthracite island, straight wardrobe or corner wardrobe, plus four finish editions of those same furniture configurations (Natural Oak, Nordic Sage, Warm White & Oak and Milano Oak). Existing drafts load unchanged; presets replace a design only when explicitly chosen.
-- Room → choose a layout, a size (Compact / Standard / Spacious) or custom dimensions → Apply, then floor and wall colour (colour swatches; names on hover). Dimensions follow the layout: *Kitchen width* (or *Wardrobe width*) along the wall, a *Second side length* for L kitchens and Corner wardrobes, and *Ceiling height*; room depth is not shown for one-wall layouts. Kitchen units keep their standard heights; wardrobes are full height and become shorter only under a lower ceiling (the form says by how much). A layout button starts from that layout's prepared design in the current room, keeping the colours. Resizing keeps the units: more space adds a unit or widens flexible ones, less space first uses free wall, then narrows units, then removes the least important ones. The sink, hob and hood, oven, fridge and corner unit are never removed: a size too small for them is refused, with the smallest size that works. A notice with Undo says what changed. Windows, doors and the garden come with the prepared rooms; there are no opening editors. A saved design whose layout is no longer offered opens the prepared design with a short notice.
-- Styles → ready-made looks first, then "Which parts change?" (whole kitchen, wall, base or tall units, island, or the selected unit, each with a small drawing), the front colour (one picture per colour, light to dark) and then its material (the materials that colour comes in, with a €–€€€€ hint; changing colour keeps the material where possible), front style, handles, worktop (optionally a different one on the island) and, for kitchens, the plinth. The carcass follows the front; there is no backsplash or carcass control.
-- Showroom mode: tap a module to open it; *Inspect up close* moves to a clear view of it and, pressed again, returns to the earlier view. Wardrobe Interior view hides fronts without changing the design; *Edit inside this wardrobe* switches to editing. Overall view returns to the complete design.
-- Edit units (opens on the Units tab): picture cards of every unit type, each saying how many free places it has. Tap a card to see where it fits, as green boxes with "+ 40 cm" in the room and as a list ("Back wall · between Wall cabinet and Integrated extractor hood"); tap a place to add it at the largest width that fits, or pick another width. Or drag the card into the room: the real unit previews in the nearest free place and drops there. When nothing fits, the card explains and offers to replace an existing unit or to narrow a neighbour (never the sink, hob, hood, oven, fridge or corner), with those units outlined in dashed amber. The selected unit (and a selected part inside a wardrobe) has a thin blue frame with a white edge and a light tint in the room (`furniture/SelectionFrame.tsx`, kept out of AO and the PDF picture); in the panel it shows its picture, the widths that fit, *Replace with* (picture cards; same width where possible), Open/Close and Delete (also the Delete key); arrow keys or dragging it in the room move it along the wall in 10 cm steps. Every change is one undoable step with an Undo notice. Wardrobes add *Inside this unit*: the shelves, rails, drawers and baskets as picture rows (move up/down to the next free height, open, remove), the parts that can be added and whether they fit (not behind sliding doors, not where a neighbour blocks the pull-out; otherwise offered instead of an existing part), and the ready-made interiors. The finder is `src/designer3d/placement.ts` (every answer checked by `validateDesign`).
-- Open Your offer for the picture, item list and total; adjust installation/VAT/single estimate and press **Download PDF offer**.
-
-## Offline preparation
-
-1. Deploy over HTTPS, or use the production preview on localhost.
-2. Load the app online and wait for **Offline ready** (shown in the desktop header; the compact phone header hides this text).
-3. Visit the tools and desired brand, load an example, and check textures/PDF export before leaving for the meeting.
-4. Reload and navigate with the network disconnected. The app, bundled catalogs/logos, fonts, textures and code-generated lighting work locally. Furniture drafts and device branding live on the device.
-5. When an update is offered, choose Save and update while connected. Existing designs are saved continuously. Prepare the new version before going offline again.
-
-`vite.config.ts` explicitly lists `brands/**/*`, `shared/**/*` and icons in `includeAssets` and all emitted code/CSS/HTML/JSON/image/font patterns in Workbox `globPatterns`, following the [Vite PWA static asset guidance](https://vite-pwa-org.netlify.app/guide/static-assets.html). New local brand assets are included on rebuild. Compress large assets: the per-file cache ceiling is 6 MB. Environment reflections are generated from local lights; no remote HDRI is needed. Browser storage eviction/private mode can prevent persistence. First-time access to a different hosting origin still needs internet.
+Open a brand with `/?brand=<folder>`. The `/setup` page builds a new brand from a logo and a few fields, previews it, and exports a ZIP to unpack into `public/brands/`. `default` (Forma Studio) and `druri-design` are fictional demo brands with sample prices.
 
 ## Deploy
 
-Build command: `pnpm build`. Output: `dist`. Serve at the domain root with HTTPS and an SPA fallback to `index.html` for `/designer/*`, `/setup`, `/summary`, and `/embed/*`. Do not cache `sw.js` with immutable headers. Hashed build assets may use immutable caching.
+The output is a static site in `dist/`. Serve it over HTTPS with a single-page fallback to `index.html`. `vercel.json` (Vercel) and `public/_redirects` (Netlify) are included. Don't cache `sw.js` as immutable.
 
-- **Vercel:** import the folder/repository, select Vite, use `pnpm build` and `dist`. `vercel.json` provides the SPA rewrite. Configure environment variables and optional custom/wildcard domain.
-- **Netlify:** build with `pnpm build`, publish `dist`. Included `public/_redirects` is copied into the build and provides the SPA fallback.
-- **Cloudflare Pages:** use the same build/output settings. Pages provides its SPA fallback when no top-level `404.html` is present. Verify direct route reloads on the deployed domain.
-- **Other static host:** upload the contents of `dist`, retain all directories, provide the SPA fallback, HTTPS, and appropriate service-worker headers.
+## Project structure
 
-Embed the material switcher on a client site:
+| Path | Contents |
+| --- | --- |
+| `src/app` | Routes, Home, Summary, Settings |
+| `src/designer3d` | The designer: layout rules, editing, cameras, panels |
+| `src/scene` | Rendering, materials, rooms, lighting, models |
+| `src/catalog`, `src/pricing`, `src/documents` | Schemas, price calculation, PDF offers |
+| `src/brand`, `src/i18n`, `src/persistence` | Branding, translations, saved designs |
+| `public/shared` | Textures, models, previews, fonts and room data |
+| `scripts`, `art` | Asset preparation and review tooling (Blender is used offline only) |
 
-```html
-<iframe
-  src="https://showroom.example/embed/material-switcher?brand=your-company"
-  title="Material preview"
-  style="width:100%;height:800px;border:0"
-  loading="lazy"
-></iframe>
-```
+## Assets and licences
 
-Adjust iframe height for the host site's phone layout. The embed route omits app navigation/footer and keeps material controls. The designer button navigates within the frame. If the hosting provider adds frame restrictions, configure allowed embedding domains there.
-
-## Verification and limits
-
-Run `pnpm test` for schemas, brand precedence, translations/formatting, all layouts, corners, islands/aisles, openings/collisions, rejected edits/history, catalog pricing, VAT/ranges and saved-design compatibility. Production build also type-checks the app.
-
-Browser checks use the built-in browser (@Browser). Layout has been checked at 1440×900, 1180×820, 1024×768, 820×1180 and 390×844; this verifies layout, not device performance. Review evidence (captures, reports) is kept locally in `verification/` and is not committed.
-
-The renderer uses on-demand frames, sharp 2× stills with a lighter 1.5× ratio only while the view moves (quality never changes on its own), lazy routes/textures, reusable local environment lighting and a lower-quality performance mode. **30+ fps on physical iPad/Android hardware remains unverified.** **Known limitation (accepted 16 October 2026):** zooming lags badly in a normal Chrome window on the MacBook Air when Performance mode is OFF; the cause is unresolved and normal-window frame rates have not been measured (run the `?fps=1` protocol in `SHOWROOM_SIMPLIFICATION_PLAN.md` section 7). Test orbiting, animations, camera/file capture and native sharing on the actual showroom devices before promising a hardware performance level.
-
-This is a demo: editable illustrative prices, procedural products, simplified room/corner/appliance visuals and no manufacturing tolerances. Assets/camera angle/light adjustment improve a preview but cannot establish building dimensions or a supplier quotation. There are no accounts, backend, payments, catalog administration panel or manufacturing exports.
-
-## Code boundaries
-
-`src/app` routes/shell; `brand` loading/setup/theme/export; `catalog` versioned schemas; `pricing` pure calculations; `designer3d` pure layout/collision logic plus render/editor/cameras; `scene` shared primitives, PBR materials, appliances and furniture storage details; `documents` Unicode PDF offers; `persistence` brand-scoped saves; `i18n` translations; `pwa` readiness/updates. Product data stays in `public/brands`; local assets in `public/shared`.
-
-`/preview-studio?brand=default` (development server only) has fixed fixture designs, camera/frame counters, motion samples, missing-model and context-loss tests. It never touches saved drafts and is excluded from production.
-
-## Demo phone and presentation mode
-
-Copy `.env.example` to `.env`, set `VITE_DEMO_CONTACT_PHONE=+383XXXXXXXX`, then restart development or rebuild production. Use an actual company-authorized number. This fallback applies only to fictional demo brands and fills missing phone/WhatsApp/Viber fields; configured contacts win. In `/setup`, editing Phone also fills WhatsApp and Viber until either is manually edited.
-
-Settings → **Modaliteti i prezantimit** hides the offline badge, fictional-demo footer and development hints. It defaults on for brands saved through `/setup`; the device preference is saved per brand. Turn it off temporarily to verify **Gati pa internet**, then turn it on for the showroom. Performance mode disables normal maps, shadows, ambient occlusion and high DPR.
-
-## Material tiers and offers
-
-`frontTiers` defines Iverall, foil MDF, matt lacquer MDF, glossy acrylic and Fenix. Each tier references decor IDs in `fronts`; its multiplier controls module pricing. `countertopTiers` defines laminate 38 mm, compact 12 mm, quartz and granite with decor IDs and a per-metre rate. Decor records retain their own material maps and old IDs. `appliancePackages` lists priced packages; the demo offers no choice, so a design keeps its stored package line (none by default). `pricing` supplies offer prefix, validity, translated payment terms, LED rates, installation, VAT and range. No supplier authenticity is implied by demo prices or textures.
-
-The PDF carries a device-generated brand/year offer number, the date, the catalog validity and payment terms; there is no customer form. Older designs keep any stored customer details. Device storage clearing resets the offer counter; this is a local sequence, not a company-wide invoice system. Furniture Design v1/v2 inputs are migrated in memory to Design v3 on read. Original furniture IDs, dimensions, room and offer details are preserved; reading alone does not rewrite the stored record.
-
-## How the visuals are built
-
-- **Furniture** is procedural (`src/designer3d/furniture/`, `src/scene/`), so any size can open, animate and be priced. Physical UV mapping, per-finish material responses and dark front gaps live in `src/scene/Materials.tsx`, `Primitives.tsx` and `GapShade.tsx`.
-- **Render pipeline** (`src/scene/pipeline/`): MSAA → GTAO ambient occlusion → output, shared by the live view and every capture; lightweight quality bypasses it. Stills render at the display's ratio (2×); a second pipeline at 1.5× draws while the camera or a front moves and hands back to the sharp one 150 ms after it stops; both stay allocated, so switching costs nothing. Start-up work (models, textures, shaders, lightmap, environment probe, contact shadows) finishes behind the loading cue. Shaders compile in the background before new objects appear (`shaderWarmup.ts`).
-- **Room** (`src/scene/rooms/`): the editable room (`design.room`: kitchen or wardrobe width, second side, ceiling) is drawn inside a larger **presentation room** (`envelope.ts`) that belongs to a home: walls carrying units stay put, the others move out (about 7 × 6.4 m for kitchens, 5.6 × 5.8 m for dressing rooms), with a glazed garden door or tall window beside the run, a doorway with a lit hallway glimpse, a ceiling shadow gap, a lowered bulkhead with downlights over the kitchen run and an oak slatted feature wall by the dining area. The envelope never changes units, fitting or prices; resizing the kitchen moves the house with it. The garden is one CC0 panorama sphere drawn only through the window openings (stencil), so it shows from every camera. Walls, ceiling and openings, the main-view search, inspection obstacles, lighting, the environment probe and the bake all use the envelope. Room recipes in `public/shared/rooms/*-v3.json`, lighting in `src/scene/lighting/`.
-- **Staging** (`staging.ts`): unpriced furniture in the space the envelope adds. Kitchens without an island get a dining table with four chairs and a pendant in front of the garden door; island kitchens and dressing rooms an armchair with a side table. The group is placed from the room alone and the main view is composed to include it whole (never cut by the frame, never in front of the fronts; tests in `tests/envelope.test.ts`). A sideboard or chest of drawers with a print, a tall plant, open shelves, a clock, a rug and a leaning mirror fill free walls, each clear of fronts, doors and the doorway. Worktop decor stays in `decor.ts`.
-- **Models** (`public/shared/models/`): clothes, appliances, stools, pendant and CC0 decor and room furniture (Poly Haven) as meshopt-compressed GLBs with two detail levels and a procedural fallback each. Add or re-prepare CC0 decor: `Blender --background --factory-startup --python art/blender/prepare_decor.py -- art/blender/decor.json <download-dir> <out-dir> [ids]`, then `node scripts/register-decor.mjs <out-dir> <download-dir> [ids]`. Rebuild the kit (about 10 s): `/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python art/blender/phase2_kit.py -- <out-dir> [--preview]`, then `node scripts/register-kit.mjs <out-dir>`. After a build, `node scripts/check-scene-assets.mjs dist` checks the asset manifest and precache.
-- **Baked room lighting** for the five prepared designs (`src/scene/bake/`, `public/shared/bakes/`): a Cycles lightmap of floor, walls and ceiling, applied only while the design's signature (room, openings, LEDs, cabinet placement) matches; finish changes keep it, structural edits fade to live lighting in 300 ms. Re-bake after changing a prepared design or its room (dev server, Chrome with `--remote-debugging-port=9333`, about 2 min per design): `pnpm dev --port 5203 --strictPort`, then `node scripts/bake-rooms.mjs http://127.0.0.1:5203 <work-dir> [name] [--preview]` and `node scripts/review/calibrate-bakes.mjs http://127.0.0.1:5203`.
-- **Frame diagnostics:** add `?fps=1` to the address (kept for the tab; `?fps=0` turns it off) for a small panel with the live frame rate and **Copy report**: frame intervals, long tasks, pixel ratios and when start-up work finished, for the first 15 s after a design opens and later 15 s windows. Nothing of it loads without the flag.
-- **Home — The Room Edit:** a static catalogue with a compact split opening, equal-sized kitchen/wardrobe cards, calculated prices, a visual Showroom chooser and conditional draft continuation. The header moon/sun switch changes Home, its header and footer between warm paper and deep green (`#252c29`); the device remembers the choice and other routes retain their brand appearance. SQ/EN/DE, local fonts/images and offline use are preserved. Card thumbnails: `node scripts/review/capture-thumbnails.mjs <preview-url> --write`; the two opening images come from the approved Phase 2 review captures (provenance in `public/shared/ASSETS.md`). Fonts are local WOFF2 files.
-- **Picture previews** (Styles, Room and Units tabs; unit types and wardrobe interior parts too): rendered from the real scene by a dev-only page, `node scripts/review/render-previews.mjs http://127.0.0.1:5203 [filter]` with the dev server and the review Chrome running; writes `public/shared/previews/*.webp` and `src/designer3d/previews.json` (each entry records the colour it was rendered with; a brand with a different colour for the same id falls back to a plain swatch). Re-run after changing finishes, lighting or the ready-made looks. To try a composition, `PREVIEW_OUT=<dir> PREVIEW_CAM=px,py,pz,tx,ty,tz,fov` writes PNGs to that folder only; the stages live in `src/app/PreviewRender.tsx` (cameras stay at least 1.6 m from their target).
-- **Review tools** drive an isolated Chrome: `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --remote-debugging-port=9333 --user-data-dir=<empty dir> --use-angle=metal --enable-gpu about:blank`. Captures: `pnpm capture:review <base-url> <out-dir>` (all presets × Hero/Overview/Front/Top/Open/Interior at 1440×900 @2×); close-ups `scripts/review/capture-closeups.mjs`; frame cost `scripts/review/measure-gpu.mjs`; front interactions `scripts/review/check-front-interactions.mjs`.
-
-## History
-
-Built in milestones from 8 October 2026: the foundation and sales release (brand system, layouts, pricing, PDF offers, A/B), six realism phases (materials, furnished rooms, lighting, finish zones, editable wardrobe storage, camera), then three correction phases: an eye-level room you stand in (`d1554d7`), Blender-generated objects (`299cd59`), background shader compilation (`ff93842`) and baked room lighting (Phase 3). Git history holds the detailed reports that were removed from the working tree.
-
-## Final Home and materials refinements — 17 October 2026
-
-Home retains the approved Room Edit style and now presents six kitchen looks and
-three wardrobe looks, using existing layouts, finish collections and calculated
-prices. New room captures show alternate angles; these are finish editions, not
-additional furniture products. `src/app/homeCatalog.ts` supplies the presentations
-without changing the deployed catalogs or prepared rooms. The desktop title is
-67px; phones keep their heading sizes and receive a larger, clickable hero image.
-
-A prominent Showroom button appears in desktop navigation and beside the collapsed
-phone/tablet menu. Materials navigation opens either `/material-switcher` or the new
-`/wardrobe-materials`; both are also featured in a compact Home section. The wardrobe
-page offers finish collections, all front colours, handles and a local interior
-preview. Material studies use local state; drafts change only through the explicit
-designer action. `/embed/wardrobe-materials` is the corresponding headerless route.
-On phones, the large material-study headline is visually hidden and the picture
-choices are smaller. Settings' header icon now closes back to its originating
-page, and Home's Back to top scrolls to the start of the document.
-
-Verification and matched screenshots: `verification/home-final/REPORT.md` (local,
-ignored by Git). Approved by the owner on 20 October 2026. No Showroom/editor, scene, room, pricing,
-persistence or catalog-source changes are part of this refinement.
-
-## Demo status — approved 20 October 2026
-
-The owner approved the demo as it is, including the Home page and its 17 October
-refinements. All four planned phases are complete; no further phase is planned.
-Final review fixes on 20 October: the AO pass no longer redraws both shadow maps
-on every frame (about 30% fewer draw calls with Performance mode OFF, same picture),
-`?lang=` works on a device's first visit, the PDF is named after the company
-(`Forma-Studio-FS-2026-0001.pdf`), the selection frame is thinner, and the Home
-"Kitchen materials" card uses a full-resolution render. Settings → Reset demo clears
-this brand's saved designs only; brand ZIP export refuses a folder name that
-belongs to a shipped or loaded brand.
-
-**Accepted limitation (unchanged):** zooming still lags in a normal Chrome window on
-the MacBook Air with Performance mode OFF. It is left as it is for the demo; present
-with Performance mode ON if it matters. Before a meeting: `pnpm build`, open the
-production build online, wait for **Offline ready** and accept any update.
+Models and textures are original work or CC0 (Poly Haven, ambientCG). Sources are listed in [`public/shared/ASSETS.md`](public/shared/ASSETS.md), and the font licences are in `public/shared/fonts/`.

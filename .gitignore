@@ -1,9 +1,26 @@
+# Dependencies and package-manager caches
 node_modules/
+.pnpm-store/
+
+# Build output and caches
 dist/
 .vite/
-.env.local
 *.tsbuildinfo
-.DS_Store
-.pnpm-store/
+coverage/
 __pycache__/
+
+# Local settings and secrets (keep .env.example)
+.env
+.env.*
+!.env.example
+
+# Internal notes, plans and review evidence (local only)
+internal/
 verification/
+
+# Editor, assistant and OS files
+.claude/
+.vscode/
+.idea/
+.DS_Store
+*.log
