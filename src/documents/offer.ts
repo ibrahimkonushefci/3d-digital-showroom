@@ -69,8 +69,15 @@ export function documentDate(iso: string, addDays = 0) {
     .map((n) => String(n).padStart(2, "0"))
     .join(".");
 }
+/** The customer sees the company's name, never the brand folder ("default"). */
 export function offerFileName(brand: BrandConfig, design: DesignDocument) {
-  return `${brand.slug}-${design.offer?.number || design.kind + "-offer"}.pdf`;
+  const company =
+    brand.companyName
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^A-Za-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || brand.slug;
+  return `${company}-${design.offer?.number || design.kind + "-offer"}.pdf`;
 }
 const LEFT = 14,
   RIGHT = 196,

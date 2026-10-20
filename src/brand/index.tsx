@@ -12,7 +12,7 @@ import {
   type BrandConfig,
   type Catalog,
 } from "../catalog/types";
-import { useT, useLanguage } from "../i18n";
+import { useT, useLanguage, languageRequested } from "../i18n";
 import { useDesigner } from "../designer3d/store";
 import { withDemoContacts } from "./contacts";
 import { usePreferences } from "../app/preferences";
@@ -101,7 +101,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
           initialError = "storageError";
         }
         if (
-          !localStorage.getItem("showroom-language") ||
+          (!languageRequested && !localStorage.getItem("showroom-language")) ||
           !brand.languages.includes(useLanguage.getState().language)
         )
           useLanguage.getState().setLanguage(brand.defaultLanguage);

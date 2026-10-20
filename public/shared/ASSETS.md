@@ -121,3 +121,13 @@ Captured through the built-in browser from the isolated material study, at 967×
 then encoded as WebP (quality 85), without retouching. Original PNGs and the capture
 camera definitions are in local ignored `verification/home-final/`. All underlying
 asset licenses remain as recorded above. The four WebPs total 200,562 bytes.
+
+## Home materials card — 20 October 2026
+
+`showroom/home-materials-kitchen.webp` (1150 × 1020, 64 KB) replaces the 320 × 200
+Styles-panel thumbnail `previews/look-sage.webp` that the Home "Kitchen materials"
+card had been stretching. Original capture of this project's renderer: the Nordic
+Sage L kitchen, Main view, production build, 1440 × 900 at 2× in headless Chrome,
+cropped around the kitchen and encoded as WebP (quality 85) without retouching.
+Source PNG: local ignored `verification/home-final/after/home-materials-kitchen-source.png`.
+All underlying asset licenses remain as recorded above.

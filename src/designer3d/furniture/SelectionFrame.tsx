@@ -16,8 +16,9 @@ const hidden = { exportHidden: true, aoExclude: true };
 
 /**
  * One outline around a whole unit (local frame: bottom centre, fronts at
- * +z), drawn as a white halo with a coloured core so it reads on pale, dark
- * and wooden fronts, plus a faint tint for the selected unit. It wraps the
+ * +z), drawn as a thin white halo with a coloured core so it reads on pale,
+ * dark and wooden fronts without pulling all the attention, plus a faint
+ * tint for the selected unit. It wraps the
  * carcass rather than the fronts, so it stays put while doors open, and
  * covers units without a door (open shelves, sliding wardrobes, drawers).
  * Lines and the transparent tint are excluded from AO (excludedFromAO), the
@@ -63,7 +64,7 @@ export function SelectionFrame({
         points={segments}
         segments
         color={HALO}
-        lineWidth={selected ? 10 : 8}
+        lineWidth={selected ? 4 : 4.5}
         transparent
         opacity={0.9}
         depthWrite={false}
@@ -75,7 +76,7 @@ export function SelectionFrame({
         points={segments}
         segments
         color={colour}
-        lineWidth={selected ? 6 : 5}
+        lineWidth={selected ? 2 : 2.5}
         // Transparent like the halo, so renderOrder draws it on top.
         transparent
         depthWrite={false}

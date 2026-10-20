@@ -134,12 +134,13 @@ export function useContactTargetOwnership() {
             owner.replace("contact-blur:" + material.uuid, material);
         }
       }
+      const owned = targetOwners.get(gl) === owner;
       const shadowUpdate = gl.shadowMap.autoUpdate;
       const shadowNeedsUpdate = gl.shadowMap.needsUpdate;
       const hidden: Object3D[] = [];
       // Contact-depth override needs no directional shadow pass. Restore before
       // the main pass; moving furniture still receives dynamic shadows there.
-      if (targetOwners.get(gl) === owner) {
+      if (owned) {
         gl.shadowMap.autoUpdate = false;
         gl.shadowMap.needsUpdate = false;
         // One bounded floor-contact pass after an edit, not an active-frame
@@ -165,8 +166,13 @@ export function useContactTargetOwnership() {
       try {
         render.call(gl, renderScene, camera);
       } finally {
-        gl.shadowMap.autoUpdate = shadowUpdate;
-        gl.shadowMap.needsUpdate = shadowNeedsUpdate;
+        // Only undo what the contact pass changed. Restoring the flags after
+        // every render put back R3F's start-up needsUpdate = true, so the AO
+        // normal pass redrew both shadow maps on every frame.
+        if (owned) {
+          gl.shadowMap.autoUpdate = shadowUpdate;
+          gl.shadowMap.needsUpdate = shadowNeedsUpdate;
+        }
         hidden.forEach((o) => (o.visible = true));
       }
     };

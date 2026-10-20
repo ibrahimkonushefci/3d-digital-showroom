@@ -156,9 +156,17 @@ material-study heading and tiles; Settings icon toggles back to the originating
 page; Back to top reaches document top. Approved Home palette and green preference
 remain. SQ/EN/DE and conditional categories remain supported.
 
-Verification and owner acceptance are recorded separately in
-`verification/home-final/REPORT.md`. This is a refinement of approved Phase 3, not
+Verification is recorded in `verification/home-final/REPORT.md`; the owner
+approved these refinements on 20 October 2026 (section 2.12). This is a refinement of approved Phase 3, not
 a restart of its design or authorization to change Showroom/editing behavior.
+
+### 2.12 Final review and demo approval (20 October 2026)
+
+- Owner commit `1a9e902` (Settings): Reset demo clears only this brand's kitchen and wardrobe drafts; the brand list comes from `src/brand/deployed.ts`; brand ZIP export refuses a deployed or loaded folder name; device branding restores the brand's own presentation default when added or removed.
+- Claude's full review found no presentation blockers. Fixes, owner-approved: `src/scene/resources.ts` no longer restores R3F's start-up `shadowMap.needsUpdate = true` after every render, so the GTAO normal pass stops redrawing both shadow maps every frame (headless, zooming with Performance mode OFF: L kitchen 956 → 678 draw calls per frame, island 1156 → 814, corner wardrobe 325 → 241; pixel-compared, no visible change). `?lang=` wins over the brand default on a first visit. PDF file names use the company name. `public/.DS_Store` and `src/.DS_Store` are no longer tracked.
+- Owner requests: the selection frame is thinner (`SelectionFrame.tsx`: halo 4 px, line 2 px; suggestions 4.5 / 2.5 px), superseding the 6 px line of section 2.10; the Home "Kitchen materials" card uses `showroom/home-materials-kitchen.webp` (1150 × 1020 render of the Nordic Sage L kitchen) instead of the 320 × 200 Styles thumbnail.
+- **The owner approved the Home refinements of section 2.11 and the demo as it is.** All four phases are complete; no further phase is planned. The zoom lag with Performance mode OFF remains the accepted limitation of section 2.3; the section 7 protocol was not run and normal-Chrome frame rates remain unmeasured.
+- Checks: `pnpm test` 30 files / 234 tests, TypeScript, production build (10.41 MB shipped), asset check, offline reload (headless, after Offline ready), PDF generation, Phase 4 task script 15/15.
 
 ## 3. Current Git state and work already done
 

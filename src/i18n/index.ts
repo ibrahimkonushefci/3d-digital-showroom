@@ -10,12 +10,14 @@ const requested =
   typeof location === "undefined"
     ? null
     : new URLSearchParams(location.search).get("lang");
-const initial =
-  requested === "en" || requested === "de" || requested === "sq"
-    ? requested
-    : typeof localStorage === "undefined"
-      ? null
-      : localStorage.getItem("showroom-language");
+/** The address asked for a language; it wins over the brand default too. */
+export const languageRequested =
+  requested === "en" || requested === "de" || requested === "sq";
+const initial = languageRequested
+  ? requested
+  : typeof localStorage === "undefined"
+    ? null
+    : localStorage.getItem("showroom-language");
 export const useLanguage = create<{
   language: Language;
   setLanguage: (l: Language) => void;

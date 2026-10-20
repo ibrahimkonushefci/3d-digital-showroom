@@ -291,7 +291,7 @@ export default function Home() {
                   className="home-material-card"
                 >
                   <img
-                    src="/shared/previews/look-sage.webp"
+                    src="/shared/showroom/home-materials-kitchen.webp"
                     alt=""
                     loading="lazy"
                   />
